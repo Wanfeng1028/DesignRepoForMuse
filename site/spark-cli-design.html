@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spark CLI 设计稿 · 终端视觉</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:ui-monospace,"JetBrains Mono",Menlo,Consolas,"Noto Sans Mono",monospace;
+    background:#EDEDF1; color:#17171C; min-height:100vh; padding:40px 24px 64px; }
+  .page-head { max-width:1100px; margin:0 auto 8px; }
+  .page-head h1 { font-size:26px; font-weight:800; }
+  .page-head p { margin-top:8px; font-size:14px; color:#6B7280; line-height:1.8; max-width:1000px; }
+  .legend { max-width:1100px; margin:14px auto 30px; display:flex; flex-wrap:wrap; gap:8px; }
+  .token-chip { display:flex; align-items:center; gap:6px; font-size:12px; color:#4B5563;
+    background:#fff; border-radius:999px; padding:5px 12px 5px 6px; box-shadow:0 1px 4px rgba(20,20,40,.06); }
+  .token-chip i { width:18px; height:18px; border-radius:50%; display:block; }
+  .frames { max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:44px; align-items:center; }
+  .frame-wrap { display:flex; flex-direction:column; align-items:center; width:100%; }
+  .frame-label { font-size:15px; font-weight:700; margin-bottom:14px; text-align:center; }
+  .frame-label span { display:block; font-size:12px; font-weight:400; color:#6B7280; margin-top:4px; }
+  /* 终端窗口 */
+  .term { width:960px; max-width:100%; background:#0d0d12; border:1px solid #2e3138;
+    border-radius:12px; overflow:hidden; box-shadow:0 24px 60px rgba(10,10,20,.25); }
+  .term.mini { width:640px; }
+  .term-bar { display:flex; align-items:center; gap:8px; padding:10px 16px;
+    border-bottom:1px solid #1c1e24; }
+  .dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+  .term-title { margin-left:8px; font-size:12px; color:#8b8f98; }
+  .term-body { padding:20px 22px 22px; font-size:14px; line-height:1.78; color:#d8d8de; }
+  .ln { white-space:pre-wrap; word-break:break-all; }
+  .pu { color:#CBA6F7; } .gr { color:#6fdd8b; } .ye { color:#e5a13c; }
+  .re { color:#f0554d; } .gy { color:#8b8f98; } .cy { color:#4cc3d9; }
+  .wh { color:#ffffff; } .bd { font-weight:700; } .it { font-style:italic; }
+  .inv { background:#CBA6F7; color:#0d0d12; display:block; margin:0 -22px; padding:0 22px; }
+  .strike { text-decoration:line-through; }
+  .sec-cap { font-size:12px; color:#8b8f98; margin:18px 0 8px; }
+  .sec-cap:first-child { margin-top:0; }
+  .fsep { border:none; border-top:1px dashed #2e3138; margin:18px -22px; }
+  .cursor { display:inline-block; width:8px; height:16px; background:#CBA6F7;
+    vertical-align:-3px; margin-left:1px; }
+  .frow { display:flex; justify-content:space-between; gap:16px; white-space:nowrap; }
+  .frow .fl { overflow:hidden; text-overflow:ellipsis; }
+  .frow .fr { flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>Spark CLI 设计稿 · 终端视觉</h1>
+  <p>补齐代码里有、但从未出过 UI 设计的 CLI 界面。视觉语言与真实终端截图一致：深色底 #0d0d12、等宽字体、紫 #CBA6F7 交互色、<br>
+  绿 #6fdd8b 表值与成功、黄 #e5a13c 表瞬态注意、红 #f0554d 表错误、灰 #8b8f98 表说明。文案保持工程师直白风格。<br>
+  P0 独立面板画成覆盖在主界面上的 TUI 浮层形态；P1 主界面状态；P2 headless 纯文本流。spark mcp / spark acp（stdio 无可视输出）与已停用 Sidebar 不画。</p>
+</div>
+<div class="legend">
+  <span class="token-chip"><i style="background:#CBA6F7"></i>交互紫 #CBA6F7</span>
+  <span class="token-chip"><i style="background:#6fdd8b"></i>值/成功绿 #6fdd8b</span>
+  <span class="token-chip"><i style="background:#e5a13c"></i>注意黄 #e5a13c</span>
+  <span class="token-chip"><i style="background:#f0554d"></i>错误红 #f0554d</span>
+  <span class="token-chip"><i style="background:#8b8f98"></i>说明灰 #8b8f98</span>
+  <span class="token-chip"><i style="background:#4cc3d9"></i>检查点青 #4cc3d9</span>
+  <span class="token-chip"><i style="background:#0d0d12;border:1px solid #2e3138"></i>终端底 #0d0d12</span>
+</div>
+<div class="frames">
+
+<!-- 1 /resume -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/resume<span>ResumePanel.tsx —— 双行会话列表 + Space 预览框 + 过滤输入</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/resume</span></div>
+    <div class="term-body">
+      <div class="ln">恢复会话  <span class="gy">/ 过滤：mdurl · ↑↓ 移动 · Space 预览 · Enter 恢复 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; ★ 给 mdurl4cj 写 README 初稿</span></div>
+      <div class="ln"><span class="gy">  12 分钟前 · 86 条事件 · git:(main) · （当前）</span></div>
+      <div class="ln">  重构登录鉴权</div>
+      <div class="ln"><span class="gy">  2 小时前 · 134 条事件 · git:(dev)</span></div>
+      <div class="ln">  port4cj 发布走查</div>
+      <div class="ln"><span class="gy">  昨天 · 45 条事件</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">╭─ 给 mdurl4cj 写 README 初稿 — 预览 ──────────────────────╮</span></div>
+      <div class="ln"><span class="gy">│ 置顶 · demo/spark-demo · ~/workspace/mdurl4cj · git:(main) · 档位 自动 · 空闲 · seq 86 · 12 分钟前 │</span></div>
+      <div class="ln"><span class="gy">╰──────────────────────────────────────────────────────────╯</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="pu">过滤：</span>mdurl<span class="cursor"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 /stats -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/stats<span>StatsPanel.tsx —— seq 水位 / token 明细 / 模型 / 分支 + 无激活会话空态</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/stats</span></div>
+    <div class="term-body">
+      <div class="ln">统计  <span class="gy">Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">seq 水位：</span>128</div>
+      <div class="ln"><span class="gy">token 累计：</span>↑12.4k ↓8.1k<span class="gy">（思考 3.2k）</span></div>
+      <div class="ln"><span class="gy">模型：</span>demo/spark-demo</div>
+      <div class="ln"><span class="gy">分支：</span>main</div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="term mini">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/stats —— 空态</span></div>
+    <div class="term-body">
+      <div class="ln">统计  <span class="gy">Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">（无激活会话）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 /model -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/model<span>CommandPanels.tsx:48 —— 模型选择列表（当前标记 / 未配置灰字 / 行内录入密钥）</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/model</span></div>
+    <div class="term-body">
+      <div class="ln">模型  <span class="gy">↑↓ 选择 · Enter 切换 / 未配置项 Enter 录入密钥 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; demo/spark-demo    200K（当前）</span></div>
+      <div class="ln">  zai/glm-4.6    200K</div>
+      <div class="ln"><span class="gy">  anthropic/claude-opus-4-6    200K（未配置，Enter 录入 apiKey）</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">录入 anthropic apiKey：******（Enter 保存 · Esc 取消）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 /mcp -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/mcp<span>CommandPanels.tsx:154 —— MCP 服务器清单与状态 + 删除二次确认</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/mcp</span></div>
+    <div class="term-body">
+      <div class="ln">MCP 服务器  <span class="gy">↑↓ 选择 · Enter 删除（二次确认）· 新增走 web 设置中心 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">●</span> filesystem   <span class="gy">12 工具 · npx -y @modelcontextprotocol/server-filesystem</span></span></div>
+      <div class="ln">  <span class="gr">●</span> github   <span class="gy">8 工具 · npx -y @modelcontextprotocol/server-github</span></div>
+      <div class="ln">  <span class="re">○</span> flaky-srv   <span class="gy">0 工具 · node ./mcp/flaky.js</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">再按一次 Enter 确认「删除 github」</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 /skills -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/skills<span>CommandPanels.tsx:685 —— 技能清单（无启停位，如实只读）</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/skills</span></div>
+    <div class="term-body">
+      <div class="ln">技能  <span class="gy">清单来源 ~/.spark/skills 与已启用扩展包 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln">  $code-review   <span class="gy">3 事件 · 2 钩子</span></div>
+      <div class="ln">  $commit   <span class="gy">1 事件 · 0 钩子</span></div>
+      <div class="ln">  $release-notes   <span class="gy">2 事件 · 1 钩子</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">停用单条技能 = 停用其所属扩展（/extensions）或删除技能目录（人类执行）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 /lsp -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/lsp<span>CommandPanels.tsx:217 —— 语言服务器清单 + install 安装输出</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/lsp</span></div>
+    <div class="term-body">
+      <div class="ln">语言服务器  <span class="gy">↑↓ 选择 · Enter 安装未装项（二次确认）· 配置 ~/.spark/lsp.json · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">●</span> typescript   <span class="gy">已连接 · 诊断 14 文件（E 2 / W 5）</span></span></div>
+      <div class="ln">  <span class="gy">＋</span> python   <span class="gy">未安装 · Python 语言服务器（pyright）</span></div>
+      <div class="ln">  <span class="re">○</span> rust   <span class="gy">未连接 · spawn ENOENT</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">已安装 pyright-lsp（npm 全局装 + 写 lsp.json）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7 /agents -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/agents<span>CommandPanels.tsx:528 —— 子代理两层清单 + 停用标记</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/agents</span></div>
+    <div class="term-body">
+      <div class="ln">子代理  <span class="gy">↑↓ 选择 · Enter 启停（写 spark.json，重启后生效）· Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">●</span> explore   <span class="gy">用户 · demo/spark-demo</span></span></div>
+      <div class="ln">  <span class="gr">●</span> plan   <span class="gy">项目 · demo/spark-demo</span></div>
+      <div class="ln">  <span class="gy">○</span> bash-fallback   <span class="gy">用户 · 已停用</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">已停用 bash-fallback（重启后生效）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 /trust -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/trust<span>CommandPanels.tsx:584 —— 文件夹信任面板</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/trust</span></div>
+    <div class="term-body">
+      <div class="ln">文件夹信任  <span class="gy">↑↓ 选择 · Enter 切换信任档 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln">当前目录：<span class="gr">已信任</span><span class="gy">（未信任目录下 bash/MCP 自动放行收紧为询问）</span></div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">●</span> /home/hatch/workspace/spark-review（当前目录）</span></div>
+      <div class="ln">  <span class="gr">●</span> /home/hatch/workspace/mdurl4cj</div>
+      <div class="ln">  <span class="re">○</span> /tmp/scratch</div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">已信任 /tmp/scratch</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9 /extensions -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/extensions<span>CommandPanels.tsx:640 —— 扩展面板</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/extensions</span></div>
+    <div class="term-body">
+      <div class="ln">扩展  <span class="gy">↑↓ 选择 · Enter 启停（重启后生效）· Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">●</span> git-toolkit   <span class="gy">v0.3.1 · 4 技能 · 2 子代理 · 6 命令</span></span></div>
+      <div class="ln">  <span class="gy">○</span> pdf-reader   <span class="gy">v0.1.0 · 2 技能 · 已停用</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">已停用 pdf-reader（重启后生效）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 /computer -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/computer<span>CommandPanels.tsx:292 —— 主开关 + 八操作审批档位（只读）</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/computer</span></div>
+    <div class="term-body">
+      <div class="ln">电脑控制  <span class="gy">↑↓ 选择 · Enter 切换主开关（改完下一操作生效）· Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">● 已启用</span>  <span class="gy">spark.json engine.computerUseEnabled（缺省关 fail-closed）</span></span></div>
+      <div class="ln">  computer://screenshot<span class="gy">  截屏 PNG（不进对话上下文）</span></div>
+      <div class="ln">  computer://click<span class="gy">  坐标点击（左/右/中、双击）</span></div>
+      <div class="ln">  computer://type<span class="gy">  键入文本（UNICODE）</span></div>
+      <div class="ln">  computer://key<span class="gy">  按键/组合键</span></div>
+      <div class="ln">  computer://scroll<span class="gy">  滚轮滚动</span></div>
+      <div class="ln">  computer://window<span class="gy">  窗口清单/聚焦</span></div>
+      <div class="ln">  computer://app<span class="gy">  进程清单/启动程序</span></div>
+      <div class="ln">  computer://clipboard<span class="gy">  剪贴板读写</span></div>
+      <div class="ln"><span class="gy">审批档位 = 权限规则 computer:// 前缀（未设逐次询问，deny 胜出）</span></div>
+      <div class="ln"><span class="gy">执行体：Windows 全量 / macOS 需辅助功能授权 / Linux X11 需 xdotool 家族（Wayland 不支持）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 11 /sandbox -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/sandbox<span>CommandPanels.tsx:346 —— 模式/清单/端口 + 代理运行状态</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/sandbox</span></div>
+    <div class="term-body">
+      <div class="ln">沙箱与网络  <span class="gy">↑↓ 选择 · Enter 切换 mode（清单/端口在 web 设置页）· Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">● allowlist</span>  <span class="gy">spark.json sandbox.network.mode</span></span></div>
+      <div class="ln">  <span class="gr">● 代理运行中</span><span class="gy">  127.0.0.1:4319，活跃隧道 2</span></div>
+      <div class="ln"><span class="gy">清单（3 条）：</span></div>
+      <div class="ln">  registry.npmjs.org</div>
+      <div class="ln">  pypi.org</div>
+      <div class="ln">  files.pythonhosted.org</div>
+      <div class="ln"><span class="gy">端口 spark.json sandbox.network.port（改端口需重启）</span></div>
+      <div class="ln"><span class="gy">边界：出口引导非内核隔离——尊重代理变量的客户端才走过滤（ADR D50）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 12 /arena -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/arena<span>CommandPanels.tsx:417 —— 双模型竞答快照（需激活会话）</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/arena</span></div>
+    <div class="term-body">
+      <div class="ln">多模型竞答  <span class="gy">↑↓ 选择 · Enter 应用该模型为胜者 / 取消本场（均需二次确认）· Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln">已完成<span class="gy"> · 把 README 的安装小节改成中文</span></div>
+      <div class="ln"><span class="inv">&gt; <span class="gr">●</span> demo/spark-demo   <span class="gy">完成 · 12,408 tokens · 96s · 3 文件（+48 −12）· 已应用</span></span></div>
+      <div class="ln">  <span class="gr">●</span> zai/glm-4.6   <span class="gy">完成 · 11,902 tokens · 88s · 3 文件（+51 −9）</span></div>
+      <div class="ln">  <span class="ye">×</span> 取消本场   <span class="gy">已完成的竞答也可作废（不应用任何胜者）</span></div>
+      <div class="ln"><span class="ye">跳过删除类改动（请手动处理）：dist/old-bundle.js</span></div>
+      <div class="ln"><span class="gy">历史 3 场（全量历史表见 web 设置中心·使用统计页）</span></div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="term mini">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/arena —— 空态</span></div>
+    <div class="term-body">
+      <div class="ln">多模型竞答  <span class="gy">↑↓ 选择 · Enter 应用该模型为胜者 / 取消本场（均需二次确认）· Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">（本会话没有竞答记录——/arena model-a|model-b &lt;任务&gt; 发起）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 13 /usage -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/usage<span>CommandPanels.tsx:714 —— 用量统计面板（模型档循环 + 成本上限行内编辑）</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/usage</span></div>
+    <div class="term-body">
+      <div class="ln">用量与路由  <span class="gy">↑↓ 选择 · Enter 切换模型档 / 编辑成本上限 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">fallback 链：</span>demo/spark-demo → zai/glm-4.6</div>
+      <div class="ln"><span class="inv">&gt; <span class="gy">压缩档：</span>demo/spark-demo</span></div>
+      <div class="ln">  <span class="gy">标题档：</span>demo/spark-demo</div>
+      <div class="ln">  <span class="gy">子代理档：</span>zai/glm-4.6</div>
+      <div class="ln">  <span class="gy">成本上限：</span><span class="gr">$5</span></div>
+      <div class="ln">  <span class="gy">token 上限：</span>不限</div>
+      <div class="ln"><span class="gy">成本：</span>$1.2043 / 上限 $5</div>
+      <div class="ln"><span class="gy">token 累计：↑128400 ↓96400</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">输入成本上限（美元，留空 = 不限）：5</span><span class="cursor"></span><span class="ye"> · Enter 提交 · Esc 取消</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 14 /checkpoints -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/checkpoints<span>CommandPanels.tsx:868 —— 检查点列表（需激活会话，回滚二次确认）</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/checkpoints</span></div>
+    <div class="term-body">
+      <div class="ln">检查点  <span class="gy">↑↓ 选择 · Enter 回滚（二次确认）· 亦可 /rollback &lt;id&gt; · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; <span class="cy">cp-9f2a1c</span>   <span class="gy">2026-10-06 14:02:11</span></span></div>
+      <div class="ln">  <span class="cy">cp-7b3e90</span>   <span class="gy">2026-10-06 13:47:55</span></div>
+      <div class="ln">  <span class="cy">cp-51ad22</span>   <span class="gy">2026-10-06 13:31:02</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">再按一次 Enter 确认「回滚到 cp-9f2a1c」</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 15 /tree -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·/tree<span>CommandPanels.tsx:913 —— 会话树面板（只读，⑂ 分叉）</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">/tree</span></div>
+    <div class="term-body">
+      <div class="ln">会话树  <span class="gy">只读 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">12</span>  读 AGENTS.md 起草初稿</div>
+      <div class="ln"><span class="gy">13</span>  讨论配色 token</div>
+      <div class="ln"><span class="gy">14</span>  <span class="gy">⑂ 给 mdurl4cj 写 README 初稿</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 16 消息流 -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·消息流<span>MessagePane.tsx / items.tsx —— 全部行类型一览</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">消息流</span></div>
+    <div class="term-body">
+      <div class="ln"><span class="pu">› </span><span class="pu">帮我把 README 的安装小节改成中文</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">工作中 · 12 秒</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy it">∵ Thinking…4s (ctrl+o 展开/收起)</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="pu">◆︎ </span>我先看看 <span class="bd">README</span> 的结构，再改 <span class="gy">install</span> 小节。</div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gr">&gt; ✓ 读取了 README.md, docs/install.md …以及其他 1 个</span></div>
+      <div class="ln"><span class="gy">&gt; … 正在写入 README.md 12s · esc to cancel</span></div>
+      <div class="ln"><span class="gr">&gt; ✓ 终端 · 3 次</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">▤ LSP typescript ~/README.md —— 2 条（E 1 / W 1）</span></div>
+      <div class="ln">  <span class="re">[E] 12:3 找不到模块 'x'</span></div>
+      <div class="ln"><span class="gy">  [W] 40:1 未使用的变量</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">✓ 交付文件 2 个：README.md、docs/install.md</span></div>
+      <div class="ln"><span class="gy">⚙ 后台任务 1/2 运行中——输出走 task_output 查询</span></div>
+      <div class="ln"><span class="gy">☑ 待办 1/3 —— 把安装小节改成中文</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">↑ 42 行已折叠（定稿后进上方滚动区）</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="gy">[审批] write README.md — 允许一次</span></div>
+      <div class="ln"><span class="gy"><span class="strike">[审批] bash rm -rf dist — 已拒绝</span></span></div>
+      <div class="ln"><span class="gy">1. 安装小节用简体还是繁体？ → 简体中文</span></div>
+      <div class="ln"><span class="gy">提问已回答</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 17 运行审批提问 -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·运行审批提问<span>LoadingIndicator.tsx / ApprovalPrompt.tsx / QuestionPrompt.tsx —— 运行指示 + 审批框 + 拒绝理由 + 提问作答</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">运行中 / 审批 / 提问</span></div>
+    <div class="term-body">
+      <div class="ln">⠋ <span class="pu">正在向服务器投喂咖啡...</span><span class="gy"> (12s · ↓ 3,204 tokens · esc to cancel)</span><span class="ye"> · 上游响应中，Ctrl+C 可中断</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">[审批]</span> write <span class="bd">src/auth.ts</span></div>
+      <div class="ln"><span class="gy">理由：补登录鉴权缺口</span></div>
+      <div class="ln"><span class="gy">1 是，允许一次（y） · 2 总是允许（a） · 4 本项目总是允许 · 3 否，建议更改（n，esc 取消）</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln">拒绝理由：直接删库风险高<span class="cursor"></span></div>
+      <div class="ln"><span class="gy">填写后 Enter 确认拒绝，Esc 取消</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">[提问]</span> 需要你的选择</div>
+      <div class="ln"><span class="bd">1. 安装小节用简体还是繁体？</span></div>
+      <div class="ln">✓ 1. 简体中文 —— 和正文统一</div>
+      <div class="ln"><span class="gy">  2. 繁体中文</span></div>
+      <div class="ln"><span class="gy">2. 是否保留英文原文对照？（可多选）</span></div>
+      <div class="ln"><span class="gy">  1. 保留</span></div>
+      <div class="ln"><span class="gy">  2. 删除</span></div>
+      <div class="ln"><span class="gy">1-4 选择（单选即推进；多选可多选）· Enter 推进/提交 · 未答问不提交（超时 fail-closed）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 18 Footer与杂项 -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·Footer与杂项<span>Footer.tsx / use-cli-keys.ts / FsMenu.tsx / use-voice-cli.ts —— 底栏各态 + @ 补全 + 语音 + notice</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">Footer 与杂项</span></div>
+    <div class="term-body">
+      <div class="sec-cap">—— 底栏：提交模式 / 计划模式 / 运行态 / 上下文水位 ——</div>
+      <div class="ln frow"><span class="fl">→spark-review git:(main) · demo/spark-demo · <span class="pu">[now]</span> · ? 帮助 · /stats 明细</span><span class="fr"><span class="gy">200k 上下文 · 34% 已用</span></span></div>
+      <div class="ln frow"><span class="fl">→spark-review git:(main) · demo/spark-demo · <span class="gy">[steer]</span> · ? 帮助 · /stats 明细</span><span class="fr"><span class="gy">200k 上下文 · 34% 已用</span></span></div>
+      <div class="ln frow"><span class="fl">→spark-review git:(main) · demo/spark-demo · <span class="gy">[queue]</span> · 计划模式<span class="ye"> · 压缩中...</span> · ? 帮助 · /stats 明细</span><span class="fr"><span class="re">200k 上下文 · 91% 已用</span></span></div>
+      <div class="ln frow"><span class="fl">→spark-review git:(main) · demo/spark-demo · <span class="pu">[now]</span> · step 4 bash<span class="ye"> · 请求授权</span> · ? 帮助 · /stats 明细</span><span class="fr"><span class="gy">200k 上下文 · 55% 已用</span></span></div>
+      <div class="sec-cap">—— 断线 / 错误 / notice 行 ——</div>
+      <div class="ln"><span class="re">已断线，重连中...</span></div>
+      <div class="ln"><span class="re">✕︎ 拉取会话失败</span></div>
+      <div class="ln"><span class="gy">E_CONN_REFUSED · Ctrl+R 重试</span></div>
+      <div class="ln"><span class="re">✕︎ 该命令需要激活会话</span></div>
+      <div class="ln"><span class="gy">已请求中断当前回合 · 再按一次 Ctrl+C 退出</span></div>
+      <div class="ln"><span class="gy">连接中…</span></div>
+      <div class="sec-cap">—— @ 路径补全（FsMenu） ——</div>
+      <div class="ln"><span class="pu">[now]</span> &gt; @src/au<span class="cursor"></span></div>
+      <div class="ln"><span class="gy">╭────────────────────────────────────────╮</span></div>
+      <div class="ln"><span class="gy">│</span><span class="pu">&gt; </span>src/auth.ts   <span class="gy">文件</span><span class="gy">               │</span></div>
+      <div class="ln"><span class="gy">│</span>  src/auth.test.ts   <span class="gy">文件</span><span class="gy">        │</span></div>
+      <div class="ln"><span class="gy">│</span>  src/assets/   <span class="gy">目录</span><span class="gy">               │</span></div>
+      <div class="ln"><span class="gy">│ (1/1) ▾ 续页 · ↑↓ 选择 Enter 补全 Esc 关闭  │</span></div>
+      <div class="ln"><span class="gy">╰────────────────────────────────────────╯</span></div>
+      <div class="sec-cap">—— 语音 notice ——</div>
+      <div class="ln"><span class="gy">录音中…Enter 停止（静音 2 秒也会自动停止）</span></div>
+      <div class="ln"><span class="gy">语音转写中…</span></div>
+      <div class="ln"><span class="gy">语音文本已填入输入框——Enter 发送（音频未留存）</span></div>
+      <div class="ln"><span class="re">✕︎ 未检测到 SoX（rec 命令）——CLI 语音听写不可用；请安装 SoX 后重试</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 19 headless输出 -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·headless输出<span>print.ts / migrate.ts / up.ts —— 纯终端文本流</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">headless</span></div>
+    <div class="term-body">
+      <div class="ln"><span class="gy">$ spark -p "把安装小节改成中文"</span></div>
+      <div class="ln">已改完：README.md 安装小节已改为简体中文，docs/install.md 同步。</div>
+      <hr class="fsep">
+      <div class="ln"><span class="gy">$ spark -p "列出改动文件" --resume-last</span></div>
+      <div class="ln">(无文本输出)</div>
+      <hr class="fsep">
+      <div class="ln"><span class="gy">$ spark -p "x" --output-format json</span></div>
+      <div class="ln">[</div>
+      <div class="ln">  { "seq": 0, "type": "session.started", ... },</div>
+      <div class="ln">  { "seq": 1, "type": "tool.called", ... },</div>
+      <div class="ln">  { "seq": 2, "type": "turn.finished", ... }</div>
+      <div class="ln">]</div>
+      <hr class="fsep">
+      <div class="ln"><span class="gy">$ spark -p "x" --output-schema ./schema.json</span></div>
+      <div class="ln"><span class="re">E_OUTPUT_SCHEMA: 输出未通过 schema 校验：…</span> <span class="gy">(stderr，exit 2)</span></div>
+      <hr class="fsep">
+      <div class="ln"><span class="gy">$ spark -p</span></div>
+      <div class="ln"><span class="re">E_USAGE: -p/--print 需要跟 prompt 文本</span></div>
+      <div class="ln"><span class="gy">$ spark -p "x" --resume-last</span></div>
+      <div class="ln"><span class="re">E_PRINT_RESUME_EMPTY: ~/.spark 中没有可续跑的会话（--resume-last 需要至少一个既有会话）</span></div>
+      <hr class="fsep">
+      <div class="ln"><span class="gy">$ spark migrate</span></div>
+      <div class="ln">迁移规划：</div>
+      <div class="ln">  源：~/.spark（12 项，48210 字节）</div>
+      <div class="ln">  目标：/data/spark-home</div>
+      <div class="ln">确认搬迁？输入 yes 继续：yes</div>
+      <div class="ln">完成。备份：~/.spark.bak-20261006</div>
+      <div class="ln">请将 SPARK_HOME 指向 /data/spark-home 后启动。</div>
+      <hr class="fsep">
+      <div class="ln"><span class="gy">$ spark up</span></div>
+      <div class="ln">已发现运行中的 server（http://127.0.0.1:4318），直接复用</div>
+      <div class="ln"><span class="re">缺少 server bundle（…/dist/server.mjs）。</span></div>
+      <div class="ln"><span class="re">请先在仓库执行 pnpm install 后运行：pnpm --filter @spark/cli build</span></div>
+      <div class="ln"><span class="re">server 启动超时（15000ms）——查看 server 日志与端口占用</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 20 设置编辑态 -->
+<div class="frame-wrap">
+  <div class="frame-label">CLI设计·设置编辑态<span>SettingsPanel.tsx:83起 —— 行内编辑 / 校验报错 / 枚举循环 / toggle / 重启档标注</span></div>
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">设置 · 编辑态</span></div>
+    <div class="term-body">
+      <div class="ln">设置  <span class="gy">输入后 Enter 保存 · Esc 取消 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; 每回合最大步数  [<span class="gr">40</span><span class="cursor"></span>]</span></div>
+      <div class="ln">  工具并发上限  <span class="gr">8</span></div>
+      <div class="ln">  压缩阈值（0–1 小数）  <span class="gr">0.8</span></div>
+      <div class="ln">  默认推理档  <span class="gr">medium</span></div>
+      <div class="ln">  turn 边界检查点  <span class="gr">on</span></div>
+      <div class="ln">  电脑控制主开关  <span class="gr">off</span></div>
+      <div class="ln">  工具超时(ms)  <span class="gr">120000</span><span class="ye">  下次启动生效</span></div>
+      <div class="ln"><span class="gy">30 项（只读项与其余设置见 web 设置中心）</span></div>
+      <div class="ln"><span class="ye">需要整数</span></div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+  <div class="term mini">
+    <div class="term-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="term-title">设置 · 枚举/toggle/校验</span></div>
+    <div class="term-body">
+      <div class="ln">设置  <span class="gy">↑↓ 选择 · Enter 改值 · Esc 关闭</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="inv">&gt; 默认推理档  <span class="gr">high</span></span></div>
+      <div class="ln"><span class="gy">  （Enter 循环：low → medium → high → 未配置）</span></div>
+      <div class="ln">  turn 边界检查点  <span class="gr">off</span><span class="gy">（Enter 切换 on/off）</span></div>
+      <div class="ln">&nbsp;</div>
+      <div class="ln"><span class="ye">不能为空</span></div>
+      <div class="ln"><span class="ye">不得小于 1</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

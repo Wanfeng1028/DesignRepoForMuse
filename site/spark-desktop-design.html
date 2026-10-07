@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spark 桌面端设计稿 · 壳层界面</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:#EFEFEF; color:#18181B; min-height:100vh; padding:40px 24px 64px; }
+  .page-head { max-width:1400px; margin:0 auto 8px; }
+  .page-head h1 { font-size:26px; font-weight:800; }
+  .page-head p { margin-top:8px; font-size:14px; color:#52525B; line-height:1.8; max-width:980px; }
+  .page-head p b { color:#18181B; }
+  .legend { max-width:1400px; margin:14px auto 30px; display:flex; flex-wrap:wrap; gap:8px; }
+  .token-chip { display:flex; align-items:center; gap:6px; font-size:12px; color:#3F3F46;
+    background:#fff; border-radius:999px; padding:5px 12px 5px 6px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .token-chip i { width:18px; height:18px; border-radius:50%; display:block; border:1px solid #E4E4E7; }
+  .frames { max-width:1400px; margin:0 auto; display:flex; gap:36px; justify-content:center; flex-wrap:wrap; align-items:flex-start; }
+  .frame-wrap { display:flex; flex-direction:column; align-items:center; }
+  .frame-label { font-size:15px; font-weight:700; margin-bottom:14px; text-align:center; }
+  .frame-label span { display:block; font-size:12px; font-weight:400; color:#71717A; margin-top:4px; }
+  .stage { background:#E4E4E7; border-radius:14px; padding:40px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.12); position:relative; }
+  /* 桌面小窗 */
+  .dlg { background:#fff; border:1px solid #D4D4D8; border-radius:12px; overflow:hidden;
+    box-shadow:0 24px 70px rgba(0,0,0,.25); }
+  .dlg-bar { height:40px; display:flex; align-items:center; padding:0 12px; background:#F4F4F5;
+    border-bottom:1px solid #E4E4E7; position:relative; }
+  .dlg-bar .t { position:absolute; left:0; right:0; text-align:center; font-size:13px; font-weight:600; color:#3F3F46; }
+  .dlg-bar .ctl { display:flex; gap:8px; margin-left:auto; z-index:1; }
+  .ctl i { width:12px; height:12px; border-radius:50%; display:block; }
+  .ctl .c1 { background:#E4E4E7; } .ctl .c2 { background:#E4E4E7; } .ctl .cx { background:#F04438; }
+  .dlg-body { padding:24px; }
+  .dlg-body h1 { font-size:16px; font-weight:600; margin-bottom:12px; }
+  .dlg-body p { font-size:13px; line-height:1.7; margin-bottom:10px; color:#3F3F46; }
+  .dlg-body p.reason { color:#18181B; }
+  .dlg-body code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
+    background:#F4F4F5; padding:1px 5px; border-radius:4px; word-break:break-all; }
+  .dlg-body pre { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; line-height:1.55;
+    background:#F4F4F5; border:1px solid #E4E4E7; border-radius:8px; padding:12px 14px;
+    overflow-x:auto; margin-bottom:12px; white-space:pre; }
+  .dlg-foot { margin-top:16px; padding-top:12px; border-top:1px solid #F4F4F5;
+    font-size:12px; color:#71717A; line-height:1.7; }
+  /* 菜单栏 mock */
+  .menubar-mock { width:920px; background:#fff; border:1px solid #D4D4D8; border-radius:10px; overflow:hidden;
+    box-shadow:0 24px 70px rgba(0,0,0,.22); }
+  .mb-titlebar { height:38px; background:#F4F4F5; border-bottom:1px solid #E4E4E7;
+    display:flex; align-items:center; padding:0 14px; font-size:13px; font-weight:600; color:#3F3F46; gap:8px; }
+  .mb-titlebar .appdot { width:16px; height:16px; border-radius:50%; border:3.5px solid #18181B; background:#fff; }
+  .mb-bar { display:flex; background:#FAFAFA; border-bottom:1px solid #E4E4E7; padding:0 8px; position:relative; }
+  .mb-item { font-size:13px; padding:7px 12px; color:#18181B; border-radius:6px; cursor:default; }
+  .mb-item.open { background:#E4E4E7; }
+  .mb-drop { position:absolute; top:34px; left:64px; width:280px; background:#fff;
+    border:1px solid #D4D4D8; border-radius:8px; box-shadow:0 12px 32px rgba(0,0,0,.18); padding:5px; z-index:5; }
+  .mb-row { display:flex; align-items:center; gap:10px; font-size:13px; padding:7px 10px; border-radius:6px; color:#18181B; }
+  .mb-row:hover { background:#F4F4F5; }
+  .mb-row .radio { width:14px; text-align:center; color:#18181B; font-size:12px; flex-shrink:0; }
+  .mb-sep { height:1px; background:#E4E4E7; margin:5px 8px; }
+  .mb-dim { color:#A1A1AA; font-size:12px; padding:7px 10px; }
+  .mb-body { height:220px; background:#FAFAFA; display:flex; align-items:center; justify-content:center;
+    color:#A1A1AA; font-size:13px; }
+  .menu-spec { width:920px; margin-top:16px; background:#fff; border:1px solid #E4E4E7; border-radius:10px; padding:16px 20px; }
+  .menu-spec h4 { font-size:13px; font-weight:700; margin-bottom:10px; }
+  .menu-spec .row { display:flex; gap:10px; font-size:12.5px; line-height:1.6; color:#3F3F46; padding:5px 0; border-top:1px solid #F4F4F5; }
+  .menu-spec .row:first-of-type { border-top:none; }
+  .menu-spec .k { flex-shrink:0; width:64px; font-weight:700; color:#18181B; }
+  .menu-spec code { font-family:ui-monospace,Menlo,monospace; font-size:11.5px; background:#F4F4F5; padding:1px 5px; border-radius:4px; }
+  .menu-spec .note { margin-top:10px; font-size:12px; color:#71717A; line-height:1.7; }
+  /* 托盘 */
+  .tray-stage-inner { display:flex; gap:36px; align-items:flex-start; }
+  .tray-icon-card { background:#fff; border:1px solid #E4E4E7; border-radius:10px; padding:24px; text-align:center; }
+  .tray-icon-card .big { width:72px; height:72px; border-radius:50%; border:16px solid #18181B; background:#fff; margin:0 auto 12px; }
+  .tray-icon-card .real { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; font-size:12px; color:#71717A; }
+  .tray-icon-card .real i { width:16px; height:16px; border-radius:50%; border:3.5px solid #18181B; background:#fff; display:block; }
+  .tray-icon-card p { font-size:12px; color:#71717A; line-height:1.7; margin-top:8px; }
+  .ctx-menu { width:240px; background:#fff; border:1px solid #D4D4D8; border-radius:8px;
+    box-shadow:0 12px 32px rgba(0,0,0,.18); padding:5px; }
+  .ctx-row { display:flex; align-items:center; gap:10px; font-size:13px; padding:7px 10px; border-radius:6px; }
+  .ctx-row:hover { background:#F4F4F5; }
+  .ctx-row .radio { width:14px; text-align:center; font-size:12px; flex-shrink:0; }
+  .ctx-sep { height:1px; background:#E4E4E7; margin:5px 8px; }
+  .tray-notes { margin-top:16px; background:#fff; border:1px solid #E4E4E7; border-radius:10px; padding:14px 18px;
+    font-size:12.5px; color:#3F3F46; line-height:1.8; max-width:560px; }
+  .tray-notes b { color:#18181B; }
+  /* 通知 */
+  .notif-list { display:flex; flex-direction:column; gap:14px; width:380px; }
+  .notif { background:#fff; border:1px solid #E4E4E7; border-radius:10px; padding:14px 16px;
+    box-shadow:0 8px 24px rgba(0,0,0,.12); display:flex; gap:12px; }
+  .notif .nic { width:32px; height:32px; border-radius:50%; border:7px solid #18181B; background:#fff; flex-shrink:0; margin-top:2px; }
+  .notif .nbody { min-width:0; }
+  .notif .napp { font-size:11.5px; color:#71717A; display:flex; justify-content:space-between; margin-bottom:4px; }
+  .notif .ntitle { font-size:13.5px; font-weight:700; margin-bottom:3px; }
+  .notif .ntext { font-size:12.5px; color:#3F3F46; line-height:1.6; }
+  .notif-cap { font-size:11.5px; color:#71717A; margin-top:-6px; }
+  .notif-notes { margin-top:16px; background:#fff; border:1px solid #E4E4E7; border-radius:10px; padding:14px 18px;
+    font-size:12.5px; color:#3F3F46; line-height:1.8; max-width:420px; }
+  .notif-notes b { color:#18181B; }
+  /* 更新策略 */
+  .update-card { width:420px; background:#fff; border:1px solid #E4E4E7; border-radius:10px; padding:20px; margin-top:16px; }
+  .update-card h4 { font-size:14px; font-weight:700; margin-bottom:12px; }
+  .pol-row { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-top:1px solid #F4F4F5; font-size:13px; }
+  .pol-row:first-of-type { border-top:none; }
+  .pol-row i { width:8px; height:8px; border-radius:50%; background:#2563EB; flex-shrink:0; margin-top:6px; }
+  .pol-row b { display:block; font-weight:700; margin-bottom:2px; }
+  .pol-row span { color:#52525B; font-size:12.5px; line-height:1.6; }
+  .stage-col { display:flex; flex-direction:column; align-items:center; }
+  /* ===== 新增：账号体系 / 通知中心 / 配对引导（设计先行，代码暂无） ===== */
+  .appwin { width:1000px; background:#fff; border:1px solid #D4D4D8; border-radius:10px; overflow:hidden;
+    box-shadow:0 24px 70px rgba(0,0,0,.22); }
+  .appwin-bar { height:44px; background:#F4F4F5; border-bottom:1px solid #E4E4E7;
+    display:flex; align-items:center; padding:0 16px; font-size:13px; font-weight:600; color:#3F3F46; gap:10px; }
+  .appwin-bar .back { color:#52525B; font-size:17px; }
+  .appwin-bar .ctl { display:flex; gap:8px; flex-shrink:0; }
+  .appbody { display:flex; min-height:560px; }
+  .dside { width:300px; border-right:1px solid #E4E4E7; background:#FAFAFA; padding:18px; flex-shrink:0; }
+  .dside h3 { font-size:14px; font-weight:700; margin-bottom:4px; }
+  .dside .sub { font-size:12px; color:#71717A; margin-bottom:14px; line-height:1.6; }
+  .dmain { flex:1; background:#fff; min-width:0; }
+  .dcol { max-width:720px; margin:0 auto; padding:24px; width:100%; }
+  .dgroup { border:1px solid #E4E4E7; border-radius:10px; overflow:hidden; margin-bottom:16px; background:#fff; }
+  .dlabel { font-size:12px; color:#71717A; padding:12px 16px 6px; }
+  .drow { display:flex; align-items:center; gap:12px; padding:11px 16px; font-size:13px; color:#18181B; }
+  .drow + .drow { border-top:1px solid #F4F4F5; }
+  .drow .meta { font-size:12px; color:#71717A; margin-top:2px; }
+  .drow .grow { flex:1; min-width:0; }
+  .drow .chev { color:#A1A1AA; font-size:14px; flex-shrink:0; }
+  .drow .val { font-size:12.5px; color:#71717A; flex-shrink:0; }
+  .drow .k { color:#71717A; flex-shrink:0; }
+  .drow .v { margin-left:auto; font-size:13px; display:flex; align-items:center; gap:7px; }
+  .drow.danger { color:#F04438; justify-content:center; font-weight:600; }
+  .sdot { width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
+  .dswitch { width:40px; height:22px; border-radius:999px; background:#2563EB; position:relative; flex-shrink:0; margin-left:auto; }
+  .dswitch::after { content:""; position:absolute; top:2px; right:2px; width:18px; height:18px;
+    background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.25); }
+  .dswitch.off { background:#D4D4D8; } .dswitch.off::after { right:auto; left:2px; }
+  .dbtn { height:40px; border-radius:8px; background:#2563EB; color:#fff; font-size:14px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; border:none; width:100%; }
+  .dbtn-ghost { height:40px; border-radius:8px; background:#fff; color:#18181B; font-size:14px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; border:1px solid #D4D4D8; width:100%; gap:8px; }
+  .dbtn-dark { height:40px; border-radius:8px; background:#18181B; color:#fff; font-size:14px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; width:100%; gap:8px; }
+  .dfield { margin-bottom:12px; }
+  .dfield input { width:100%; height:42px; border:1px solid #D4D4D8; border-radius:8px; padding:0 14px;
+    font-size:13.5px; outline:none; color:#18181B; background:#fff; }
+  .dfield input:focus { border-color:#2563EB; }
+  .dfield input::placeholder { color:#A1A1AA; }
+  .seg { display:flex; background:#F4F4F5; border-radius:999px; padding:3px; margin-bottom:18px; }
+  .seg span { flex:1; text-align:center; font-size:13.5px; font-weight:600; padding:8px 0;
+    border-radius:999px; color:#71717A; }
+  .seg span.on { background:#fff; color:#18181B; box-shadow:0 1px 4px rgba(0,0,0,.1); }
+  .divider { display:flex; align-items:center; gap:12px; font-size:12px; color:#A1A1AA; margin:18px 0 14px; }
+  .divider::before, .divider::after { content:""; flex:1; height:1px; background:#E4E4E7; }
+  .login-card { width:400px; background:#fff; border:1px solid #D4D4D8; border-radius:12px;
+    box-shadow:0 24px 70px rgba(0,0,0,.22); padding:36px 36px 28px; }
+  .login-card h1 { font-size:20px; font-weight:700; text-align:center; }
+  .login-card .lsub { font-size:13px; color:#71717A; text-align:center; margin:8px 0 22px; }
+  .forgot { text-align:right; margin:-6px 0 14px; }
+  .forgot a { font-size:12.5px; color:#2563EB; text-decoration:none; }
+  .agree { margin-top:16px; font-size:12px; color:#A1A1AA; text-align:center; line-height:1.7; }
+  .agree a { color:#52525B; }
+  .oauth-stack { display:flex; flex-direction:column; gap:10px; }
+  .avatar { width:52px; height:52px; border-radius:50%; background:#E4E4E7;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; }
+  .notif-row { display:flex; gap:12px; padding:13px 16px; }
+  .notif-row + .notif-row { border-top:1px solid #F4F4F5; }
+  .nic2 { width:34px; height:34px; border-radius:9px; background:#F4F4F5; color:#52525B;
+    display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .nt { font-size:13px; font-weight:600; margin-bottom:3px; display:flex; align-items:center; gap:8px; }
+  .nx { font-size:12.5px; color:#52525B; line-height:1.6; }
+  .ntime { font-size:11.5px; color:#A1A1AA; margin-left:auto; flex-shrink:0; font-weight:400; }
+  .pair-steps { display:flex; gap:18px; align-items:stretch; }
+  .stepcard { width:300px; background:#fff; border:1px solid #D4D4D8; border-radius:12px;
+    box-shadow:0 24px 70px rgba(0,0,0,.2); padding:28px 24px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; }
+  .stepnum { width:28px; height:28px; border-radius:50%; background:#18181B; color:#fff; font-size:13px;
+    font-weight:700; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .stepnum.done { background:#12B76A; }
+  .stepcard h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+  .stepcard p { font-size:12.5px; color:#71717A; line-height:1.7; margin-bottom:14px; }
+  .qrbox { width:200px; height:200px; margin:0 auto 10px; border:1px solid #E4E4E7; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; background:#fff; }
+  .qrbox svg { width:168px; height:168px; display:block; }
+  .paircode { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:26px;
+    font-weight:700; letter-spacing:6px; margin:6px 0 4px; }
+  .spinner { width:44px; height:44px; border-radius:50%; border:4px solid #E4E4E7;
+    border-top-color:#2563EB; animation:spin 1s linear infinite; margin:18px auto; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .bigcheck { width:64px; height:64px; border-radius:50%; background:#12B76A; color:#fff; font-size:30px;
+    display:flex; align-items:center; justify-content:center; margin:10px auto 14px; }
+  .step-arrow { align-self:center; color:#A1A1AA; font-size:22px; flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>Spark 桌面端设计稿 · 壳层界面</h1>
+  <p>桌面壳（Electron 主进程）独有的界面：首启引导窗、启动失败窗、应用菜单栏、托盘图标与菜单、系统通知、更新就绪通知——共 6 框。<br>
+  另有 <b>5 框设计先行</b>（代码暂无实现，产品需要）：通知中心、登录、我的、账号与安全、配对引导三步流程，交互参考移动端设计稿 07 / 12 / 13 / 10。<br>
+  <b>风格按桌面真实截图走</b>：浅色、dense、系统原生感（zinc 中性色阶），不用 App 那套深色卡片。<br>
+  文案依据：<code>apps/desktop/src/fatal.ts</code>（首启/失败窗纯渲染）、<code>main.ts</code> 菜单与托盘模板、<code>notify.ts</code> NOTIFY_COPY、<code>updater.ts</code> 状态文案。</p>
+</div>
+<div class="legend">
+  <span class="token-chip"><i style="background:#FAFAFA"></i>底 #FAFAFA</span>
+  <span class="token-chip"><i style="background:#F4F4F5"></i>面板 #F4F4F5</span>
+  <span class="token-chip"><i style="background:#E4E4E7"></i>边框 #E4E4E7</span>
+  <span class="token-chip"><i style="background:#18181B"></i>正文 #18181B</span>
+  <span class="token-chip"><i style="background:#71717A"></i>次要 #71717A</span>
+  <span class="token-chip"><i style="background:#2563EB"></i>点缀蓝 #2563EB</span>
+  <span class="token-chip"><i style="background:#F04438"></i>危险红 #F04438</span>
+</div>
+<div class="frames">
+
+<!-- 1 首启引导窗 -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·首启引导窗<span>models.json 缺失时先弹此窗再启动 · fatal.ts renderFirstRunHtml</span></div>
+  <div class="stage">
+    <div class="dlg" style="width:560px; height:480px;">
+      <div class="dlg-bar"><span class="t">欢迎使用 Spark</span><span class="ctl"><i class="c1"></i><i class="c2"></i><i class="cx"></i></span></div>
+      <div class="dlg-body">
+        <h1>欢迎使用 Spark——先配置一个模型</h1>
+        <p>首次使用需要配置模型。已为你打开配置目录 <code>~/.spark</code>，请把下面的最小配置保存为 <code>~/.spark/models.json</code>（按你实际使用的供应商修改）。</p>
+        <pre>{
+  "providers": {
+    "deepseek": {
+      "apiKeyEnv": "DEEPSEEK_API_KEY",
+      "baseUrl": "https://api.deepseek.com"
+    }
+  },
+  "defaultModel": { "provider": "deepseek", "model": "deepseek-chat", "contextWindow": 65536 }
+}</pre>
+        <p>API 密钥经 <code>apiKeyEnv</code> 指向的环境变量读取（如 DEEPSEEK_API_KEY），不要写进配置文件。</p>
+        <div class="dlg-foot">保存后本窗口自动检测并继续启动；关闭本窗口即退出应用。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 启动失败窗 -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·启动失败窗<span>sidecar 起不来时的致命引导 · fatal.ts renderFatalHtml</span></div>
+  <div class="stage">
+    <div class="dlg" style="width:480px; height:360px;">
+      <div class="dlg-bar"><span class="t">Spark</span><span class="ctl"><i class="c1"></i><i class="c2"></i><i class="cx"></i></span></div>
+      <div class="dlg-body">
+        <h1>Spark 启动失败</h1>
+        <p class="reason"><strong>原因：</strong>未找到模型配置文件，sidecar 无法启动。</p>
+        <pre style="max-height:86px; overflow:hidden;">[sidecar] error: E_CONFIG missing models.json
+[sidecar] refusing to start without model config
+[main] sidecar exited with code 1</pre>
+        <p>首次使用需要配置模型：配置文件位于 <code>~/.spark/models.json</code>（配置写法见首次启动引导，密钥只经环境变量读）。</p>
+        <p>日志位于 <code>~/.spark/logs/sidecar-2026-10-06.log</code>。</p>
+        <p>请重启应用重试。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 应用菜单栏 -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·应用菜单栏<span>Electron 应用菜单 mock · main.ts refreshMenus 模板</span></div>
+  <div class="stage">
+    <div class="stage-col">
+      <div class="menubar-mock">
+        <div class="mb-titlebar"><span class="appdot"></span>Spark</div>
+        <div class="mb-bar">
+          <span class="mb-item">文件</span><span class="mb-item">编辑</span><span class="mb-item">视图</span><span class="mb-item open">窗口</span>
+          <div class="mb-drop">
+            <div class="mb-row"><span class="radio"></span>最小化</div>
+            <div class="mb-sep"></div>
+            <div class="mb-dim">最近聚焦的窗口以 radio 标出，点击唤回</div>
+            <div class="mb-row"><span class="radio">●</span>给 mdurl4cj 写 README</div>
+            <div class="mb-row"><span class="radio">○</span>修好了 iOS 键盘遮挡</div>
+            <div class="mb-row"><span class="radio">○</span>窗口 3</div>
+          </div>
+        </div>
+        <div class="mb-body">应用主窗口区域（菜单示意，窗口内容省略）</div>
+      </div>
+      <div class="menu-spec">
+        <h4>菜单结构（与代码模板一致）</h4>
+        <div class="row"><span class="k">文件</span><span>新建窗口 / 在新窗口打开当前会话 / — / 关闭（role）</span></div>
+        <div class="row"><span class="k">编辑</span><span>系统标准 <code>editMenu</code>（role，macOS 复制粘贴撤销的必经之路）</span></div>
+        <div class="row"><span class="k">视图</span><span>系统标准 <code>viewMenu</code>（role）</span></div>
+        <div class="row"><span class="k">窗口</span><span>最小化（role）/ macOS 缩放（role）/ — / 逐窗列表（radio，最近聚焦勾选，点击唤回；标题取自页面标题，取不到回退「窗口 N」）</span></div>
+        <div class="note">macOS：最左侧另有系统标准 <code>appMenu</code>（关于 / 偏好设置 / 退出等）。窗口增减、标题、焦点变化时菜单整体重建。引导窗（fatal / 首启）是 data: 页，不进窗口列表。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 托盘图标与菜单 -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·托盘图标与菜单<span>16px 黑环白心圆 · main.ts createTray / refreshMenus</span></div>
+  <div class="stage">
+    <div class="stage-col">
+      <div class="tray-stage-inner">
+        <div class="tray-icon-card">
+          <div class="big"></div>
+          <p>放大示意：黑环白心圆形</p>
+          <div class="real"><i></i>实际 16px</div>
+          <p>macOS 按 template 单色渲染<br>（由系统决定明暗）</p>
+        </div>
+        <div>
+          <div class="ctx-menu">
+            <div class="ctx-row"><span class="radio"></span>显示窗口</div>
+            <div class="ctx-row"><span class="radio"></span>新建窗口</div>
+            <div class="ctx-sep"></div>
+            <div class="ctx-row"><span class="radio">●</span>给 mdurl4cj 写 README</div>
+            <div class="ctx-row"><span class="radio">○</span>修好了 iOS 键盘遮挡</div>
+            <div class="ctx-sep"></div>
+            <div class="ctx-row"><span class="radio"></span>退出 Spark</div>
+          </div>
+          <div class="tray-notes" style="margin-top:14px; max-width:240px;">
+            <b>多窗口时逐窗列项</b>（radio 标出最近聚焦）；单窗口时不列，与「显示窗口」重复。
+          </div>
+        </div>
+      </div>
+      <div class="tray-notes">
+        <b>左键直接唤起窗口</b>（最近聚焦的那个；macOS 单击同样唤窗），右键出此菜单。<br>
+        hideOnClose 下窗口是隐藏而非销毁——全部隐藏后，Windows / Linux 的菜单栏随窗口一起不可见，托盘是唯一的唤回路口。<br>
+        Linux 缺 app-indicator 时托盘创建失败，hideOnClose 自动退化为直接退出（不会把应用藏成找不回来的进程）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 系统通知气泡 -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·系统通知气泡<span>OS 原生通知样式 · notify.ts NOTIFY_COPY（body 只含会话标题）</span></div>
+  <div class="stage">
+    <div class="stage-col">
+      <div class="notif-list">
+        <div>
+          <div class="notif">
+            <div class="nic"></div>
+            <div class="nbody"><div class="napp"><span>Spark</span><span>现在</span></div>
+              <div class="ntitle">Spark·回合完成</div>
+              <div class="ntext">「给 mdurl4cj 写 README」的回合已结束</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="notif">
+            <div class="nic"></div>
+            <div class="nbody"><div class="napp"><span>Spark</span><span>现在</span></div>
+              <div class="ntitle">Spark·等待审批</div>
+              <div class="ntext">「升级依赖」有一个操作等待你的批准</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="notif">
+            <div class="nic"></div>
+            <div class="nbody"><div class="napp"><span>Spark</span><span>现在</span></div>
+              <div class="ntitle">Spark·运行出错</div>
+              <div class="ntext">「跑一遍测试」报告了一个错误，请回到窗口查看</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="notif">
+            <div class="nic"></div>
+            <div class="nbody"><div class="napp"><span>Spark</span><span>现在</span></div>
+              <div class="ntitle">Spark·目标已完成</div>
+              <div class="ntext">「每日 AI 早报」的持续目标已结束</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="notif">
+            <div class="nic"></div>
+            <div class="nbody"><div class="napp"><span>Spark</span><span>现在</span></div>
+              <div class="ntitle">Spark·目标已暂停</div>
+              <div class="ntext">「仓颉 PR 跟进」的持续目标已暂停，需你决定下一步</div></div>
+          </div>
+          <div class="notif-cap">示例会话标题均为占位，真实标题取自会话</div>
+        </div>
+      </div>
+      <div class="notif-notes">
+        <b>脱敏红线</b>：body 只含会话标题与状态词，消息正文、错误文本、目标内容一律不进通知。<br>
+        <b>点击通知</b>唤回最近聚焦的窗口（与托盘左键同一目标）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 更新就绪通知 -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·更新就绪通知<span>updater.ts updaterStateText（downloaded）+ 更新策略</span></div>
+  <div class="stage">
+    <div class="stage-col">
+      <div class="notif-list" style="width:420px;">
+        <div class="notif">
+          <div class="nic"></div>
+          <div class="nbody"><div class="napp"><span>Spark</span><span>现在</span></div>
+            <div class="ntitle">Spark</div>
+            <div class="ntext">更新已就绪，重启桌面应用后安装</div></div>
+        </div>
+      </div>
+      <div class="update-card">
+        <h4>更新策略</h4>
+        <div class="pol-row"><i></i><div><b>后台下载</b><span>发现新版本后静默下载（进度只记日志），不弹窗打断当前操作。</span></div></div>
+        <div class="pol-row"><i></i><div><b>退出时安装</b><span>下载完成后只提示「已就绪」；用户下次重启应用时自动安装新版本。</span></div></div>
+        <div class="pol-row"><i></i><div><b>不打断运行中任务</b><span>下载、提示、安装都不中断正在跑的会话；安装发生在应用退出之后。</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7 通知中心（设计先行） -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·通知中心<span>设计先行（代码仅有系统通知气泡）· 交互参考移动端 07</span></div>
+  <div class="stage">
+    <div class="appwin">
+      <div class="appwin-bar"><span class="ctl"><i class="c1"></i><i class="c2"></i><i class="cx"></i></span><span>Spark</span></div>
+      <div class="appbody">
+        <div class="dmain">
+          <div style="padding:18px 24px 2px"><div style="font-size:16px;font-weight:700">通知中心</div>
+            <div style="font-size:12.5px;color:#71717A;margin-top:4px">Agent 需要你时，第一时间推给你。</div></div>
+          <div class="dlabel">今天</div>
+          <div class="dgroup" style="margin:0 24px 4px">
+            <div class="notif-row"><div class="nic2">◷</div><div class="grow">
+              <div class="nt"><span class="sdot" style="background:#D97706"></span>等待审批<span class="ntime">2 分钟前</span></div>
+              <div class="nx">「重构 auth 模块」请求执行 <span class="mono">rm -rf /tmp/build</span>，等待你的决定。</div></div></div>
+            <div class="notif-row"><div class="nic2">✓</div><div class="grow">
+              <div class="nt"><span class="sdot" style="background:#12B76A"></span>任务完成<span class="ntime">1 小时前</span></div>
+              <div class="nx">「写周报」已完成，共用时 4 分 12 秒。</div></div></div>
+          </div>
+          <div class="dlabel">更早</div>
+          <div class="dgroup" style="margin:0 24px 20px">
+            <div class="notif-row"><div class="nic2">!</div><div class="grow">
+              <div class="nt"><span class="sdot" style="background:#F04438"></span>运行出错<span class="ntime">昨天</span></div>
+              <div class="nx">「迁移数据库」运行出错：连接超时，已暂停等待处理。</div></div></div>
+          </div>
+        </div>
+        <div class="dside">
+          <h3>推送设置</h3>
+          <div class="sub">允许 Spark 发送系统通知</div>
+          <div class="dgroup">
+            <div class="drow"><div class="grow">系统通知<div class="meta">允许 Spark 发送推送</div></div>
+              <span style="font-size:12.5px;color:#2563EB;font-weight:600;flex-shrink:0">已开启 ›</span></div>
+          </div>
+          <div class="dlabel" style="padding-left:0">推送类型</div>
+          <div class="dgroup">
+            <div class="drow"><div class="grow">审批等待<div class="meta">Agent 请求执行敏感操作时</div></div><span class="dswitch"></span></div>
+            <div class="drow"><div class="grow">任务完成<div class="meta">一轮工作结束时</div></div><span class="dswitch"></span></div>
+            <div class="drow"><div class="grow">问答回复<div class="meta">暂未开放</div></div><span class="dswitch off"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 登录（设计先行） -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·登录<span>设计先行（桌面无账号体系）· 交互参考移动端 12，桌面居中卡片版</span></div>
+  <div class="stage">
+    <div class="login-card">
+      <h1>欢迎使用 Spark</h1>
+      <div class="lsub">一个账号，多端同步。</div>
+      <div class="seg"><span class="on">登录</span><span>注册</span></div>
+      <div class="dfield"><input placeholder="邮箱地址" type="email"></div>
+      <div class="dfield"><input placeholder="密码" type="password"></div>
+      <div class="forgot"><a href="#">忘记密码？</a></div>
+      <div class="dbtn">登录</div>
+      <div class="divider">其他方式继续</div>
+      <div class="oauth-stack">
+        <div class="dbtn-ghost"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.5z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.7-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.8-5l-3.7 2.9C3.5 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.7-.4-1.5-.4-2.4s.2-1.7.4-2.4L1.6 6.8C.6 8.5 0 10.2 0 12s.6 3.5 1.6 5.2l3.7-2.8z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.5 0 3.5 2.7 1.6 6.8l3.7 2.9c1-2.9 3.7-5 6.7-5z"/></svg>使用 Google 继续</div>
+        <div class="dbtn-dark"><svg viewBox="0 0 24 24" width="17" height="17" fill="#fff"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8.98-.2 1.92-.87 3.03-.83 1.32.11 2.31.63 2.96 1.57-2.71 1.63-2.26 5.21.44 6.28-.6 1.57-1.38 3.12-2.51 4.15zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>使用 Apple 继续</div>
+      </div>
+      <div class="agree">继续即代表同意<a href="#">《用户协议》</a>与<a href="#">《隐私政策》</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9 我的（设计先行） -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·我的<span>设计先行（桌面无账号体系）· 交互参考移动端 13，桌面设置页版</span></div>
+  <div class="stage">
+    <div class="appwin">
+      <div class="appwin-bar"><span class="ctl"><i class="c1"></i><i class="c2"></i><i class="cx"></i></span><span>Spark</span></div>
+      <div class="dcol">
+        <div class="dgroup">
+          <div class="drow" style="padding:16px">
+            <span class="avatar"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 19c1.2-3.2 3.9-5 7-5s5.8 1.8 7 5"/></svg></span>
+            <div class="grow"><div style="font-size:15px;font-weight:700">晚风</div>
+              <div class="meta">wanfeng572@gmail.com</div></div>
+            <span class="chev">›</span>
+          </div>
+        </div>
+        <div class="dlabel">账号</div>
+        <div class="dgroup">
+          <div class="drow"><div class="grow">账号与安全</div><span class="chev">›</span></div>
+          <div class="drow"><div class="grow">我的设备</div><span class="val">2 台</span><span class="chev">›</span></div>
+        </div>
+        <div class="dgroup">
+          <div class="drow"><div class="grow">设置</div><span class="chev">›</span></div>
+        </div>
+        <div class="dgroup">
+          <div class="drow"><div class="grow">切换账号</div><span class="chev">›</span></div>
+        </div>
+        <div class="dgroup">
+          <div class="drow danger">退出登录</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 账号与安全（设计先行） -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·账号与安全<span>设计先行（桌面无账号体系）· 交互参考移动端 10</span></div>
+  <div class="stage">
+    <div class="appwin">
+      <div class="appwin-bar"><span class="back">‹</span><span>账号与安全</span><span class="ctl" style="margin-left:auto"><i class="c1"></i><i class="c2"></i><i class="cx"></i></span></div>
+      <div class="dcol">
+        <div class="dgroup">
+          <div class="drow" style="padding:16px">
+            <span class="avatar"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 19c1.2-3.2 3.9-5 7-5s5.8 1.8 7 5"/></svg></span>
+            <div class="grow"><div style="font-size:15px;font-weight:700">晚风</div>
+              <div class="meta">wanfeng572@gmail.com</div></div>
+            <span class="chev">›</span>
+          </div>
+        </div>
+        <div class="dgroup">
+          <div class="drow"><span class="k">服务器地址</span><span class="v mono">192.168.1.10:4318</span></div>
+          <div class="drow"><span class="k">连接状态</span><span class="v"><span class="sdot" style="background:#12B76A"></span>已连接</span></div>
+          <div class="drow"><span class="k">鉴权方式</span><span class="v">账号 Token</span></div>
+        </div>
+        <div class="dlabel">账号</div>
+        <div class="dgroup">
+          <div class="drow"><div class="grow">邮箱<div class="meta">wanfeng572@gmail.com</div></div><span class="chev">›</span></div>
+          <div class="drow"><div class="grow">Google<div class="meta">未绑定</div></div><span class="chev">›</span></div>
+          <div class="drow"><div class="grow">Apple<div class="meta">未绑定</div></div><span class="chev">›</span></div>
+          <div class="drow"><div class="grow">修改密码</div><span class="chev">›</span></div>
+        </div>
+        <div class="dlabel">设备</div>
+        <div class="dgroup">
+          <div class="drow"><div class="grow">我的设备</div><span class="val">2 台</span><span class="chev">›</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 11 配对引导（设计先行） -->
+<div class="frame-wrap">
+  <div class="frame-label">桌面设计·配对引导<span>设计先行 · 桌面端「添加新设备」三步流程</span></div>
+  <div class="stage">
+    <div class="pair-steps">
+      <div class="stepcard">
+        <div class="stepnum">1</div>
+        <h3>出示配对码</h3>
+        <p>在手机上打开 Spark 并扫码，或手动输入 6 位配对码。</p>
+        <div class="qrbox"><svg id="qr1" viewBox="0 0 150 150"></svg></div>
+        <div class="paircode">482 913</div>
+        <p style="margin:4px 0 0">58 秒后过期，可重新签发</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="stepcard">
+        <div class="stepnum">2</div>
+        <h3>等待扫码</h3>
+        <p>配对码已出示，等待手机端确认连接。</p>
+        <div class="spinner"></div>
+        <p>等待手机扫码…</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="stepcard">
+        <div class="stepnum done">✓</div>
+        <h3>配对成功</h3>
+        <p>新设备已加入，可在「设备与配对」中管理。</p>
+        <div class="bigcheck">✓</div>
+        <div style="font-size:14px;font-weight:700">晚风的 iPhone</div>
+        <div style="font-size:12px;color:#71717A;margin-top:4px">刚刚配对</div>
+        <div class="dbtn" style="margin-top:20px">完成</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var svg = document.getElementById('qr1');
+  if (!svg) return;
+  var N = 25, s = 6, seed = 20261007;
+  function rnd(){ seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+  var h = '<rect width="' + (N*s) + '" height="' + (N*s) + '" fill="#fff"/>';
+  function finder(x, y){
+    h += '<rect x="' + (x*s) + '" y="' + (y*s) + '" width="' + (7*s) + '" height="' + (7*s) + '" fill="#18181B"/>';
+    h += '<rect x="' + ((x+1)*s) + '" y="' + ((y+1)*s) + '" width="' + (5*s) + '" height="' + (5*s) + '" fill="#fff"/>';
+    h += '<rect x="' + ((x+2)*s) + '" y="' + ((y+2)*s) + '" width="' + (3*s) + '" height="' + (3*s) + '" fill="#18181B"/>';
+  }
+  function inFinder(i, j){ return (i < 8 && j < 8) || (i >= N-8 && j < 8) || (i < 8 && j >= N-8); }
+  for (var j = 0; j < N; j++) for (var i = 0; i < N; i++){
+    if (!inFinder(i, j) && rnd() < 0.45)
+      h += '<rect x="' + (i*s) + '" y="' + (j*s) + '" width="' + s + '" height="' + s + '" fill="#18181B"/>';
+  }
+  finder(0, 0); finder(N-7, 0); finder(0, N-7);
+  svg.innerHTML = h;
+})();
+</script>
+
+</div>
+</body>
+</html>
