@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spark 安卓端全量设计稿 · 参照 iOS 版</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Roboto","Noto Sans CJK SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:#EDEDF1; color:#17171C; min-height:100vh; padding:40px 24px 64px; }
+  .page-head { max-width:1400px; margin:0 auto 8px; }
+  .page-head h1 { font-size:26px; font-weight:800; }
+  .page-head p { margin-top:8px; font-size:14px; color:#6B7280; line-height:1.8; max-width:900px; }
+  .legend { max-width:1400px; margin:14px auto 30px; display:flex; flex-wrap:wrap; gap:8px; }
+  .token-chip { display:flex; align-items:center; gap:6px; font-size:12px; color:#4B5563;
+    background:#fff; border-radius:999px; padding:5px 12px 5px 6px; box-shadow:0 1px 4px rgba(20,20,40,.06); }
+  .token-chip i { width:18px; height:18px; border-radius:50%; display:block; }
+  .phones { max-width:1400px; margin:0 auto; display:flex; gap:36px; justify-content:center; flex-wrap:wrap; align-items:flex-start; }
+  .phone-wrap { display:flex; flex-direction:column; align-items:center; }
+  .phone-label { font-size:15px; font-weight:700; margin-bottom:14px; text-align:center; }
+  .phone-label span { display:block; font-size:12px; font-weight:400; color:#6B7280; margin-top:4px; }
+  .phone-label .is-and { display:inline-block; font-size:10px; font-weight:700; color:#fff; background:#12B76A;
+    border-radius:999px; padding:2px 8px; margin-left:6px; vertical-align:2px; }
+  .phone-label .is-new { display:inline-block; font-size:10px; font-weight:700; color:#fff; background:#4176E6;
+    border-radius:999px; padding:2px 8px; margin-left:6px; vertical-align:2px; }
+  .phone { width:375px; height:812px; background:#F7F7F9; border-radius:44px;
+    border:11px solid #101014; position:relative; overflow:hidden;
+    box-shadow:0 30px 80px rgba(20,20,50,.22); }
+  .camdot { position:absolute; top:22px; left:50%; transform:translateX(-50%);
+    width:13px; height:13px; background:#101014; border-radius:50%; z-index:60; }
+  .screen { position:absolute; inset:0; overflow-y:auto; padding:0 0 120px; scrollbar-width:none; }
+  .screen::-webkit-scrollbar { display:none; }
+  .statusbar { display:flex; justify-content:space-between; align-items:center;
+    padding:14px 26px 6px; font-size:13.5px; font-weight:500; position:relative; z-index:30; }
+  .sb-icons { display:flex; align-items:center; gap:5px; }
+  .sb-icons svg { fill:#17171C; display:block; }
+  svg.fi { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2;
+    stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+  /* 通用 */
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:10px 20px 4px; }
+  .user-block { display:flex; align-items:center; gap:11px; }
+  .hello small { display:block; font-size:12px; color:#8A8F98; }
+  .hello b { font-size:17px; font-weight:700; }
+  .icon-btn { width:40px; height:40px; border-radius:50%; background:#fff; color:#3A3D44;
+    display:flex; align-items:center; justify-content:center; position:relative;
+    box-shadow:0 2px 10px rgba(20,20,40,.07); }
+  .icon-btn .dot { position:absolute; top:9px; right:11px; width:8px; height:8px;
+    border-radius:50%; background:#F04438; border:2px solid #fff; }
+  .card { margin:0 20px 12px; background:#fff; border-radius:22px; padding:16px;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .section-head { display:flex; justify-content:space-between; align-items:baseline; padding:20px 22px 10px; }
+  .section-head h4 { font-size:16px; font-weight:700; }
+  .section-head a { font-size:12.5px; color:#8A8F98; text-decoration:none; }
+  /* 状态：8px 圆点 + 文字，无胶囊底（J.2.2 口径；药丸徽章是 AI 味来源，已废除） */
+  .status { display:inline-flex; align-items:center; gap:7px; font-size:13px; color:#3A3D44;
+    font-weight:500; white-space:nowrap; margin-left:auto; flex-shrink:0; }
+  .status i { width:8px; height:8px; border-radius:50%; display:block; flex-shrink:0; }
+  .meta { font-size:12.5px; color:#8A8F98; }
+  /* 底栏 */
+  .tabbar { position:absolute; left:16px; right:16px; bottom:22px; z-index:40;
+    background:#16161B; border-radius:28px; display:flex; align-items:center;
+    justify-content:space-around; padding:10px 6px; box-shadow:0 12px 32px rgba(10,10,20,.35); }
+  .tab { display:flex; flex-direction:column; align-items:center; gap:3px;
+    font-size:10px; color:#7A7E87; width:56px; }
+  .tab.on { color:#fff; }
+  /* 底栏：深色悬浮，五个 tab 统一为图标 + 文字 */
+  /* 深色 AI 状态卡 */
+  .ai-card { margin:14px 20px 0; background:#16161B; border-radius:24px; padding:18px;
+    color:#fff; position:relative; overflow:hidden; box-shadow:0 10px 28px rgba(10,10,20,.28); }
+  .ai-card .tag { display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:#A7AAB3;
+    margin-bottom:10px; }
+  .ai-card h3 { font-size:19px; font-weight:800; line-height:1.45; }
+  .ai-card p { font-size:12.5px; color:#A7AAB3; margin-top:6px; }
+  .ai-card .cta { display:inline-flex; align-items:center; gap:6px; margin-top:14px; background:#fff; color:#16161B;
+    font-size:13.5px; font-weight:700; border-radius:999px; padding:9px 18px; }
+  .ai-card .cta svg { width:15px; height:15px; }
+  .sess-row1 { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .sess-row1 h5 { font-size:15.5px; font-weight:700; }
+  /* 屏2 会话详情 */
+  .chat-head { display:flex; align-items:center; gap:10px; padding:10px 16px;
+    background:rgba(247,247,249,.94); position:sticky; top:0; z-index:20; }
+  .chat-head .back { color:#17171C; display:flex; }
+  .chat-title b { display:block; font-size:16px; }
+  .chat-title small { font-size:12px; color:#067647; display:flex; align-items:center; gap:5px; }
+  .chat-title small i { width:7px; height:7px; border-radius:50%; background:#12B76A; }
+  .turn-line { text-align:center; font-size:12px; color:#8A8F98; margin:14px 0 4px; }
+  .turn-line b { color:#4176E6; font-weight:700; }
+  .msg-a { margin:10px 20px 0; background:#fff; border-radius:4px 20px 20px 20px;
+    padding:14px 15px; font-size:14.5px; line-height:1.65; box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .tool-row { display:flex; align-items:center; gap:8px; margin:10px 20px 0; background:#EFF4FE;
+    border-radius:14px; padding:10px 13px; font-size:12.5px; color:#3B5FC0; }
+  .tool-row svg { width:16px; height:16px; }
+  .msg-u { margin:12px 20px 0 70px; background:#CBE5FE; border-radius:20px 20px 4px 20px;
+    padding:13px 15px; font-size:14.5px; line-height:1.65; }
+  /* 对话输入框 v2：双层结构（输入区 + 工具条），社区主流做法 */
+  .composer2 { background:#fff; border-radius:20px; border:1px solid #E7E9EC;
+    box-shadow:0 4px 18px rgba(20,20,40,.07); }
+  .composer2 .c-input { padding:13px 16px 2px; }
+  .composer2 .c-input input { width:100%; border:none; outline:none; font-size:15px;
+    background:transparent; color:#17171C; }
+  .composer2 .c-input input::placeholder { color:#B6BAC2; }
+  .composer2 .c-bar { display:flex; align-items:center; gap:8px; padding:6px 8px 8px; }
+  .composer-float { position:absolute; left:16px; right:16px; bottom:26px; z-index:40; }
+  .plus-btn { width:34px; height:34px; border-radius:50%; background:#F2F4F7; color:#3A3D44;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .send { width:34px; height:34px; border-radius:50%; background:#4176E6; color:#fff; border:none;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  /* DSH 发送钮参数：34px 正圆 / #4176E6 info-fill / 白箭头 16px / 禁用 40% 透明 / 无发光 */
+  .hscroll { display:flex; gap:10px; overflow-x:auto; padding:6px 20px 6px;
+    scroll-snap-type:x mandatory; scrollbar-width:none; }
+  .hscroll::-webkit-scrollbar { display:none; }
+  .hstat { min-width:148px; scroll-snap-align:start; background:#fff; border-radius:20px;
+    padding:14px; box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .hstat .sdot { width:10px; height:10px; border-radius:50%; margin-bottom:9px; }
+  .hstat b { font-size:19px; font-weight:800; display:block; }
+  .hstat small { font-size:11px; color:#8A8F98; }
+  /* 设置通用 */
+  .set-head { padding:14px 22px 6px; }
+  .set-head h2 { font-size:27px; font-weight:800; }
+  .set-head p { font-size:13px; color:#8A8F98; margin-top:6px; }
+  .group { margin:14px 20px 0; background:#fff; border-radius:22px; overflow:hidden;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .glabel { font-size:12.5px; color:#8A8F98; padding:14px 16px 6px; }
+  .srow { display:flex; align-items:center; gap:12px; padding:13px 16px; font-size:15px; }
+  .srow + .srow { border-top:1px solid #F1F1F4; }
+  .srow .ric { width:34px; height:34px; border-radius:11px; display:flex; align-items:center;
+    justify-content:center; flex-shrink:0; }
+  .srow .ric svg { width:17px; height:17px; }
+  .srow .val { margin-left:auto; font-size:13.5px; color:#8A8F98; white-space:nowrap; }
+  .srow .chev { color:#C4C7CD; display:flex; margin-left:6px; }
+  .srow .chev svg { width:17px; height:17px; }
+.cleanbtn{font-size:13px;font-weight:600;color:#F04438;background:#FDECEA;border-radius:999px;padding:5px 14px;margin-left:8px;flex-shrink:0;white-space:nowrap}
+  .switch { margin-left:auto; width:50px; height:30px; border-radius:999px; background:#34C77B; position:relative; flex-shrink:0; }
+  .switch::after { content:""; position:absolute; top:2px; right:2px; width:26px; height:26px;
+    background:#fff; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+  .switch.off { background:#E4E4E7; } .switch.off::after { right:auto; left:2px; }
+  .danger { color:#E04438; justify-content:center; font-weight:600; }
+  .foot-note { text-align:center; font-size:12px; color:#A7AAB3; margin:22px 0 6px; }
+  /* 配对引导 */
+  .ob-visual { margin-top:92px; display:flex; align-items:center; justify-content:center; gap:34px; }
+  .dev { border:2.5px solid #3A3D44; border-radius:10px; position:relative; background:#fff; }
+  .dev.pc { width:128px; height:86px; }
+  .dev.pc::after { content:""; position:absolute; bottom:-13px; left:50%; transform:translateX(-50%);
+    width:64px; height:4px; background:#3A3D44; border-radius:2px; }
+  .dev.mb { width:56px; height:102px; border-radius:14px; }
+  .dev.mb::after { content:""; position:absolute; bottom:7px; left:50%; transform:translateX(-50%);
+    width:24px; height:4px; background:#3A3D44; border-radius:2px; }
+  .wire { display:flex; align-items:center; color:#4176E6; }
+  .ob-copy { text-align:center; margin-top:46px; padding:0 44px; }
+  .ob-copy h1 { font-size:26px; letter-spacing:.5px; }
+  .ob-copy p { font-size:14px; color:#8A8F98; margin-top:10px; }
+  .cta-dark { margin:22px 20px 0; background:#16161B; color:#fff; border-radius:999px; height:54px;
+    display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700;
+    box-shadow:0 10px 26px rgba(10,10,20,.3); }
+  .cta-blue { margin:14px 20px 0; background:#4176E6; color:#fff; border-radius:999px; height:54px;
+    display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; }
+  .link-center { display:block; text-align:center; margin-top:16px; font-size:14px; color:#4176E6;
+    text-decoration:none; font-weight:600; }
+  /* 扫码 sheet */
+  .dim { position:absolute; inset:0; background:rgba(15,15,20,.45); z-index:45; }
+  .sheet { position:absolute; left:0; right:0; bottom:0; z-index:50; background:#fff;
+    border-radius:28px 28px 0 0; padding:10px 24px 34px; }
+  .handle { width:38px; height:5px; border-radius:3px; background:#D9DCE1; margin:6px auto 14px; }
+  .sheet h3 { text-align:center; font-size:17px; font-weight:700; }
+  .sheet .sub { text-align:center; font-size:13px; color:#8A8F98; margin:8px 0 18px; line-height:1.6; }
+  .qrbox { width:200px; height:200px; margin:0 auto; border-radius:16px; border:1px solid #ECECF0;
+    display:flex; align-items:center; justify-content:center; background:#fff; }
+  .sheet .rowbtns { display:flex; gap:10px; margin-top:20px; }
+  .btn-ghost { flex:1; height:50px; border-radius:999px; background:#F2F4F7; color:#17171C;
+    font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .btn-blue { flex:1; height:50px; border-radius:999px; background:#4176E6; color:#fff;
+    font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  /* 首页空态 */
+  /* 空态：内容块在屏内垂直居中 */
+  .empty-body { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  /* 03 问候：左对齐大小字混排 */
+  .greet2 { padding:16px 22px 0; }
+  .greet2 small { font-size:13px; color:#8A8F98; }
+  .greet2 h2 { font-size:28px; font-weight:800; color:#17171C; margin-top:6px; letter-spacing:.2px; }
+  /* 横向滚动卡片 */
+  .hscroll { display:flex; gap:12px; overflow-x:auto; padding:2px 20px 6px; scrollbar-width:none; }
+  .hscroll::-webkit-scrollbar { display:none; }
+  .hcard { flex:0 0 240px; background:#fff; border-radius:24px; padding:16px;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .hcard .status { margin-left:0; margin-bottom:10px; }
+  .hcard h5 { font-size:15.5px; font-weight:700; margin-bottom:6px; }
+  /* 淡彩：取自用户博客 BlogAstroPure 的 Google Blog Card 参数（--gcard-*），内容卡片轮换使用 */
+  .tint-p { background:linear-gradient(227deg,#f0f3ff 16.73%,#d0d9ff 98.44%); }
+  .tint-a { background:linear-gradient(354deg,#dcf1ff 4.7%,#e6f4ea 95.09%); }
+  .tint-g { background:linear-gradient(0deg,#daf9d4 0%,#e6f4ea 60%); }
+  .chips { display:flex; gap:8px; padding:16px 20px 0; overflow:hidden; }
+  .chip { flex-shrink:0; font-size:13px; font-weight:600; color:#3A3D44; background:#fff;
+    border-radius:999px; padding:9px 16px; box-shadow:0 2px 8px rgba(20,20,40,.06);
+    display:flex; align-items:center; gap:6px; }
+  .chip svg { width:14px; height:14px; color:#4176E6; }
+  .chip.on { background:#16161B; color:#fff; }
+  /* 搜索 */
+  .searchbar { margin:12px 20px 0; background:#fff; border-radius:999px; display:flex; align-items:center;
+    gap:10px; padding:13px 18px; box-shadow:0 3px 14px rgba(20,20,40,.06); color:#8A8F98; }
+  .searchbar input { flex:1; border:none; outline:none; font-size:15px; background:transparent; }
+  .res-row { display:flex; align-items:center; gap:12px; padding:14px 16px; }
+  .res-row + .res-row { border-top:1px solid #F1F1F4; }
+  .res-row .ric { width:38px; height:38px; border-radius:13px; background:#F2F4F7; color:#3A3D44;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .res-row b { font-size:15px; display:block; }
+  .res-row small { font-size:12.5px; color:#8A8F98; }
+  /* 进度条 */
+  .usage-top { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+  .usage-top b { font-size:15px; }
+  .usage-top span { font-size:12.5px; color:#8A8F98; }
+  .pbar { height:8px; border-radius:999px; background:#EDEFF3; overflow:hidden; }
+  .pbar i { display:block; height:100%; border-radius:999px; background:#4176E6; }
+  .usage-nums { display:flex; justify-content:space-between; margin-top:10px; font-size:12.5px; color:#8A8F98; }
+  .usage-nums b { color:#17171C; }
+  .note-card { margin:0 20px; background:#EFF4FE; border-radius:18px; padding:14px 16px;
+    font-size:13px; color:#3B5FC0; line-height:1.7; }
+  /* 用量图表：单色圆顶柱，无渐变无装饰 */
+  .chart-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+  .chart-head b { font-size:15px; }
+  .chart-head span { font-size:12.5px; color:#8A8F98; }
+  .chart-grid { display:flex; align-items:flex-end; gap:8px; height:168px; }
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    height:100%; gap:6px; }
+  .bar-col .bv { font-size:10px; color:#8A8F98; line-height:1; }
+  .bar-col .bar { width:100%; max-width:24px; background:#4176E6; border-radius:6px 6px 3px 3px; }
+  .bar-col .bl { font-size:10.5px; color:#8A8F98; line-height:1; }
+  .bar-col.today .bar { background:#16161B; }
+  .bar-col.today .bl { color:#17171C; font-weight:700; }
+  /* 配对确认 */
+  .server-line { display:flex; align-items:center; gap:10px; background:#F7F7F9; border-radius:14px;
+    padding:12px 14px; font-family:ui-monospace,Menlo,monospace; font-size:13px; margin:4px 0 6px; }
+  .kv { display:flex; justify-content:space-between; font-size:14px; padding:9px 2px; }
+  .kv span { color:#8A8F98; } .kv b { font-weight:600; }
+  /* 账号体系：默认头像（人形图标，中性） */
+  .avatar-def { border-radius:50%; background:#EDEFF2; color:#9AA0AA;
+    display:flex; align-items:center; justify-content:center; flex:none; }
+  .avatar-def .fi { width:55%; height:55%; }
+  /* 登录 */
+  .login-hero { padding:34px 26px 6px; }
+  .login-hero h1 { font-size:27px; letter-spacing:.5px; }
+  .login-hero p { font-size:13.5px; color:#8A8F98; margin-top:8px; }
+  .seg { display:flex; background:#EDEFF2; border-radius:999px; padding:3px; margin:20px 26px 0; }
+  .seg span { flex:1; text-align:center; font-size:14px; font-weight:600; padding:9px 0;
+    border-radius:999px; color:#8A8F98; }
+  .seg span.on { background:#fff; color:#17171C; box-shadow:0 1px 4px rgba(20,20,40,.08); }
+  .login-form { padding:18px 26px 0; display:flex; flex-direction:column; gap:12px; }
+  .field { display:flex; align-items:center; background:#fff; border-radius:999px;
+    padding:0 16px; height:54px; gap:10px; box-shadow:0 2px 10px rgba(20,20,40,.05); }
+  .field .pre { font-size:15px; color:#17171C; font-weight:600; }
+  .field input { flex:1; border:none; outline:none; font-size:15px; background:transparent; color:#17171C; }
+  .field input::placeholder { color:#B6BAC2; }
+  .field .fi { width:19px; height:19px; color:#9AA0AA; }
+  .btn-primary { height:52px; border-radius:999px; background:#4176E6; color:#fff;
+    font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center;
+    margin:8px 26px 0; }
+  .forgot-row { text-align:right; margin:10px 28px 0; font-size:13px; }
+  .forgot-row a { color:#4176E6; text-decoration:none; font-weight:600; }
+  .divider { display:flex; align-items:center; gap:12px; margin:26px 26px 0;
+    font-size:12px; color:#B6BAC2; }
+  .divider::before, .divider::after { content:""; flex:1; height:1px; background:#EDEFF2; }
+  .btn-oauth { display:flex; align-items:center; justify-content:center; gap:10px; height:52px;
+    border-radius:999px; background:#fff; border:1px solid #E4E4E7; font-size:15px; font-weight:600;
+    margin:12px 26px 0; color:#17171C; box-shadow:0 2px 10px rgba(20,20,40,.05); }
+  .btn-oauth.dark { background:#16161B; border-color:#16161B; color:#fff; }
+  .btn-oauth svg { width:20px; height:20px; flex:none; }
+  .agree { margin:auto 26px 34px; text-align:center; font-size:11.5px; color:#9AA0AA; line-height:1.8; }
+  .agree a { color:#4176E6; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>Spark 安卓端全量设计稿 · 参照 iOS 版</h1>
+  <p>安卓版：内容与交互<b>完全参照 iOS 设计稿</b>，仅按 Android 平台规范调整——挖孔屏（无刘海）、Android 风格状态栏、字体 Roboto、应用内返回箭头；深色悬浮底栏等签名式设计保持一致。<br>共 13 个屏：<b>●现有 3 屏</b>按新风格重绘；其余为 DESIGN.md J.2 已定规格、但代码里还没落地的屏，一并按新风格出稿；<b>●账号体系 2 屏</b>（登录 / 我的）为本次新增 UI，先行设计。<br>
+  导航变化：原"单栈 + 抽屉"改为深色悬浮底栏（会话 / 搜索 / 新建 / 通知 / 我的），设置页从"我的"进入。图标统一为 Feather 描边风格。<br>
+  修订记录（2026-10-03）：去 AI 味——全文件只保留蓝/绿/红/中性灰四色族（紫/粉/橙清零，图标底统一中性灰）；删除装饰性柱状图与 mascot 小怪兽；accent 严格唯一。账号体系 UI 新增：默认头像改用人形图标（中性，不再用"晚"字）；账号与安全、设置页改为已登录态。登录改为国际范：邮箱 + 密码（登录/注册切换）、Google / Apple 第三方登录，不用手机号。<br>
+  修订记录（2026-10-04）：03 按社区参考重做为对话首屏（问候 + 进行中/最近信息流）；内容卡片引入用户博客 BlogAstroPure 的淡彩参数（紫/青/绿 pastel tint 轮换）；chips 文案去 AI 味（先出方案 / 双模型 PK / 帮我看代码）；hallmark 式 audit：胶囊徽章残留改为 8px 圆点 + 文字、补 eye 图标、琥珀色统一 #D97706、清死 CSS。</p>
+</div>
+<div class="legend">
+  <span class="token-chip"><i style="background:#F7F7F9;border:1px solid #E4E4E7"></i>底 #F7F7F9</span>
+  <span class="token-chip"><i style="background:#fff;border:1px solid #E4E4E7"></i>卡片 #FFFFFF · r22</span>
+  <span class="token-chip"><i style="background:#16161B"></i>深色 #16161B</span>
+  <span class="token-chip"><i style="background:#4176E6"></i>点睛蓝 #4176E6</span>
+  <span class="token-chip"><i style="background:#CBE5FE"></i>气泡蓝 #CBE5FE</span>
+  <span class="token-chip"><i style="background:#12B76A"></i>成功绿 #12B76A</span>
+  <span class="token-chip"><i style="background:#F04438"></i>危险红 #F04438</span>
+  <span class="token-chip"><i style="background:linear-gradient(227deg,#f0f3ff 16.73%,#d0d9ff 98.44%)"></i>淡彩紫 · 博客 gcard</span>
+  <span class="token-chip"><i style="background:linear-gradient(354deg,#dcf1ff 4.7%,#e6f4ea 95.09%)"></i>淡彩青 · 博客 gcard</span>
+  <span class="token-chip"><i style="background:linear-gradient(0deg,#daf9d4 0%,#e6f4ea 60%)"></i>淡彩绿 · 博客 gcard</span>
+</div>
+<div class="phones">
+
+<!-- 1 配对引导 -->
+<div class="phone-wrap">
+  <div class="phone-label">01 · 配对引导页<span class="is-and">安卓</span><span>首次启动 · J.2.10</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="display:flex;flex-direction:column">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="ob-visual">
+      <div class="dev pc"></div>
+      <div class="wire"><i data-ic="zap"></i></div>
+      <div class="dev mb"></div>
+    </div>
+    <div class="ob-copy">
+      <h1>连接你的电脑</h1>
+      <p>配对后，手机就能操控电脑上的 Spark。</p>
+    </div>
+    <div style="flex:1"></div>
+    <div class="cta-dark">开始配对</div>
+    <a class="link-center" href="#">没有相机？手动输入配对码</a>
+    <div style="height:30px"></div>
+  </div></div>
+</div>
+
+<!-- 2 扫码配对 -->
+<div class="phone-wrap">
+  <div class="phone-label">02 · 扫码配对<span class="is-and">安卓</span><span>配对 sheet · J.2.9</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="set-head"><h2>设置</h2></div>
+    <div class="dim"></div>
+    <div class="sheet">
+      <div class="handle"></div>
+      <h3>扫描配对二维码</h3>
+      <p class="sub">将取景框对准电脑端「设置 → 配对」<br>出示的二维码</p>
+      <div class="qrbox"><div id="qr"></div></div>
+      <div class="rowbtns">
+        <div class="btn-ghost">取消</div>
+        <div class="btn-blue">手动输入</div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 3 首页空态 -->
+<div class="phone-wrap">
+  <div class="phone-label">03 · 首页<span class="is-and">安卓</span><span>对话首屏 · 问候 + 上下文信息流</span><span class="is-new">重做</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="topbar">
+      <div class="avatar-def" style="width:44px;height:44px"><i data-ic="user" class="fi"></i></div>
+      <div class="icon-btn"><i data-ic="bell"></i><span class="dot"></span></div>
+    </div>
+    <div class="greet2"><small>晚上好，晚风</small><h2>今天先搞定哪一件事？</h2></div>
+    <div class="composer2" style="margin:18px 20px 0">
+      <div class="c-input"><input placeholder="描述你的任务…" /></div>
+      <div class="c-bar">
+        <div class="plus-btn"><i data-ic="plus"></i></div>
+        <div style="flex:1"></div>
+        <button class="send">↑</button>
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip"><i data-ic="zap"></i>/plan 先出方案</div>
+      <div class="chip"><i data-ic="zap"></i>/arena 双模型 PK</div>
+      <div class="chip"><i data-ic="zap"></i>/review 帮我看代码</div>
+    </div>
+    <div class="section-head"><h4>进行中</h4><a href="#">查看全部 ›</a></div>
+    <div class="hscroll">
+      <div class="hcard tint-p">
+        <span class="status"><i style="background:#4176E6"></i>运行中</span>
+        <h5>重构登录鉴权</h5>
+        <div class="meta">第 12 步 · 12 分钟前</div>
+      </div>
+      <div class="hcard tint-a">
+        <span class="status"><i style="background:#D97706"></i>待审批</span>
+        <h5>升级依赖到 pnpm 10</h5>
+        <div class="meta">等你确认 · 2 小时前</div>
+      </div>
+    </div>
+    <div class="section-head"><h4>最近</h4><a href="#">查看全部 ›</a></div>
+    <div class="card tint-g"><div class="sess-row1"><h5>给 mdurl4cj 写 README</h5><span class="status"><i style="background:#C4C7CD"></i>已完成</span></div><div class="meta">昨天 · 28 步</div></div>
+    <div class="card tint-p"><div class="sess-row1"><h5>修好了 iOS 键盘遮挡</h5><span class="status"><i style="background:#C4C7CD"></i>已完成</span></div><div class="meta">3 天前 · 15 步</div></div>
+  </div>
+  <div class="tabbar">
+    <div class="tab on"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 4 会话列表 -->
+<div class="phone-wrap">
+  <div class="phone-label">04 · 会话列表<span class="is-and">安卓</span><span>SessionsScreen · 现有重绘</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="topbar">
+      <div class="user-block"><div class="avatar-def" style="width:44px;height:44px"><i data-ic="user" class="fi"></i></div>
+        <div class="hello"><small>晚上好</small><b>晚风</b></div></div>
+      <div class="icon-btn"><i data-ic="bell"></i><span class="dot"></span></div>
+    </div>
+    <div class="ai-card">
+      <span class="tag"><i style="width:8px;height:8px;border-radius:50%;background:#4176E6;display:inline-block"></i>Agent 正在工作中</span>
+      <h3>重构登录鉴权 · 第 12 步</h3>
+      <p>已调用 3 个工具 · 本次已用 42 秒</p>
+      <span class="cta">打开会话 <i data-ic="arrow"></i></span>
+    </div>
+    <div class="section-head"><h4>继续上次的会话</h4><a href="#">查看全部 ›</a></div>
+    <div class="card tint-p">
+      <div class="sess-row1"><h5>重构登录鉴权</h5><span class="status"><i style="background:#4176E6"></i>运行中</span></div>
+      <div class="meta">spark · 12 分钟前 · 第 12 步 · 3 个工具</div>
+    </div>
+    <div class="card tint-a">
+      <div class="sess-row1"><h5>修复 CI 构建失败</h5><span class="status"><i style="background:#D97706"></i>待审批</span></div>
+      <div class="meta">spark · 2 小时前</div>
+    </div>
+    <div class="card tint-g">
+      <div class="sess-row1"><h5>给 mdurl4cj 写 README</h5><span class="status"><i style="background:#C4C7CD"></i>已完成</span></div>
+      <div class="meta">mdurl4cj · 昨天</div>
+    </div>
+  </div>
+  <div class="tabbar">
+    <div class="tab on"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 5 会话详情 -->
+<div class="phone-wrap">
+  <div class="phone-label">05 · 会话详情<span class="is-and">安卓</span><span>SessionScreen · 现有重绘</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#8A8F98"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="turn-line">工作中 · <b>42 秒</b> · 第 12 步 · 3 个工具</div>
+    <div class="msg-a">已经定位到问题：token 刷新逻辑在收到 401 时没有重试。我先补上重试逻辑，再跑一遍登录流程验证。</div>
+    <div class="tool-row"><i data-ic="file"></i>读取了 auth.ts、api.ts 等 3 个文件</div>
+    <div class="msg-u">把登录失败的重试逻辑也加上，顺便补个单测</div>
+    <div class="msg-a">收到。重试逻辑已加上，单测覆盖了 401 / 403 / 超时三种情况，正在跑验证…</div>
+    <div class="turn-line" style="margin-top:16px">已工作 1 分 20 秒</div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 6 搜索 -->
+<div class="phone-wrap">
+  <div class="phone-label">06 · 搜索<span class="is-and">安卓</span><span>新增（配合底栏）</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="set-head"><h2>搜索</h2></div>
+    <div class="searchbar"><i data-ic="search" class="fi" style="color:#8A8F98"></i><input placeholder="搜会话、文件、命令…" /></div>
+    <div class="chips">
+      <div class="chip on">全部</div><div class="chip">会话</div><div class="chip">命令</div><div class="chip">文件</div>
+    </div>
+    <div class="section-head"><h4>最近搜索</h4><a href="#">清空</a></div>
+    <div class="group" style="margin-top:0">
+      <div class="res-row"><span class="ric"><i data-ic="chat" class="fi"></i></span><div><b>重构登录鉴权</b><small>spark · 12 分钟前</small></div></div>
+      <div class="res-row"><span class="ric"><i data-ic="zap" class="fi"></i></span><div><b>/arena 双模型 PK</b><small>命令 · 常用</small></div></div>
+      <div class="res-row"><span class="ric"><i data-ic="file" class="fi"></i></span><div><b>auth.ts</b><small>spark/src · 昨天打开过</small></div></div>
+    </div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab on"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 7 通知 -->
+<div class="phone-wrap">
+  <div class="phone-label">07 · 通知<span class="is-and">安卓</span><span>J.2.6 · 推送开关</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="set-head"><h2>通知</h2><p>Agent 需要你时，第一时间推给你。</p></div>
+    <div class="card tint-p" style="display:flex;align-items:center;gap:13px">
+      <span class="ric" style="width:44px;height:44px;border-radius:14px;background:#E8F0FE;color:#295FCC;display:flex;align-items:center;justify-content:center"><i data-ic="bell" class="fi"></i></span>
+      <div style="flex:1"><b style="font-size:15px">系统通知</b><div class="meta" style="margin-top:3px">允许 Spark 发送推送</div></div>
+      <span style="font-size:13px;color:#4176E6;font-weight:600">已开启 ›</span>
+    </div>
+    <div class="group">
+      <div class="glabel">推送类型</div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="shield" class="fi"></i></span><div>审批等待<div class="meta">Agent 请求执行敏感操作时</div></div><span class="switch"></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="check" class="fi"></i></span><div>任务完成<div class="meta">一轮工作结束时</div></div><span class="switch"></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="chat" class="fi"></i></span><div>问答回复<div class="meta">暂未开放</div></div><span class="switch off"></span></div>
+    </div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab on"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 8 用量 -->
+<div class="phone-wrap">
+  <div class="phone-label">08 · 用量<span class="is-and">安卓</span><span>J.2.5 · 只读统计</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="set-head"><h2>用量</h2><p>本机统计，仅供参考。← 滑动查看</p></div>
+    <div class="hscroll">
+      <div class="hstat tint-p"><b>48.2k</b><small>今日 Token</small></div>
+      <div class="hstat tint-a"><b>2</b><small>运行中会话</small></div>
+      <div class="hstat tint-g"><b>1</b><small>待审批</small></div>
+      <div class="hstat tint-p"><b>36</b><small>本周会话</small></div>
+      <div class="hstat tint-a"><b>312k</b><small>本月 Token</small></div>
+    </div>
+    <div class="card tint-a">
+      <div class="chart-head"><b>近 7 天 Token 用量</b><span>总计 154k</span></div>
+      <div class="chart-grid">
+        <div class="bar-col"><span class="bv">12k</span><div class="bar" style="height:25%"></div><span class="bl">27</span></div>
+        <div class="bar-col"><span class="bv">8k</span><div class="bar" style="height:17%"></div><span class="bl">28</span></div>
+        <div class="bar-col"><span class="bv">22k</span><div class="bar" style="height:46%"></div><span class="bl">29</span></div>
+        <div class="bar-col"><span class="bv">15k</span><div class="bar" style="height:31%"></div><span class="bl">30</span></div>
+        <div class="bar-col"><span class="bv">31k</span><div class="bar" style="height:65%"></div><span class="bl">1</span></div>
+        <div class="bar-col"><span class="bv">18k</span><div class="bar" style="height:38%"></div><span class="bl">2</span></div>
+        <div class="bar-col today"><span class="bv">48k</span><div class="bar" style="height:100%"></div><span class="bl">今天</span></div>
+      </div>
+    </div>
+    <div class="card tint-g">
+      <div class="usage-top"><b>本月累计 Token</b><span>剩余 38%</span></div>
+      <div class="pbar"><i style="width:62%"></i></div>
+      <div class="usage-nums"><span>已用 <b>312k</b> / 阈值 500k</span></div>
+    </div>
+    <div class="note-card">以上为本机统计，仅供参考，不做订阅与计费。<br>清零本机统计请前往「设置 → 清理缓存」。</div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab on"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 9 清理缓存 -->
+<div class="phone-wrap">
+  <div class="phone-label">09 · 清理缓存<span class="is-and">安卓</span><span>J.2.7</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>清理缓存</b></div>
+      <span style="margin-left:auto"><span class="icon-btn" style="width:38px;height:38px"><i data-ic="refresh" class="fi"></i></span></span>
+    </div>
+    <div class="group">
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="chat" class="fi"></i></span>
+        <div>应用缓存<div class="meta">会话和消息在本机的缓存</div></div>
+        <span class="val">96 MB</span><span class="cleanbtn">清理</span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="file" class="fi"></i></span>
+        <div>产物缓存<div class="meta">已下载产物预览的磁盘缓存</div></div>
+        <span class="val">32 MB</span><span class="cleanbtn">清理</span></div>
+    </div>
+    <div class="group"><div class="srow danger">全部清理</div></div>
+    <div class="foot-note">清理前会二次确认 · 不会删除你的会话数据</div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab on"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 10 账号与安全 -->
+<div class="phone-wrap">
+  <div class="phone-label">10 · 账号与安全<span class="is-and">安卓</span><span>J.2.8 · 账号体系（本次新增 UI，先行设计）</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>账号与安全</b></div>
+    </div>
+    <div class="card tint-p" style="display:flex;align-items:center;gap:13px">
+      <div class="avatar-def" style="width:52px;height:52px"><i data-ic="user" class="fi"></i></div>
+      <div><b style="font-size:16px">晚风</b><div class="meta" style="margin-top:2px">wanfeng572@gmail.com</div></div>
+      <span class="chev" style="margin-left:auto;color:#C4C7CD"><i data-ic="chev" class="fi"></i></span>
+    </div>
+    <div class="card">
+      <div class="kv"><span>服务器地址</span><b style="font-family:ui-monospace,Menlo,monospace;font-size:13px">192.168.1.10:4318</b></div>
+      <div class="kv"><span>连接状态</span><b style="color:#067647">● 已连接</b></div>
+      <div class="kv"><span>鉴权方式</span><b>账号 Token</b></div>
+    </div>
+    <div class="group">
+      <div class="glabel">账号</div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="smartphone" class="fi"></i></span>
+        <div>邮箱<div class="meta">wanfeng572@gmail.com</div></div><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.5z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.7-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.8-5l-3.7 2.9C3.5 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.7-.4-1.5-.4-2.4s.2-1.7.4-2.4L1.6 6.8C.6 8.5 0 10.2 0 12s.6 3.5 1.6 5.2l3.7-2.8z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.5 0 3.5 2.7 1.6 6.8l3.7 2.9c1-2.9 3.7-5 6.7-5z"/></svg></span>
+        <div>Google<div class="meta">未绑定</div></div><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7"><svg viewBox="0 0 24 24" width="19" height="19" fill="#3A3D44"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8.98-.2 1.92-.87 3.03-.83 1.32.11 2.31.63 2.96 1.57-2.71 1.63-2.26 5.21.44 6.28-.6 1.57-1.38 3.12-2.51 4.15zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg></span>
+        <div>Apple<div class="meta">未绑定</div></div><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="lock" class="fi"></i></span>修改密码<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group">
+      <div class="glabel">设备</div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="phone" class="fi"></i></span>
+        <div>配对设备<div class="meta">本机 · iPhone</div></div><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="cpu" class="fi"></i></span>
+        <div>MacBook Pro<div class="meta">服务器所在设备</div></div></div>
+    </div>
+    <div class="group"><div class="srow danger">断开并撤销配对</div></div>
+    <div class="group"><div class="srow danger">注销账号</div></div>
+    <div class="note-card" style="margin-top:14px">账号用于多端同步；撤销配对只断开本机连接，不影响账号。</div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab on"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 11 设置 -->
+<div class="phone-wrap">
+  <div class="phone-label">11 · 设置<span class="is-and">安卓</span><span>SettingsScreen · 现有重绘</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="set-head"><h2>设置</h2></div>
+    <div class="card tint-a" style="display:flex;align-items:center;gap:13px">
+      <div class="avatar-def" style="width:52px;height:52px"><i data-ic="user" class="fi"></i></div>
+      <div><b style="font-size:16px">晚风</b><div class="meta" style="margin-top:2px">wanfeng572@gmail.com</div></div>
+      <span class="chev" style="margin-left:auto;color:#C4C7CD"><i data-ic="chev" class="fi"></i></span>
+    </div>
+    <div class="group">
+      <div class="glabel">通用</div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="sun" class="fi"></i></span>外观<span class="val">跟随系统</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="globe" class="fi"></i></span>语言<span class="val">简体中文</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="bell" class="fi"></i></span>通知<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="zap" class="fi"></i></span><div>电脑控制<div class="meta">开关在桌面 / 网页端设置中心</div></div><span class="status"><i style="background:#12B76A"></i>已启用</span></div>
+    </div>
+    <div class="group">
+      <div class="glabel">数据与安全</div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="zap" class="fi"></i></span>用量<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="trash" class="fi"></i></span>清理缓存<span class="val">128 MB</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="shield" class="fi"></i></span>账号与安全<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group">
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="info" class="fi"></i></span>关于 Spark<span class="val">v1.0.0</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group"><div class="srow danger">断开连接</div></div>
+    <div class="foot-note">Spark</div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab on"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- 12 登录 -->
+<div class="phone-wrap">
+  <div class="phone-label">12 · 登录<span class="is-and">安卓</span><span>账号体系 · 邮箱 / Google / Apple</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="display:flex;flex-direction:column">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title" id="authTitle"><b>登录</b></div>
+    </div>
+    <div class="login-hero"><h1>欢迎使用 Spark</h1><p>一个账号，多端同步。</p></div>
+    <div class="seg" id="authSeg"><span class="on" data-m="login">登录</span><span data-m="register">注册</span></div>
+    <div class="login-form" id="loginForm">
+      <div class="field"><input placeholder="邮箱地址" type="email"></div>
+      <div class="field"><input placeholder="密码" type="password"><i data-ic="eye" class="fi"></i></div>
+    </div>
+    <div class="login-form" id="registerForm" style="display:none">
+      <div class="field"><input placeholder="邮箱地址" type="email"></div>
+      <div class="field"><input placeholder="设置密码（至少 8 位）" type="password"></div>
+      <div class="field"><input placeholder="确认密码" type="password"></div>
+    </div>
+    <div class="btn-primary" id="authBtn">登录</div>
+    <div class="forgot-row" id="forgotRow"><a href="#">忘记密码？</a></div>
+    <div class="divider">其他方式继续</div>
+    <div class="btn-oauth"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.5z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.7-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.8-5l-3.7 2.9C3.5 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.7-.4-1.5-.4-2.4s.2-1.7.4-2.4L1.6 6.8C.6 8.5 0 10.2 0 12s.6 3.5 1.6 5.2l3.7-2.8z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.5 0 3.5 2.7 1.6 6.8l3.7 2.9c1-2.9 3.7-5 6.7-5z"/></svg>使用 Google 继续</div>
+    <div class="btn-oauth dark"><svg viewBox="0 0 24 24" fill="#fff"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8.98-.2 1.92-.87 3.03-.83 1.32.11 2.31.63 2.96 1.57-2.71 1.63-2.26 5.21.44 6.28-.6 1.57-1.38 3.12-2.51 4.15zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>使用 Apple 继续</div>
+    <div class="agree">继续即代表同意<a href="#">《用户协议》</a>与<a href="#">《隐私政策》</a></div>
+  </div></div>
+</div>
+
+<!-- 13 我的 -->
+<div class="phone-wrap">
+  <div class="phone-label">13 · 我的<span class="is-and">安卓</span><span>账号主页 · 从设置顶栏进入</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>我的</b></div>
+    </div>
+    <div class="card tint-g" style="display:flex;align-items:center;gap:14px;padding:20px">
+      <div class="avatar-def" style="width:60px;height:60px"><i data-ic="user" class="fi"></i></div>
+      <div><b style="font-size:17px">晚风</b><div class="meta" style="margin-top:3px">wanfeng572@gmail.com</div></div>
+      <span class="chev" style="margin-left:auto;color:#C4C7CD"><i data-ic="chev" class="fi"></i></span>
+    </div>
+    <div class="group">
+      <div class="glabel">账号</div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="shield" class="fi"></i></span>账号与安全<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="phone" class="fi"></i></span>我的设备<span class="val">2 台</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group">
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="sliders" class="fi"></i></span>设置<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group">
+      <div class="srow"><span class="ric" style="background:#F2F4F7;color:#3A3D44"><i data-ic="refresh" class="fi"></i></span>切换账号<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group"><div class="srow danger">退出登录</div></div>
+  </div>
+  <div class="tabbar">
+    <div class="tab"><i data-ic="chat" class="fi"></i>会话</div>
+    <div class="tab"><i data-ic="search" class="fi"></i>搜索</div>
+    <div class="tab"><i data-ic="edit" class="fi"></i>新建</div>
+    <div class="tab"><i data-ic="bell" class="fi"></i>通知</div>
+    <div class="tab on"><i data-ic="user" class="fi"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- ===== 新增：代码补齐屏（14起，安卓版） ===== -->
+<style>
+/* 代码补齐屏共用（14–32） */
+.dot8{width:8px;height:8px;border-radius:50%;display:block;flex-shrink:0}
+.menu-card{position:absolute;z-index:50;background:#fff;border-radius:18px;padding:6px;min-width:210px;
+  box-shadow:0 14px 40px rgba(10,10,20,.18)}
+.menu-card.static{position:static;transform:none;margin:0 48px;box-shadow:0 8px 26px rgba(10,10,20,.12)}
+.menu-row{display:flex;align-items:center;gap:11px;padding:11px 12px;font-size:14.5px;font-weight:500;color:#17171C}
+.menu-row+.menu-row{border-top:1px solid #F1F1F4}
+.menu-row svg.fi{width:17px;height:17px;color:#3A3D44}
+.menu-row .tick{margin-left:auto;color:#4176E6;display:flex}
+.menu-row .tick svg.fi{width:16px;height:16px;color:#4176E6}
+.menu-row.danger{color:#F04438}.menu-row.danger svg.fi{color:#F04438}
+.notice-strip{background:#fff;text-align:center;padding:7px 16px;font-size:12.5px;color:#F04438}
+.fab{position:absolute;right:18px;bottom:26px;width:58px;height:58px;border-radius:50%;background:#4176E6;color:#fff;
+  display:flex;align-items:center;justify-content:center;z-index:40;box-shadow:0 10px 24px rgba(65,118,230,.4)}
+.fab svg.fi{width:24px;height:24px}
+.ham{width:44px;height:44px;border-radius:50%;background:#fff;color:#17171C;display:flex;align-items:center;
+  justify-content:center;box-shadow:0 2px 10px rgba(20,20,40,.07);flex-shrink:0}
+.ham svg.fi{width:20px;height:20px}
+.sess-head{display:flex;align-items:center;padding:8px 16px 8px;gap:8px}
+.sess-title{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;font-size:17px;font-weight:600}
+.sess-title svg.fi{width:16px;height:16px;color:#8A8F98}
+.grp{font-size:12.5px;color:#8A8F98;margin:14px 20px 8px}
+.card.flush{padding:0;overflow:hidden}
+.srow2{display:flex;align-items:center;gap:10px;padding:13px 16px}
+.srow2+.srow2{border-top:1px solid #F1F1F4}
+.srow2 .t{flex:1;font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow2 .d{font-size:12.5px;color:#8A8F98;flex-shrink:0}
+.srow2 .pin{color:#8A8F98;font-size:14px;flex-shrink:0}
+.srow2 svg.fi{width:16px;height:16px;color:#8A8F98;flex-shrink:0}
+.spin{width:22px;height:22px;border-radius:50%;border:2.5px solid #E4E4E7;border-top-color:#8A8F98;
+  animation:rot 1s linear infinite;margin:16px auto 4px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.arch-empty{text-align:center;padding:30px 30px}
+.arch-empty b{font-size:16px}.arch-empty p{font-size:13px;color:#8A8F98;margin-top:8px;line-height:1.7}
+.banner{background:#fff;text-align:center;padding:8px 16px;font-size:12.5px;line-height:1.6}
+.banner .act{color:#8A8F98;font-weight:600;margin-left:10px}
+.cap{font-size:11px;color:#B6BAC2;margin:18px 20px 6px}
+.cap:first-child{margin-top:6px}
+.user-b{display:flex;justify-content:flex-end;margin:10px 20px 0}
+.user-b .bub{max-width:80%;background:#EDEFF2;border-radius:18px;padding:10px 14px;font-size:14.5px;line-height:1.6;color:#17171C}
+.user-b .bub .thumb{width:64px;height:64px;border-radius:14px;background:#D9DCE1;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:center;color:#8A8F98}
+.user-b .bub .thumb svg.fi{width:26px;height:26px}
+.a-block{margin:14px 20px 0}
+.a-text{font-size:15px;line-height:1.7;color:#17171C}
+.act-row{display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}
+.act-row .abtn{display:flex;align-items:center;gap:5px;font-size:12.5px;color:#8A8F98}
+.act-row .abtn.on{color:#17171C;font-weight:600}
+.act-row .abtn svg.fi{width:14px;height:14px}
+.act-row .gen{margin-left:auto;font-size:12px;color:#B6BAC2}
+.note-line{display:flex;gap:10px;margin-top:10px;align-items:center}
+.note-line input{flex:1;border:1px solid #E4E4E7;border-radius:10px;height:38px;padding:0 12px;font-size:13.5px;outline:none;background:#fff}
+.note-line .sv{font-size:13.5px;color:#4176E6;font-weight:600}
+.fold{margin:10px 20px 0;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 3px 14px rgba(20,20,40,.06)}
+.fold .fh{display:flex;align-items:center;gap:8px}
+.fold .fh b{font-size:14px;font-weight:600;color:#17171C}
+.fold .fh b.mut{color:#8A8F98;font-weight:500}
+.fold .fh .st{font-size:12.5px;margin-left:auto}
+.fold .fh>svg.fi{width:15px;height:15px;color:#8A8F98}
+.fold .fb{margin-top:8px;font-size:13px;color:#8A8F98;line-height:1.7}
+.fold .fb.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.diag-line{font-size:12.5px;padding:3px 0;color:#17171C}
+.diag-line .tagE{color:#F04438;font-weight:700}.diag-line .tagW{color:#D97706;font-weight:700}
+.diag-line .pos{color:#8A8F98}
+.appr{margin:10px 20px 0;background:#fff;border-radius:20px;overflow:hidden;display:flex;box-shadow:0 3px 14px rgba(20,20,40,.06)}
+.appr .bar{width:4px;background:#D97706;flex-shrink:0}
+.appr .bd{flex:1;padding:16px}
+.appr h5{font-size:15.5px;font-weight:700;color:#17171C}
+.appr .res{font-family:ui-monospace,Menlo,monospace;font-size:13px;margin-top:8px;color:#17171C;line-height:1.6}
+.appr .res.plain{font-family:inherit}
+.appr .rsn{font-size:13px;color:#8A8F98;margin-top:6px;line-height:1.6}
+.appr .btns{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.abtn-p{height:48px;border-radius:999px;background:#16161B;color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.abtn-s{height:48px;border-radius:999px;background:#F2F4F7;color:#17171C;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.abtn-d{height:48px;border-radius:999px;background:#fff;color:#F04438;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.appr .done{font-size:13px;color:#8A8F98}
+.qgrp{margin-top:14px}.qgrp .qq{font-size:14.5px;font-weight:600;color:#17171C}
+.qopt{border:1px solid #E4E4E7;border-radius:14px;padding:12px 14px;font-size:14px;margin-top:8px;color:#17171C;line-height:1.5}
+.qopt.on{border-color:#17171C;background:#F7F7F9}
+.qopt .desc{color:#8A8F98}
+.chip-row{display:flex;gap:8px;margin:0 20px 8px;flex-wrap:wrap}
+.achip{display:flex;align-items:center;gap:7px;border:1px solid #E4E4E7;background:#fff;border-radius:999px;
+  padding:7px 12px;font-size:12.5px;color:#3A3D44}
+.achip svg.fi{width:13px;height:13px;color:#8A8F98}
+.achip .x{display:flex}.achip .x svg.fi{width:12px;height:12px}
+.achip.wide{border-radius:14px;line-height:1.6}
+.stop{width:34px;height:34px;border-radius:50%;background:#4176E6;color:#fff;border:none;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stop i{width:12px;height:12px;background:#fff;border-radius:2px;display:block}
+.send.dis{opacity:.35}
+.sheet2{position:absolute;left:0;right:0;bottom:0;z-index:50;background:#fff;border-radius:28px 28px 0 0;
+  padding:8px 20px 30px;max-height:80%;overflow-y:auto;box-shadow:0 -12px 40px rgba(10,10,20,.12);scrollbar-width:none}
+.sheet2::-webkit-scrollbar{display:none}
+.sheet2.static{position:static;border-radius:28px;margin:0 0 14px;box-shadow:0 3px 14px rgba(20,20,40,.06)}
+.sheet2 .stitle{text-align:center;font-size:16.5px;font-weight:700;margin:2px 44px 14px;color:#17171C}
+.sheet2 .sclose{position:absolute;top:14px;right:16px;width:32px;height:32px;border-radius:50%;background:#F2F4F7;
+  color:#3A3D44;display:flex;align-items:center;justify-content:center}
+.sheet2 .sclose svg.fi{width:15px;height:15px}
+.tinput{border:1px solid #E4E4E7;border-radius:14px;height:50px;padding:0 16px;font-size:15px;width:100%;outline:none;background:#fff;color:#17171C}
+.tinput::placeholder{color:#B6BAC2}
+.cta-row{display:flex;gap:10px;margin-top:14px}
+.code6{font-family:ui-monospace,Menlo,monospace;font-size:30px;font-weight:700;letter-spacing:10px;text-align:center;margin:12px 0 6px;color:#17171C;text-indent:10px}
+.pop-wrap{position:relative;height:320px;background:#F7F7F9;border-radius:22px;overflow:hidden;margin:0 0 14px}
+.pop-dim{position:absolute;inset:0;background:rgba(15,15,20,.45);display:flex;align-items:center;justify-content:center}
+.pop{width:270px;background:#fff;border-radius:22px;padding:20px 18px 6px;text-align:center}
+.pop b{font-size:16px;color:#17171C}.pop p{font-size:13px;color:#8A8F98;margin-top:8px;line-height:1.65}
+.pop .pa{display:block;padding:13px 0;font-size:15.5px;border-top:1px solid #F1F1F4;margin-top:10px}
+.tree-row{display:flex;align-items:center;padding:12px 0;gap:10px}
+.tree-row+.tree-row{border-top:1px solid #F1F1F4}
+.tree-row .tt{flex:1;font-size:14.5px;color:#17171C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tree-row .tt.mut{color:#8A8F98}
+.tree-row .mono{font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+.link{color:#4176E6;font-size:13px;font-weight:600;flex-shrink:0}
+.backbtn{position:absolute;right:16px;bottom:100px;width:44px;height:44px;border-radius:50%;background:#fff;color:#3A3D44;
+  display:flex;align-items:center;justify-content:center;z-index:40;box-shadow:0 6px 20px rgba(10,10,20,.14)}
+.backbtn svg.fi{width:18px;height:18px}
+.notice-err{color:#F04438;font-size:13px;margin-top:8px;line-height:1.6}
+/* 抽屉 32 */
+.drawer{position:absolute;top:0;bottom:0;left:0;width:280px;background:#FAFAFA;z-index:55;padding:66px 20px 24px;display:flex;flex-direction:column}
+.drawer .brand{font-size:21px;font-weight:800;margin-bottom:18px;color:#17171C}
+.drawer .mi{padding:13px 16px;border-radius:12px;font-size:15.5px;color:#8A8F98;margin-bottom:4px;border:1px solid transparent}
+.drawer .mi.on{background:#F4F4F5;border-color:#E4E4E7;color:#17171C;font-weight:600}
+.drawer .ft{margin-top:auto;font-size:12.5px;color:#8A8F98;line-height:1.6}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.3);z-index:54}
+/* 深色模式 31（theme/tokens.ts darkTheme） */
+.phone.dk .screen{background:#09090b;color:#fafafa}
+.phone.dk .statusbar{color:#fafafa}
+.phone.dk .card,.phone.dk .group,.phone.dk .sheet2.static{background:#18181b;box-shadow:none}
+.phone.dk .set-head h2,.phone.dk .chat-title b,.phone.dk .appr h5{color:#fafafa}
+.phone.dk .meta,.phone.dk .set-head p,.phone.dk .val,.phone.dk .rsn{color:#a1a1aa}
+.phone.dk .srow+.srow,.phone.dk .srow2+.srow2,.phone.dk .tree-row+.tree-row{border-top-color:#27272a}
+.phone.dk .tinput{background:#18181b;border-color:#27272a;color:#fafafa}
+.phone.dk .cta-dark{background:#fafafa;color:#18181b;box-shadow:none}
+.phone.dk .btn-ghost{background:#27272a;color:#fafafa}
+.phone.dk .danger{color:#f87171}
+.phone.dk .notice-err{color:#f87171}
+.phone.dk .chat-head{background:rgba(9,9,11,.94)}
+.phone.dk .ric{background:#27272a !important;color:#fafafa !important}
+.phone.dk .chev{color:#52525b !important}
+.phone.dk .foot-note{color:#52525b}
+.phone.dk .srow2 .t,.phone.dk .tree-row .tt,.phone.dk .code6{color:#fafafa}
+.phone.dk .srow2 .d{color:#a1a1aa}
+.phone.dk .ham{background:#18181b;color:#fafafa;box-shadow:none}
+.phone.dk .link{color:#818cf8}
+</style>
+
+<!-- 14 会话列表-筛选菜单 -->
+<div class="phone-wrap">
+  <div class="phone-label">14 · 会话列表-筛选菜单<span>SessionsScreen · 筛选菜单 + 顶部通知条</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="sess-head">
+      <span class="ham"><i data-ic="menu" class="fi"></i></span>
+      <div class="sess-title">全部会话<i data-ic="cdn"></i></div>
+      <span style="width:44px;flex-shrink:0"></span>
+    </div>
+    <div class="notice-strip">未配置服务器：请先在设置页完成配对</div>
+    <div class="grp">今天</div>
+    <div class="card flush" style="margin-top:0;opacity:.45">
+      <div class="srow2"><span class="dot8" style="background:#4176E6"></span><span class="t">重构登录鉴权</span><span class="d">12:40</span></div>
+      <div class="srow2"><span class="dot8" style="background:#D97706"></span><span class="t">升级依赖到 pnpm 10</span><span class="d">昨天</span></div>
+    </div>
+    <div class="menu-card" style="top:122px;left:50%;transform:translateX(-50%)">
+      <div class="menu-row"><i data-ic="list"></i>全部<span class="tick"><i data-ic="check" class="fi"></i></span></div>
+      <div class="menu-row"><i data-ic="folder"></i>按项目</div>
+      <div class="menu-row"><i data-ic="archive"></i>已归档</div>
+    </div>
+    <div class="fab"><i data-ic="plus" class="fi"></i></div>
+  </div></div>
+</div>
+
+<!-- 15 会话列表-有数据 -->
+<div class="phone-wrap">
+  <div class="phone-label">15 · 会话列表-有数据<span>分组 / 会话行 / 归档空态 / 下拉刷新</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="sess-head">
+      <span class="ham"><i data-ic="menu" class="fi"></i></span>
+      <div class="sess-title">全部会话<i data-ic="cdn"></i></div>
+      <span style="width:44px;flex-shrink:0"></span>
+    </div>
+    <div class="spin"></div>
+    <div class="grp">今天</div>
+    <div class="card flush" style="margin-top:0">
+      <div class="srow2"><span class="dot8" style="background:#4176E6"></span><span class="pin">★</span><span class="t">重构登录鉴权重构登录鉴权重构</span><span class="d">12:40</span></div>
+      <div class="srow2"><span class="dot8" style="background:#D97706"></span><span class="t">升级依赖到 pnpm 10</span><span class="d">11:05</span></div>
+      <div class="srow2"><span class="dot8" style="background:#4176E6"></span><span class="t">新会话</span><span class="d">09:12</span></div>
+    </div>
+    <div class="grp">更早</div>
+    <div class="card flush" style="margin-top:0">
+      <div class="srow2"><span class="dot8" style="background:#C4C7CD"></span><span class="t">给 mdurl4cj 写 README</span><span class="d">昨天</span></div>
+      <div class="srow2"><span class="dot8" style="background:#C4C7CD"></span><span class="t">修好了 iOS 键盘遮挡</span><span class="d">3 天前</span></div>
+    </div>
+    <div class="cap">「已归档」档 · 空态</div>
+    <div class="arch-empty"><b>暂无已归档会话</b><p>在会话页的"… "菜单里归档的会话会出现在这里</p></div>
+    <div class="fab"><i data-ic="plus" class="fi"></i></div>
+  </div></div>
+</div>
+
+<!-- 16 会话详情-页头与空态 -->
+<div class="phone-wrap">
+  <div class="phone-label">16 · 会话详情-页头与空态<span>页头 / 空态 / 时间戳分隔 / 回合头</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small style="color:#8A8F98">spark</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="turn-line" style="color:#8A8F98">10月6日 14:32</div>
+    <div class="arch-empty"><b>开始对话</b><p>描述你的任务，Spark 即刻开工</p></div>
+    <div class="turn-line">工作中 · <b>42 秒</b> · 第 12 步 · 3 工具</div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 17 消息-用户与助手 -->
+<div class="phone-wrap">
+  <div class="phone-label">17 · 消息-用户与助手<span>用户气泡 / 助手操作行 / 备注</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="user-b"><div class="bub"><div class="thumb"><i data-ic="image" class="fi"></i></div>把这张图的配色用到登录页</div></div>
+    <div class="a-block">
+      <div class="a-text">收到。取主色 #4176E6、辅色 #CBE5FE，已应用到登录页按钮与输入框，顺手把深色模式也对齐了。</div>
+      <div class="cap" style="margin:12px 0 0">未反馈态</div>
+      <div class="act-row">
+        <span class="abtn"><i data-ic="copy"></i>复制</span>
+        <span class="abtn"><i data-ic="tup"></i></span>
+        <span class="abtn"><i data-ic="tdn"></i></span>
+        <span class="gen">内容由 AI 生成</span>
+      </div>
+      <div class="cap" style="margin:14px 0 0">已复制 + 已投「有帮助」+ 备注行</div>
+      <div class="act-row">
+        <span class="abtn on"><i data-ic="check"></i>已复制</span>
+        <span class="abtn on"><i data-ic="tup"></i></span>
+        <span class="abtn"><i data-ic="tdn"></i></span>
+        <span class="abtn">备注</span>
+        <span class="gen">内容由 AI 生成</span>
+      </div>
+      <div class="note-line"><input placeholder="补充备注（可空）" /><span class="sv">保存</span></div>
+    </div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 18 消息-思考与工具 -->
+<div class="phone-wrap">
+  <div class="phone-label">18 · 消息-思考与工具<span>思考卡 / 工具卡 / LSP 诊断卡</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="cap">思考卡 · 流式中自动展开</div>
+    <div class="fold"><div class="fh"><b class="mut">思考中…</b><i data-ic="cup" style="margin-left:auto"></i></div>
+      <div class="fb">先看 auth.ts 的 token 刷新逻辑，确认 401 分支是否缺重试；再决定补在哪一层……</div></div>
+    <div class="cap">思考卡 · 结束后默认收起</div>
+    <div class="fold"><div class="fh"><b class="mut">思考过程</b><i data-ic="cdn" style="margin-left:auto"></i></div></div>
+    <div class="cap">工具卡 · 运行中 / 失败默认展开</div>
+    <div class="fold"><div class="fh"><b>read_file</b><span class="st" style="color:#4176E6">运行中</span><i data-ic="cdn"></i></div></div>
+    <div class="fold"><div class="fh"><b>exec</b><span class="st" style="color:#F04438">失败</span><i data-ic="cup"></i></div>
+      <div class="fb mono">Error: command failed with exit code 1<br>pnpm test --filter auth</div></div>
+    <div class="cap">LSP 诊断卡 · 点按展开逐条</div>
+    <div class="fold"><div class="fh"><b class="mut">LSP typescript · src/auth.ts</b><span class="st" style="color:#8A8F98">E 2 / W 1</span><i data-ic="cup"></i></div>
+      <div class="fb">
+        <div class="diag-line"><span class="tagE">[E]</span> <span class="pos">12:5</span> refreshToken 可能为 undefined</div>
+        <div class="diag-line"><span class="tagE">[E]</span> <span class="pos">28:9</span> 缺少 await，返回 Promise 未处理</div>
+        <div class="diag-line"><span class="tagW">[W]</span> <span class="pos">40:1</span> 未使用的变量 retryCount</div>
+      </div></div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 19 审批卡 -->
+<div class="phone-wrap">
+  <div class="phone-label">19 · 审批卡<span>三键纵向 / 已决策翻牌</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="turn-line">工作中 · <b>18 秒</b> · 第 4 步 · 1 工具</div>
+    <div class="appr"><div class="bar"></div><div class="bd">
+      <h5>请求授权</h5>
+      <div class="res">exec: rm -rf /tmp/spark-cache</div>
+      <div class="rsn">清理构建缓存，释放约 2 GB 磁盘空间</div>
+      <div class="btns">
+        <div class="abtn-p">允许</div>
+        <div class="abtn-s">始终允许</div>
+        <div class="abtn-d">拒绝</div>
+      </div>
+    </div></div>
+    <div class="cap">已决策翻牌</div>
+    <div class="appr"><div class="bd"><div class="done">已允许本次</div></div></div>
+    <div class="appr"><div class="bd"><div class="done">已拒绝</div></div></div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 20 提问卡 -->
+<div class="phone-wrap">
+  <div class="phone-label">20 · 提问卡<span>单选多选 / 提交 / 翻牌</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="appr"><div class="bar"></div><div class="bd">
+      <h5>需要你的选择</h5>
+      <div class="qgrp"><div class="qq">1. 部署方式</div>
+        <div class="qopt on">✓ Docker <span class="desc">—— 用现有镜像</span></div>
+        <div class="qopt">本地二进制 <span class="desc">—— 需自行编译</span></div>
+      </div>
+      <div class="qgrp"><div class="qq">2. 需要回滚方案吗（可多选）</div>
+        <div class="qopt on">✓ 数据库快照</div>
+        <div class="qopt on">✓ 灰度发布</div>
+        <div class="qopt">人工值守</div>
+      </div>
+      <div class="btns"><div class="abtn-p">提交回答</div></div>
+      <div class="rsn">每问至少选择一项</div>
+    </div></div>
+    <div class="cap">已回答 / 超时翻牌</div>
+    <div class="appr"><div class="bd">
+      <div class="done">提问已回答</div>
+      <div class="res plain" style="margin-top:8px">1. 部署方式 → Docker（备注：用现有镜像）</div>
+      <div class="res plain">2. 需要回滚方案吗 → 数据库快照、灰度发布</div>
+    </div></div>
+    <div class="appr"><div class="bd"><div class="done">提问超时/中断——未获回答</div></div></div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 21 横幅细条组 -->
+<div class="phone-wrap">
+  <div class="phone-label">21 · 横幅细条组<span>BannerRow 九种</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="cap">断线 / 重连中</div>
+    <div class="banner" style="color:#D97706">连接已停止：鉴权失败，请到设置页重新配对</div>
+    <div class="banner" style="color:#D97706">正在重连…</div>
+    <div class="cap">红色人话错误条</div>
+    <div class="banner" style="color:#F04438">未获得相册权限，无法附加图片</div>
+    <div class="cap">SubmitOutcome 瞬态行（2.5s 自清）</div>
+    <div class="banner" style="color:#4176E6">已插话注入当前轮</div>
+    <div class="banner" style="color:#4176E6">已排队（下一轮执行）</div>
+    <div class="cap">回合 error 横幅 + 重试</div>
+    <div class="banner" style="color:#D97706">本轮以 error 结束<span class="act">重试</span></div>
+    <div class="cap">交付 / 后台任务 / 待办</div>
+    <div class="banner" style="color:#D97706">交付文件 3 个：登录页重构</div>
+    <div class="banner" style="color:#4176E6">后台任务 1/2 运行中——输出走 task_output 查询</div>
+    <div class="banner" style="color:#4176E6">待办 2/5——进行中：接入 Apple 登录</div>
+    <div class="cap">计划模式条 + 切换档位入口</div>
+    <div class="banner" style="color:#8A8F98">计划模式：写类工具全拒，模型只读地出计划；退出需你批准<span class="act">切换档位</span></div>
+    <div style="height:24px"></div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 22 输入区状态 -->
+<div class="phone-wrap">
+  <div class="phone-label">22 · 输入区状态<span>附件 / 提交档 / 话筒 / 停止</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="cap">空文本发送禁用 + 附件 chips</div>
+    <div class="chip-row">
+      <div class="achip">上传中…</div>
+      <div class="achip">design.png <span class="x"><i data-ic="x"></i></span></div>
+    </div>
+    <div class="composer2" style="margin:0 20px">
+      <div class="c-input"><input placeholder="描述你的任务…" /></div>
+      <div class="c-bar">
+        <div class="plus-btn"><i data-ic="mic"></i></div>
+        <div class="plus-btn"><i data-ic="plus"></i></div>
+        <div style="flex:1"></div>
+        <button class="send dis">↑</button>
+      </div>
+    </div>
+    <div class="cap">话筒提示条（点按展开 / 收起）</div>
+    <div class="chip-row"><div class="achip wide"><i data-ic="micoff"></i>语音听写筹备中——上线后此处按住说话</div></div>
+    <div class="cap">运行中：停止钮 + 提交档 chip</div>
+    <div class="chip-row"><div class="achip"><i data-ic="clock"></i>排队发送</div></div>
+    <div class="composer2" style="margin:0 20px">
+      <div class="c-input"><input value="把登录页主色换掉" /></div>
+      <div class="c-bar">
+        <div class="plus-btn"><i data-ic="mic"></i></div>
+        <div class="plus-btn"><i data-ic="plus"></i></div>
+        <div style="flex:1"></div>
+        <button class="stop"><i></i></button>
+      </div>
+    </div>
+    <div style="height:24px"></div>
+  </div></div>
+</div>
+
+<!-- 23 会话菜单 -->
+<div class="phone-wrap">
+  <div class="phone-label">23 · 会话菜单<span>会话菜单 / 权限档位菜单</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small><i></i>运行中</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="cap">会话菜单（"… "入口）</div>
+    <div class="menu-card static">
+      <div class="menu-row"><i data-ic="star"></i>置顶</div>
+      <div class="menu-row"><i data-ic="edit"></i>重命名</div>
+      <div class="menu-row"><i data-ic="shield"></i>权限档位</div>
+      <div class="menu-row"><i data-ic="archive"></i>归档</div>
+      <div class="menu-row danger"><i data-ic="trash"></i>删除</div>
+      <div class="menu-row"><i data-ic="gbr"></i>会话树</div>
+      <div class="menu-row"><i data-ic="archive"></i>检查点</div>
+      <div class="menu-row"><i data-ic="zap"></i>多模型竞答</div>
+    </div>
+    <div class="cap">权限档位菜单（计划模式下多一行）</div>
+    <div class="menu-card static">
+      <div class="menu-row"><i data-ic="shield"></i>逐项确认<span class="tick"><i data-ic="check" class="fi"></i></span></div>
+      <div class="menu-row"><i data-ic="edit"></i>自动编辑</div>
+      <div class="menu-row"><i data-ic="list"></i>计划模式</div>
+      <div class="menu-row"><i data-ic="atri"></i>完全访问</div>
+      <div class="menu-row"><i data-ic="logout"></i>退出计划模式</div>
+    </div>
+    <div style="height:24px"></div>
+  </div></div>
+</div>
+
+<!-- 24 重命名与删除 -->
+<div class="phone-wrap">
+  <div class="phone-label">24 · 重命名与删除<span>两个确认 sheet</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="cap">重命名 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">重命名会话</div>
+      <input class="tinput" value="重构登录鉴权" />
+      <div class="cta-row"><div class="cta-dark" style="flex:1;margin:0;height:50px;font-size:15px">保存</div></div>
+    </div>
+    <div class="cap">删除确认 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">删除会话</div>
+      <div class="card" style="margin:0 0 4px"><div class="meta" style="line-height:1.7;color:#17171C;font-size:14px">会话记录会移入服务端回收目录（~/.spark/trash/），不在本机——运行中的会话不可删除。</div></div>
+      <div class="group" style="margin:12px 0 0"><div class="srow danger" style="justify-content:center">删除</div></div>
+    </div>
+    <div style="height:24px"></div>
+  </div></div>
+</div>
+
+<!-- 25 会话树与检查点 -->
+<div class="phone-wrap">
+  <div class="phone-label">25 · 会话树与检查点<span>两个管理 sheet</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="cap">会话树 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">会话树</div>
+      <div class="card" style="margin:0">
+        <div class="tree-row"><span class="tt">修复 CI 构建</span><span class="link">在此分叉</span></div>
+        <div class="tree-row"><span class="tt mut" style="padding-left:16px">↳ 修复 CI 构建（docker 方案）</span></div>
+        <div class="tree-row"><span class="tt" style="padding-left:16px">升级依赖到 pnpm 10</span><span class="link">在此分叉</span></div>
+      </div>
+    </div>
+    <div class="cap">检查点 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">检查点</div>
+      <div class="card" style="margin:0">
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">10-06 14:20</div><div class="meta">3 个文件快照</div></div><span class="link" style="margin-left:auto">回滚到此</span></div>
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">10-06 11:02</div><div class="meta">5 个文件快照</div></div><span class="link" style="margin-left:auto">回滚到此</span></div>
+      </div>
+    </div>
+    <div style="height:24px"></div>
+  </div></div>
+</div>
+
+<!-- 26 Arena sheet -->
+<div class="phone-wrap">
+  <div class="phone-label">26 · Arena sheet<span>多模型竞答</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="cap">多模型竞答 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">多模型竞答</div>
+      <div class="card" style="margin:0">
+        <div class="meta">running · 对比两种登录方案</div>
+        <div class="tree-row"><span class="tt" style="color:#4176E6;font-weight:600">★ claude-4-5 · 第 12 步</span></div>
+        <div class="tree-row"><span class="tt">gpt-5 · 第 15 步</span><span class="link">应用胜者</span></div>
+        <div class="meta" style="margin-top:10px">已应用：4 个文件</div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px"><span class="link" style="color:#F04438">取消竞答</span></div>
+        <div class="spin" style="margin:10px auto 0"></div>
+      </div>
+    </div>
+    <div style="height:24px"></div>
+  </div></div>
+</div>
+
+<!-- 27 回到底部与翻页 -->
+<div class="phone-wrap">
+  <div class="phone-label">27 · 回到底部与翻页<span>浮钮 / 上拉 loading / 已加载全部</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="back"><i data-ic="back" class="fi"></i></span>
+      <div class="chat-title"><b>重构登录鉴权</b><small style="color:#8A8F98">spark</small></div>
+      <span style="margin-left:auto;color:#3A3D44"><i data-ic="more" class="fi"></i></span>
+    </div>
+    <div class="spin"></div>
+    <div class="meta" style="text-align:center;font-size:12.5px">已加载全部历史</div>
+    <div class="msg-a" style="margin-top:12px">收到。重试逻辑已加上，单测覆盖了 401 / 403 / 超时三种情况，正在跑验证…</div>
+    <div class="user-b"><div class="bub">把登录失败的重试逻辑也加上，顺便补个单测</div></div>
+    <div class="backbtn"><i data-ic="adn"></i></div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="描述你的任务…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send">↑</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 28 设置-已配置态（真实版） -->
+<div class="phone-wrap">
+  <div class="phone-label">28 · 设置-已配置态<span>真实设置屏 · 与 11 屏新版区分</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="ham" style="width:38px;height:38px"><i data-ic="menu" class="fi"></i></span>
+      <div class="chat-title"><b>设置</b></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px">待配对</b>
+      <div class="meta mono" style="margin-top:6px;font-family:ui-monospace,Menlo,monospace">192.168.1.10:4318</div>
+      <div class="cta-row"><div class="cta-dark" style="flex:1;margin:0;height:48px;font-size:15px">连接</div><div class="btn-ghost" style="flex:1">取消</div></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px">服务器</b>
+      <div class="meta" style="margin:10px 0 6px">服务器地址</div>
+      <input class="tinput" placeholder="http://192.168.1.10:4318" />
+      <div class="meta" style="margin:10px 0 6px">配对 Token</div>
+      <input class="tinput" type="password" placeholder="扫码配对所得；环回直连可留空" />
+      <div class="notice-err">服务器地址不能为空</div>
+      <div class="cta-dark" style="margin:14px 0 0">保存</div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px">外观</b>
+      <div class="srow2"><span class="t">跟随系统</span><span style="color:#4176E6;display:flex"><i data-ic="check" class="fi" style="width:16px;height:16px"></i></span></div>
+      <div class="srow2"><span class="t">浅色</span></div>
+      <div class="srow2"><span class="t">深色</span></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px">电脑控制</b>
+      <div class="meta" style="margin-top:8px;line-height:1.7">已启用 · 开关在桌面/网页端设置中心（热生效）</div>
+    </div>
+    <div class="card">
+      <div class="srow2" style="padding:0"><span class="t" style="font-weight:600">配对设备</span><span class="d">已配对 2 台</span><span class="chev" style="display:flex;color:#C4C7CD"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px">服务管理</b>
+      <div class="srow2"><i data-ic="shield"></i><span class="t">信任目录</span><span class="chev" style="display:flex;color:#C4C7CD"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+      <div class="srow2"><i data-ic="package"></i><span class="t">扩展插件</span><span class="chev" style="display:flex;color:#C4C7CD"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+      <div class="srow2"><i data-ic="code"></i><span class="t">语言服务器</span><span class="chev" style="display:flex;color:#C4C7CD"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+      <div class="srow2"><i data-ic="users"></i><span class="t">子代理预设</span><span class="chev" style="display:flex;color:#C4C7CD"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+    </div>
+    <div class="card"><div class="danger" style="text-align:center;font-weight:600">断开连接</div></div>
+    <div style="height:20px"></div>
+  </div></div>
+</div>
+
+<!-- 29 配对设备 -->
+<div class="phone-wrap">
+  <div class="phone-label">29 · 配对设备<span>sheet + 撤销二次确认</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="cap">配对设备 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">配对设备</div>
+      <div class="card" style="margin:0 0 12px">
+        <b style="font-size:14.5px">服务地址</b>
+        <div class="meta" style="margin-top:6px;line-height:1.7">192.168.1.10:4318 · 局域网可达 · 配对鉴权已启用</div>
+      </div>
+      <div class="card" style="margin:0 0 12px">
+        <b style="font-size:14.5px">已配对设备（2）</b>
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">iPhone 16</div><div class="meta">最近活跃 10-06 14:20</div></div><span style="margin-left:auto;color:#F04438;display:flex"><i data-ic="x" class="fi" style="width:18px;height:18px"></i></span></div>
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">MacBook Air</div><div class="meta">最近活跃 10-05 22:41</div></div><span style="margin-left:auto;color:#F04438;display:flex"><i data-ic="x" class="fi" style="width:18px;height:18px"></i></span></div>
+      </div>
+      <div class="card" style="margin:0 0 12px">
+        <b style="font-size:14.5px">配对码</b>
+        <div class="code6">428916</div>
+        <div class="meta" style="text-align:center;line-height:1.7">另一台设备在配对引导里输入这 6 位数字；过期后重新签发。</div>
+      </div>
+      <div class="cta-dark" style="margin:0">重新签发配对码</div>
+    </div>
+    <div class="cap">撤销二次确认</div>
+    <div class="pop-wrap"><div class="pop-dim"><div class="pop">
+      <b>撤销这台设备？</b>
+      <p>撤销后该设备的连接立即断开，需重新配对才能恢复。</p>
+      <span class="pa" style="color:#F04438">撤销</span>
+      <span class="pa" style="color:#8A8F98;border-top:none;padding-top:4px">保持</span>
+    </div></div></div>
+    <div style="height:20px"></div>
+  </div></div>
+</div>
+
+<!-- 30a 服务管理-信任与扩展 -->
+<div class="phone-wrap">
+  <div class="phone-label">30a · 服务管理-信任与扩展<span>信任目录 / 扩展插件 sheet</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="cap">信任目录 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">信任目录</div>
+      <div class="card" style="margin:0">
+        <div class="tree-row"><span class="tt mono">~/workspace/spark</span><span class="switch" style="margin-left:auto"></span></div>
+        <div class="tree-row"><span class="tt mono">~/docs</span><span class="switch off" style="margin-left:auto"></span></div>
+      </div>
+    </div>
+    <div class="cap">扩展插件 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">扩展插件</div>
+      <div class="card" style="margin:0">
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">pdf-reader</div><div class="meta mono" style="font-size:12px;font-family:ui-monospace,Menlo,monospace">~/.spark/extensions/pdf</div></div><span class="switch" style="margin-left:auto"></span></div>
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">md-toc</div><div class="meta" style="font-size:12px;font-family:ui-monospace,Menlo,monospace">~/.spark/extensions/md-toc</div></div><span class="switch off" style="margin-left:auto"></span></div>
+      </div>
+    </div>
+    <div style="height:20px"></div>
+  </div></div>
+</div>
+
+<!-- 30b 服务管理-LSP与子代理 -->
+<div class="phone-wrap">
+  <div class="phone-label">30b · 服务管理-LSP与子代理<span>语言服务器 / 子代理预设 sheet</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="cap">语言服务器 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">语言服务器</div>
+      <div class="card" style="margin:0 0 12px">
+        <b style="font-size:14px">连接状态</b>
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">typescript</div><div class="meta">已连接 · 0 错误 / 2 警告</div></div><span class="dot8" style="background:#12B76A;margin-left:auto"></span></div>
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">python</div><div class="meta">未连接 · 0 错误 / 0 警告</div></div><span class="dot8" style="background:#C4C7CD;margin-left:auto"></span></div>
+      </div>
+      <div class="card" style="margin:0">
+        <b style="font-size:14px">安装</b>
+        <div class="tree-row"><span class="tt">typescript（typescript）</span><span class="link">安装</span></div>
+        <div class="tree-row"><span class="tt">python（python）</span><span class="link">安装</span></div>
+        <div class="tree-row"><span class="tt">html（html）</span><span class="link">安装</span></div>
+      </div>
+    </div>
+    <div class="cap">子代理预设 sheet</div>
+    <div class="sheet2 static">
+      <div class="handle"></div><div class="sclose"><i data-ic="x"></i></div>
+      <div class="stitle">子代理预设</div>
+      <div class="card" style="margin:0">
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">researcher</div><div class="meta">联网调研助手</div></div><span class="switch" style="margin-left:auto"></span></div>
+        <div class="tree-row"><div><div style="font-size:14.5px;color:#17171C">coder</div><div class="meta">编码执行助手</div></div><span class="switch off" style="margin-left:auto"></span></div>
+      </div>
+    </div>
+    <div style="height:20px"></div>
+  </div></div>
+</div>
+
+<!-- 31 深色模式 -->
+<div class="phone-wrap">
+  <div class="phone-label">31 · 深色模式<span>设置已配置态 · 深色主题</span><span class="is-new">代码补齐</span></div>
+  <div class="phone dk"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="chat-head">
+      <span class="ham" style="width:38px;height:38px"><i data-ic="menu" class="fi"></i></span>
+      <div class="chat-title"><b>设置</b></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px;color:#fafafa">待配对</b>
+      <div class="meta" style="margin-top:6px;font-family:ui-monospace,Menlo,monospace">192.168.1.10:4318</div>
+      <div class="cta-row"><div class="cta-dark" style="flex:1;margin:0;height:48px;font-size:15px">连接</div><div class="btn-ghost" style="flex:1">取消</div></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px;color:#fafafa">服务器</b>
+      <div class="meta" style="margin:10px 0 6px">服务器地址</div>
+      <input class="tinput" placeholder="http://192.168.1.10:4318" />
+      <div class="meta" style="margin:10px 0 6px">配对 Token</div>
+      <input class="tinput" type="password" placeholder="扫码配对所得；环回直连可留空" />
+      <div class="cta-dark" style="margin:14px 0 0">保存</div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px;color:#fafafa">外观</b>
+      <div class="srow2"><span class="t">跟随系统</span></div>
+      <div class="srow2"><span class="t">浅色</span></div>
+      <div class="srow2"><span class="t">深色</span><span style="color:#818cf8;display:flex;margin-left:auto"><i data-ic="check" class="fi" style="width:16px;height:16px"></i></span></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px;color:#fafafa">电脑控制</b>
+      <div class="meta" style="margin-top:8px;line-height:1.7">已启用 · 开关在桌面/网页端设置中心（热生效）</div>
+    </div>
+    <div class="card">
+      <div class="srow2" style="padding:0"><span class="t" style="font-weight:600">配对设备</span><span class="d">已配对 2 台</span><span class="chev" style="display:flex;color:#52525b"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15.5px;color:#fafafa">服务管理</b>
+      <div class="srow2"><i data-ic="shield"></i><span class="t">信任目录</span><span class="chev" style="display:flex;color:#52525b"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+      <div class="srow2"><i data-ic="package"></i><span class="t">扩展插件</span><span class="chev" style="display:flex;color:#52525b"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+      <div class="srow2"><i data-ic="code"></i><span class="t">语言服务器</span><span class="chev" style="display:flex;color:#52525b"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+      <div class="srow2"><i data-ic="users"></i><span class="t">子代理预设</span><span class="chev" style="display:flex;color:#52525b"><i data-ic="chev" class="fi" style="width:17px;height:17px"></i></span></div>
+    </div>
+    <div class="card"><div class="danger" style="text-align:center;font-weight:600">断开连接</div></div>
+    <div style="height:20px"></div>
+  </div></div>
+</div>
+
+<!-- 32 抽屉-设置选中 -->
+<div class="phone-wrap">
+  <div class="phone-label">32 · 抽屉-设置选中<span>AppNavigator · 选中态</span><span class="is-new">代码补齐</span></div>
+  <div class="phone"><div class="camdot"></div><div class="screen" style="padding:0">
+    <div class="statusbar"><span>14:32</span><span class="sb-icons"><svg viewBox="0 0 18 14" width="17" height="13"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg><svg viewBox="0 0 18 14" width="17" height="13"><path d="M9 13.2c.9 0 1.7-.7 1.7-1.7H7.3c0 .9.7 1.7 1.7 1.7zM9 8.6c-1.9 0-3.7.8-5 2l1.4 1.4c.9-.9 2.2-1.4 3.6-1.4s2.7.5 3.6 1.4l1.4-1.4c-1.3-1.2-3.1-2-5-2zm0-3.4c-3.1 0-5.9 1.2-7.9 3.2l1.4 1.4C4 8.1 6.4 7.2 9 7.2s5 .9 6.5 2.6l1.4-1.4C14.9 6.4 12.1 5.2 9 5.2z"/></svg><svg viewBox="0 0 28 14" width="25" height="13"><rect x="1" y="1.5" width="22" height="11" rx="3" fill="none" stroke="#17171C" stroke-width="1.6"/><rect x="3.6" y="4" width="12" height="6" rx="1.5"/><rect x="24.6" y="5" width="2.4" height="4" rx="1.2"/></svg></span></div>
+    <div class="sess-head">
+      <span class="ham"><i data-ic="menu" class="fi"></i></span>
+      <div class="sess-title">设置</div>
+      <span style="width:44px;flex-shrink:0"></span>
+    </div>
+    <div class="card"><b style="font-size:15.5px">服务器</b><div class="meta" style="margin-top:8px">抽屉打开时主内容置后</div></div>
+    <div class="scrim"></div>
+    <div class="drawer">
+      <div class="brand">Spark</div>
+      <div class="mi">全部会话</div>
+      <div class="mi on">设置</div>
+      <div class="ft">配对与设备管理在设置页</div>
+    </div>
+  </div></div>
+</div>
+
+</div><!-- /phones -->
+<script>
+// Feather 风格图标（描边），mockup 内联
+const P = {
+  chat: '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+  search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+  sliders: '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  back: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
+  arrow: '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+  chev: '<polyline points="9 18 15 12 9 6"/>',
+  more: '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  sun: '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+  phone: '<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>',
+  cpu: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>',
+  eye: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+  edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>',
+  info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+  refresh: '<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>',
+  user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  lock: '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+  smartphone: '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>'
+};
+document.querySelectorAll('[data-ic]').forEach(el => {
+  const k = el.getAttribute('data-ic');
+  if (P[k]) el.innerHTML = '<svg class="fi" viewBox="0 0 24 24">' + P[k] + '</svg>';
+});
+// 登录 / 注册切换
+(function(){
+  const seg = document.getElementById('authSeg'); if (!seg) return;
+  const tabs = seg.querySelectorAll('span');
+  const lf = document.getElementById('loginForm'), rf = document.getElementById('registerForm');
+  const btn = document.getElementById('authBtn'), fr = document.getElementById('forgotRow');
+  const title = document.querySelector('#authTitle b');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('on')); t.classList.add('on');
+    const reg = t.dataset.m === 'register';
+    lf.style.display = reg ? 'none' : 'flex';
+    rf.style.display = reg ? 'flex' : 'none';
+    btn.textContent = reg ? '创建账号' : '登录';
+    fr.style.display = reg ? 'none' : 'block';
+    if (title) title.textContent = reg ? '注册' : '登录';
+  }));
+})();
+// 二维码占位（示意用，非真实码）
+(function(){
+  const box = document.getElementById('qr'); if(!box) return;
+  const N=21, s=8; let h='<svg width="168" height="168" viewBox="0 0 168 168">';
+  let seed=7; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+  const finder=(x,y)=>`<rect x="${x*s}" y="${y*s}" width="${7*s}" height="${7*s}" fill="#17171C"/><rect x="${(x+1)*s}" y="${(y+1)*s}" width="${5*s}" height="${5*s}" fill="#fff"/><rect x="${(x+2)*s}" y="${(y+2)*s}" width="${3*s}" height="${3*s}" fill="#17171C"/>`;
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+    const inF=(x<8&&y<8)||(x>N-9&&y<8)||(x<8&&y>N-9);
+    if(!inF&&rnd()>0.52) h+=`<rect x="${x*s}" y="${y*s}" width="${s}" height="${s}" fill="#17171C"/>`;
+  }
+  h+=finder(0,0)+finder(N-7,0)+finder(0,N-7)+'</svg>'; box.innerHTML=h;
+})();
+</script>
+</body>
+</html>

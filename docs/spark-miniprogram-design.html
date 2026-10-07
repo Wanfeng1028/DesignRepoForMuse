@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spark 微信小程序设计稿</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:#EDEDF1; color:#17171C; min-height:100vh; padding:40px 24px 64px; }
+  .page-head { max-width:1400px; margin:0 auto 8px; }
+  .page-head h1 { font-size:26px; font-weight:800; }
+  .page-head p { margin-top:8px; font-size:14px; color:#6B7280; line-height:1.8; max-width:900px; }
+  .legend { max-width:1400px; margin:14px auto 30px; display:flex; flex-wrap:wrap; gap:8px; }
+  .token-chip { display:flex; align-items:center; gap:6px; font-size:12px; color:#4B5563;
+    background:#fff; border-radius:999px; padding:5px 12px 5px 6px; box-shadow:0 1px 4px rgba(20,20,40,.06); }
+  .token-chip i { width:18px; height:18px; border-radius:50%; display:block; }
+  .phones { max-width:1400px; margin:0 auto; display:flex; gap:36px; justify-content:center; flex-wrap:wrap; align-items:flex-start; }
+  .phone-wrap { display:flex; flex-direction:column; align-items:center; }
+  .phone-label { font-size:15px; font-weight:700; margin-bottom:14px; text-align:center; }
+  .phone-label span { display:block; font-size:12px; font-weight:400; color:#6B7280; margin-top:4px; }
+  .phone-label .is-new { display:inline-block; font-size:10px; font-weight:700; color:#fff; background:#4176E6;
+    border-radius:999px; padding:2px 8px; margin-left:6px; vertical-align:2px; }
+  .phone { width:375px; height:812px; background:#F7F7F9; border-radius:52px;
+    border:11px solid #101014; position:relative; overflow:hidden;
+    box-shadow:0 30px 80px rgba(20,20,50,.22); }
+  .notch { position:absolute; top:11px; left:50%; transform:translateX(-50%);
+    width:112px; height:30px; background:#101014; border-radius:20px; z-index:60; }
+  .screen { position:absolute; inset:0; overflow-y:auto; padding:0 0 120px; scrollbar-width:none; }
+  .screen::-webkit-scrollbar { display:none; }
+  .statusbar { display:flex; justify-content:space-between; align-items:center;
+    padding:16px 30px 6px; font-size:14px; font-weight:600; position:relative; z-index:30; }
+  svg.fi { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2;
+    stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+  /* 微信风格导航栏：白底 + 底部 hairline，标题居中 17px */
+  .wxnav { background:#fff; border-bottom:1px solid #E5E5E5;
+    display:grid; grid-template-columns:52px 1fr 52px; align-items:center;
+    padding:10px 0 12px; position:sticky; top:0; z-index:20; }
+  .wxnav-title { text-align:center; font-size:17px; font-weight:600; }
+  .wxback { color:#17171C; display:flex; align-items:center; justify-content:center; }
+  /* 微信原生 tabBar：白底 + 顶部 hairline，双 tab */
+  .wxtab { position:absolute; left:0; right:0; bottom:0; z-index:40; background:#fff;
+    border-top:1px solid #E5E5E5; display:flex; padding:8px 0 24px; }
+  .wtab { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    font-size:10px; color:#7A7E87; }
+  .wtab .fi { width:24px; height:24px; }
+  .wtab.on { color:#4176E6; }
+  /* 通用（与 App 端同一套 token） */
+  .card { margin:0 16px 12px; background:#fff; border-radius:22px; padding:16px;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .status { display:inline-flex; align-items:center; gap:7px; font-size:13px; color:#3A3D44;
+    font-weight:500; white-space:nowrap; margin-left:auto; flex-shrink:0; }
+  .status i { width:8px; height:8px; border-radius:50%; display:block; flex-shrink:0; }
+  .status.light { color:#fff; margin-left:0; }
+  .meta { font-size:12.5px; color:#8A8F98; }
+  .group { margin:14px 16px 0; background:#fff; border-radius:22px; overflow:hidden;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .srow { display:flex; align-items:center; gap:12px; padding:13px 16px; font-size:15px; }
+  .srow + .srow { border-top:1px solid #F1F1F4; }
+  .srow .ric { width:34px; height:34px; border-radius:11px; background:#F2F4F7; color:#3A3D44;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .srow .ric svg { width:17px; height:17px; }
+  .srow .val { margin-left:auto; font-size:13.5px; color:#8A8F98; white-space:nowrap; }
+  .srow .chev { color:#C4C7CD; display:flex; margin-left:6px; }
+  .srow .chev svg { width:17px; height:17px; }
+  .danger { color:#F04438; justify-content:center; font-weight:600; }
+  .foot-note { text-align:center; font-size:12px; color:#A7AAB3; margin:22px 0 6px; }
+  .link-center { display:block; text-align:center; margin-top:18px; font-size:14px; color:#4176E6;
+    text-decoration:none; font-weight:600; }
+  /* M1 登录 */
+  .login-hero { text-align:center; margin-top:64px; }
+  .login-hero h1 { font-size:36px; font-weight:800; letter-spacing:1px; }
+  .login-hero p { font-size:15px; color:#8A8F98; margin-top:10px; letter-spacing:4px; }
+  .btn-wxlogin { margin:6px 26px 0; height:52px; border-radius:999px; background:#07C160; color:#fff;
+    font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .mp-field { margin:14px 26px 0; background:#fff; border-radius:999px; height:52px;
+    display:flex; align-items:center; padding:0 16px; box-shadow:0 2px 10px rgba(20,20,40,.05); }
+  .login-hero + .mp-field { margin-top:36px; }
+  .mp-field input { flex:1; border:none; outline:none; font-size:15px; background:transparent; color:#17171C; }
+  .mp-field input::placeholder { color:#B6BAC2; }
+  .btn-login { margin:18px 26px 0; height:52px; border-radius:999px; background:#4176E6; color:#fff;
+    font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .mp-links { display:flex; justify-content:center; align-items:center; gap:10px;
+    margin-top:14px; font-size:13px; color:#4176E6; font-weight:600; }
+  .mp-links span { color:#D8DBE0; }
+  .divider { display:flex; align-items:center; gap:12px; margin:30px 26px 0;
+    font-size:12px; color:#B6BAC2; }
+  .divider::before, .divider::after { content:""; flex:1; height:1px; background:#EDEFF2; }
+  .agree { position:absolute; left:0; right:0; bottom:44px; text-align:center;
+    font-size:11.5px; color:#9AA0AA; line-height:1.8; }
+  .agree a { color:#4176E6; text-decoration:none; }
+  /* M2 会话列表 */
+  .wxsearch { margin:12px 16px 0; background:#EFEFF1; border-radius:10px; display:flex;
+    align-items:center; justify-content:center; gap:6px; padding:9px 12px;
+    color:#8A8F98; font-size:14px; }
+  .wxsearch .fi { width:16px; height:16px; }
+  .ai-card-lite { margin:14px 16px 12px; background:#16161B; border-radius:22px; padding:18px; color:#fff; }
+  .ai-card-lite h3 { font-size:17px; font-weight:700; margin-top:10px; }
+  .ai-card-lite p { font-size:12.5px; color:#A7AAB3; margin-top:6px; }
+  .sess-row1 { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .sess-row1 h5 { font-size:15.5px; font-weight:700; }
+  .sess-row1 .chev { color:#C4C7CD; display:flex; }
+  .sess-row1 .chev svg { width:17px; height:17px; }
+  .sess-row2 { display:flex; align-items:center; margin-top:8px; }
+  .sess-row2 .status { margin-left:0; }
+  .sess-row2 .meta { margin-left:auto; }
+  /* M3 会话详情 */
+  .turn-line { text-align:center; font-size:12px; color:#8A8F98; margin:14px 0 4px; }
+  .turn-line b { color:#4176E6; font-weight:700; }
+  .msg-a { margin:10px 16px 0; background:#fff; border-radius:4px 20px 20px 20px;
+    padding:14px 15px; font-size:14.5px; line-height:1.65; box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .msg-u { margin:12px 16px 0 66px; background:#CBE5FE; border-radius:20px 20px 4px 20px;
+    padding:13px 15px; font-size:14.5px; line-height:1.65; }
+  /* 对话输入框 v2：双层结构（输入区 + 工具条），与 App 端统一 */
+  .composer2 { background:#fff; border-radius:20px; border:1px solid #E7E9EC;
+    box-shadow:0 4px 18px rgba(20,20,40,.07); }
+  .composer2 .c-input { padding:13px 16px 2px; }
+  .composer2 .c-input input { width:100%; border:none; outline:none; font-size:15px;
+    background:transparent; color:#17171C; }
+  .composer2 .c-input input::placeholder { color:#B6BAC2; }
+  .composer2 .c-bar { display:flex; align-items:center; gap:8px; padding:6px 8px 8px; }
+  .composer-float { position:absolute; left:12px; right:12px; bottom:26px; z-index:40; }
+  .plus-btn { width:34px; height:34px; border-radius:50%; background:#F2F4F7; color:#3A3D44;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .send { width:34px; height:34px; border-radius:50%; background:#4176E6; color:#fff; border:none;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .send .fi { width:16px; height:16px; }
+  /* M4 我的 */
+  .profile { display:flex; align-items:center; gap:14px; margin-top:14px; }
+  .pavatar { width:58px; height:58px; border-radius:50%; background:#EDEFF2; color:#9AA0AA;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .pavatar .fi { width:28px; height:28px; }
+  .pinfo b { font-size:17px; display:block; }
+  .pinfo small { font-size:13px; color:#8A8F98; display:block; margin-top:4px; }
+  .profile .chev { margin-left:auto; color:#C4C7CD; display:flex; }
+  .profile .chev svg { width:17px; height:17px; }
+  /* ===== 新增：代码补齐屏（M6起） ===== */
+  /* M6 列表-筛选（代码 sl-header：标题筛选按钮 + 右侧设置链接，无 tabBar） */
+  .sl-head { display:flex; align-items:center; justify-content:space-between; padding:12px 18px 4px; }
+  .sl-title-btn { display:flex; align-items:center; gap:5px; font-size:17px; font-weight:600; }
+  .sl-title-btn .caret { color:#8A8F98; font-size:13px; }
+  .sl-settings-link { font-size:15px; color:#4176E6; font-weight:500; }
+  .dim2 { position:absolute; inset:0; background:rgba(15,15,20,.35); z-index:45; }
+  .fmenu { position:absolute; top:104px; left:16px; right:16px; z-index:50; background:#fff;
+    border-radius:12px; overflow:hidden; box-shadow:0 12px 32px rgba(10,10,20,.18); }
+  .fmenu .frow { display:flex; align-items:center; padding:0 16px; height:44px; font-size:15px; }
+  .fmenu .frow + .frow { border-top:1px solid #F1F1F4; }
+  .fmenu .frow .chk { margin-left:auto; color:#4176E6; font-weight:700; }
+  .sec-title { font-size:12.5px; color:#8A8F98; padding:16px 20px 6px; }
+  .sessrow { display:flex; align-items:center; gap:9px; padding:13px 16px; }
+  .sessrow + .sessrow { border-top:1px solid #F1F1F4; }
+  .sessrow .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .sessrow .pin { color:#8A8F98; font-size:13px; flex-shrink:0; }
+  .sessrow .t { flex:1; font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sessrow .d { font-size:12.5px; color:#8A8F98; flex-shrink:0; }
+  .empty { text-align:center; padding:56px 40px; }
+  .empty h4 { font-size:17px; font-weight:700; }
+  .empty p { font-size:13.5px; color:#8A8F98; margin-top:8px; line-height:1.7; }
+  .fab { position:absolute; right:18px; bottom:34px; width:56px; height:56px; border-radius:50%;
+    background:#4176E6; color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:28px; font-weight:300; box-shadow:0 8px 24px rgba(65,118,230,.4); z-index:40; }
+  .cap { font-size:11.5px; color:#A7AAB3; padding:14px 20px 4px; }
+  /* M7 细条族 */
+  .spbar { background:#fff; padding:9px 16px; font-size:12.5px; display:flex; align-items:center;
+    gap:8px; border-bottom:1px solid #F1F1F4; line-height:1.6; }
+  .spbar .retry { color:#4176E6; font-weight:600; margin-left:auto; flex-shrink:0; }
+  .pager { text-align:center; font-size:12.5px; color:#8A8F98; padding:8px 0; }
+  .backbottom { position:absolute; right:18px; bottom:120px; width:44px; height:44px; border-radius:50%;
+    background:#fff; color:#3A3D44; display:flex; align-items:center; justify-content:center;
+    font-size:20px; box-shadow:0 6px 20px rgba(20,20,40,.14); z-index:40; }
+  .menufab { position:absolute; top:112px; right:16px; width:40px; height:40px; border-radius:50%;
+    background:#fff; color:#8A8F98; display:flex; align-items:center; justify-content:center;
+    font-size:20px; letter-spacing:2px; text-indent:2px; box-shadow:0 4px 16px rgba(20,20,40,.1); z-index:30; }
+  /* M8/M9 消息卡 */
+  .appr { margin:10px 16px 0; background:#fff; border-radius:16px; overflow:hidden; display:flex;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .appr .bar { width:4px; background:#D97706; flex-shrink:0; }
+  .appr .bd { flex:1; padding:14px 15px; min-width:0; }
+  .appr .bd h5 { font-size:15px; font-weight:700; }
+  .appr .res { font-size:13.5px; margin-top:8px; font-family:ui-monospace,Menlo,monospace;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .appr .why { font-size:12.5px; color:#8A8F98; margin-top:6px; line-height:1.6; }
+  .abtn { height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:15px; font-weight:600; margin-top:10px; }
+  .abtn.pri { background:#16161B; color:#fff; }
+  .abtn.sec { background:#F2F4F7; color:#17171C; }
+  .abtn.dan { background:#fff; color:#F04438; }
+  .qopt { border:1px solid #E7E9EC; border-radius:12px; padding:11px 14px; font-size:14px;
+    margin-top:8px; display:flex; align-items:center; gap:9px; }
+  .qopt.on { border-color:#4176E6; color:#4176E6; font-weight:600; }
+  .qopt .box { width:16px; height:16px; border-radius:50%; border:1.5px solid #C4C7CD; flex-shrink:0; }
+  .qopt.on .box { border-color:#4176E6; background:#4176E6; box-shadow:inset 0 0 0 3px #fff; }
+  .tcard { margin:10px 16px 0; background:#fff; border-radius:14px; padding:12px 15px;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  .tcard .hd { display:flex; align-items:center; gap:8px; }
+  .tcard .hd b { font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tcard .hd .st { margin-left:auto; font-size:12.5px; flex-shrink:0; }
+  .tcard .hd .cv { color:#8A8F98; font-size:14px; flex-shrink:0; }
+  .tcard .dt { font-size:12.5px; color:#8A8F98; margin-top:8px; line-height:1.7;
+    font-family:ui-monospace,Menlo,monospace; }
+  .turnrow { text-align:center; font-size:12px; padding:12px 16px 2px; }
+  .tsline { text-align:center; font-size:12px; color:#8A8F98; padding:12px 0 2px; }
+  .att-row { display:flex; gap:8px; margin-bottom:10px; }
+  .att { width:64px; height:64px; border-radius:10px; background:#F2F4F7; color:#8A8F98;
+    display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
+  .att .fi { width:24px; height:24px; }
+  .att .x { position:absolute; top:-7px; right:-7px; width:20px; height:20px; border-radius:50%;
+    background:#8A8F98; color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; }
+  /* M10 弹窗 */
+  .sheet2 { position:absolute; left:0; right:0; bottom:0; z-index:50; background:#F7F7F9;
+    border-radius:20px 20px 0 0; padding:8px 0 30px; }
+  .sheet2 .arow { text-align:center; font-size:16px; padding:15px 0; background:#fff; }
+  .sheet2 .arow + .arow { border-top:1px solid #F1F1F4; }
+  .sheet2 .arow.red { color:#F04438; }
+  .sheet2 .gap { height:8px; }
+  .modal2 { position:relative; z-index:60; margin:0 52px 18px; background:#fff; border-radius:16px;
+    padding:20px 18px 14px; text-align:center; box-shadow:0 16px 48px rgba(10,10,20,.25); }
+  .modal2 h5 { font-size:16px; font-weight:700; }
+  .modal2 p { font-size:13.5px; color:#3A3D44; margin-top:10px; line-height:1.7; }
+  .modal2 input { width:100%; border:1px solid #E7E9EC; border-radius:10px; height:42px;
+    padding:0 12px; font-size:15px; margin-top:14px; outline:none; }
+  .modal2 .mrow { display:flex; margin:16px -18px 0; border-top:1px solid #F1F1F4; }
+  .modal2 .mrow span { flex:1; text-align:center; padding:13px 0 4px; font-size:16px; color:#8A8F98; }
+  .modal2 .mrow span:last-child { border-left:1px solid #F1F1F4; color:#4176E6; font-weight:600; }
+  .modal2 .mrow span.del { color:#dc2626; font-weight:600; }
+  /* M11 composer（代码 composer.tsx 单胶囊形态） */
+  .cwrap { margin:0 12px; }
+  .attach-strip { background:#fff; border-radius:16px 16px 0 0; border:1px solid #E7E9EC;
+    border-bottom:none; padding:12px 12px 4px; display:flex; gap:12px; }
+  .cps { background:#fff; border-radius:20px; border:1px solid #E7E9EC; display:flex;
+    align-items:center; gap:10px; padding:8px 8px 8px 14px; box-shadow:0 4px 18px rgba(20,20,40,.07); }
+  .cps.flat-top { border-radius:0 0 20px 20px; border-top:none; }
+  .cps .pglyph { width:34px; height:34px; border-radius:50%; background:#F2F4F7; color:#3A3D44;
+    display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:300; flex-shrink:0; }
+  .cps .pglyph.dim { opacity:.35; }
+  .cps .tx { flex:1; font-size:15px; color:#B6BAC2; }
+  .cps .tx.dark { color:#17171C; }
+  .stop { width:34px; height:34px; border-radius:50%; background:#4176E6;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .stop i { width:12px; height:12px; background:#fff; border-radius:2px; display:block; }
+  /* M12 设置 */
+  .pair-host { font-family:ui-monospace,Menlo,monospace; font-size:13.5px; color:#8A8F98; margin-top:8px; }
+  .st-cta { margin:14px 0 0; height:50px; border-radius:999px; background:#4176E6; color:#fff;
+    font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .st-ghost { margin:10px 0 0; height:50px; border-radius:999px; border:1px solid #E4E4E7;
+    color:#8A8F98; font-size:15px; font-weight:600; display:flex; align-items:center; justify-content:center; }
+  .disconnect { margin:14px 16px 0; background:#fff; border-radius:22px; padding:15px;
+    text-align:center; color:#F04438; font-size:15.5px; font-weight:600;
+    box-shadow:0 3px 14px rgba(20,20,40,.06); }
+  /* M13 深色（theme/tokens.ts darkTheme） */
+  .phone.dark { background:#09090b; border-color:#000; }
+  .phone.dark .screen { background:#09090b; }
+  .phone.dark .statusbar { color:#fafafa; }
+  .phone.dark .sl-title-btn { color:#fafafa; }
+  .phone.dark .sl-settings-link { color:#818cf8; }
+  .phone.dark .card, .phone.dark .fmenu { background:#18181b; }
+  .phone.dark .sec-title, .phone.dark .sessrow .d, .phone.dark .sessrow .pin { color:#a1a1aa; }
+  .phone.dark .sessrow .t { color:#fafafa; }
+  .phone.dark .sessrow + .sessrow { border-color:#27272a; }
+  .phone.dark .fmenu .frow { color:#fafafa; }
+  .phone.dark .fmenu .frow + .frow { border-color:#27272a; }
+  .phone.dark .fmenu .frow .chk { color:#818cf8; }
+  .phone.dark .fab { background:#818cf8; box-shadow:0 8px 24px rgba(129,140,248,.35); }
+  .phone.dark .empty h4 { color:#fafafa; }
+  .phone.dark .empty p { color:#a1a1aa; }
+</style>
+</head>
+<body>
+<div class="page-head">
+  <h1>Spark 微信小程序设计稿</h1>
+  <p>共 13 个屏：M1–M5 原有（登录 / 会话列表 / 会话详情 / 我的 / 账号与安全）；M6–M13 为代码补齐屏——M6 列表筛选与行、M7 会话页细条与空态、M8/M9 消息卡上下、M10 会话菜单、M11 Composer 三态、M12 设置已配对完整版、M13 深色模式。<br>
+  新屏严格以小程序代码为准：无 tabBar（J.1 纪律），列表用标题筛选菜单；M1/M4/M5 系账号体系设计先行，代码暂无对应页面。<br>
+  导航按微信原生习惯：顶部白色导航栏（标题居中 17px）+ 底部原生 tabBar（会话 / 我的）；push 页无 tabBar。<br>
+  token 与 App 端严格一致（底 #F7F7F9 / 卡片白 r22 / 深色 #16161B / 点睛蓝 #4176E6），图标统一 Feather 描边。唯一例外：微信一键登录按钮用微信绿 #07C160（平台规范，单次使用）。</p>
+</div>
+<div class="legend">
+  <span class="token-chip"><i style="background:#F7F7F9;border:1px solid #E4E4E7"></i>底 #F7F7F9</span>
+  <span class="token-chip"><i style="background:#fff;border:1px solid #E4E4E7"></i>卡片 #FFFFFF · r22</span>
+  <span class="token-chip"><i style="background:#16161B"></i>深色 #16161B</span>
+  <span class="token-chip"><i style="background:#4176E6"></i>点睛蓝 #4176E6</span>
+  <span class="token-chip"><i style="background:#CBE5FE"></i>气泡蓝 #CBE5FE</span>
+  <span class="token-chip"><i style="background:#12B76A"></i>成功绿 #12B76A</span>
+  <span class="token-chip"><i style="background:#F04438"></i>危险红 #F04438</span>
+  <span class="token-chip"><i style="background:#07C160"></i>微信绿 #07C160 · 仅登录钮</span>
+</div>
+<div class="phones">
+
+<!-- M1 登录 -->
+<div class="phone-wrap">
+  <div class="phone-label">M1 · 登录<span>邮箱 + 密码 · 与 App 同体系</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span></span><span class="wxnav-title">登录</span><span></span></div>
+    <div class="login-hero">
+      <h1>Spark</h1>
+    </div>
+    <div class="mp-field"><input placeholder="邮箱地址"></div>
+    <div class="mp-field"><input placeholder="密码" type="password"></div>
+    <div class="btn-login">登录</div>
+    <div class="mp-links"><a>忘记密码</a><span>·</span><a>注册账号</a></div>
+    <div class="divider"><span>或</span></div>
+    <div class="btn-wxlogin">微信授权登录</div>
+    <div class="agree">登录即代表同意<a>《用户协议》</a><a>《隐私政策》</a></div>
+  </div></div>
+</div>
+
+<!-- M2 会话列表 -->
+<div class="phone-wrap">
+  <div class="phone-label">M2 · 会话列表<span>微信风搜索 + 深色 AI 状态卡</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span></span><span class="wxnav-title">会话</span><span></span></div>
+    <div class="wxsearch"><i data-ic="search"></i><span>搜索会话</span></div>
+    <div class="ai-card-lite">
+      <span class="status light"><i style="background:#4176E6"></i>运行中</span>
+      <h3>重构登录鉴权</h3>
+      <p>Turn 12 · 正在写 auth.ts</p>
+    </div>
+    <div class="card">
+      <div class="sess-row1"><h5>重构登录鉴权</h5><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="sess-row2"><span class="status"><i style="background:#4176E6"></i>运行中</span><span class="meta">12 分钟前</span></div>
+    </div>
+    <div class="card">
+      <div class="sess-row1"><h5>给 README 加徽章</h5><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="sess-row2"><span class="status"><i style="background:#D97706"></i>待审批</span><span class="meta">1 小时前</span></div>
+    </div>
+  </div>
+  <div class="wxtab">
+    <div class="wtab on"><i data-ic="chat"></i>会话</div>
+    <div class="wtab"><i data-ic="user"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- M3 会话详情 -->
+<div class="phone-wrap">
+  <div class="phone-label">M3 · 会话详情<span>气泡对话 + 底部 composer · 无 tabBar</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">重构登录鉴权</span><span></span></div>
+    <div class="turn-line">Turn 12 · <b>运行中</b></div>
+    <div class="msg-a">auth.ts 的 token 刷新逻辑已写完，单测覆盖了过期与并发两种场景。下一步给 miniapp 侧加上登录态过期提示，你看可以吗？</div>
+    <div class="msg-u">可以，加上吧，顺手把 401 的错误文案也对齐一下。</div>
+    <div class="msg-a">收到，正在改 miniapp 的 request 封装，预计 2 分钟后提一版。</div>
+  </div>
+  <div class="composer2 composer-float">
+    <div class="c-input"><input placeholder="输入消息…" /></div>
+    <div class="c-bar">
+      <div class="plus-btn"><i data-ic="plus"></i></div>
+      <div style="flex:1"></div>
+      <button class="send"><i data-ic="up"></i></button>
+    </div>
+  </div></div>
+</div>
+
+<!-- M4 我的 -->
+<div class="phone-wrap">
+  <div class="phone-label">M4 · 我的<span>资料卡 + 账号行</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span></span><span class="wxnav-title">我的</span><span></span></div>
+    <div class="card profile">
+      <span class="pavatar"><i data-ic="user"></i></span>
+      <div class="pinfo"><b>晚风</b><small>wanfeng572@gmail.com</small></div>
+      <span class="chev"><i data-ic="chev" class="fi"></i></span>
+    </div>
+    <div class="group">
+      <div class="srow"><span class="ric"><i data-ic="shield" class="fi"></i></span>账号与安全<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric"><i data-ic="trash" class="fi"></i></span>清理缓存<span class="val">128 MB</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric"><i data-ic="info" class="fi"></i></span>关于 Spark<span class="val">v1.0.0</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group"><div class="srow danger">退出登录</div></div>
+  </div>
+  <div class="wxtab">
+    <div class="wtab"><i data-ic="chat"></i>会话</div>
+    <div class="wtab on"><i data-ic="user"></i>我的</div>
+  </div></div>
+</div>
+
+<!-- M5 账号与安全 -->
+<div class="phone-wrap">
+  <div class="phone-label">M5 · 账号与安全<span>push 页 · 无 tabBar</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">账号与安全</span><span></span></div>
+    <div class="group">
+      <div class="srow"><span class="ric"><i data-ic="mail" class="fi"></i></span>邮箱<span class="val">wanfeng572@gmail.com</span><span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+      <div class="srow"><span class="ric"><i data-ic="chat" class="fi"></i></span>微信账号<span class="val" style="color:#12B76A">已绑定</span></div>
+      <div class="srow"><span class="ric"><i data-ic="lock" class="fi"></i></span>修改密码<span class="chev"><i data-ic="chev" class="fi"></i></span></div>
+    </div>
+    <div class="group"><div class="srow danger">注销账号</div></div>
+    <div class="foot-note">注销后将清除本机全部数据，且不可恢复</div>
+  </div></div>
+</div>
+
+</div><!-- /phones -->
+
+<!-- ===== 新增：代码补齐屏（M6起） ===== -->
+<div class="phones" style="margin-top:36px">
+
+<!-- M6 列表-筛选与行 -->
+<div class="phone-wrap">
+  <div class="phone-label">M6 · 列表-筛选与行<span>标题筛选菜单 · 分组标题 · 置顶★ · 空态三档</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="sl-head">
+      <div class="sl-title-btn">全部会话<span class="caret">⌄</span></div>
+      <span class="sl-settings-link">设置</span>
+    </div>
+    <div class="sec-title">今天</div>
+    <div class="card" style="padding:0">
+      <div class="sessrow"><span class="dot" style="background:#4176E6"></span><span class="pin">★</span><span class="t">重构登录鉴权</span><span class="d">14:02</span></div>
+      <div class="sessrow"><span class="dot" style="background:#D97706"></span><span class="t">给 mdurl4cj 写 README 与发布说明文档</span><span class="d">11:47</span></div>
+      <div class="sessrow"><span class="dot" style="background:#12B76A"></span><span class="t">修好了 iOS 键盘遮挡</span><span class="d">09:15</span></div>
+    </div>
+    <div class="sec-title">昨天</div>
+    <div class="card" style="padding:0">
+      <div class="sessrow"><span class="dot" style="background:#8A8F98"></span><span class="t">升级依赖</span><span class="d">昨天</span></div>
+      <div class="sessrow"><span class="dot" style="background:#8A8F98"></span><span class="t">新会话</span><span class="d">昨天</span></div>
+    </div>
+    <div class="cap">空态 · 已配对无会话</div>
+    <div class="empty" style="padding-top:16px"><h4>暂无会话</h4><p>下拉刷新，或从右下角新建会话</p></div>
+    <div class="cap">空态 · 已归档空</div>
+    <div class="empty" style="padding-top:16px"><h4>暂无会话</h4><p>没有已归档的会话（归档在桌面/网页端侧栏操作）</p></div>
+    <div class="dim2"></div>
+    <div class="fmenu">
+      <div class="frow">全部<span class="chk">✓</span></div>
+      <div class="frow">按项目</div>
+      <div class="frow">已归档</div>
+    </div>
+  </div>
+  <div class="fab">+</div></div>
+</div>
+
+<!-- M7 会话页-细条与空态 -->
+<div class="phone-wrap">
+  <div class="phone-label">M7 · 会话页-细条与空态<span>sp-bar 细条族 · 空态 · 上拉加载 · 回到底部</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">重构登录鉴权</span><span></span></div>
+    <div class="cap">断线重连</div>
+    <div class="spbar"><span style="color:#D97706">正在重连…</span></div>
+    <div class="cap">鉴权失败</div>
+    <div class="spbar"><span style="color:#F04438">连接已停止：鉴权失败，请到设置页重新配对</span></div>
+    <div class="cap">计划模式</div>
+    <div class="spbar"><span style="color:#8A8F98">计划模式：写类工具全拒，模型只读地出计划；退出需你批准</span></div>
+    <div class="cap">交付声明</div>
+    <div class="spbar"><span style="color:#8A8F98">交付文件 3 个：改动摘要与回归清单</span></div>
+    <div class="cap">后台任务</div>
+    <div class="spbar"><span style="color:#8A8F98">后台任务 1/2 运行中——输出走 task_output 查询</span></div>
+    <div class="cap">待办</div>
+    <div class="spbar"><span style="color:#8A8F98">待办 2/5 · 写单测进行中</span></div>
+    <div class="cap">本轮 error + 重试</div>
+    <div class="spbar"><span style="color:#F04438">本轮以 error 结束</span><span class="retry">重试</span></div>
+    <div class="cap">附件提示</div>
+    <div class="spbar"><span style="color:#F04438">图片过大，已拒绝（单张上限 5 MB）</span></div>
+    <div class="cap">上拉加载</div>
+    <div class="pager">加载中…</div>
+    <div class="pager">已加载全部历史</div>
+    <div class="cap">空态</div>
+    <div class="empty" style="padding-top:8px"><h4>开始对话</h4><p>描述你的任务，Spark 即刻开工</p></div>
+  </div>
+  <div class="menufab">⋯</div>
+  <div class="backbottom">↓</div></div>
+</div>
+
+<!-- M8 消息卡上 -->
+<div class="phone-wrap">
+  <div class="phone-label">M8 · 消息卡上<span>审批卡 · 提问卡 · 工具卡 · 思考卡</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">重构登录鉴权</span><span></span></div>
+    <div class="cap">审批卡 · 待决策</div>
+    <div class="appr"><div class="bar"></div><div class="bd">
+      <h5>请求授权</h5>
+      <div class="res">bash: rm -rf /tmp/spark-build</div>
+      <div class="why">清理构建产物，释放约 2.1 GB 磁盘空间</div>
+      <div class="abtn pri">允许</div>
+      <div class="abtn sec">始终允许</div>
+      <div class="abtn dan">拒绝</div>
+    </div></div>
+    <div class="cap">结构化提问卡 · 待作答</div>
+    <div class="appr"><div class="bar"></div><div class="bd">
+      <h5>需要你的选择</h5>
+      <div class="why">1. 合并用哪个分支？</div>
+      <div class="qopt on"><span class="box"></span>main</div>
+      <div class="qopt"><span class="box"></span>dev</div>
+      <div class="abtn pri">提交</div>
+    </div></div>
+    <div class="cap">工具调用卡 · 展开</div>
+    <div class="tcard"><div class="hd"><b>read</b><span class="st" style="color:#12B76A">完成</span><span class="cv">∧</span></div>
+      <div class="dt">src/pages/session/index.tsx · 412 行</div></div>
+    <div class="cap">思考过程卡 · 思考中</div>
+    <div class="tcard"><div class="hd"><b style="color:#8A8F98;font-weight:500">思考中…</b><span class="cv" style="margin-left:auto">∧</span></div>
+      <div class="dt" style="font-family:inherit;color:#8A8F98">先看 sp-bar 的渲染条件，再决定待办条接哪个 slice 字段……</div></div>
+  </div></div>
+</div>
+
+<!-- M9 消息卡下 -->
+<div class="phone-wrap">
+  <div class="phone-label">M9 · 消息卡下<span>LSP 诊断卡 · 回合头 · 时间戳 · 附件气泡</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">重构登录鉴权</span><span></span></div>
+    <div class="tsline">10月6日 14:32</div>
+    <div class="turnrow"><span style="color:#4176E6">工作中 · 12 秒 · 第 3 步 · 2 工具</span></div>
+    <div class="cap">LSP 诊断卡 · 折叠</div>
+    <div class="tcard"><div class="hd"><b style="color:#8A8F98;font-weight:500">LSP typescript · src/auth.ts</b><span class="st" style="color:#8A8F98">E 2 / W 1</span><span class="cv">∨</span></div></div>
+    <div class="cap">LSP 诊断卡 · 展开</div>
+    <div class="tcard"><div class="hd"><b style="color:#8A8F98;font-weight:500">LSP typescript · src/auth.ts</b><span class="st" style="color:#8A8F98">E 2 / W 1</span><span class="cv">∧</span></div>
+      <div class="dt"><span style="color:#F04438">[E] </span><span style="color:#8A8F98">12:4 </span>不能将类型“string”分配给类型“number”</div>
+      <div class="dt"><span style="color:#D97706">[W] </span><span style="color:#8A8F98">30:1 </span>未使用的变量“tmp”</div></div>
+    <div class="turnrow"><span style="color:#8A8F98">已工作 45 秒</span></div>
+    <div class="cap">带附件的用户气泡</div>
+    <div class="msg-u"><div class="att-row"><span class="att"><i data-ic="image"></i></span></div>这张报错截图看一下，点登录没反应。</div>
+  </div></div>
+</div>
+
+<!-- M10 会话菜单 -->
+<div class="phone-wrap">
+  <div class="phone-label">M10 · 会话菜单<span>ActionSheet · 重命名弹窗 · 删除确认</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">重构登录鉴权</span><span></span></div>
+    <div class="turn-line">Turn 12 · <b>运行中</b></div>
+    <div class="msg-a">auth.ts 的 token 刷新逻辑已写完，单测覆盖了过期与并发两种场景。</div>
+    <div class="cap">重命名弹窗</div>
+    <div class="modal2">
+      <h5>重命名会话</h5>
+      <input placeholder="输入新标题" value="重构登录鉴权" />
+      <div class="mrow"><span>取消</span><span>确定</span></div>
+    </div>
+    <div class="cap">删除确认弹窗</div>
+    <div class="modal2">
+      <h5>删除会话</h5>
+      <p>会话文件将移入服务端回收站（两段式删除，可在存储页恢复）</p>
+      <div class="mrow"><span>取消</span><span class="del">删除</span></div>
+    </div>
+    <div class="dim2"></div>
+    <div class="sheet2">
+      <div class="arow">置顶</div>
+      <div class="arow">重命名</div>
+      <div class="arow">归档</div>
+      <div class="arow red">删除</div>
+      <div class="gap"></div>
+      <div class="arow">取消</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- M11 Composer 三态 -->
+<div class="phone-wrap">
+  <div class="phone-label">M11 · Composer 三态<span>附件待发 · 上传中 · 运行中停止</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">重构登录鉴权</span><span></span></div>
+    <div class="msg-u">把登录页的报错截个图发我。</div>
+    <div class="cap">附件待发 · 可逐张删除</div>
+    <div class="cwrap">
+      <div class="attach-strip">
+        <span class="att"><i data-ic="image"></i><span class="x">×</span></span>
+        <span class="att"><i data-ic="image"></i><span class="x">×</span></span>
+      </div>
+      <div class="cps flat-top">
+        <span class="pglyph">+</span><span class="tx dark">已收到，正在看…</span>
+        <span class="send"><i data-ic="up" class="fi"></i></span>
+      </div>
+    </div>
+    <div class="cap">上传中 · 「+」置灰禁用</div>
+    <div class="cwrap"><div class="cps">
+      <span class="pglyph dim">+</span><span class="tx">上传中…</span>
+      <span class="send" style="opacity:.35"><i data-ic="up" class="fi"></i></span>
+    </div></div>
+    <div class="cap">运行中 · 发送变停止</div>
+    <div class="cwrap"><div class="cps">
+      <span class="pglyph">+</span><span class="tx">描述你的任务…</span>
+      <span class="stop"><i></i></span>
+    </div></div>
+  </div></div>
+</div>
+
+<!-- M12 设置-已配对完整版 -->
+<div class="phone-wrap">
+  <div class="phone-label">M12 · 设置-已配对完整版<span>待配对确认卡 · 电脑控制只读 · 断开连接</span><span class="is-new">新增</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="wxnav"><span class="wxback"><i data-ic="back" class="fi"></i></span><span class="wxnav-title">设置</span><span></span></div>
+    <div class="card">
+      <div class="sess-row1"><h5>待配对</h5></div>
+      <div class="pair-host">http://192.168.1.10:4318</div>
+      <div class="st-cta">连接</div>
+      <div class="st-ghost">取消</div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="sess-row1"><h5>电脑控制</h5></div>
+      <p class="meta" style="margin-top:8px; line-height:1.7;">已启用 · 开关在桌面/网页端设置中心（热生效）</p>
+    </div>
+    <div class="disconnect">断开连接</div>
+    <div class="foot-note">配对卡 / 服务器卡 / 外观三档见「小程序现状」截图，不重画</div>
+  </div></div>
+</div>
+
+<!-- M13 深色模式 -->
+<div class="phone-wrap">
+  <div class="phone-label">M13 · 深色模式<span>外观「深色」· 会话列表</span><span class="is-new">新增</span></div>
+  <div class="phone dark"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><span></span></div>
+    <div class="sl-head">
+      <div class="sl-title-btn">全部会话<span class="caret">⌄</span></div>
+      <span class="sl-settings-link">设置</span>
+    </div>
+    <div class="sec-title">今天</div>
+    <div class="card" style="padding:0">
+      <div class="sessrow"><span class="dot" style="background:#818cf8"></span><span class="pin">★</span><span class="t">重构登录鉴权</span><span class="d">14:02</span></div>
+      <div class="sessrow"><span class="dot" style="background:#fbbf24"></span><span class="t">给 README 加徽章</span><span class="d">11:47</span></div>
+    </div>
+    <div class="sec-title">昨天</div>
+    <div class="card" style="padding:0">
+      <div class="sessrow"><span class="dot" style="background:#a1a1aa"></span><span class="t">修好了 iOS 键盘遮挡</span><span class="d">昨天</span></div>
+    </div>
+    <div class="empty"><h4>暂无会话</h4><p>下拉刷新，或从右下角新建会话</p></div>
+  </div>
+  <div class="fab">+</div></div>
+</div>
+
+</div><!-- /新增 phones -->
+<script>
+// Feather 风格图标（描边），mockup 内联 —— 与 App 端 P 字典同源，另增 user / lock / up
+const P = {
+  chat: '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+  search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  back: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
+  arrow: '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+  up: '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>',
+  chev: '<polyline points="9 18 15 12 9 6"/>',
+  more: '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+  phone: '<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>',
+  info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+  user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  mail: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',
+  x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
+};
+document.querySelectorAll('[data-ic]').forEach(el => {
+  const k = el.getAttribute('data-ic');
+  if (P[k]) el.innerHTML = '<svg class="fi" viewBox="0 0 24 24">' + P[k] + '</svg>';
+});
+</script>
+</body>
+</html>
