@@ -25,7 +25,7 @@ function Status({ label }: { label: string }) {
   );
 }
 
-function AgentRow({ role, model, task, status }: { role: string; model: string; task: string; status: string }) {
+function AgentRow({ role, model, task, status, time }: { role: string; model: string; task: string; status: string; time: string }) {
   return (
     <div style={{ background: C.darkCard, borderRadius: tokens.radius.card, padding: "13px 16px", marginTop: 10 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
@@ -35,7 +35,10 @@ function AgentRow({ role, model, task, status }: { role: string; model: string; 
         </span>
         <Status label={status} />
       </div>
-      <div style={{ fontSize: 14, color: C.darkSub, marginTop: 6 }}>{task}</div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 6 }}>
+        <div style={{ fontSize: 14, color: C.darkSub }}>{task}</div>
+        <span style={{ fontSize: 13, color: C.darkSub, flexShrink: 0 }}>{time}</span>
+      </div>
     </div>
   );
 }
@@ -52,12 +55,12 @@ export default function AgentTeamDark() {
           <span>Team, 6 agents</span>
           <span>Auto review</span>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: C.darkSub, marginTop: 16 }}>
-          <span>1,240 of 6,000 credits</span>
-          <span>Step 3 of 5</span>
+        <div style={{ height: 4, borderRadius: 2, background: C.darkDivider, marginTop: 16 }}>
+          <div style={{ width: "20%", height: "100%", borderRadius: 2, background: C.darkText }} />
         </div>
-        <div style={{ height: 4, borderRadius: 2, background: C.darkDivider, marginTop: 8 }}>
-          <div style={{ width: "21%", height: "100%", borderRadius: 2, background: C.darkText }} />
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: C.darkSub, marginTop: 8 }}>
+          <span>1,240 of 6,000 credits</span>
+          <span>Step 3 of 8</span>
         </div>
         <div style={{ background: C.darkCard, borderRadius: tokens.radius.card, padding: "12px 16px", marginTop: 16 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
@@ -67,14 +70,17 @@ export default function AgentTeamDark() {
             </span>
             <Status label="Running" />
           </div>
-          <div style={{ fontSize: 14, color: C.darkSub, marginTop: 6 }}>Merging results from 4 agents</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 6 }}>
+            <div style={{ fontSize: 14, color: C.darkSub }}>Merging results from 4 agents</div>
+            <span style={{ fontSize: 13, color: C.darkSub, flexShrink: 0 }}>31s</span>
+          </div>
         </div>
         <div style={{ fontSize: 15, fontWeight: 700, marginTop: 20 }}>Agents</div>
-        <AgentRow role="Researcher" model="DeepSeek V4 Pro" task="Reading notion.com/pricing" status="Running" />
-        <AgentRow role="Researcher" model="DeepSeek V4 Pro" task="Searching 'Obsidian Sync price'" status="Running" />
-        <AgentRow role="Researcher" model="DeepSeek V4 Pro" task="Done: 2 plans found" status="Done" />
-        <AgentRow role="Analyst" model="GPT-6.1 Sol" task="Running code to build the table" status="Running" />
-        <AgentRow role="Reviewer" model="GPT-6.1 Sol" task="Waiting for a free slot" status="Queued" />
+        <AgentRow role="Researcher" model="DeepSeek V4 Pro" task="Reading notion.com/pricing" status="Running" time="9s" />
+        <AgentRow role="Researcher" model="DeepSeek V4 Pro" task="Searching 'Obsidian Sync price'" status="Running" time="7s" />
+        <AgentRow role="Researcher" model="DeepSeek V4 Pro" task="Done: 2 plans found" status="Done" time="6s" />
+        <AgentRow role="Analyst" model="GPT-6.1 Sol" task="Running code to build the table" status="Running" time="21s" />
+        <AgentRow role="Reviewer" model="GPT-6.1 Sol" task="Waiting for a free slot" status="Queued" time="8s" />
         <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
           <span
             style={{

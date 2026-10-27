@@ -5,10 +5,10 @@ function SignalIcon({ dark }: { dark: boolean }) {
   const c = dark ? "#F5F5F7" : "#17181C";
   return (
     <svg width="18" height="12" viewBox="0 0 18 12" fill={c}>
-      <rect x="0" y="7" width="3" height="5" rx="1" />
-      <rect x="5" y="5" width="3" height="7" rx="1" />
-      <rect x="10" y="2" width="3" height="10" rx="1" />
-      <rect x="15" y="0" width="3" height="12" rx="1" />
+      <rect x="0" y="7" width="2.5" height="5" rx="1" />
+      <rect x="4.5" y="5" width="2.5" height="7" rx="1" />
+      <rect x="9" y="2" width="2.5" height="10" rx="1" />
+      <rect x="13.5" y="0" width="2.5" height="12" rx="1" />
     </svg>
   );
 }
@@ -16,7 +16,7 @@ function SignalIcon({ dark }: { dark: boolean }) {
 function WifiIcon({ dark }: { dark: boolean }) {
   const c = dark ? "#F5F5F7" : "#17181C";
   return (
-    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke={c} strokeWidth="1.6" strokeLinecap="round">
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke={c} strokeWidth="1.4" strokeLinecap="round">
       <path d="M1 4.5C4 1.5 12 1.5 15 4.5" />
       <path d="M3.5 7.5C5.5 5.5 10.5 5.5 12.5 7.5" />
       <circle cx="8" cy="10.2" r="1.1" fill={c} stroke="none" />
@@ -28,9 +28,8 @@ function BatteryIcon({ dark }: { dark: boolean }) {
   const c = dark ? "#F5F5F7" : "#17181C";
   return (
     <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
-      <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke={c} opacity="0.5" />
-      <rect x="2" y="2" width="18" height="8" rx="2" fill={c} />
-      <path d="M23 4v4a2.2 2.2 0 0 0 0-4z" fill={c} opacity="0.5" />
+      <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" fill={c} />
+      <path d="M23 4v4a2.2 2.2 0 0 0 0-4z" fill={c} />
     </svg>
   );
 }

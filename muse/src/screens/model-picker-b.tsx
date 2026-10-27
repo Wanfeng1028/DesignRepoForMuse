@@ -58,6 +58,13 @@ function Section({ title, desc, children }: { title: string; desc: string; child
 
 const segments = ["Auto", "Off", "Low", "Med", "High", "Max"];
 
+// NOTE (detail close-out 2026-10-27): the original shows a tiny sub-text under
+// each Thinking segment, but at ~3px glyph height in the only source (overview
+// 154px phone) it is below reliable reading resolution: 8x/10x Lanczos crops,
+// per-pixel glyph bitmap analysis, and two k3free vision passes all failed to
+// converge on values, so no multiplier is rendered rather than inventing one.
+// See DESIGN-TOKENS.md section 9 for the full methods-tried list.
+
 export default function ModelPickerB() {
   return (
     <Phone theme="dark">

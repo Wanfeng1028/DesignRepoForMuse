@@ -78,7 +78,7 @@ export default function ChatDarkKyotoEn() {
       <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "0 20px" }}>
         <UserBubble dark>2 days in Kyoto, temples and food</UserBubble>
         <AiMeta dark model="Kimi K3" sub="Searched 4 times, checked the weather, found 12 places" />
-        <p style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.5, margin: "0 0 14px 0" }}>
+        <p style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.55, margin: "0 0 14px 0" }}>
           Temples on dry Saturday, market on Sunday.
         </p>
         <div style={{ display: "flex", gap: 12 }}>

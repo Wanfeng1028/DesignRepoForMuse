@@ -1,7 +1,7 @@
 // codegen: spark-x2.6 draft, hand-adapted to shared chrome/tokens API
 import { Phone } from "../components/Phone";
 import { tokens } from "../tokens";
-import { ActionRow, AiMeta, Icon, InputBar, TopBar, UserBubble } from "../components/chrome";
+import { ActionRow, AiMeta, Icon, InputBar, ModelDot, TopBar, UserBubble } from "../components/chrome";
 
 export const meta = { id: "chat-dark-lisbon-en", title: "Lisbon chat (dark, EN)", source: "det_r0_c0" };
 
@@ -20,7 +20,7 @@ export default function ChatDarkLisbonEn() {
         <TopBar
           dark
           left={Icon.menu(C.darkText)}
-          center={<span style={{ fontSize: 16, fontWeight: 700, color: C.darkText }}>Claude Sonnet 5.5</span>}
+          center={<span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 16, fontWeight: 700, color: C.darkText }}><ModelDot model="Claude Sonnet 5.5" />Claude Sonnet 5.5</span>}
           right={Icon.edit(C.darkText)}
         />
         <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "4px 20px 16px" }}>
@@ -42,11 +42,23 @@ export default function ChatDarkLisbonEn() {
           </div>
           <div
             style={{
-              display: "inline-flex", marginTop: 14, border: `1px solid ${C.darkDivider}`, borderRadius: tokens.radius.chip,
-              padding: "5px 12px", fontSize: tokens.font.caption, color: C.darkSub,
+              display: "inline-flex", alignItems: "center", gap: 4, marginTop: 14, border: `1px solid ${C.darkDivider}`,
+              borderRadius: tokens.radius.chip, padding: "5px 12px", fontSize: tokens.font.caption, color: C.darkSub,
             }}
           >
-            3 sources
+            {["T", "L", "V"].map((b) => (
+              <span
+                key={b}
+                style={{
+                  width: 16, height: 16, borderRadius: 4, background: C.darkRow, color: C.darkText,
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 10, fontWeight: 700, flexShrink: 0,
+                }}
+              >
+                {b}
+              </span>
+            ))}
+            <span style={{ marginLeft: 4 }}>3 sources</span>
           </div>
           <ActionRow dark credits="28 credits" />
           <div style={{ display: "flex", justifyContent: "flex-end", margin: "4px 0 2px" }}>

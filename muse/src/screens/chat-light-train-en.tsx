@@ -32,7 +32,7 @@ export default function ChatLightTrainEn() {
       />
       <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "0 20px" }}>
         <UserBubble dark={false}>Paris to Barcelona: train or plane?</UserBubble>
-        <AiMeta dark={false} model="DeepSeek V4 Pro · Auto" sub="Searched 9 sites, read 4 pages, thought for 6s" />
+        <AiMeta dark={false} model="DeepSeek V4 Pro · Auto" sub="Searched 9 sites, read 6 pages, thought for 6s" />
         <p style={{ margin: "0 0 8px 0", fontSize: 16, fontWeight: 700, lineHeight: 1.55 }}>
           Take the train unless the flight is much cheaper.
         </p>
@@ -60,7 +60,18 @@ export default function ChatLightTrainEn() {
             </div>
           ))}
         </div>
-        <div style={{ fontSize: 13, color: C.lightSub, marginTop: 12 }}>4 sources</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13, color: C.lightSub, marginTop: 12 }}>
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              style={{
+                width: 16, height: 16, borderRadius: 4, background: "#EDEEF0",
+                display: "inline-block", flexShrink: 0,
+              }}
+            />
+          ))}
+          <span style={{ marginLeft: 4 }}>4 sources</span>
+        </div>
         <ActionRow dark={false} credits="41 credits" />
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 4 }}>
           {suggestions.map((s) => (

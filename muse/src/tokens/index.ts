@@ -2,7 +2,8 @@ export const tokens = {
   colors: {
     darkBg: "#121316",
     darkCard: "#1E1F23",
-    darkInput: "#26272B",
+    darkInput: "#1F2024",
+    userBubbleDark: "#191A1E",
     darkRow: "#2F3034",
     darkDivider: "#2A2C31",
     darkText: "#F5F5F7",
@@ -14,10 +15,10 @@ export const tokens = {
     lightText: "#17181C",
     lightSub: "#6B6C72",
     lightDim: "#9A9BA2",
-    accent: "#E4754A",
+    accent: "#E2A181",
     blackBtn: "#111214",
     whiteBtn: "#FFFFFF",
-    chartAmber: "#B07A3B",
+    chartAmber: "#8C553C",
     userBubbleLight: "#EDEEF0",
   },
   font: {
