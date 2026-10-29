@@ -5,19 +5,19 @@
   --color-ink: #11110f;
   --color-muted: rgba(17, 17, 15, 0.46);
   --color-faint: rgba(17, 17, 15, 0.34);
-  --color-canvas: #f9f9f7;
+  --color-canvas: #f4f4f4;
   --color-card: #ffffff;
   --color-tile: #f4f4f2;
   --color-hairline: rgba(0, 0, 0, 0.06);
-  --color-userblue: #1987f7;
+  --color-userblue: #0088fe;
   --color-online: #2ecb70;
-  --color-taskbg: #fffaf2;
-  --color-taskline: rgba(94, 74, 46, 0.12);
-  --color-taskink: #53412e;
-  --color-taskmuted: #88755e;
+  --color-taskbg: #ffffff;
+  --color-taskline: rgba(0, 0, 0, 0.06);
+  --color-taskink: #11110f;
+  --color-taskmuted: rgba(17, 17, 15, 0.55);
   --color-action: #f97316;
-  --radius-bubble: 16px;
-  --radius-card: 20px;
+  --radius-bubble: 24px;
+  --radius-card: 24px;
 }
 
 html, body { background: #e9e9e6; }

@@ -13,15 +13,15 @@ export type MemberActivityProps = {
 /** Member activity row: blob avatar + name + @role + status line + optional time. */
 export function MemberActivityRow({ name, role, status, time, actionNeeded, avatarColor }: MemberActivityProps) {
   return (
-    <div className="flex items-center gap-3 py-2">
+    <div className="flex items-center gap-3 py-2.5">
       <Avatar name={name} color={avatarColor} size={42} className="shrink-0" />
       <div className="min-w-0 flex-1">
-        <p className="text-[14px] font-bold text-[#11110f]">
+        <p className="text-[15px] font-bold text-[#11110f]">
           {name} <span className="font-normal text-black/45">@{role}</span>
         </p>
-        <p className={`truncate text-[13px] ${actionNeeded ? 'font-medium text-[#f97316]' : 'text-black/55'}`}>{status}</p>
+        <p className={`truncate text-[14px] ${actionNeeded ? 'font-medium text-[#f97316]' : 'text-black/55'}`}>{status}</p>
       </div>
-      {time ? <span className="shrink-0 text-[12px] text-black/40">{time}</span> : null}
+      {time ? <span className="shrink-0 text-[13px] text-black/40">{time}</span> : null}
     </div>
   )
 }

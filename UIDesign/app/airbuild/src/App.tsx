@@ -1,4 +1,5 @@
 import { AirDailyCard, SalesReportCard } from './components/briefing-cards.tsx'
+import { Avatar } from './components/avatar.tsx'
 import { Composer } from './components/composer.tsx'
 import { DetailPanel } from './components/detail-panel.tsx'
 import { FileCard } from './components/file-card.tsx'
@@ -53,8 +54,9 @@ function ChatScreen() {
         <Message author="Pluso" role="Developer" avatarColor="#45c8d8">
           I&rsquo;ve put together a direction for the first-session experience. The town stays at the center, with just enough guidance to help someone get started.
         </Message>
-        <div className="flex justify-end">
-          <div className="w-[78%]"><FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" /></div>
+        <div className="relative flex justify-end">
+          <div className="w-[68%]"><FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" /></div>
+          <Avatar name="Ampo" color="#9b7bf3" size={36} className="absolute right-0 top-1/2 shrink-0 -translate-y-1/2" />
         </div>
         <Message author="Ampo" role="Product manager" avatarColor="#9b7bf3">
           I&rsquo;ll keep the same visual language across both sizes. On iPad, the wider canvas gives the town more space while keeping the session controls easy to reach.
@@ -85,7 +87,7 @@ function BriefingScreen() {
           Your daily report is ready. Hands Time led growth, while two new Mood reviews raised questions.
         </Message>
         <div className="flex gap-3 overflow-hidden -mr-4 pr-4">
-          <div className="w-[82%] shrink-0">
+          <div className="w-[62%] shrink-0">
             <AirDailyCard
               headline="Hands Time led the growth. Mood deserves a closer look."
               body="On Sep 13, your three apps recorded 360 downloads and $58 in estimated proceeds. Hands Time contributed most of the increase."
@@ -93,7 +95,7 @@ function BriefingScreen() {
               glance="Downloads and estimated proceeds for Sep 13, compared with the last seven days of downloads."
             />
           </div>
-          <div className="w-[82%] shrink-0">
+          <div className="w-[62%] shrink-0">
             <SalesReportCard
               title="Hands Time — Sales Report"
               body="Downloads are growing steadily over the past few months, showing a consistent upward trend that reflects stronger user engagement."
@@ -109,7 +111,7 @@ function BriefingScreen() {
           Check Mood&rsquo;s first-entry flow. Both reviews mention difficulty starting. Try the latest version before deciding changes.
         </Message>
       </MessageList>
-      <div className="px-3 pb-4">
+      <div className="px-4 pb-5">
         <Composer initialValue="Any updates on Hands Time?" />
       </div>
     </PhoneFrame>

@@ -15,7 +15,7 @@ export function PhoneFrame({ children, width = 390, height = 844, className, lab
   return (
     <figure className={cn('shrink-0', className)}>
       <div
-        className="relative overflow-hidden bg-[#f9f9f7] shadow-[0_24px_60px_rgba(0,0,0,0.25)]"
+        className="relative overflow-hidden bg-[#f4f4f4] shadow-[0_24px_60px_rgba(0,0,0,0.25)]"
         style={{ width, height, borderRadius: 52, border: '10px solid #1c1c1e', boxSizing: 'border-box' }}
       >
         <div className="flex h-full flex-col">
