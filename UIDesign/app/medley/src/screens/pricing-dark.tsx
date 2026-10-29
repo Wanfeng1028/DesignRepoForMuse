@@ -22,7 +22,7 @@ export default function PricingDark() {
           <p className="ml-[30px] mt-3 text-[13px] leading-[1.5] text-dark-sub">
             80,000 credits a month, about 1,000 Claude Sonnet messages.
           </p>
-          <PlanFeature text="Claude Sonnet and Opus, GPT-5.1, GLM-5, Kimi K3" />
+          <PlanFeature text="Claude Sonnet and Opus, GPT-6.1 Sol, Kimi K3" />
           <PlanFeature text="Image generation and deep research" />
           <PlanFeature text="30 agent tasks a month, 3 scheduled" />
           <div className="ml-[30px] mt-2.5">

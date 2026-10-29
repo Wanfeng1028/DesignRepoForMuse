@@ -74,6 +74,7 @@ export default function ChatDarkLisbonCn() {
           <div className="text-body leading-[1.55] text-dark-text">
             第二天适合慢慢吃。上午 11 点前到 Time Out 市场，赶在午饭高峰之前，点几样小食分着吃，比一顿大餐更划算。下午走到
             Bairro Alto，买一个葡式蛋挞。
+            <span className="ml-1.5 inline-block h-3 w-3 rounded-full bg-brand-dot align-middle" />
           </div>
         </div>
         <InputBar dark placeholder="有问题，尽管问" modelLabel="Sonnet 5.5" mic="stop" />

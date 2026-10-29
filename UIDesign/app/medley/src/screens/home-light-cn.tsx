@@ -16,12 +16,12 @@ export default function HomeLightCn() {
           dark={false}
           left={Icon.menu('#17181c')}
           center={
-            <Tabs value="chat" className="rounded-chip bg-light-bubble p-[3px]">
+            <Tabs value="chat" className="rounded-chip bg-light-card p-[3px]">
               <TabsList className="gap-0">
-                <TabsTrigger value="chat" className="rounded-[16px] px-[14px] py-[6px] text-[14px] text-light-sub data-[state=active]:bg-light-card data-[state=active]:text-light-text">
+                <TabsTrigger value="chat" className="rounded-[16px] px-[14px] py-[6px] text-[14px] text-light-sub data-[state=active]:bg-light-bubble data-[state=active]:text-light-text">
                   聊天
                 </TabsTrigger>
-                <TabsTrigger value="agents" className="px-[14px] py-[6px] text-[14px] font-medium text-light-sub data-[state=active]:bg-light-card data-[state=active]:text-light-text">
+                <TabsTrigger value="agents" className="px-[14px] py-[6px] text-[14px] font-medium text-light-sub data-[state=active]:bg-light-bubble data-[state=active]:text-light-text">
                   智能体
                 </TabsTrigger>
               </TabsList>

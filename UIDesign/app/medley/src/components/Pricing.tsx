@@ -31,7 +31,7 @@ export function PlanCard({
   children?: ReactNode
 }) {
   return (
-    <div className="mt-2.5 rounded-card border border-transparent bg-dark-card px-4 py-[14px]">
+    <div className="mt-2.5 rounded-card border border-transparent bg-dark-card px-4 py-3">
       <div className="flex items-center gap-2.5">
         <Radio selected={selected} />
         <span className="text-[16px] font-bold">{name}</span>
@@ -50,7 +50,7 @@ export function PlanCard({
 
 export function PlanFeature({ text }: { text: string }) {
   return (
-    <div className="ml-[30px] mt-2 flex gap-2 text-[13px] leading-[1.45]">
+    <div className="ml-[30px] mt-1.5 flex gap-2 text-[13px] leading-[1.45]">
       <span className="shrink-0">{Icon.check('#f5f5f7', 16)}</span>
       <span>{text}</span>
     </div>
@@ -61,9 +61,9 @@ export function BillingToggle({ monthlyLabel, yearlyLabel, saveLabel }: { monthl
   return (
     <div className="flex rounded-button bg-dark-input p-1">
       <span className="flex-1 py-[9px] text-center text-[14px] font-semibold text-dark-sub">{monthlyLabel}</span>
-      <span className="flex flex-1 items-center justify-center gap-1.5 rounded-chip bg-dark-text py-[9px] text-[14px] font-bold text-light-text">
+      <span className="flex flex-1 items-center justify-center gap-1.5 rounded-chip bg-dark-pill py-[9px] text-[14px] font-bold text-white">
         {yearlyLabel}
-        <span className="rounded-[10px] bg-accent px-[7px] py-[2px] text-[11px] font-bold text-white">{saveLabel}</span>
+        <span className="text-[11px] font-semibold text-dark-sub">{saveLabel}</span>
       </span>
     </div>
   )

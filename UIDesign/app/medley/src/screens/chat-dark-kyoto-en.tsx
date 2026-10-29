@@ -81,7 +81,7 @@ export default function ChatDarkKyotoEn() {
         </div>
         <div className="h-2" />
       </div>
-      <InputBar dark placeholder="Ask anything" />
+      <InputBar dark placeholder="Ask anything" mic="plain" />
     </Phone>
   )
 }

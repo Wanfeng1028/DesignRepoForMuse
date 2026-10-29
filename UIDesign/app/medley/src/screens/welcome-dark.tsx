@@ -15,19 +15,19 @@ export default function WelcomeDark() {
         <div className="flex min-h-0 flex-1 flex-col justify-center px-5">
           <div className="flex items-baseline gap-2">
             <span className="text-welcome font-bold leading-[1.15] text-dark-text">Let&apos;s discover</span>
-            <span className="h-3 w-3 shrink-0 self-center rounded-full bg-accent" />
+            <span className="h-[15px] w-[15px] shrink-0 self-center rounded-full bg-brand-dot" />
           </div>
           <div className="mt-4 text-[16px] text-dark-sub">Every top AI in one app.</div>
           <div className="mt-1.5 text-[15px] text-dark-dim">Claude, GPT, Gemini, DeepSeek, Kimi and GLM</div>
         </div>
         <div className="flex flex-col gap-3 px-5 pb-4">
-          <Button variant="white" className="text-[16px] text-black-btn">
-            <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border border-[#d8d8dc] bg-white text-[13px] font-extrabold text-black-btn">
+          <Button variant="white" className="h-[40px] text-[16px] text-black-btn">
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#d8d8dc] bg-white text-[10px] font-extrabold text-black-btn">
               G
             </span>
             Continue with Google
           </Button>
-          <Button variant="outline" className="border-dark-divider font-semibold text-dark-text">
+          <Button variant="outline" className="h-[40px] border-dark-divider font-semibold text-dark-text">
             Try without an account
           </Button>
           <div className="px-5 pt-0.5 text-left text-caption leading-[1.45] text-dark-dim">

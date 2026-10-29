@@ -38,7 +38,7 @@ export default function ModelPickerA() {
               right={
                 <div className="text-right">
                   <div className="mb-0.5">
-                    <span className="rounded-chip border border-dark-divider px-2 py-[1px] text-[11px] font-semibold text-dark-sub">Pro</span>
+                    <span className="rounded-chip border border-dark-divider px-2 py-[1px] text-[11px] font-semibold text-dark-sub">Pro+</span>
                   </div>
                   <ModelCost value="-400" />
                 </div>

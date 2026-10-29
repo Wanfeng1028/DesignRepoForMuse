@@ -25,7 +25,9 @@ export const tokens = {
     lightSub: '#6b6c72', // visual
     lightDim: '#9a9ba2', // visual
     lightBubble: '#edeef0', // measured
-    accent: '#e2a181', // measured, replaces old #e4754a
+    accent: '#e2a181', // measured (Lisbon mic centre), replaces old #e4754a
+    brandDot: '#fd6718', // measured: welcome dot centre pixels (253,103,24); distinct from mic peach
+    darkPill: '#303135', // measured: pricing Yearly pill sample (48,49,53)
     blackBtn: '#111214', // visual
     whiteBtn: '#ffffff',
     chartAmber: '#8c553c', // measured, replaces old #b07a3b
