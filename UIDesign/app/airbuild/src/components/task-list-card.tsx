@@ -12,7 +12,7 @@ export type TaskListCardProps = {
 export function TaskListCard({ title, items, actionLabel = 'View task', onAction }: TaskListCardProps) {
   return (
     <section className="rounded-[20px] border border-black/[0.06] bg-white p-4 shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
-      <h3 className="flex items-center gap-2 text-[15px] font-bold text-[#11110f]">
+      <h3 className="flex items-center gap-2 text-[14px] font-bold text-[#11110f]">
         <TaskListIcon className="h-5 w-5 shrink-0" />
         {title}
       </h3>

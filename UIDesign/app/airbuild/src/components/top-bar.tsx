@@ -26,7 +26,7 @@ export type ChatTopBarProps = {
 /** Chat top bar: back chevron (left circle) + centred project pill + … menu (right circle). */
 export function ChatTopBar({ project, swatch, onBack, onMenu }: ChatTopBarProps) {
   return (
-    <header className="relative flex items-start justify-between px-4 pt-2 pb-5">
+    <header className="relative flex items-start justify-between px-4 pt-2 pb-4">
       <button type="button" aria-label="Back" onClick={onBack} className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-white border border-black/[0.05] shadow-[0_2px_10px_rgba(0,0,0,0.06)]">
         <ChevronLeftIcon className="h-5 w-5" />
       </button>

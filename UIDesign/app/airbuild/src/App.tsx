@@ -54,9 +54,9 @@ function ChatScreen() {
         <Message author="Pluso" role="Developer" avatarColor="#45c8d8">
           I&rsquo;ve put together a direction for the first-session experience. The town stays at the center, with just enough guidance to help someone get started.
         </Message>
-        <div className="relative flex justify-end">
+        <div className="flex items-center justify-end">
           <div className="w-[68%]"><FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" /></div>
-          <Avatar name="Ampo" color="#9b7bf3" size={36} className="absolute right-0 top-1/2 shrink-0 -translate-y-1/2" />
+          <Avatar name="Ampo" color="#9b7bf3" size={36} className="-ml-2 shrink-0" />
         </div>
         <Message author="Ampo" role="Product manager" avatarColor="#9b7bf3">
           I&rsquo;ll keep the same visual language across both sizes. On iPad, the wider canvas gives the town more space while keeping the session controls easy to reach.

@@ -19,7 +19,7 @@ export function PhoneFrame({ children, width = 390, height = 844, className, lab
         style={{ width, height, borderRadius: 52, border: '10px solid #1c1c1e', boxSizing: 'border-box' }}
       >
         <div className="flex h-full flex-col">
-          <div className="relative flex items-center justify-between px-7 pt-4 pb-1 text-[13px] font-semibold text-[#11110f]">
+          <div className="relative flex items-center justify-between px-7 pt-3 pb-1 text-[13px] font-semibold text-[#11110f]">
             <span>13:00</span>
             <span className="absolute left-1/2 top-2.5 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-black" aria-hidden />
             <span className="flex items-end gap-1" aria-hidden>
