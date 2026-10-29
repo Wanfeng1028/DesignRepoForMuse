@@ -1,0 +1,28 @@
+/** AirBuild chat-window tokens, table A of AIRBUILD-REA-20261029.md. Single source of truth. */
+export const tokens = {
+  canvas: { width: 1200, height: 668, radius: 18 },
+  windowBg: 'rgba(244,246,244,0.42)',
+  windowFilter: 'blur(34px) saturate(1.24)',
+  ink: '#11110f',
+  muted: 'rgba(17,17,15,0.46)',
+  hairline: 'rgba(17,17,15,0.045)',
+  divider: 'rgba(17,17,15,0.22)',
+  blue: '#1987f7',
+  green: '#2ecb70',
+  sidebar: { width: 198, bg: 'rgba(226,228,226,0.56)' },
+  conversation: { minWidth: 320, bg: 'rgba(249,249,247,0.92)', titleBg: 'rgba(249,249,247,0.94)' },
+  preview: { minWidth: 310, widthPct: 42, tabBg: '#f7f7f5', tabHeight: 36 },
+  font: '"SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
+  agentBubble: { bg: '#ffffff', border: 'rgba(0,0,0,0.045)', shadow: '0 5px 16px rgba(0,0,0,0.025)', padding: '10px 12px', radius: 13, fontSize: 12, lineHeight: 1.38 },
+  userBubble: { bg: '#1987f7', maxWidth: 'min(78%, 310px)' },
+  agentRow: { grid: '30px 1fr auto', gap: 7, minHeight: 42, padding: '4px 5px', radius: 9, nameSize: 11, bioSize: 8 },
+  projectTile: { aspect: 1.25, radius: 12, bg: 'rgba(255,255,255,0.34)', iconSize: 32, iconRadius: '32%' },
+  composer: { height: 32, radius: 999, margin: '0 14px 10px', bg: 'rgba(255,255,255,0.94)', shadow: '0 10px 28px rgba(0,0,0,0.065)' },
+  taskCard: { bg: '#fffaf2', border: 'rgba(94,74,46,0.12)', radius: 12, padding: 12, fontSize: 10, titleColor: '#53412e', titleSize: 11 },
+  statusPill: { padding: '3px 7px', radius: 999, fontSize: 9, successColor: '#167b3d', successBg: '#e7f8ed' },
+  toast: { bottom: 30, bg: 'rgba(18,18,18,0.88)', radius: 999, padding: '10px 14px' },
+  drawerMs: 240,
+  messageInMs: 260,
+  trafficLights: ['#ff5f57', '#febc2e', '#28c840'],
+} as const
+export type Tokens = typeof tokens
