@@ -1,0 +1,26 @@
+You are a pixel-precise visual QA judge. The single image below is a side-by-side comparison, top-aligned, both panels 390px wide in the same coordinate frame.
+LEFT panel = ORIGINAL (official App Store screenshot, phone screen cropped, no marketing headline).
+RIGHT panel = RENDER (our implementation screenshot, same screen region).
+Red label "LEFT: ORIGINAL" is over the left panel, blue label "RIGHT: RENDER" over the right panel.
+If you cannot see any image, output exactly NO_IMAGE and nothing else. Do not invent measurements.
+
+FIRST LINE must be exactly one of:
+VERDICT: CLEAN
+or
+VERDICT: DIFFS: 1, 2, 3, ...
+(CLEAN only if there is zero substantive difference. Avatar face artwork is a filed residual: ignore avatar faces/drawings entirely. Ignore the bottom crop cut-off: both panels end at the same height. Do NOT require copying the official photo for the centre project mark: an abstract isometric-town illustration counts as a match for that element, but a plain letter block does not.)
+
+After the first line, list EVERY difference as a numbered item, continuing past item 8 if needed. Do not stop early. For each item give: element name, ORIGINAL value, RENDER value, both quantified in the 390px-wide panel frame (sizes in px, font size/weight, hex colors, spacing in px, corner radius in px, icon shape/size, alignment). Cover at minimum, in this order:
+1. status bar: clock size, signal/WiFi/battery icon sizes, Dynamic Island size
+2. top-bar circles: diameter, icon size, shadow/border
+3. centre project mark: size, shape, artwork type (photo-like town vs letter block vs abstract town)
+4. centre pill: width x height, font size, padding, position below the mark
+5. author line: font size/weight, gap from name line to bubble, avatar size and vertical alignment vs bubble
+6. agent bubble: horizontal/vertical padding, corner radius, font size, line height, width
+7. file card: width x height, doc icon size, filename font size, meta font size, right avatar size and overlap (half off right edge vs fully inside)
+8. task card: width, left-edge position (flush with screen edge vs inset), title font size and wrapping, item rows, "View task" row presence/position
+9. user blue bubble: color hex, padding, radius, font size
+10. canvas background hex, message-to-message vertical spacing, side margins
+11. any other visible difference (text content differences do NOT count; only visual parameters count)
+
+Be concrete and quantitative. Do not hedge with "roughly similar". If a value is equal, say EQUAL for that sub-item instead of listing it as a diff.

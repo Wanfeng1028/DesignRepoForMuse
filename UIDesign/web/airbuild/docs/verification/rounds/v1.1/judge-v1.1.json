@@ -1,0 +1,2 @@
+HTTP-STATUS 429
+{"error":{"message":"Too many requests for this free model (request_id: chatcmpl-305d24577da440668e19c3bb45aa3483)","type":"rate_limit_exceeded_error","param":"","code":"free_campaign_global_limit"}}
