@@ -115,3 +115,19 @@ shadcn 式源码进仓；禁 Ant Design / MUI / Next.js。
      非免费的视觉能力模型/渠道，裁判改用该模型重跑。
 - 在解限前，任何一套都不许记为干净、不许以人眼或像素自测替代裁判 verdict、
   不许悄悄换用 k3free / spark / 其他模型。
+
+## 本轮新增准绳（2026-10-29，用户亲供高清 Medley 原图）
+
+- 3 张唯一文件已复制进 UIDesign/docs/references/medley/（原文件在
+  ~/workspace/user/media_library/image/，复制不移动）：
+  - medley-15-screens-overview-hd.jpg — md5 e3c77147009c9564409522ea92684994
+    （278,920 字节；与上传的另一张完全重复，去重）
+  - medley-4-screens-chinese-hd.jpg — md5 eece9e866a39de38fcfe665ae82a10ad
+    （223,290 字节；welcome-dark、home-light-cn、chat-dark-lisbon-cn、
+    App language 四屏，全文可读）
+  - medley-5-screens-hd.jpg — md5 91c4515ffd47cd3a4838350599534067
+    （208,580 字节；与上传的另一张完全重复，去重；chat-dark-lisbon-en、
+    home-light-en、model-picker 暗色、pricing-dark、credits-light，全文可读）
+- 两套 Medley 的每轮比对一律以这 3 张为准；中文屏文字、模型价格、
+  积分图表等此前“看不清”的项不再列为不可确认，必须逐项抠到 1:1。
+  AirBuild 两套依据不变（App Store 高清图 + 用户照片 + rea 报告）。
