@@ -16,10 +16,10 @@ export function AirDailyCard({ headline, body, date, glance, onShare }: AirDaily
         <span>▦ Made in AirBuild</span>
         <button type="button" onClick={onShare} className="rounded-full bg-[#f4f4f2] px-2 py-0.5 text-[10px] font-medium">Share</button>
       </div>
-      <h3 className="mt-3 text-[17px] font-bold leading-tight text-[#11110f]">{headline}</h3>
-      <p className="mt-2 text-[12px] leading-relaxed text-black/55">{body}</p>
-      <div className="mt-3 flex h-[150px] flex-col justify-end rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#2e7d7b,#1f4f4a)' }}>
-        <p className="text-[17px] font-bold text-white">The Air Daily</p>
+      <h3 className="mt-3 text-[15px] font-bold leading-tight text-[#11110f]">{headline}</h3>
+      <p className="mt-2 text-[11px] leading-relaxed text-black/55">{body}</p>
+      <div className="mt-3 flex h-[140px] flex-col justify-end rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#2e7d7b,#1f4f4a)' }}>
+        <p className="text-[16px] font-bold text-white">The Air Daily</p>
         <p className="text-[12px] text-white/85">A little perspective on your apps</p>
       </div>
       <p className="mt-3 text-[14px] font-bold text-[#11110f]">At a glance</p>
@@ -52,8 +52,8 @@ export function SalesReportCard({ title, body, stats, series }: SalesReportCardP
         <span>▦ Made in AirBuild</span>
         <span>Share</span>
       </div>
-      <h3 className="mt-3 text-[17px] font-bold leading-tight text-[#11110f]">{title}</h3>
-      <p className="mt-2 text-[12px] leading-relaxed text-black/55">{body}</p>
+      <h3 className="mt-3 text-[15px] font-bold leading-tight text-[#11110f]">{title}</h3>
+      <p className="mt-2 text-[11px] leading-relaxed text-black/55">{body}</p>
       <div className="mt-3 grid grid-cols-2 gap-3 border-y border-black/[0.06] py-3">
         {stats.map((s) => (
           <div key={s.label}>

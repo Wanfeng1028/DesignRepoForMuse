@@ -14,7 +14,7 @@ export function FileCard({ filename, meta, onOpen }: FileCardProps) {
       onClick={onOpen}
       className="w-full rounded-[20px] border border-black/[0.045] bg-white px-3.5 py-3 text-left shadow-[0_5px_16px_rgba(0,0,0,0.025)]"
     >
-      <span className="flex items-center gap-2 text-[15px] font-semibold text-[#11110f]">
+      <span className="flex items-center gap-2 text-[14px] font-semibold text-[#11110f]">
         <DocIcon className="h-5 w-5 shrink-0" />
         {filename}
       </span>

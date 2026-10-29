@@ -38,7 +38,7 @@ function StoreGlyph({ kind }: { kind: string }) {
  */
 export function DetailPanel({ title, status, updated, iconLabel, stores, versions, progress }: DetailPanelProps) {
   return (
-    <section className="flex flex-col rounded-t-[32px] bg-white px-4 pt-2 pb-4">
+    <section className="flex flex-col rounded-t-[32px] bg-[#f4f4f4] px-4 pt-2 pb-4">
       <span className="mx-auto mb-3 h-1 w-10 rounded-full bg-black/15" aria-hidden />
       <div className="flex items-center justify-between">
         <span className="w-11" aria-hidden />

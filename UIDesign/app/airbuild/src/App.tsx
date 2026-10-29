@@ -61,7 +61,7 @@ function ChatScreen() {
         <Message author="Ampo" role="Product manager" avatarColor="#9b7bf3">
           I&rsquo;ll keep the same visual language across both sizes. On iPad, the wider canvas gives the town more space while keeping the session controls easy to reach.
         </Message>
-        <TaskListCard
+        <div className="pr-10"><TaskListCard
           title="Make the first session rewarding"
           items={[
             { label: 'Define the first-session flow' },
@@ -69,7 +69,7 @@ function ChatScreen() {
             { label: 'Check the layout on iPhone and iPad' },
           ]}
           onAction={() => undefined}
-        />
+        /></div>
         <Message kind="user">
           Yes. Keep the soft green palette. And please make sure the town has room to breathe on iPad rather than just stretching the phone layout.
         </Message>
@@ -191,7 +191,7 @@ export default function App() {
   if (screen && SCREENS[screen]) {
     const Single = SCREENS[screen]
     return (
-      <main className="flex min-h-screen items-start justify-center bg-[#e9e9e6] py-6">
+      <main className="flex min-h-screen items-start justify-center bg-[#e9e9e6]">
         <Single />
       </main>
     )
