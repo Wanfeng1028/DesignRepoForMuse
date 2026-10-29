@@ -24,5 +24,8 @@ export const tokens = {
   drawerMs: 240,
   messageInMs: 260,
   trafficLights: ['#ff5f57', '#febc2e', '#28c840'],
+  /** Shared floating-control material (REA: window-control-group / header-action-group / account-button / sidebar-footer-action). */
+  controlBg: 'linear-gradient(325deg, rgba(255,255,255,0.78), rgba(255,255,255,0.48) 48%, rgba(245,247,250,0.24))',
+  controlShadow: 'inset 1px 1px 0 rgba(255,255,255,0.38), inset -2px -2px 3px rgba(255,255,255,0.30), 0 4px 10px rgba(112,121,132,0.08), 0 1px 2px rgba(112,121,132,0.06)',
 } as const
 export type Tokens = typeof tokens

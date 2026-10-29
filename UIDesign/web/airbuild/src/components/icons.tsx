@@ -29,6 +29,15 @@ export const IconCard = (p: P) => (<svg {...base(p)}><rect x="2" y="5" width="20
 export const IconRoute = (p: P) => (<svg {...base(p)}><circle cx="6" cy="19" r="2.5" /><circle cx="18" cy="5" r="2.5" /><path d="M8.5 19H18V7.5M18 7.5H8.5" /></svg>)
 export const IconBookOpen = (p: P) => (<svg {...base(p)}><path d="M12 6c-1.5-1.5-4-2-8-2v16c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2V4c-4 0-6.5.5-8 2z" /><path d="M12 6v16" /></svg>)
 export const IconChart = (p: P) => (<svg {...base(p)}><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" /></svg>)
+export const IconShare = (p: P) => (<svg {...base(p)}><path d="M12 15V3M8 7l4-4 4 4" /><path d="M5 11v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9" /></svg>)
+/** Mini project artwork icons (vector redraws, not the official bitmaps). */
+export const IconClockMini = (p: P) => (<svg {...base(p)}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>)
+export const IconCupMini = (p: P) => (<svg {...base(p)}><path d="M5 9h11v6a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5z" /><path d="M16 10h2a2.5 2.5 0 0 1 0 5h-2M8 5.5c0-1 1-1 1-2M12 5.5c0-1 1-1 1-2" /></svg>)
+export const IconGridMini = (p: P) => (<svg {...base(p)}><rect x="4" y="4" width="7" height="7" rx="2" /><rect x="13" y="4" width="7" height="7" rx="2" /><rect x="4" y="13" width="7" height="7" rx="2" /><rect x="13" y="13" width="7" height="7" rx="2" /></svg>)
+export type ProjectIconKey = 'clock' | 'house' | 'cup' | 'grid'
+export const projectIconMap: Record<ProjectIconKey, (p: P) => React.ReactNode> = {
+  clock: IconClockMini, house: IconHouse, cup: IconCupMini, grid: IconGridMini,
+}
 export type IconName = 'plus' | 'gear' | 'house' | 'sidebar-left' | 'sidebar-right' | 'x' | 'arrow-up' | 'book' | 'device' | 'iphone' | 'decrease' | 'person'
 export const iconMap: Record<IconName, (p: P) => React.ReactNode> = {
   plus: IconPlus, gear: IconGear, house: IconHouse, 'sidebar-left': IconSidebarLeft,

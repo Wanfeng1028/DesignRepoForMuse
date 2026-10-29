@@ -42,39 +42,50 @@ reflowed); window radius 18px; window bg `rgba(244,246,244,0.42)` +
 `blur(34px) saturate(1.24)`; ink `#11110f`; muted `rgba(17,17,15,0.46)`;
 hairline `rgba(17,17,15,0.045)`; divider `rgba(17,17,15,0.22)`; blue `#1987f7`;
 green `#2ecb70`; grid `sidebar 198px / conversation min 320px 1fr / preview
-min 310px 42%`; sidebar bg `rgba(226,228,226,0.56)`; conversation bg
+min 310px 42%`; titlebar 40px in the same three zones (sidebar zone:
+traffic lights 17px gap 7px + 64×32 control capsule; conversation zone:
+centred 32px squircle project icon; preview zone: device tabs + 64×32
+action capsule; divider only at the preview boundary); sidebar bg
+`rgba(226,228,226,0.56)` + hairline right border; conversation bg
 `rgba(249,249,247,0.92)`; preview bg radial-gradient (50% 22% white →
 `#f7f7f5` → `#e4e4e2`); agent bubble `#fff`, `rgba(0,0,0,0.045)` border,
 `0 5px 16px rgba(0,0,0,0.025)` shadow, `10px 12px` padding, 13px radius,
-12px/1.38; user bubble white on `#1987f7`, max-width `min(78%, 310px)`;
+12px/1.38, container max `min(84%, 330px)`; user bubble white on `#1987f7`, max-width `min(78%, 310px)`;
 agent-row grid `30px 1fr auto`, gap 7px, min-height 42px, padding `4px 5px`,
-radius 9px, name 11px/600, bio 8px; project-tile aspect 1.25, radius 12px,
-bg `rgba(255,255,255,0.34)`, icon 32px / 32% radius; preview-tab 36px high,
-76–180px wide, radius 9px, bg `#f7f7f5`; follow-up composer 32px high,
+radius 9px, name 11px/600, role em 400 `rgba(0,0,0,0.4)`, status 8px
+`rgba(0,0,0,0.34)`, online dot 8px `#2ecb70`; project-tile grid 3 columns
+gap 6px, aspect 1.25, radius 12px, bg `rgba(255,255,255,0.34)`, icon-only
+32px / 32% radius (no name label); preview-tab 36px high,
+76–180px wide, radius 9px, bg `#f7f7f5`, 10px/500 device label, icon 12px
+opacity 0.45, close 9px (opacity 0, 0.3 on hover/active); phone 270px wide,
+aspect 0.51, 7px `#d8d8d6` frame, radius 38px, shadow
+`0 24px 48px rgba(0,0,0,0.14)`, statusbar 8px/700, appbar 42px, feed divider
+inset from left 33px; follow-up composer 32px high,
 capsule 999px, margin `0 14px 10px`, bg `rgba(255,255,255,0.94)`,
 `0 10px 28px rgba(0,0,0,0.065)` shadow; task card bg `#fffaf2`, border
 `rgba(94,74,46,0.12)`, radius 12px, padding 12px, 10px, title `#53412e`
-11px/600; status pill `3px 7px`, 999px, 9px, success `#167b3d` on `#e7f8ed`;
-toast bottom 30px centred, white on `rgba(18,18,18,0.88)`, 999px; drawer
+11px/600, status `#88755e` on its own line under the title, steps then
+4px track (`#e9e0d4` / `#72a682`, radius 3px); status pill `3px 7px`, 999px, 9px, success `#167b3d` on `#e7f8ed`;
+toast bottom 30px centred, white on `rgba(18,18,18,0.88)`, 999px, 11px; drawer
 240ms `cubic-bezier(0.32,0.72,0,1)`; message entry 260ms
 `cubic-bezier(.22,1,.36,1)`; font SF Pro Rounded first + system fallback;
-traffic-lights titlebar; resizer 8px wide. See `src/tokens/tokens.ts`.
+resizer 8px wide. See `src/tokens/tokens.ts`.
 
 ## Components (all prop-driven; no brand copy hardcoded in components)
 
 | Component | File | Notes |
 |---|---|---|
-| `AppWindow` + `ScaleCanvas` | `src/components/AppWindow.tsx` | Three-column grid + scale; both collapsed states |
-| `Titlebar` / `TrafficLights` | `src/components/Titlebar.tsx` | Red/yellow/green lights, new, sidebar/preview toggles |
-| `Sidebar` / `ProjectTile` / `AgentRow` | `src/components/Sidebar.tsx` | Project grid + agent list + round footer buttons |
-| `AgentMessage` / `UserMessage` / `TypingRow` / `TaskCard` | `src/components/Message.tsx` | Typing = 3× 5px dots, 800ms, 0/160/320ms stagger |
-| `FollowUpComposer` | `src/components/FollowUpComposer.tsx` | 32px capsule composer, `onSend` prop |
-| `PreviewTabs` / `PhonePreview` | `src/components/Preview.tsx` | phone-statusbar / phone-appbar / phone-projects / phone-feed |
+| `AppWindow` + `ScaleCanvas` | `src/components/AppWindow.tsx` | Three-column grid + scale; device-tab state lives here; both collapsed states |
+| `Titlebar` / `TrafficLights` | `src/components/Titlebar.tsx` | 40px, same three grid zones as the body: sidebar zone (17px lights + 64×32 control capsule), conversation zone (centred 32px project icon), preview zone (device tabs + new-tab + 64×32 action capsule); divider only at the preview boundary |
+| `Sidebar` / `ProjectTile` / `AgentRow` | `src/components/Sidebar.tsx` | Icon-only project grid (3 cols, gap 6px) + agent list (blob avatar + name + @role + status line + green online dot) + Account pill + 3 round footer buttons |
+| `AgentMessage` / `UserMessage` / `TypingRow` / `TaskCard` | `src/components/Message.tsx` | Avatar bottom-aligned; typing = 3× 5px `#aaa` dots, 800ms, 0/160/320ms stagger; task card = title, status line, steps, track |
+| `FollowUpComposer` | `src/components/FollowUpComposer.tsx` | 32px capsule composer, `onSend` prop; attach `#ededeb`, send blue `#1987f7` (see Residuals 9) |
+| `PreviewTabs` / `PhonePreview` | `src/components/Preview.tsx` | Tabs live in the titlebar; phone-statusbar (8px/700) / phone-appbar (42px) / phone-projects / phone-feed (divider inset 33px) |
 | `ServiceModuleColumn` | `src/components/ServiceModuleColumn.tsx` | ORIGINAL right column: AirFeedback / AirPayment / AirRouter / AirKnowledge / AirTraffic |
 | `BottomModuleBar` | `src/components/BottomModuleBar.tsx` | ADAPTED variant, labelled 改编（非原版） — not the original |
-| `Toast` / `Resizer` | `src/components/Toast.tsx` | Toast bottom 30px; resizer 8px col-resize |
-| `AvatarBlob` | `src/components/AvatarBlob.tsx` | Self-drawn circular blob avatar (see Residuals) |
-| `icons` | `src/components/icons.tsx` | All 12 official icon semantics redrawn as vector SVG |
+| `Toast` / `Resizer` | `src/components/Toast.tsx` | Toast bottom 30px, 11px; resizer 8px col-resize |
+| `AvatarBlob` | `src/components/AvatarBlob.tsx` | Self-drawn blob character (tinted disc + lightened blob + two eyes; see Residuals) |
+| `icons` | `src/components/icons.tsx` | All 12 official icon semantics redrawn as vector SVG, plus vector mini project icons |
 | `Button` / `Input` / `StatusPill` / `Separator` | `src/components/ui/` | shadcn-style; Button/Input via Radix Slot, Separator via Radix |
 | `cn` | `src/lib/utils.ts` | clsx + tailwind-merge |
 | `tokens` / `dark-tokens` | `src/tokens/` | Table A (live) / table B (reserve only, not rendered) |
@@ -85,45 +96,58 @@ screen. No Storybook. Gallery copy is demo content only (see Residuals).
 ## Verification
 
 - Build: `/home/hatch/.npm-global/bin/pnpm build` → `tsc -b && vite build`,
-  40 modules, built clean (see build receipt in the final report).
+  40 modules, built clean.
 - Screenshots: `docs/verification/shoot.cjs` renders the `dist/` build with a
   headless Chromium and saves `gallery-1280.png` (full page),
   `gallery-1280-top.png` (1280×800 viewport) and `gallery-1200x668.png`
-  (1200×668 canvas viewport), plus `check-collapsed.png` and
-  `check-sidebar-collapsed.png` crops. Note: the VM's `/opt/meta-chromium/chrome`
+  (1200×668 canvas viewport). `docs/verification/shoot-sections.cjs`
+  screenshots the three gallery windows individually (`window-main.png`,
+  `window-sidebar-collapsed.png`, `window-preview-collapsed.png`) into
+  `docs/verification/rounds/<version>/`; the root `check-*.png` files are
+  copies of the latest collapsed windows. Note: the VM's `/opt/meta-chromium/chrome`
   currently refuses to start ("Hatch WebGL domain policy is required for
-  browser startup"), so the script uses the Playwright-cached
+  browser startup"), so both scripts use the Playwright-cached
   `chrome-headless-shell` binary instead; the rendered page is the same
   `dist/` build, and `file://` is used with `--allow-file-access-from-files`.
+- Judging: every round is judged by `qiniu/conatus-free` (BotsRouter) on
+  the render side by side with the real originals (user-photo desktop crop
+  + App Store iPad shot). Round verdicts live in `CHANGELOG.md`; a round is
+  clean only on an explicit zero-substantive-difference verdict.
 
-Comparison against the references (read from the screenshots, item by item):
+Comparison against the references (v1.1 state, measured from code + shots):
 
-- Three-column grid + fixed 1200×668 canvas + scale: PASS — window renders
-  at full width, sidebar / conversation / preview proportions match the
-  REA grid; at 1280px viewport the canvas scales to fit without reflowing.
-- Window glass (translucent bg + blur + 18px radius) + traffic lights: PASS
-  (backdrop blur is not visible on the flat grey gallery background, which
-  is expected — the value is in code, not faked).
-- Sidebar project tiles (2×2, aspect 1.25) + agent rows (avatar + name +
-  @role + bio + Online): PASS — matches the user photo's left column
-  (Leto / Ampo / Camo / Colo / Pluso / Ato) and ipad-01's member column.
-- Agent white bubbles / user blue bubbles / task card with progress + steps:
-  PASS — colours, radii and the #fffaf2 task card match REA table A and the
-  ipad-01 "Make the first session rewarding" card shape.
-- Follow-up composer capsule + toast: PASS — capsule with + and blue ↑
-  buttons; toast renders bottom-centred (it transiently overlaps the
-  composer row, as a bottom-30px toast over a bottom-anchored composer does).
-- Preview tabs + iPhone preview: PASS — 36px tabs, phone frame, 3-column
-  project grid, 48px feed rows; statusbar redrawn as vector bars + battery.
-- Service module column (original, right side): PASS — five modules with
+- Three-column grid + fixed 1200×668 canvas + scale: window renders at full
+  width, sidebar / conversation / preview proportions match the REA grid;
+  at 1280px viewport the canvas scales to fit without reflowing.
+- Titlebar: 40px, three zones matching the body grid; 17px traffic lights
+  (gap 7px); sidebar zone with 64×32 control capsule; conversation zone
+  with the 32px project icon measured centred (main 447px, sidebar-collapsed
+  ~432px per the 174px compensation, preview-collapsed ~678px per the 48px
+  strip); preview zone with the 10px `iOS 26.5` device tab + new-tab +
+  action capsule; divider only at the preview boundary.
+- Sidebar project tiles: 3-column grid, gap 6px, icon-only 32px squircle
+  vector mini-icons (Hands Time / Hourtown / Sleepy Coffee / Casehot —
+  the iPad project set, not the web demo's 8-project set).
+- Agent rows: blob avatar + name + lowercase @role + status sentence +
+  green online dot; footer = Account pill + Home / Settings / Activity.
+- Agent white bubbles (container max `min(84%, 330px)`) / user blue bubbles
+  (`min(78%, 310px)`) / task card (title, status line, steps, track at the
+  bottom) / typing dots `#aaa` / composer capsule with `#ededeb` attach
+  and blue ↑ send / toast bottom-30px centred (pill centre measured x=639
+  vs window centre 640).
+- Preview tabs in the titlebar + iPhone preview: 270px wide, aspect 0.51,
+  7px `#d8d8d6` frame, 38px radius, centred stage; feed dividers inset
+  from left 33px.
+- Service module column (original, right side): five modules with
   coloured mini-icons and round action buttons, matching the user photo's
   right column names and order.
 - Bottom module bar: present ONLY as the labelled adapted variant, kept
   visually separate from the original column.
-- Collapsed states: PASS — sidebar-collapsed renders sidebar width 0 with
-  the conversation stream shifted by the REA 174px compensation (190px
-  total left padding incl. the 16px base); preview-collapsed renders only
-  the 48px vertical "Preview" strip.
+- Collapsed states: sidebar-collapsed renders the traffic lights +
+  control capsule as a 170px transparent overlay with the conversation
+  title compensated by 174px and the message stream unshifted (padding
+  stays 16px); preview-collapsed renders a 48px titlebar strip with the
+  toggle and no body preview column.
 - Resizer: present as an 8px col-resize separator component (drag-to-resize
   wiring is left to the host app; the gallery does not fake a drag).
 
@@ -140,9 +164,24 @@ Comparison against the references (read from the screenshots, item by item):
 3. No official evidence exists for a bottom module bar: the bottom bar in
    this package is an adaptation (BotsTalk-style), explicitly labelled
    改编（非原版）; the original is the right-hand column.
-4. Avatar portraits have no vector source: avatars are self-drawn circular
-   blob approximations (initial + tint), not the official webp portraits,
-   and their exact colours are not claimed.
+4. Avatar portraits have no vector source: avatars are self-drawn blob
+   characters (tinted disc + lightened blob + two eyes), not the official
+   webp portraits, and their exact colours and faces are not claimed.
+9. Composer send button, platform conflict: the web demo's base CSS makes
+   the send button near-black `#111` (its Shadow DOM layer restyles the
+   floating controls as white gradient), while the native App Store shots
+   show a blue ↑ button. This package keeps the blue `#1987f7` send button
+   per the high-resolution native visual evidence; the web-demo black /
+   gradient variant is not rendered.
+10. Task card, platform difference: the web demo card is title, status line,
+    steps, progress track (this package follows it). The native iPad card
+    shows no track and no status line, but a "View task >" link at the
+    bottom right; that link is not rendered here.
+11. Project set, source mix: the sidebar shows the 4 iPad projects (Hands
+    Time / Hourtown / Sleepy Coffee / Casehot) in the web demo's 3-column
+    grid, so the second row holds a single tile. The web demo's own roster
+    has 8 projects (Soft Moon / Level / Pigeon / Touch Time / Lofi Dot /
+    AirBuild / Slobox + Hands Time); those four extra names are not shown.
 5. Font fallback on non-Apple devices: SF Pro Rounded exists only on Apple
    devices; elsewhere the stack falls back to SF Pro Display /
    -apple-system / Helvetica Neue / Arial, so rendering there will differ.

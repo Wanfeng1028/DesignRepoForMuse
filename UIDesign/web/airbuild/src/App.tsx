@@ -42,16 +42,16 @@ export default function App() {
         </nav>
       </header>
 
-      <Section id="window" title="1 · App window — three columns" note="Sidebar 198px / conversation min 320px 1fr / preview min 310px 42%. Window background rgba(244,246,244,0.42) + blur(34px) saturate(1.24), radius 18px. Toggle the titlebar sidebar/preview icons to see both collapsed states live.">
-        <ScaleCanvas><AppWindow showToast={toast} onSend={(v) => { setSent([...sent, v]); setToast('Message sent') }} /></ScaleCanvas>
+      <Section id="window" title="1 · App window — three columns" note="Sidebar 198px / conversation min 320px 1fr / preview min 310px 42%. Window background rgba(244,246,244,0.42) + blur(34px) saturate(1.24), radius 18px. Titlebar is 40px in the same three zones: sidebar zone (traffic lights 17px + control capsule), conversation zone (centred 32px project icon), preview zone (device tabs + action capsule). Toggle the titlebar sidebar/preview icons to see both collapsed states live.">
+        <div data-window="main"><ScaleCanvas><AppWindow showToast={toast} onSend={(v) => { setSent([...sent, v]); setToast('Message sent') }} /></ScaleCanvas></div>
         {sent.length ? <p style={{ fontSize: 12, marginTop: 10 }}>Sent via composer (demo state): {sent.join(' · ')}</p> : null}
         <div style={{ marginTop: 12 }}><Button onClick={() => setToast(toast ? '' : 'Message sent')}>{toast ? 'Hide toast' : 'Show toast'}</Button></div>
       </Section>
 
       <Section id="collapsed" title="2 · Collapsed states" note="sidebar-collapsed: sidebar width 0. preview-collapsed: preview width 0, only a 48px titlebar-preview strip remains. Drawer motion 240ms cubic-bezier(0.32,0.72,0,1).">
         <div style={{ display: 'grid', gap: 24 }}>
-          <ScaleCanvas><AppWindow sidebarCollapsed title="Hourtown — sidebar collapsed" /></ScaleCanvas>
-          <ScaleCanvas><AppWindow previewCollapsed title="Hourtown — preview collapsed" /></ScaleCanvas>
+          <div data-window="sidebar-collapsed"><ScaleCanvas><AppWindow sidebarCollapsed title="Hourtown — sidebar collapsed" /></ScaleCanvas></div>
+          <div data-window="preview-collapsed"><ScaleCanvas><AppWindow previewCollapsed title="Hourtown — preview collapsed" /></ScaleCanvas></div>
         </div>
       </Section>
 
@@ -64,7 +64,7 @@ export default function App() {
         </div>
       </Section>
 
-      <Section id="preview" title="4 · Preview tabs + iPhone preview" note="Tab 36px high, 76–180px wide, 9px radius, #f7f7f5 (active transparent). Phone: white frame, #d8d8d6 border, 0 24px 48px shadow; feed rows 48px, avatar 26px, name 9px/600 #242426.">
+      <Section id="preview" title="4 · Preview tabs + iPhone preview" note="Preview tabs live in the titlebar (36px high, 76–180px wide, 9px radius, 10px device label, #f7f7f5, active transparent) — see section 1. The phone below is the standalone stage: 270px wide, aspect 0.51, 7px #d8d8d6 frame, 38px radius, 0 24px 48px shadow (alpha 0.14); statusbar 8px/700, appbar 42px; feed rows 48px, avatar 26px, name 9px/600 #242426, divider inset from left 33px.">
         <div className="ab-preview-bg" style={{ borderRadius: 18, height: 560, maxWidth: 720, overflow: 'hidden' }}><PhonePreview /></div>
       </Section>
 
