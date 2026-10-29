@@ -11,14 +11,14 @@ export type AirDailyCardProps = {
 /** The Air Daily report card: eyebrow row, headline, body, teal cover block, At a glance. */
 export function AirDailyCard({ headline, body, date, glance, onShare }: AirDailyCardProps) {
   return (
-    <Card className="overflow-hidden rounded-[24px] p-4">
+    <Card className="overflow-hidden rounded-[24px] p-3.5">
       <div className="flex items-center justify-between text-[10px] font-semibold text-black/45">
         <span>▦ Made in AirBuild</span>
         <button type="button" onClick={onShare} className="rounded-full bg-[#f4f4f2] px-2 py-0.5 text-[10px] font-medium">Share</button>
       </div>
-      <h3 className="mt-3 text-[15px] font-bold leading-tight text-[#11110f]">{headline}</h3>
+      <h3 className="mt-3 text-[14px] font-bold leading-tight text-[#11110f]">{headline}</h3>
       <p className="mt-2 text-[11px] leading-relaxed text-black/55">{body}</p>
-      <div className="mt-3 flex h-[140px] flex-col justify-end rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#2e7d7b,#1f4f4a)' }}>
+      <div className="mt-3 flex h-[120px] flex-col justify-end rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#2e7d7b,#1f4f4a)' }}>
         <p className="text-[16px] font-bold text-white">The Air Daily</p>
         <p className="text-[12px] text-white/85">A little perspective on your apps</p>
       </div>
@@ -47,12 +47,12 @@ export function SalesReportCard({ title, body, stats, series }: SalesReportCardP
   const pts = series.map((v, i) => `${x(i)},${y(v)}`).join(' ')
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
   return (
-    <Card className="rounded-[24px] p-4">
+    <Card className="rounded-[24px] p-3.5">
       <div className="flex items-center justify-between text-[10px] font-semibold text-black/45">
         <span>▦ Made in AirBuild</span>
         <span>Share</span>
       </div>
-      <h3 className="mt-3 text-[15px] font-bold leading-tight text-[#11110f]">{title}</h3>
+      <h3 className="mt-3 text-[14px] font-bold leading-tight text-[#11110f]">{title}</h3>
       <p className="mt-2 text-[11px] leading-relaxed text-black/55">{body}</p>
       <div className="mt-3 grid grid-cols-2 gap-3 border-y border-black/[0.06] py-3">
         {stats.map((s) => (

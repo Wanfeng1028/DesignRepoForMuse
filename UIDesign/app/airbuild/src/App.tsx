@@ -61,7 +61,7 @@ function ChatScreen() {
         <Message author="Ampo" role="Product manager" avatarColor="#9b7bf3">
           I&rsquo;ll keep the same visual language across both sizes. On iPad, the wider canvas gives the town more space while keeping the session controls easy to reach.
         </Message>
-        <div className="pr-10"><TaskListCard
+        <div className="pr-14"><TaskListCard
           title="Make the first session rewarding"
           items={[
             { label: 'Define the first-session flow' },
@@ -87,7 +87,7 @@ function BriefingScreen() {
           Your daily report is ready. Hands Time led growth, while two new Mood reviews raised questions.
         </Message>
         <div className="flex gap-3 overflow-hidden -mr-4 pr-4">
-          <div className="w-[62%] shrink-0">
+          <div className="w-[66%] shrink-0">
             <AirDailyCard
               headline="Hands Time led the growth. Mood deserves a closer look."
               body="On Sep 13, your three apps recorded 360 downloads and $58 in estimated proceeds. Hands Time contributed most of the increase."
@@ -95,7 +95,7 @@ function BriefingScreen() {
               glance="Downloads and estimated proceeds for Sep 13, compared with the last seven days of downloads."
             />
           </div>
-          <div className="w-[62%] shrink-0">
+          <div className="w-[66%] shrink-0">
             <SalesReportCard
               title="Hands Time — Sales Report"
               body="Downloads are growing steadily over the past few months, showing a consistent upward trend that reflects stronger user engagement."
@@ -111,7 +111,7 @@ function BriefingScreen() {
           Check Mood&rsquo;s first-entry flow. Both reviews mention difficulty starting. Try the latest version before deciding changes.
         </Message>
       </MessageList>
-      <div className="px-4 pb-5">
+      <div className="px-4 pb-3">
         <Composer initialValue="Any updates on Hands Time?" />
       </div>
     </PhoneFrame>
