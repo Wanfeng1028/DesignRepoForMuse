@@ -10,7 +10,8 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--render", required=True)
 ap.add_argument("--original", required=True, help="comma-separated original image paths")
 ap.add_argument("--prompt", required=True)
-ap.add_argument("--max-tokens", type=int, default=4000)
+ap.add_argument("--prompt-scope", default=None, help="optional scope file appended to --prompt")
+ap.add_argument("--max-tokens", type=int, default=6000)
 args = ap.parse_args()
 
 token = os.environ.get("BR_TOKEN", "")
@@ -18,14 +19,26 @@ if not token:
     print("no BR_TOKEN", file=sys.stderr); sys.exit(2)
 
 def b64(path):
+    # Always send JPEG data URIs (v1.1 lesson: PNG payloads + 3000-token
+    # caps produced empty verdicts). PNG inputs are converted in memory.
+    if path.lower().endswith(".png"):
+        from PIL import Image
+        import io
+        im = Image.open(path).convert("RGB")
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=88)
+        return base64.b64encode(buf.getvalue()).decode()
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
 with open(args.prompt, encoding="utf-8") as f:
     prompt = f.read()
+if args.prompt_scope:
+    with open(args.prompt_scope, encoding="utf-8") as f:
+        prompt += "\n\n" + f.read()
 
 content = [{"type": "text", "text": prompt}]
-content.append({"type": "image_url", "image_url": {"url": "data:image/png;base64," + b64(args.render)}})
+content.append({"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + b64(args.render)}})
 for i, path in enumerate(args.original.split(",")):
     ext = "jpeg" if path.lower().endswith((".jpg", ".jpeg")) else "png"
     content.append({"type": "image_url", "image_url": {"url": f"data:image/{ext};base64," + b64(path)}})
