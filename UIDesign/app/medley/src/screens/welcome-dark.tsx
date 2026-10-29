@@ -21,16 +21,16 @@ export default function WelcomeDark() {
           <div className="mt-1.5 text-[15px] text-dark-dim">Claude, GPT, Gemini, DeepSeek, Kimi and GLM</div>
         </div>
         <div className="flex flex-col gap-3 px-5 pb-4">
-          <Button variant="white" className="h-[40px] text-[16px] text-black-btn">
+          <Button variant="white" className="text-[16px] text-black-btn">
             <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#d8d8dc] bg-white text-[10px] font-extrabold text-black-btn">
               G
             </span>
             Continue with Google
           </Button>
-          <Button variant="outline" className="h-[40px] border-dark-divider font-semibold text-dark-text">
+          <Button variant="outline" className="border-dark-divider font-semibold text-dark-text">
             Try without an account
           </Button>
-          <div className="px-5 pt-0.5 text-left text-caption leading-[1.45] text-dark-dim">
+          <div className="pt-0.5 text-left text-caption leading-[1.45] text-dark-dim">
             By continuing, you confirm you&apos;re 18 or older and agree to the Terms and Privacy Policy.
           </div>
         </div>
