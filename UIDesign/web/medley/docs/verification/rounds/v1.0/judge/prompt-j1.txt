@@ -1,0 +1,10 @@
+You are a strict UI fidelity judge. The FIRST image is a desktop re-layout RENDER of a UI kit gallery page. The FOLLOWING image(s) are the TRUE ORIGINAL mobile app screenshots. The render is wider than a phone: DO NOT flag column arrangement, panel width, or gallery page chrome (section headings, notes, nav links) as differences. Compare ONLY component forms inside the named panel(s): exact text/labels, relative font sizes, font weights, colors (estimate hex), corner radii, spacing/gaps, icon shapes, badges, button shapes and states, dot colors, dividers, and vertical placement of elements inside the panel (e.g. buttons pinned to the bottom vs flowing after text).
+
+Rules:
+- Number every difference: D1, D2, ... Each must be quantified (position, size, color hex estimate, weight, spacing, radius, icon form). Vague impressions like "looks off" do NOT count.
+- If you cannot read something in the original (too small/blurry), say UNREADABLE for that item; do not count it as a difference and do not invent a value.
+- Do not flag differences that are only caused by the render being wider/taller as a desktop panel, EXCEPT the internal vertical placement of elements within a panel (top vs bottom anchoring) which DOES count.
+- End with exactly one line: VERDICT: ZERO SUBSTANTIVE DIFFERENCES  OR  VERDICT: N DIFFERENCES (with N matching your list).
+
+SCOPE THIS CALL: only the "Welcome (dark)" panel in the render (black panel, "Let's discover"). Original: the phone screenshot that follows.
+Check in order: (1) M mark + "Medley" wordmark top-left; (2) headline "Let's discover" size/weight and the orange dot after it (color, size); (3) subtitle two lines and their colors; (4) white "Continue with Google" pill button (shape, G icon, label weight) and outlined "Try without an account" button; (5) footnote text and color; (6) vertical placement: in the original, where do the buttons sit relative to the panel height (bottom-anchored with large empty space above?) vs in the render.

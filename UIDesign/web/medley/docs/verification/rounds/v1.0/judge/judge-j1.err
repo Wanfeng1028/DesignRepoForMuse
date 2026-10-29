@@ -1,0 +1,2 @@
+HTTP 429: {"error":{"message":"Too many requests for this free model (request_id: chatcmpl-d0060a91b6e749d0902826d69602364a)","type":"rate_limit_exceeded_error","param":"","code":"free_campaign_global_limit"}}
+RATE_LIMIT_STOP
