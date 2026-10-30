@@ -5,8 +5,9 @@ export type SourceBadge = { label: string };
 
 /**
  * Sources chip: small square badges + "N sources".
- * Lisbon: T/L/V badges (6x crop confirmed). Train: blank badges + "4 sources"
- * (letters unrecoverable at 6x, so no letters are invented).
+ * Lisbon: T/L/V badges (6x crop confirmed). Train: S/R/K badges + "4 sources"
+ * (v1.3 S8 — the audit's "blank" reading is superseded by the original
+ * Train screen, which shows S R K letter badges).
  */
 export function SourceChips({ dark, badges, countLabel }: { dark: boolean; badges: string[]; countLabel: string }) {
   return (

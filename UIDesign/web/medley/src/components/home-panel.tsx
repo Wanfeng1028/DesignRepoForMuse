@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { cn } from "../lib/utils";
 import { Icon } from "./icons";
 import { MedleyMark, ModelDots } from "./medley-mark";
@@ -53,16 +54,19 @@ export type HomePanelProps = {
 export function HomePanel({ greeting, suggestions, composerPlaceholder, composerModelLabel, variant, segmentLabels, dark = false }: HomePanelProps) {
   const text = dark ? "#F5F5F7" : "#17181C";
   const sub = dark ? "#9A9BA2" : "#6B6C72";
+  const [autoOpen, setAutoOpen] = useState(false);
   return (
     <div className={cn("flex flex-col", dark ? "bg-dark-bg text-dark-text" : "bg-light-bg text-light-text")}>
       <div className="flex h-14 items-center justify-between px-4">
         <span className="inline-flex w-[72px]" style={{ color: text }}>{Icon.menu(text)}</span>
         <span className="flex flex-1 items-center justify-center">
           {variant === "en" ? (
-            <span className="inline-flex items-center gap-1.5 rounded-chip bg-user-bubble-light px-3 py-[7px] text-[14px] font-semibold">
+            <span onClick={() => setAutoOpen((v) => !v)} className="inline-flex cursor-pointer items-center gap-1.5 rounded-chip bg-user-bubble-light px-3 py-[7px] text-[14px] font-semibold">
               <ModelDots />
               Auto
-              {Icon.chevronDown(sub)}
+              <span className="morph-rotate inline-flex" data-open={autoOpen}>
+                {Icon.chevronDown(sub)}
+              </span>
             </span>
           ) : (
             <span className="inline-flex items-center rounded-chip bg-user-bubble-light p-[3px]">
@@ -71,7 +75,8 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
             </span>
           )}
         </span>
-        <span className="flex w-[72px] justify-end" style={{ color: text }}>{Icon.clock(text)}</span>
+        {/* v1.3 P2-6: dashed-ring clock in the original home top bar. */}
+        <span className="flex w-[72px] justify-end" style={{ color: text }}>{Icon.clockDashed(text)}</span>
       </div>
       <div className="flex-1" />
       <div className="px-5">

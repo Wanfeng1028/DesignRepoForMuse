@@ -31,21 +31,21 @@ export function SuspendedPanel({
   const sub = "#6B6C72";
   return (
     <div className="bg-light-bg text-light-text p-5 flex flex-col">
+      {/* v1.3 P2-4: the badge glyph is two vertical bars (ov-suspended 2x
+          zoom), not a diagonal slash. */}
       <div className="mt-4 mb-6 flex h-14 w-14 items-center justify-center rounded-full border-2 border-light-divider bg-light-card">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
           <circle cx="14" cy="14" r="10" stroke={sub} strokeWidth="2" />
-          <line x1="8" y1="20" x2="20" y2="8" stroke={sub} strokeWidth="2" strokeLinecap="round" />
+          <line x1="11" y1="9" x2="11" y2="19" stroke={sub} strokeWidth="2" strokeLinecap="round" />
+          <line x1="17" y1="9" x2="17" y2="19" stroke={sub} strokeWidth="2" strokeLinecap="round" />
         </svg>
       </div>
       <div className="text-[26px] font-bold leading-[1.25]">{title}</div>
       <div className="mt-4 text-[14px] leading-[1.55]">{body}</div>
       <div className="mt-3 text-[14px] leading-[1.55] font-bold">{suspendedUntil}</div>
       <div className="mt-6 flex items-start gap-2.5">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="mt-[3px] shrink-0" aria-hidden="true">
-          <circle cx="9" cy="9" r="7" stroke={sub} strokeWidth="1.6" />
-          <line x1="9" y1="8" x2="9" y2="12.5" stroke={sub} strokeWidth="1.6" strokeLinecap="round" />
-          <circle cx="9" cy="5.6" r="0.9" fill={sub} />
-        </svg>
+        {/* v1.3 P3 hygiene: the inline info SVG is converged onto Icon.info. */}
+        <span className="mt-[3px] inline-flex shrink-0" style={{ color: sub }}>{Icon.info(sub, 18)}</span>
         <span className="flex-1 text-list-item leading-[1.55] text-light-sub">{subscriptionNote}</span>
       </div>
       <div className="ml-7 mt-2 text-list-item font-semibold underline">{manageLabel}</div>

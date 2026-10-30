@@ -23,6 +23,18 @@ export const tokens = {
     lightSub: "#6B6C72",
     lightDim: "#9A9BA2",
     accent: "#E2A181",
+    /** v1.3 accent split (Q12): one shared token painted four different
+     * original colors, so each site now owns its token. Values are
+     * measured, not copied from the shared token. */
+    welcomeDot: "#D95E27",
+    composerMicDark: "#D95E27",
+    composerStop: "#D66F44",
+    drawerRunningDot: "#FFFFFF",
+    modelDotsFirst: "#E2A181",
+    legendClaude: "#966955",
+    legendGlm: "#916478",
+    legendKimi: "#817D57",
+    legendDeepseek: "#5F788C",
     blackBtn: "#111214",
     whiteBtn: "#FFFFFF",
     chartAmber: "#8C553C",
@@ -31,12 +43,13 @@ export const tokens = {
     modelClaude: "#B0703C",
     modelGlm: "#C65D7B",
     modelKimi: "#9A9A3E",
-    modelDeepseek: "#5B8A99",
+    /** v1.3 C6: Train DeepSeek dot is blue in the original, not teal-grey. */
+    modelDeepseek: "#5F788C",
     modelGpt: "#3FA34D",
   },
   font: {
     family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Noto Sans SC', sans-serif",
-    welcomeTitle: 38,
+    welcomeTitle: 41,
     greeting: 27,
     pageTitle: 20,
     sectionTitle: 16,
@@ -44,7 +57,7 @@ export const tokens = {
     listItem: 15,
     secondary: 13,
     caption: 12,
-    hugeNumber: 44,
+    hugeNumber: 37,
     statusBar: 13,
   },
   spacing: {

@@ -51,6 +51,10 @@ function LisbonChat({ dark }: { dark: boolean }) {
         <div className="rounded-chip border border-dark-divider px-[18px] py-2.5 text-list-item text-dark-text">{d.lisbon.followUp}</div>
       </div>
       <ChatMessage dark={dark} role="ai" model="Claude Sonnet 5.5" blocks={[{ kind: "paragraph", text: d.lisbon.day2 }]} />
+      {/* v1.3 S1: Lisbon thread composer — generating stop state. */}
+      <div className="mt-3 px-1 pb-2">
+        <Composer dark placeholder="Message Claude Sonnet 5.5" mic="stop" />
+      </div>
     </div>
   );
 }
@@ -59,24 +63,32 @@ function TrainChat() {
   return (
     <div className="px-6 py-2">
       <UserBubble dark={false}>{d.train.user}</UserBubble>
-      <AiMeta dark={false} model="DeepSeek V4 Pro · Auto" sub="Searched 9 sites, read 6 pages, thought for 6s" />
+      <AiMeta dark={false} model="DeepSeek V4 Pro · Auto" sub="Searched 9 sites, read 4 pages, thought for 6s" />
       <p className="my-0 mb-2 text-body font-bold leading-[1.55]">{d.train.verdict}</p>
       <p className="my-0 mb-4 text-body leading-[1.55]">{d.train.body}</p>
       <CompareTable headers={d.train.headers} rows={d.train.rows} />
-      <div className="mt-3 flex items-center gap-1 text-secondary text-light-sub">
-        {[0, 1, 2].map((i) => (
-          <span key={i} className="inline-block h-4 w-4 shrink-0 rounded bg-user-bubble-light" />
+      {/* v1.3 sweep: sources sit in a filled light pill (ov-train). */}
+      <div className="mt-3 inline-flex items-center gap-1 rounded-chip bg-user-bubble-light px-3 py-[5px] text-caption text-light-sub">
+        {["S", "R", "K"].map((letter) => (
+          <span key={letter} className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded bg-light-card text-[10px] font-bold text-light-text">
+            {letter}
+          </span>
         ))}
         <span className="ml-1">4 sources</span>
       </div>
       <ActionRow dark={false} credits="41 credits" />
-      <div className="mt-1 flex flex-col gap-2.5">
+      {/* v1.3 sweep: suggestions are pill chips with a corner arrow (ov-train). */}
+      <div className="mt-3 flex flex-col gap-2.5">
         {d.train.suggestions.map((s) => (
-          <div key={s} className="flex items-center py-2">
-            <span className="mr-2.5 text-light-sub">+</span>
+          <div key={s} className="flex items-center gap-2.5 rounded-chip border border-light-divider px-3 py-2.5">
+            {Icon.cornerUpRight("#6B6C72", 16)}
             <span className="text-list-item font-medium">{s}</span>
           </div>
         ))}
+      </div>
+      {/* v1.3 S1: Train thread composer last (plain line mic, ov-train bottom). */}
+      <div className="mt-3 pb-2">
+        <Composer dark={false} placeholder="Ask anything" mic="plain" />
       </div>
     </div>
   );
@@ -89,12 +101,20 @@ function KyotoChat() {
       <AiMeta dark model="Kimi K3" sub="Searched 4 times, checked the weather, found 12 places" />
       <p className="my-0 mb-3.5 text-body font-bold leading-[1.55] text-dark-text">{d.kyoto.verdict}</p>
       <div className="flex gap-3">
-        {d.kyoto.days.map((day) => (
-          <div key={day.date} className="flex-1 rounded-card px-3 py-2.5" style={{ background: day.light ? "#EDEEF0" : "#1E1F23" }}>
-            <div className="text-list-item font-bold" style={{ color: day.light ? "#17181C" : "#F5F5F7" }}>{day.date}</div>
-            <div className="mt-1 text-secondary" style={{ color: day.light ? "#6B6C72" : "#9A9BA2" }}>{day.weather}</div>
+        {d.kyoto.days.map((day) => {
+          const dayColor = day.light ? "#17181C" : "#F5F5F7";
+          const daySub = day.light ? "#6B6C72" : "#9A9BA2";
+          return (
+          <div key={day.date} className="flex-1 rounded-card px-3 py-2.5" style={{ background: day.light ? "#FFFFFF" : "#1E1F23" }}>
+            <div className="text-list-item font-bold" style={{ color: dayColor }}>{day.date}</div>
+            {/* v1.3 sweep: weather glyph before the temperature (ov-kyoto). */}
+            <div className="mt-1 flex items-center gap-1.5 text-secondary" style={{ color: daySub }}>
+              {/rain/i.test(day.weather) ? Icon.cloudRain(daySub, 14) : Icon.sun(daySub, 14)}
+              <span>{day.weather}</span>
+            </div>
           </div>
-        ))}
+          );
+        })}
       </div>
       {d.kyoto.timeline.map((t) => (
         <div key={t.place} className="mt-3.5 flex gap-3">
@@ -106,7 +126,7 @@ function KyotoChat() {
         </div>
       ))}
       <div className="mt-4 flex gap-5">
-        <span className="flex items-center gap-1.5 text-[14px] font-semibold text-dark-text">{Icon.mapPin("#F5F5F7", 16)}Show map</span>
+        <span className="flex items-center gap-1.5 text-[14px] font-semibold text-dark-text">{Icon.map("#F5F5F7", 16)}Show map</span>
         <span className="flex items-center gap-1.5 text-[14px] font-semibold text-dark-text">{Icon.calendar("#F5F5F7", 16)}Add to calendar</span>
       </div>
       <div className="mt-3 text-caption text-dark-dim">Weather from Google Weather, 10:24</div>
@@ -115,7 +135,7 @@ function KyotoChat() {
         {d.kyoto.poll.map((label, i) => (
           <div
             key={label}
-            className="mt-2.5 flex items-center gap-2.5 rounded-chip border px-3 py-2.5 text-list-item"
+            className={i === 0 ? "mt-2.5 flex items-center gap-2.5 rounded-chip border px-3 py-2.5 text-list-item" : "mt-2.5 flex items-center gap-2.5 border-t border-dark-divider px-3 py-2.5 text-list-item"}
             style={{
               background: i === 0 ? "#F5F5F7" : "transparent",
               borderColor: i === 0 ? "transparent" : "#2A2C31",
@@ -130,6 +150,10 @@ function KyotoChat() {
           </div>
         ))}
       </div>
+      {/* v1.3 S1: Kyoto thread composer (plain line mic, ov-kyoto bottom). */}
+      <div className="mt-4 pb-2">
+        <Composer dark placeholder="Ask anything" mic="plain" />
+      </div>
     </div>
   );
 }
@@ -140,7 +164,8 @@ function RouterChat() {
       <UserBubble dark={false}>{d.router.user}</UserBubble>
       <div className="mt-2 rounded-card bg-user-bubble-light p-4">
         <div className="flex gap-2.5">
-          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-light-sub text-[12px] font-bold text-light-sub">!</span>
+          {/* v1.3 P2-5: shield outline, not "!". */}
+          <span className="inline-flex shrink-0" style={{ color: "#6B6C72" }}>{Icon.shield("#6B6C72", 20)}</span>
           <div>
             <div className="text-list-item font-bold leading-[1.45]">{d.router.noticeTitle}</div>
             <p className="my-0 mt-2 text-[14px] leading-[1.55] text-light-sub">{d.router.noticeBody}</p>
@@ -159,7 +184,11 @@ function RouterChat() {
           <span className="text-list-item leading-[1.5]">{b}</span>
         </div>
       ))}
-      <ActionRow dark={false} credits="44 credits" />
+      <ActionRow dark={false} credits="64 credits" />
+      {/* v1.3 S1: Router thread composer (plain mic, "Message GPT-6.1 Sol"). */}
+      <div className="mt-3 pb-2">
+        <Composer dark={false} placeholder="Message GPT-6.1 Sol" mic="plain" />
+      </div>
     </div>
   );
 }
@@ -171,6 +200,7 @@ function SidebarDemo() {
       nav={d.drawerNav}
       pinnedLabel="Pinned"
       pinnedTitle="Thesis outline"
+      pinnedDots={["#E4754A", "#9B5DE5"]}
       recentLabel="Recent"
       recent={d.drawerRecent}
       messagesLeft="About 240 messages left"
@@ -208,15 +238,14 @@ export default function App() {
           topCenter={<span className="inline-flex items-center gap-1.5 text-body font-bold text-dark-text"><ModelDot model="Claude Sonnet 5.5" />Claude Sonnet 5.5</span>}
           rightPanel={<ChatInfoSheet {...d.chatInfo} />}
         >
+          {/* v1.3 S1: LisbonChat now ends with its own stop composer; the
+              duplicate desktop composer is removed. */}
           <LisbonChat dark />
-          <div className="mt-auto px-4 pb-4 pt-2">
-            <Composer dark placeholder="Message Claude Sonnet 5.5" />
-          </div>
         </DesktopLayout>
       </Section>
 
       <Section id="desktop-home" title="Desktop example — Home (light) + Credits" note="Main: English home panel. Right: credits panel.">
-        <DesktopLayout sidebar={<SidebarDemo />} rightPanel={<CreditsPanel balance="12,480" balanceUnit="credits" aboutLine="About 270 messages at your usual mix" planLine="Pro plan, 80,000 credits a month. Renews Nov 15." last30Label="Last 30 days" last30Total="71,720 credits" upgradeLabel="Oct 15, upgraded to Pro" bars={d.creditsBars} legend={d.creditsLegend} models={d.creditsModels} activity={{ title: "Lisbon on a budget", meta: "Today, 10:21, Claude Sonnet 5.5", amount: "84" }} dateRange={["Sep 28", "Oct 25"]} />}>
+        <DesktopLayout sidebar={<SidebarDemo />} rightPanel={<CreditsPanel balance="12,480" balanceUnit="credits" aboutLine="About 270 messages at your usual mix" planLine="Pro plan, 80,000 credits a month. Renews Nov 15." last30Label="Last 30 days" last30Total="71,720 credits" upgradeLabel="Oct 15, upgraded to Pro" bars={d.creditsBars} legend={d.creditsLegend} models={d.creditsModels} activity={{ title: "Lisbon on a budget", meta: "Today, 10:21, Claude Sonnet 5.5", amount: "84" }} dateRange={["Sep 26", "Oct 25"]} />}>
           <div className="flex min-h-[560px] flex-col">
             <HomePanel variant="en" greeting="Good evening, Alex" suggestions={d.homeEnSuggestions} composerPlaceholder="Ask anything" />
           </div>
@@ -249,13 +278,17 @@ export default function App() {
             <AiMeta dark={false} model="GPT-6.1 Sol · Auto" sub="Thought for 3s" />
             <p className="my-0 mb-3.5 text-body font-bold leading-[1.55]">{d.savings.headline}</p>
             <SavingsCard title="Savings growth" sliders={d.savings.sliders} yearsLabel="Years" years="15" finalBalance="$58,164" finalLabel="Final balance" putIn="$36,000" putInLabel="Put in" growth="$22,164" growthLabel="Growth" axisLabels={["Now", "5 yr", "10 yr", "15 yr"]} footerLeft="Calculated in Medley" footerRight="Formula ▾" />
+            {/* v1.3 S1: Savings thread composer (plain line mic, ov-savings). */}
+            <div className="mt-4">
+              <Composer dark={false} placeholder="Ask anything" mic="plain" />
+            </div>
           </div>
           <div className="rounded-card border border-light-divider bg-dark-bg pb-2"><KyotoChat /></div>
           <div className="rounded-card border border-light-divider bg-light-bg pb-2 lg:col-span-2"><RouterChat /></div>
         </div>
       </Section>
 
-      <Section id="picker" title="Model picker — A and B" note="Picker B renders no section title above GPT-6.1 Sol / Kimi K3 / Claude Opus 5.5 (none exists in the original) and no Thinking multiplier figures (unreadable in the only source).">
+      <Section id="picker" title="Model picker — A and B" note="Picker B renders no section title above GPT-6.1 Sol / Kimi K3 / Claude Opus 5.5 (none exists in the original). Thinking figures ~110/~10/~110/~140/~200/~400 measured from the Thinking zoom (v1.3).">
         <div className="grid items-start gap-6 lg:grid-cols-2">
           <div className="rounded-card bg-dark-bg px-5 pb-5"><ModelPickerA sections={d.pickerASections} howCreditsText="Credits are based on each provider's official API price, and every answer shows what it used." /></div>
           <div className="rounded-card bg-dark-bg px-5 pb-5">
@@ -266,19 +299,19 @@ export default function App() {
 
       <Section id="pricing" title="Pricing panel (dark)">
         <div className="max-w-[560px] rounded-card bg-dark-bg px-5 pb-3">
-          <PricingPanel title="Every top AI in one app" intro="Credits are based on each provider's official API price, and every answer shows what it used." billing={billing} onBillingChange={setBilling} plans={d.pricingPlans} ctaLabel="Start 7-day free trial" footnote="Free for 7 days, then $191.99 a year. Cancel anytime in Google Play before the trial ends and you won't be charged. No ads on any plan, no weekly plans." />
+          <PricingPanel title="Every top AI in one app" intro="Credits are based on each provider's official API price, and every answer shows what it used." billing={billing} onBillingChange={setBilling} plans={d.pricingPlans} ctaLabel="Start 7-day free trial" footnote="Free for 7 days, then $191.99 a year. Cancel anytime in Google Play before the trial ends and you won't be charged. No ads on any plan. No weekly plans." />
         </div>
       </Section>
 
       <Section id="credits" title="Credits panel (light)">
         <div className="max-w-[720px] rounded-card border border-light-divider px-5 py-4">
-          <CreditsPanel balance="12,480" balanceUnit="credits" aboutLine="About 270 messages at your usual mix" planLine="Pro plan, 80,000 credits a month. Renews Nov 15." last30Label="Last 30 days" last30Total="71,720 credits" upgradeLabel="Oct 15, upgraded to Pro" bars={d.creditsBars} legend={d.creditsLegend} models={d.creditsModels} activity={{ title: "Lisbon on a budget", meta: "Today, 10:21, Claude Sonnet 5.5", amount: "84" }} dateRange={["Sep 28", "Oct 25"]} />
+          <CreditsPanel balance="12,480" balanceUnit="credits" aboutLine="About 270 messages at your usual mix" planLine="Pro plan, 80,000 credits a month. Renews Nov 15." last30Label="Last 30 days" last30Total="71,720 credits" upgradeLabel="Oct 15, upgraded to Pro" bars={d.creditsBars} legend={d.creditsLegend} models={d.creditsModels} activity={{ title: "Lisbon on a budget", meta: "Today, 10:21, Claude Sonnet 5.5", amount: "84" }} dateRange={["Sep 26", "Oct 25"]} />
         </div>
       </Section>
 
       <Section id="agent-team" title="Agent team panel (dark)" note="Order: progress bar above the credits line; 20% measured fill; times 31s / 9s / 7s / 6s / 21s / 8s.">
         <div className="max-w-[560px] rounded-card bg-dark-bg px-5 py-4">
-          <AgentTeamPanel titleLines={["Compare the pricing of 12 note-taking", "apps"]} meta={["Team, 6 agents", "Auto review"]} creditsLine="1,240 of 6,000 credits" stepLine="Step 3 of 8" progressPct="20%" lead={d.agentLead} agents={d.agentRows} />
+          <AgentTeamPanel titleLines={["Compare the pricing of 12 note-taking", "apps"]} meta={["Team, 6 agents", "Auto-review"]} creditsLine="1,240 of 6,000 credits" stepLine="Step 3 of 6" progressPct="20%" lead={d.agentLead} agents={d.agentRows} />
         </div>
       </Section>
 

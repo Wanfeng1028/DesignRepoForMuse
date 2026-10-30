@@ -28,22 +28,27 @@ export function WelcomePanel({
       <div className="flex flex-1 flex-col justify-center">
         <div className="flex items-baseline gap-2">
           <span className="text-welcome-title font-bold leading-[1.15]">Let&apos;s discover</span>
-          <span className="h-3 w-3 shrink-0 self-center rounded-full bg-accent" />
+          {/* v1.3 C1/Q12: CN HD dot, vivid orange-red (217,94,39), 16px — its
+              own token, not the shared accent. */}
+          <span className="h-4 w-4 shrink-0 self-center rounded-full bg-welcome-dot" />
         </div>
         <div className="mt-4 text-body text-dark-sub">{tagline}</div>
         <div className="mt-1.5 text-list-item text-dark-dim">{modelLine}</div>
       </div>
       <div className="flex flex-col gap-3 pb-4">
-        <Button className="w-full">
+        {/* v1.3 C8: Google fill ~#ECEEF2, not pure white. */}
+        <Button className="w-full bg-[#ECEEF2]">
           <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-[#D8D8DC] bg-white text-[13px] font-extrabold">
             G
           </span>
           {googleLabel}
         </Button>
-        <Button variant="outline" className="w-full border-dark-divider text-dark-text font-semibold">
+        {/* v1.3 sweep: Try button is a filled dark pill, not an outline. */}
+        <Button variant="outline" className="w-full border-transparent bg-dark-row font-semibold text-dark-text">
           {tryLabel}
         </Button>
-        <div className="px-5 pt-0.5 text-left text-caption leading-[1.45] text-dark-dim">{footnote}</div>
+        {/* v1.3 F8: footnote ~10-11px in the original, not 12px. */}
+        <div className="px-5 pt-0.5 text-left text-[11px] leading-[1.45] text-dark-dim">{footnote}</div>
       </div>
     </div>
   );

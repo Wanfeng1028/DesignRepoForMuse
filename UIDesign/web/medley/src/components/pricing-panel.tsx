@@ -15,10 +15,12 @@ export type PlanData = {
 };
 
 /**
- * Dark pricing panel: dot row, greeting-size title, monthly/yearly segmented
- * control (Yearly selected, "Save 20%" accent chip), plan rows with radio
- * markers, white trial CTA and the trial footnote. No card borders on plans
- * (per the mobile close-out: plan cards are borderless dark cards).
+ * Dark pricing panel: 6-dot row, 22px title (v1.3 F1 — the greeting token
+ * stays 27px for Home), monthly/yearly segmented control (v1.3 B1: Yearly
+ * selected is a dark-grey highlight, "Save 20%" plain small text, no white
+ * pill, no peach badge), plan rows with radio markers, white trial CTA
+ * and the trial footnote. No card borders on plans (per the mobile
+ * close-out: plan cards are borderless dark cards).
  */
 export function PricingPanel({
   title,
@@ -40,8 +42,8 @@ export function PricingPanel({
   return (
     <div className="bg-dark-bg text-dark-text">
       <div className="mb-1">{Icon.close("#F5F5F7")}</div>
-      <ModelDots size={10} />
-      <h1 className="text-greeting font-bold leading-[1.25] my-2">{title}</h1>
+      <ModelDots size={10} count={6} />
+      <h1 className="text-[22px] font-bold leading-[1.25] my-2">{title}</h1>
       <p className="text-[14px] leading-[1.5] text-dark-sub my-0 mb-3">{intro}</p>
 
       <div className="flex rounded-button bg-dark-input p-1">
@@ -52,12 +54,12 @@ export function PricingPanel({
             onClick={() => onBillingChange?.(b)}
             className={cn(
               "flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-chip border-0 py-[9px] text-[14px] capitalize",
-              billing === b ? "bg-dark-text font-bold text-light-text" : "bg-transparent font-semibold text-dark-sub",
+              billing === b ? "bg-dark-row font-bold text-dark-text" : "bg-transparent font-semibold text-dark-sub",
             )}
           >
             {b === "monthly" ? "Monthly" : "Yearly"}
             {b === "yearly" && (
-              <span className="rounded-[10px] bg-accent px-[7px] py-[2px] text-[11px] font-bold text-white">Save 20%</span>
+              <span className="text-[12px] font-medium text-dark-sub">Save 20%</span>
             )}
           </button>
         ))}
@@ -86,7 +88,7 @@ export function PricingPanel({
             ))}
             {p.selected && (
               <div className="mt-2.5 ml-[30px]">
-                <ModelDots size={8} />
+                <ModelDots size={8} count={6} />
               </div>
             )}
           </div>

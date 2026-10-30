@@ -1,14 +1,33 @@
 import { tokens } from "../tokens";
+import { Icon } from "./icons";
+
+/**
+ * v1.3 C9: per-bar segment splits (amber / pink / teal / green fractions).
+ * The original stacks several colors per bar and varies them bar to bar
+ * (green appears in later bars); exact per-bar splits are not separable
+ * from the JPEG (audit待量19), so these fractions are a shape-faithful
+ * approximation, not measured values — the fixed 55/30/15 split is gone.
+ */
+const BAR_SEGMENTS: [number, number, number, number][] = [
+  [0.7, 0.2, 0.1, 0], [0.7, 0.2, 0.1, 0], [0.65, 0.25, 0.1, 0], [0.65, 0.2, 0.15, 0],
+  [0.6, 0.25, 0.15, 0], [0.6, 0.2, 0.15, 0.05], [0.55, 0.25, 0.15, 0.05], [0.55, 0.25, 0.12, 0.08],
+  [0.5, 0.3, 0.12, 0.08], [0.5, 0.28, 0.14, 0.08], [0.48, 0.3, 0.14, 0.08], [0.46, 0.3, 0.14, 0.1],
+  [0.45, 0.3, 0.15, 0.1], [0.45, 0.28, 0.15, 0.12], [0.42, 0.3, 0.16, 0.12], [0.42, 0.28, 0.16, 0.14],
+  [0.4, 0.3, 0.16, 0.14], [0.4, 0.3, 0.15, 0.15], [0.38, 0.3, 0.17, 0.15], [0.38, 0.28, 0.17, 0.17],
+];
+const BAR_COLORS = ["#8C553C", "#C65D7B", "#5B8A99", "#3FA34D"];
 
 export type CreditBarDay = { height: number };
 export type CreditModelRow = { name: string; messages: string; amount: string; pct: string };
 export type CreditLegendItem = { label: string; color: string };
 
 /**
- * Light credits panel: 44px huge balance, plan line, Buy/Change buttons,
- * last-30-days header, "Oct 15, upgraded to Pro" dashed marker, ~20 stacked
- * multi-color bars (brown-gold base #8C553C + pink + teal tips), legend,
- * By-model rows and an Activity row. All figures are props.
+ * Light credits panel: 37px huge balance (v1.3 F2), back + "Credits" +
+ * info header (v1.3 S2), plan line, Buy/Change buttons, last-30-days
+ * header, "Oct 15, upgraded to Pro" as an x-axis label only (v1.3 S14 —
+ * no vertical dashed line), ~20 stacked multi-color bars with per-bar
+ * varying splits (v1.3 C9), legend, By-model rows with dots (v1.3 S12)
+ * and an Activity row with a dot (v1.3 S13). All figures are props.
  */
 export function CreditsPanel({
   balance,
@@ -40,6 +59,13 @@ export function CreditsPanel({
   const c = tokens.colors;
   return (
     <div className="bg-light-bg text-light-text">
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-2.5">
+          {Icon.back("#17181C")}
+          <span className="text-page-title font-bold">Credits</span>
+        </span>
+        {Icon.info("#17181C")}
+      </div>
       <div className="flex items-baseline gap-2 mt-1">
         <span className="text-huge-number font-bold leading-[1]">{balance}</span>
         <span className="text-body text-light-sub">{balanceUnit}</span>
@@ -61,26 +87,31 @@ export function CreditsPanel({
         <span className="text-list-item font-bold">{last30Total}</span>
       </div>
 
-      <div className="mt-2 flex">
-        <div className="ml-[60%] flex items-center gap-1">
-          <span className="inline-block h-2.5 w-px bg-light-dim" />
-          <span className="text-[11px] text-light-dim">{upgradeLabel}</span>
-        </div>
-      </div>
-      <div className="relative mt-1">
-        <div className="absolute top-0 bottom-0 left-[60%] z-[1] border-l border-dashed border-light-dim" />
-        <div className="mt-1 flex h-[110px] items-end gap-[3px]">
-          {bars.map((h, i) => (
+      <div className="mt-1 flex h-[110px] items-end gap-[3px]">
+        {bars.map((h, i) => {
+          const segs = BAR_SEGMENTS[i % BAR_SEGMENTS.length];
+          return (
             <div key={i} className="flex flex-1 flex-col-reverse" style={{ height: h }}>
-              <div style={{ height: Math.round(h * 0.55), background: c.chartAmber }} />
-              <div style={{ height: Math.round(h * 0.3), background: "#C65D7B" }} />
-              <div style={{ height: Math.max(2, Math.round(h * 0.15)), background: "#5B8A99", borderTopLeftRadius: 2, borderTopRightRadius: 2 }} />
+              {segs.map((f, j) =>
+                f > 0 ? (
+                  <div
+                    key={j}
+                    style={{
+                      height: Math.max(j === segs.length - 1 ? 2 : 0, Math.round(h * f)),
+                      background: BAR_COLORS[j],
+                      borderTopLeftRadius: j === segs.length - 1 ? 2 : 0,
+                      borderTopRightRadius: j === segs.length - 1 ? 2 : 0,
+                    }}
+                  />
+                ) : null,
+              )}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
-      <div className="mt-1.5 flex justify-between">
+      <div className="mt-1.5 flex items-center justify-between">
         <span className="text-caption text-light-sub">{dateRange[0]}</span>
+        <span className="text-[11px] text-light-dim">{upgradeLabel}</span>
         <span className="text-caption text-light-sub">{dateRange[1]}</span>
       </div>
       <div className="mt-2.5 flex gap-4">
@@ -94,29 +125,39 @@ export function CreditsPanel({
 
       <div className="mt-6 text-section-title font-bold">By model</div>
       <div>
-        {models.map((m, i) => (
+        {models.map((m, i) => {
+          const dot = legend.find((l) => m.name.includes(l.label))?.color;
+          return (
           <div
             key={m.name}
             className="flex items-center justify-between py-3"
             style={{ borderBottom: i < models.length - 1 ? `1px solid ${c.lightDivider}` : "none" }}
           >
-            <div>
-              <div className="text-list-item font-medium">{m.name}</div>
-              <div className="text-secondary text-light-sub mt-0.5">{m.messages}</div>
+            <div className="flex items-center gap-2.5">
+              {dot && <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: dot }} />}
+              <div>
+                <div className="text-list-item font-medium">{m.name}</div>
+                <div className="text-secondary text-light-sub mt-0.5">{m.messages}</div>
+              </div>
             </div>
             <div className="text-right">
               <div className="text-list-item font-bold">{m.amount}</div>
               <div className="text-secondary text-light-sub mt-0.5">{m.pct}</div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="mt-5 text-section-title font-bold">Activity</div>
       <div className="flex items-center justify-between py-3">
-        <div>
-          <div className="text-list-item font-medium">{activity.title}</div>
-          <div className="text-secondary text-light-sub mt-0.5">{activity.meta}</div>
+        <div className="flex items-center gap-2.5">
+          {/* v1.3 S13: Lisbon activity dot (orange, as in the drawer Lisbon row). */}
+          <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: "#E4754A" }} />
+          <div>
+            <div className="text-list-item font-medium">{activity.title}</div>
+            <div className="text-secondary text-light-sub mt-0.5">{activity.meta}</div>
+          </div>
         </div>
         <span className="text-list-item font-bold">{activity.amount}</span>
       </div>

@@ -17,6 +17,12 @@
   --color-light-sub: #6b6c72;
   --color-light-dim: #9a9ba2;
   --color-accent: #e2a181;
+  /* v1.3 accent split (Q12) — see src/tokens/index.ts. */
+  --color-welcome-dot: #d95e27;
+  --color-composer-mic-dark: #d95e27;
+  --color-composer-stop: #d66f44;
+  --color-drawer-running-dot: #ffffff;
+  --color-model-dots-first: #e2a181;
   --color-black-btn: #111214;
   --color-white-btn: #ffffff;
   --color-chart-amber: #8c553c;
@@ -29,7 +35,7 @@
   --color-model-gpt: #3fa34d;
 
   /* Type scale — visual estimates at the 390px render frame, per DESIGN-TOKENS.md. */
-  --text-welcome-title: 38px;
+  --text-welcome-title: 41px;
   --text-welcome-title--line-height: 1.15;
   --text-greeting: 27px;
   --text-greeting--line-height: 1.25;
@@ -45,7 +51,7 @@
   --text-secondary--line-height: 1.45;
   --text-caption: 12px;
   --text-caption--line-height: 1.45;
-  --text-huge-number: 44px;
+  --text-huge-number: 37px;
   --text-huge-number--line-height: 1.1;
 
   /* Radii — measured / comparison-verified, per DESIGN-TOKENS.md. */
@@ -69,4 +75,29 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* v1.3 morphing (M4 live, M2/M3 transition on state change): chevron
+ * rotates 180deg on toggle; mic/stop/send glyphs fade-scale in when the
+ * composer state prop changes. No keyframe morphing is faked for pairs
+ * with no toggle in the original (M1/M5/M6/M7 — see CHANGELOG). */
+.morph-rotate {
+  display: inline-flex;
+  transition: transform 200ms ease;
+}
+.morph-rotate[data-open="true"] {
+  transform: rotate(180deg);
+}
+@keyframes morph-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.morph-in {
+  animation: morph-in 180ms ease;
 }

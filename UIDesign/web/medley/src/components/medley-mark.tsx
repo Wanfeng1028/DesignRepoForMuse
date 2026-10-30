@@ -32,12 +32,17 @@ export function ModelDot({ model, size = 8 }: { model: string; size?: number }) 
   );
 }
 
-/** 5-dot cluster, used only for the Auto pill and the pricing dot row. */
-export function ModelDots({ size = 6 }: { size?: number }) {
-  const dots = [tokens.colors.accent, "#4A7DE4", "#2EB5A5", "#9B5DE5", "#3FA34D"];
+/**
+ * Dot cluster. Default 5 dots (Auto pill, chat-info model line — home Auto
+ * pill count is unconfirmed past ~5 in JPEG, see audit待量15, so it is
+ * left at 5). Pricing rows pass count={6} (v1.3 C10: 6 dots per row in the
+ * original, pink 6th dot appended to the existing five hues).
+ */
+export function ModelDots({ size = 6, count = 5 }: { size?: number; count?: number }) {
+  const dots = [tokens.colors.modelDotsFirst, "#4A7DE4", "#2EB5A5", "#9B5DE5", "#3FA34D", "#C65D7B"];
   return (
     <span style={{ display: "inline-flex", gap: 2, alignItems: "center" }} aria-hidden="true">
-      {dots.map((d, i) => (
+      {dots.slice(0, count).map((d, i) => (
         <span key={i} style={{ width: size, height: size, borderRadius: "50%", background: d, display: "inline-block" }} />
       ))}
     </span>

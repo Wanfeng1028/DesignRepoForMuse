@@ -36,15 +36,23 @@ export function FollowUpChip({ dark, children }: { dark: boolean; children: Reac
   );
 }
 
-/** AiMeta header: single model dot + model name, optional sub line (never a 5-dot cluster). */
+/** AiMeta header: single model dot + model name, optional sub line (never a 5-dot cluster).
+ * v1.3 sweep: the sub line carries a trailing chevron in the original
+ * (Train "thought for 6s ›", Kyoto "found 12 places ›"). */
 export function AiMeta({ dark, model, sub }: { dark: boolean; model: string; sub?: string }) {
+  const subColor = dark ? "#9A9BA2" : "#6B6C72";
   return (
     <div className="mt-4 mb-2">
       <div className={cn("flex items-center gap-1.5 text-[14px] font-semibold", dark ? "text-dark-text" : "text-light-text")}>
         <ModelDot model={model} />
         {model}
       </div>
-      {sub && <div className={cn("text-secondary mt-1", dark ? "text-dark-sub" : "text-light-sub")}>{sub}</div>}
+      {sub && (
+        <div className={cn("mt-1 flex items-center gap-0.5 text-secondary", dark ? "text-dark-sub" : "text-light-sub")}>
+          <span>{sub}</span>
+          {Icon.chevronRight(subColor, 14)}
+        </div>
+      )}
     </div>
   );
 }

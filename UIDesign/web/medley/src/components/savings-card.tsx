@@ -1,4 +1,5 @@
 import { tokens } from "../tokens";
+import { Icon } from "./icons";
 import { Slider } from "./ui/controls";
 
 export type SavingsRow = { label: string; value: string; fill: string };
@@ -47,13 +48,19 @@ export function SavingsCard({
   for (let i = 0; i <= 29; i++) {
     const months = (i / 29) * 180;
     const fv = 200 * ((Math.pow(1 + r, months) - 1) / r);
-    const x = (i / 29) * 278;
+    // v1.3 sweep: the curve ends at ~82% of plot width so the "Balance"
+    // label sits right of the endpoint dot without clipping (280 viewBox).
+    const x = (i / 29) * 230;
     const y = 104 - (fv / 60000) * (104 - 12.9);
     pts.push(`${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`);
   }
   return (
     <div className="rounded-card bg-light-card p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-      <div className="text-body font-bold">{title}</div>
+      <div className="flex items-center justify-between">
+        <div className="text-body font-bold">{title}</div>
+        {/* v1.3 S9: card "..." menu. */}
+        {Icon.more("#6B6C72", 18)}
+      </div>
       {sliders.map((s) => (
         <div key={s.label} className="mt-4">
           <div className="flex justify-between text-[14px] text-light-sub">
@@ -98,9 +105,11 @@ export function SavingsCard({
               <line key={y} x1="0" y1={y} x2="280" y2={y} stroke={c.lightDivider} strokeWidth="1" />
             ))}
             <path d={pts.join(" ")} fill="none" stroke={c.lightText} strokeWidth="1.5" />
-            <path d="M0 104 L 278 47.6" fill="none" stroke={c.lightDim} strokeWidth="1.5" strokeDasharray="5 4" />
-            <text x="222" y="14" fontSize="11" fill={c.lightText} fontWeight="600">Balance</text>
-            <text x="228" y="56" fontSize="11" fill={c.lightDim}>Put in</text>
+            {/* v1.3 S10: Balance curve endpoint dot (last sample: 230, 15.7). */}
+            <circle cx="230" cy="15.7" r="4" fill={c.lightText} />
+            <path d="M0 104 L 230 57.4" fill="none" stroke={c.lightDim} strokeWidth="1.5" strokeDasharray="5 4" />
+            <text x="237" y="19" fontSize="11" fill={c.lightText} fontWeight="600">Balance</text>
+            <text x="235" y="61" fontSize="11" fill={c.lightDim}>Put in</text>
           </svg>
           <div className="flex justify-between text-[11px] text-light-dim">
             {axisLabels.map((l) => (
@@ -117,10 +126,12 @@ export function SavingsCard({
   );
 }
 
-/** Three-column comparison table (train screen): 100px label column + two equal value columns. */
+/** Three-column comparison table (train screen): 100px label column + two
+ * equal value columns. v1.3 sweep: the original table sits in a white
+ * rounded card, not on bare hairlines. */
 export function CompareTable({ rows, headers }: { headers: [string, string]; rows: [string, string, string][] }) {
   return (
-    <div className="border-t border-light-divider">
+    <div className="rounded-card bg-light-card p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
       <div className="flex border-b border-light-divider">
         <div className="w-[100px] shrink-0 py-2.5" />
         {headers.map((h) => (

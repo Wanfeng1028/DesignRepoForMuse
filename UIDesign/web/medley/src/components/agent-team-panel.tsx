@@ -1,14 +1,24 @@
 import { cn } from "../lib/utils";
-import { tokens } from "../tokens";
+import { Icon } from "./icons";
+import { Composer } from "./composer";
 
 export type AgentStatus = "Running" | "Done" | "Queued";
 export type AgentRowData = { role: string; model: string; task: string; status: AgentStatus; time: string };
 
+/**
+ * v1.3 I1/I2/I3 (ov-agent 2x zoom): Running = white dot; Done = check-in-
+ * circle icon (Lucide circle-check); Queued = clock-in-circle icon.
+ */
 function StatusDot({ status }: { status: AgentStatus }) {
-  const bg = status === "Running" ? "#3FA34D" : status === "Done" ? tokens.colors.darkText : tokens.colors.darkSub;
   return (
     <span className="inline-flex shrink-0 items-center gap-[5px] text-secondary text-dark-sub">
-      <span className="h-[7px] w-[7px] rounded-full" style={{ background: bg }} />
+      {status === "Running" ? (
+        <span className="h-[7px] w-[7px] rounded-full" style={{ background: "#F5F5F7" }} />
+      ) : status === "Done" ? (
+        Icon.checkCircle("#9A9BA2", 16)
+      ) : (
+        Icon.clock("#9A9BA2", 16)
+      )}
       {status}
     </span>
   );
@@ -22,7 +32,11 @@ function AgentCard({ row, lead = false }: { row: AgentRowData; lead?: boolean })
           <span className="font-bold">{row.role}</span>
           <span className="text-dark-sub"> · {row.model}</span>
         </span>
-        <StatusDot status={row.status} />
+        {/* v1.3 sweep: every agent card carries a "..." menu after the status. */}
+        <span className="flex items-center gap-2">
+          <StatusDot status={row.status} />
+          {Icon.more("#9A9BA2", 16)}
+        </span>
       </div>
       <div className="mt-1.5 flex items-center justify-between gap-2.5">
         <div className="text-[14px] text-dark-sub">{row.task}</div>
@@ -57,7 +71,12 @@ export function AgentTeamPanel({
 }) {
   return (
     <div className="bg-dark-bg text-dark-text">
-      <h1 className="text-[17px] font-bold leading-[1.3] my-0.5 mb-2.5">
+      {/* v1.3 S3: back top-left + "..." top-right. */}
+      <div className="mb-1 flex items-center justify-between">
+        {Icon.back("#F5F5F7")}
+        {Icon.more("#9A9BA2")}
+      </div>
+      <h1 className="text-[19px] font-bold leading-[1.3] my-0.5 mb-2.5">
         {titleLines[0]}
         <br />
         {titleLines[1]}
@@ -83,11 +102,18 @@ export function AgentTeamPanel({
         {["Pause all", "Stop all"].map((label) => (
           <span
             key={label}
-            className="flex h-12 flex-1 items-center justify-center rounded-button border border-dark-divider text-list-item font-semibold"
+            className="flex h-12 flex-1 items-center justify-center gap-2 rounded-button border border-dark-divider text-list-item font-semibold"
           >
+            {/* v1.3 S11: Lucide pause (double bar) / square icons. */}
+            {label === "Pause all" ? Icon.pause("#F5F5F7", 16) : Icon.square("#F5F5F7", 16)}
             {label}
           </span>
         ))}
+      </div>
+      {/* v1.3 S1: "Add an instruction" composer — white-circle dark-arrow
+          send button, no plus (ov-agent bottom). */}
+      <div className="mt-4">
+        <Composer dark placeholder="Add an instruction" mic="arrow" hidePlus />
       </div>
     </div>
   );

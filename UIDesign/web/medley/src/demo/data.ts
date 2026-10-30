@@ -60,7 +60,7 @@ export const kyoto = {
   verdict: "Temples on dry Saturday, market on Sunday.",
   days: [
     { date: "Sat, Nov 1", weather: "19° clear", light: true },
-    { date: "Sun, Nov 2", weather: "16° rain", light: false },
+    { date: "Sun, Nov 2", weather: "15° rain", light: false },
   ],
   timeline: [
     { time: "7:30", place: "Fushimi Inari", note: "Go before 8 to beat the crowds" },
@@ -85,42 +85,42 @@ export const pickerASections: ModelSectionData[] = [
   {
     title: "Everyday", desc: "Fast and light, for everyday questions.",
     rows: [
-      { name: "GLM-5.3 Flash", desc: "Fast everyday answers", cost: "-5" },
-      { name: "DeepSeek V4.1 Flash", desc: "Quick answers, good at math and code", cost: "-11" },
+      { name: "GLM-5.3 Flash", desc: "Fast everyday answers", cost: "~5" },
+      { name: "DeepSeek V4.1 Flash", desc: "Quick answers, good at math and code", cost: "~11" },
     ],
   },
   {
     title: "Advanced", desc: "Better at writing and reasoning.",
-    rows: [{ name: "GLM-5", desc: "Long documents and writing", cost: "-31" }],
+    rows: [{ name: "GLM-5", desc: "Long documents and writing", cost: "~31" }],
   },
   {
     title: "Flagship", desc: "Strong all-rounders for serious work.",
     rows: [
-      { name: "Claude Sonnet 5.5", desc: "Writing and coding", cost: "-80" },
-      { name: "Kimi K3", desc: "Very long documents", cost: "-120" },
+      { name: "Claude Sonnet 5.5", desc: "Writing and coding", cost: "~80" },
+      { name: "Kimi K3", desc: "Very long documents", cost: "~120" },
     ],
   },
   {
     title: "Frontier", desc: "The most capable models, for the hardest problems.",
-    rows: [{ name: "Claude Fable 5.1", desc: "The hardest problems", cost: "-400", badge: "Pro" }],
+    rows: [{ name: "Claude Fable 5.1", desc: "The hardest problems", cost: "~400", badge: "Pro+" }],
   },
 ];
 
 export const pickerBSections: ModelSectionData[] = [
   {
     title: "Advanced", desc: "Better at writing and reasoning.",
-    rows: [{ name: "GLM-5", desc: "Long documents and writing", cost: "-31" }],
+    rows: [{ name: "GLM-5", desc: "Long documents and writing", cost: "~31" }],
   },
   {
     title: "Flagship", desc: "Strong all-rounders for serious work.",
-    rows: [{ name: "Claude Sonnet 5.5", desc: "Writing and coding", cost: "-80", selected: true }],
+    rows: [{ name: "Claude Sonnet 5.5", desc: "Writing and coding", cost: "~80", selected: true }],
   },
 ];
 
 export const pickerBUntitled: ModelRowData[] = [
-  { name: "GPT-6.1 Sol", desc: "Advanced reasoning", cost: "-80" },
+  { name: "GPT-6.1 Sol", desc: "Advanced reasoning", cost: "~80" },
   { name: "Kimi K3", desc: "Very long documents", unavailableNote: "Not available in this chat" },
-  { name: "Claude Opus 5.5", desc: "Deep, careful work", cost: "-160" },
+  { name: "Claude Opus 5.5", desc: "Deep, careful work", cost: "~160" },
 ];
 
 export const pricingPlans: PlanData[] = [
@@ -129,7 +129,7 @@ export const pricingPlans: PlanData[] = [
     name: "Pro", monthly: "$16.00/mo", yearly: "$191.99 a year", selected: true, badge: "7 days free",
     detail: "80,000 credits a month, about 1,000 Claude Sonnet messages.",
     features: [
-      "Claude Sonnet and Opus, GPT-5.1, GLM-5, Kimi K3",
+      "Claude Sonnet and Opus, GPT-6.1 Sol, Kimi K3",
       "Image generation and deep research",
       "30 agent tasks a month, 3 scheduled",
     ],
@@ -137,12 +137,12 @@ export const pricingPlans: PlanData[] = [
   { name: "Pro+", monthly: "$56.00/mo", yearly: "$671.99 a year" },
 ];
 
-export const creditsBars = [18, 24, 20, 32, 28, 40, 36, 48, 44, 58, 52, 64, 60, 72, 68, 80, 76, 88, 84, 96];
+export const creditsBars = [14, 15, 14, 16, 18, 20, 22, 26, 30, 36, 42, 50, 58, 66, 76, 86, 94, 101, 106, 110];
 export const creditsLegend = [
-  { label: "Claude", color: "#E4754A" },
-  { label: "GLM", color: "#4A7DE4" },
-  { label: "Kimi", color: "#9B5DE5" },
-  { label: "DeepSeek", color: "#2EB5A5" },
+  { label: "Claude", color: "#966955" },
+  { label: "GLM", color: "#916478" },
+  { label: "Kimi", color: "#817D57" },
+  { label: "DeepSeek", color: "#5F788C" },
 ];
 export const creditsModels = [
   { name: "Claude Sonnet 5.5", messages: "480 messages", amount: "38,400", pct: "54%" },
@@ -155,7 +155,7 @@ export const agentLead: AgentRowData = { role: "Lead", model: "Claude Sonnet 5.5
 export const agentRows: AgentRowData[] = [
   { role: "Researcher", model: "DeepSeek V4 Pro", task: "Reading notion.com/pricing", status: "Running", time: "9s" },
   { role: "Researcher", model: "DeepSeek V4 Pro", task: "Searching 'Obsidian Sync price'", status: "Running", time: "7s" },
-  { role: "Researcher", model: "DeepSeek V4 Pro", task: "Done: 2 plans found", status: "Done", time: "6s" },
+  { role: "Researcher", model: "DeepSeek V4 Pro", task: "Boar: 2 plans found", status: "Done", time: "6s" },
   { role: "Analyst", model: "GPT-6.1 Sol", task: "Running code to build the table", status: "Running", time: "21s" },
   { role: "Reviewer", model: "GPT-6.1 Sol", task: "Waiting for a free slot", status: "Queued", time: "8s" },
 ];
@@ -167,12 +167,12 @@ export const drawerNav: DrawerNavItem[] = [
   { label: "Flashcards", icon: "cards" },
 ];
 export const drawerRecent: DrawerRecentItem[] = [
-  { label: "Lisbon on a budget", dot: "#E4754A" },
+  { label: "Lisbon on a budget", dot: "#C65D7B", dots: ["#C65D7B", "#C65D7B"] },
   { label: "Fix my Python script", dot: "#4A7DE4" },
-  { label: "Cell biology notes", dot: "#2EB5A5" },
-  { label: "Q3 report summary", dot: "#9B5DE5" },
-  { label: "Cover letter draft", dot: "#3FA34D" },
-  { label: "Spanish verbs quiz", dot: "#4A7DE4" },
+  { label: "Cell biology notes", dot: "#9B5DE5" },
+  { label: "Q3 report summary", dot: "#3FA34D", dots: ["#3FA34D", "#9A9A3E"] },
+  { label: "Cover letter draft", dot: "#E4754A" },
+  { label: "Spanish verbs quiz", dot: "#C65D7B" },
 ];
 
 export const homeEnSuggestions: Suggestion[] = [
@@ -184,7 +184,7 @@ export const homeEnSuggestions: Suggestion[] = [
 export const homeCnSuggestions: Suggestion[] = [
   { icon: "news", text: "今天有什么新闻" },
   { icon: "pdf", text: "总结一份 PDF" },
-  { icon: "searchOrbit", text: "深度研究一个话题", badge: "Pro" },
+  { icon: "searchOrbit", text: "深度研究一个话题", badge: "Pro+" },
   { icon: "cards", text: "把笔记做成闪卡" },
 ];
 
@@ -214,9 +214,9 @@ export const chatInfo = {
     { value: "6", label: "Messages" },
   ],
   modelChips: [
-    { name: "GLM-5", dot: "#4A7DE4" },
+    { name: "GLM-5", dot: "#916478" },
     { name: "Claude Sonnet 5.5", dot: "#E4754A" },
-    { name: "DeepSeek V4 Pro", dot: "#2EB5A5" },
+    { name: "DeepSeek V4 Pro", dot: "#5F788C" },
   ],
   tools: [
     { name: "Web search", right: "4, 1 from saved results" },
@@ -224,7 +224,7 @@ export const chatInfo = {
     { name: "Code runs", right: "1" },
     { name: "Weather", right: "1" },
   ],
-  latestReply: { model: "Claude Sonnet 5.5", dot: "#E4754A", time: "10:21" },
+  latestReply: { model: "Claude Sonnet 5.5", dot: "#E4754A", time: "10:31" },
   latestMetrics: [
     { label: "First token", value: "0.8s" },
     { label: "Speed", value: "62 tok/s" },
@@ -234,8 +234,8 @@ export const chatInfo = {
     { label: "Thinking", value: "Medium" },
   ],
   replies: [
-    { model: "GLM-5", dot: "#4A7DE4", right: "10:24, 28 credits, 1.1s" },
-    { model: "DeepSeek V4 Pro", dot: "#2EB5A5", right: "10:17, 41 credits, 3.5s" },
+    { model: "GLM-5", dot: "#916478", right: "10:24, 28 credits, 1.1s" },
+    { model: "DeepSeek V4 Pro", dot: "#5F788C", right: "10:19, 41 credits, 0.9s" },
   ],
   footnote: "First token is the time from sending to the first word. Speed counts the visible answer only.",
 };

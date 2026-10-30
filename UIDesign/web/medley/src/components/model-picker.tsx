@@ -126,12 +126,26 @@ export function ModelPickerA({ sections, howCreditsText }: { sections: ModelSect
 export const THINKING_SEGMENTS = ["Auto", "Off", "Low", "Med", "High", "Max"] as const;
 
 /**
+ * v1.3 T6/Q13: Thinking figures measured from the Thinking zoom crop
+ * (zoom-pickerB-thinking): each segment carries a "~" figure underneath —
+ * Auto ~110, Off ~10, Low ~110, Med ~140, High ~200, Max ~400. The "~"
+ * prefix is confirmed here (same glyph as the model rows), closing audit
+ * 待量8. The v1.2 "unreadable" note is superseded.
+ */
+export const THINKING_VALUES: Record<string, string> = {
+  Auto: "~110",
+  Off: "~10",
+  Low: "~110",
+  Med: "~140",
+  High: "~200",
+  Max: "~400",
+};
+
+/**
  * Picker B: Advanced / Flagship sections, then a Thinking segmented control
- * (Auto/Off/Low/Med/High/Max), then three rows with NO section title — the
- * original shows no heading for GPT-6.1 Sol / Kimi K3 / Claude Opus 5.5, so
- * none is invented here. The tiny multiplier sub-text under each Thinking
- * segment is deliberately NOT rendered: at ~3px glyph height it is below
- * reliable reading resolution (see README residuals).
+ * (Auto/Off/Low/Med/High/Max with "~" figures underneath), then three rows
+ * with NO section title — the original shows no heading for GPT-6.1 Sol /
+ * Kimi K3 / Claude Opus 5.5, so none is invented here.
  */
 export function ModelPickerB({
   sections,
@@ -161,14 +175,15 @@ export function ModelPickerB({
               <TabsTrigger
                 key={s}
                 value={s}
-                className="flex-1 text-center data-[state=inactive]:text-dark-sub"
+                className="flex flex-1 flex-col items-center gap-0.5 text-center data-[state=inactive]:text-dark-sub"
               >
-                {s}
+                <span>{s}</span>
+                <span className="text-[11px] leading-none opacity-70">{THINKING_VALUES[s]}</span>
               </TabsTrigger>
             ))}
           </TabsList>
         </Tabs>
-        <div className="text-secondary text-dark-sub mt-2">Auto picks the ideal for each message.</div>
+        <div className="text-secondary text-dark-sub mt-2">Auto picks the level for each message.</div>
       </div>
       <div className="pt-2">
         {untitledRows.map((r, i) => (

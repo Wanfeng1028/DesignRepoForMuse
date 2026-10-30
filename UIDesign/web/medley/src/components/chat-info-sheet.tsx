@@ -1,4 +1,5 @@
-import { ModelDots } from "./medley-mark";
+import { ModelDots, ModelDot } from "./medley-mark";
+import { Icon } from "./icons";
 
 export type ChatInfoTool = { name: string; right: string };
 export type ChatInfoReply = { model: string; dot: string; right: string };
@@ -37,6 +38,8 @@ export function ChatInfoSheet({
       </div>
       <div className="mt-2.5 flex items-center justify-between">
         <span className="text-page-title font-bold">{title}</span>
+        {/* v1.3 sweep: sheet header carries a close X (ov-chatinfo). */}
+        {Icon.close("#17181C")}
       </div>
       <div className="mt-3 flex gap-2">
         {stats.map((s) => (
@@ -96,17 +99,33 @@ export function ChatInfoSheet({
   );
 }
 
-/** Dimmed chat remnant shown behind the sheet (top bar + bubble + model line). */
+/** Dimmed chat remnant shown behind the sheet (v1.3 S4: top bar with
+ * hamburger / Auto pill / clock / edit, then bubble + model line). */
 export function ChatInfoBackdrop({ bubbleText, modelLine }: { bubbleText: string; modelLine: string }) {
+  const sub = "#6B6C72";
   return (
     <div className="opacity-45 bg-light-bg px-5 py-3" aria-hidden="true">
+      <div className="flex items-center justify-between pb-3">
+        <span className="inline-flex" style={{ color: sub }}>{Icon.menu("#17181C")}</span>
+        {/* v1.3 sweep: thread top-bar Auto is bare (no pill), unlike Home's. */}
+        <span className="inline-flex items-center gap-1.5 px-1 py-[7px] text-[14px] font-semibold text-light-text">
+          <ModelDots />
+          Auto
+          {Icon.chevronDown(sub, 14)}
+        </span>
+        <span className="inline-flex items-center gap-3" style={{ color: sub }}>
+          {Icon.clock("#17181C")}
+          {Icon.edit("#17181C")}
+        </span>
+      </div>
       <div className="flex justify-end">
         <div className="max-w-[85%] bg-user-bubble-light px-4 py-3 text-body leading-[1.35]" style={{ borderRadius: 20, borderTopRightRadius: 6 }}>
           {bubbleText}
         </div>
       </div>
       <div className="mt-2.5 flex items-center gap-2">
-        <ModelDots />
+        {/* v1.3 sweep: backdrop model line has a single model dot, not a cluster. */}
+        <ModelDot model="Claude Sonnet 5.5" />
         <span className="text-[14px] font-bold text-light-text">{modelLine}</span>
       </div>
     </div>
