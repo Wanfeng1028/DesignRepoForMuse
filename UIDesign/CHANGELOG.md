@@ -294,3 +294,17 @@ shadcn 式源码进仓；禁 Ant Design / MUI / Next.js。
   头像/贴图 artwork 不可复制等）。
 - 本轮提交：四套各一 commit + 本总账一 commit；构建四套由工人各自通过
   后，协调方独立重跑全部通过（tsc + vite）。
+
+## Round 7 — 2026-10-30（颜色层还原 + 四套主动重扫重修）
+
+- 起因：用户 2026-10-30 15:32 亲发新截图 photo-9（2×2 四屏），当场指出 round 6 渲染把原屏压成了黑白灰 + 一个橙点，“差太远”；并再令不要一句一句提醒，四套所有细节须主动重比。本轮第一优先是颜色层，其次是四套全量主动重扫重修；零裁判调用，验收只认 PIL/DOM 实测数。
+- 基准规则（冲突定夺，不平均）：颜色层服从新截图 photo-9；布局/字号/间距等其他维度仍以旧 HD 条 + round 6 实测为准。旧 HD 条 welcome 平色 #111518 + 橙点是另一状态/旧 capture。静态渲染取新截图的暖色 + 宝石蓝一帧；标题轮换行为（每句一色）只在 CHANGELOG 注明，不伪造动画。
+- 颜色层定论（新截图证明原屏并非黑白灰）：welcome 左下暖色（橙棕）环境光、右下绿色环境光、上部蓝晕；Medley 标志旁多彩圆点（绿/品红/蓝）；“Let's discover”后宝石蓝光标/圆点；home “Auto”旁多彩圆点；Kimi K3 黄点；GPT-6.1 Sol 绿点；天气图标、模型点等彩色元素。环境光一律用径向渐变还原（参数见各套 CHANGELOG），不许一色平铺冒充。
+- app/medley v1.7：品牌簇矢量重绘（绿 #5ec8a7、蓝 #8fb0d8、品红 #d98cb4）；标题光标 #fd6718 → #6ea9dd；三色环境光（蓝晕 radial 320×260 at 78% 30% rgba(52,86,120,0.45)、暖光 300×240 at 21% 76% rgba(114,66,40,0.55)、绿光 280×220 at 82% 92% rgba(38,94,78,0.55)）；Kimi 点全线 #d8c25a（京都顶栏硬编码紫点纠正，round 6 T9 闭合）、GPT 点全线 #4a8a76；Auto pill 5 点 pastel → 3 点斜簇。截图 rounds/v1.7（18 张）。
+- web/medley v1.5：welcome 局部底 #0D0E10（干净顶中实测 (13,14,16)）+ 三向环境光（蓝 radial 300px at 88% 42% rgba(64,102,150,0.46)、暖 280px at 16% 76% rgba(116,66,46,0.62)、绿 320px at 92% 108% rgba(52,110,95,0.90)）；品牌簇 9px 盘 0/4/8px 上升；标题点橙 → 宝石蓝光泽球（核实测）；Kimi/GPT 点改光泽（底色不变）；home 浅色面平铺 → 洗色渐变 + 卡片 flex 拉伸（面板填满卡片）。截图 rounds/v1.5。
+- app/airbuild v1.8：头像 7 色按 ipad-01/iphone-03 网格修正（Pluso 单色 cyan #50e2f1、Ampo 蓝底粉面 #1fb0df/#fdccc8 等）+ Pluso 橙点/Camo 杯徽标；简报 pills 真色 6×6 圆点（蓝 #64a2f7、红 #cb2c19）；简报封面 teal + 淡黄花头 + 77px；草稿封面改中性深灰；商店 glyph 竖渐变；详情绿 #34c759；发送钮 #268eff（用户气泡仍 #0088fe）；Home tile 白卡 + pastel 三块 + 日落渐变。截图 rounds/v1.8（7 framed + 6 bare）。
+- web/airbuild v1.4：头像圆盘饱和化（Ato #97c151、Pluso #52ccdb、Colo #855dfe、Camo #f9d01f、Ampo #4db7da、Leto #f8ad43）；共享渐变改两段式 325deg；全部控件补齐 backdrop blur(4px) saturate(1.45)（作曲器本身未动）；胶囊图标墨色 #11110f；侧栏 PROJECTS/AGENTS 标题行删除（官方模板无此元素，属臆造）；头像内环只留 agent 行；滚动条全局隐藏；resizer 挂载（此前定义未挂载）。截图 rounds/v1.4。
+- welcome 底色统一（协调方裁决）：app/medley welcome 初版仍沿用旧 HD #111518，与 web/medley welcome-local #0D0E10 冲突。协调方亲测 photo-9 干净顶中 (13,14,16) 后裁定：新截图在颜色层优先，两套 welcome 统一为 #0D0E10；app 侧只改 welcome 容器 + Phone frame（className 覆盖），global darkBg #111518 不动；重建 + welcome 重拍验证（众数/状态栏/顶中/底条均为 (13,14,16)，光标仍 #6EA9DD）。旧 HD #111518 仍为其他深色屏的底色依据（其颜色证据未被新截图推翻）。
+- 全量主动重扫（非颜色层）：四套每屏可见元素逐项重比，扫出即修；AirBuild 两套无登录形态屏的结论沿用（App Store 图全为已登录态屏，Localizable.strings 中 Sign/Log in/Welcome/password 均为 0 次），不造屏。改动细节与前后值见各套 CHANGELOG。
+- 未闭合（均带实测原因，详见各套 CHANGELOG，不编数）：标题轮换其余句子与配色未知（只捕获宝石蓝一帧，不做动画）；photo-9 右列两屏右缘裁切（右缘外文字无法采样）；京都天气图标色（约 10px JPEG 块，无精确值，图标缺失本身记未闭合）；home 建议行图标色（过小无法定精确色）；app/medley pricing 整体漂移、picker-a 全屏、language 行距矛盾、总览 9 屏无单屏 HD 原图；web/medley U1 深色底状态冲突（welcome 局部跟 photo-9，全局 darkBg 保持 #111518）、U3/U4/U5/U6（无 HD 源处沿用、品牌点底色去模糊估计、洗色中段冷约 9 级、CN home 洗色假设）；app/airbuild U1–U14 延续（详情顶圆角、商店卡高、Assets.car 无 Linux 工具等）与本轮新增近似项（TestFlight 渐变复用、销售条坐标未定位、pills pitch 多约 2pt）；web/airbuild U1–U8 延续（tile 照片封面不可拷、服务列底色无证据、头像五官自绘、画廊底平色、Assets.car、发送钮蓝取舍、深色未渲染）。
+- 本轮提交：四套各一 commit + 本总账一 commit；四套构建由工人各自通过后，协调方独立重跑全部通过（tsc + vite，含 app/medley 底色补丁后重建）；app/medley welcome 按补丁后代码重拍。
