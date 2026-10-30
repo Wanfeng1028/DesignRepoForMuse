@@ -1,4 +1,4 @@
-import { TaskListIcon } from './icons.tsx'
+import { CheckIcon, TaskListIcon } from './icons.tsx'
 
 export type TaskItem = { label: string; done?: boolean; active?: boolean }
 export type TaskListCardProps = {
@@ -24,7 +24,7 @@ export function TaskListCard({ title, items, actionLabel = 'View task', onAction
               style={{ background: item.done ? '#467458' : item.active ? '#c49b65' : 'transparent' }}
               aria-hidden
             >
-              {item.done ? '✓' : ''}
+              {item.done ? <CheckIcon className="h-3 w-3" /> : null}
             </span>
             {item.label}
           </li>

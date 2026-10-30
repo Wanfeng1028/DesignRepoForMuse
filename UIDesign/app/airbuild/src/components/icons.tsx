@@ -1,69 +1,103 @@
 import type { SVGProps } from 'react'
+import {
+  ArrowUp,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  Clover,
+  Cloud,
+  Ellipsis,
+  FileText,
+  Hand,
+  ListChecks,
+  Plus,
+  Share,
+} from 'lucide-react'
+
+/**
+ * Icons — Lucide (lucide-react 1.63.0, verified against the installed package:
+ * clover / hand / list-checks / cloud / file-text paths read from
+ * node_modules/lucide-react/dist/esm/icons/*.mjs). All strokes use Lucide's
+ * default width 2, replacing the previous 1.6-2.2 mixed self-drawn set.
+ * Brand glyphs (App Store / TestFlight) stay self-drawn vectors in
+ * detail-panel.tsx: Lucide has no brand icons and official bitmaps are
+ * never copied. The old HandIcon palm dot is dropped: Lucide hand has no
+ * dot (decision recorded in CHANGELOG v1.6).
+ */
+export const ChevronLeftIcon = ChevronLeft
+export const EllipsisIcon = Ellipsis
+export const CloudIcon = Cloud
+export const CloverIcon = Clover
+export const PlusIcon = Plus
+export const HandIcon = Hand
+export const ArrowUpIcon = ArrowUp
+export const DocIcon = FileText
+export const CheckIcon = Check
+export const ShareIcon = Share
+export const TaskListIcon = ListChecks
+export const ChevronDownIcon = ChevronDown
 
 type P = SVGProps<SVGSVGElement>
 
-function base(props: P) {
-  return { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', ...props }
+/** Solid black hand silhouette (own redraw) for the detail app-icon tile: the original is a solid black hand, not an outline. */
+export function HandSolidIcon(props: P) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
+      <path d="M8.6 12.2V6.4a1.9 1.9 0 0 1 3.8 0v4.1V5.2a1.9 1.9 0 0 1 3.8 0v5.3V6.6a1.9 1.9 0 0 1 3.8 0v4.6a3.4 3.4 0 0 1 .6 1.9v1.4a6.4 6.4 0 0 1-6.4 6.4h-1a5.4 5.4 0 0 1-3.8-1.6l-3.3-3.3a2.1 2.1 0 0 1 2.5-3.4Z" />
+    </svg>
+  )
 }
 
-/** Redrawn vectors in the spirit of the official 12 raster icons; no official bitmap is used. */
-export function ChevronLeftIcon(props: P) {
+/** M1 — chevron down/up morph: pure rotation transition, no hard cut. */
+export function ChevronMorphIcon({ open, ...props }: P & { open: boolean }) {
   return (
-    <svg {...base(props)}><path d="M14.5 5.5 8 12l6.5 6.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    <ChevronDown
+      {...props}
+      className={`ab-morph ${props.className ?? ''}`}
+      style={{ transform: open ? 'rotate(0deg)' : 'rotate(180deg)', ...props.style }}
+    />
   )
 }
-export function EllipsisIcon(props: P) {
+
+/** M2 — plus/check morph in one slot: plus strokes fade + shrink while the check draws in (stroke-dashoffset). Not a direct path interpolation (node counts differ), so it is a custom stroke animation. */
+export function PlusCheckMorphIcon({ checked, ...props }: P & { checked: boolean }) {
   return (
-    <svg {...base(props)}><circle cx="5" cy="12" r="1.4" fill="currentColor" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /><circle cx="19" cy="12" r="1.4" fill="currentColor" /></svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
+      <g
+        className="ab-morph"
+        style={{ opacity: checked ? 0 : 1, transform: checked ? 'scale(0.4)' : 'scale(1)', transformOrigin: '12px 12px' }}
+      >
+        <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </g>
+      <path
+        d="m5 12.5 4.5 4.5L19 7.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="20"
+        className="ab-morph"
+        style={{ strokeDashoffset: checked ? 0 : 20, opacity: checked ? 1 : 0 }}
+      />
+    </svg>
   )
 }
-export function CloudIcon(props: P) {
+
+/** M5 — task circle/check morph: ring stays, check draws in (stroke-dashoffset). Requires the SVG check, not the old text glyph. */
+export function TaskCheckMorphIcon({ checked, ...props }: P & { checked: boolean }) {
   return (
-    <svg {...base(props)}><path d="M7 18a4 4 0 1 1 .6-7.95A5.5 5.5 0 0 1 18.2 12 3.5 3.5 0 0 1 17.5 18H7Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /></svg>
-  )
-}
-export function CloverIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="M12 12c-2.5-.3-4.5-1.6-4.5-3.6C7.5 6.3 9.2 5 11 5.6 11.4 3.9 13 3 14.4 3.8c1.5.8 1.8 2.6 1 4 1.8-.3 3.6.9 3.6 2.7 0 2-2 3.3-4.5 3.5 1.6 1.5 2.2 3.8.6 5.2-1.4 1.2-3.5.5-4.1-1.1-.6 1.6-2.7 2.3-4.1 1.1-1.6-1.4-1-3.7.6-5.2Z" fill="currentColor" /></svg>
-  )
-}
-export function PlusIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" /></svg>
-  )
-}
-export function HandIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="M8 11V5.5a1.5 1.5 0 0 1 3 0V10m0-4.5v-1a1.5 1.5 0 0 1 3 0V10m0-3.5a1.5 1.5 0 0 1 3 0V12m0-3a1.5 1.5 0 0 1 3 0v4a7 7 0 0 1-7 7h-.8a6 6 0 0 1-4.2-1.8L6 15.5A2.2 2.2 0 0 1 9 12.5L8 11Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /><circle cx="12.5" cy="15.5" r="1.3" fill="currentColor" /></svg>
-  )
-}
-export function ArrowUpIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="M12 19V5m0 0-6 6m6-6 6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-  )
-}
-export function DocIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="M7 3h7l4 4v14H7V3Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /><path d="M14 3v4h4M10 12h5M10 15.5h5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
-  )
-}
-export function CheckIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="m5 12.5 4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-  )
-}
-export function ShareIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="M12 15V3m0 0L8 7m4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
-  )
-}
-export function TaskListIcon(props: P) {
-  return (
-    <svg {...base(props)}><circle cx="6.5" cy="7" r="1.8" stroke="currentColor" strokeWidth="1.7" /><circle cx="6.5" cy="17" r="1.8" stroke="currentColor" strokeWidth="1.7" /><path d="M11 7h7M11 17h7M6.5 9.5v5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
-  )
-}
-export function ChevronDownIcon(props: P) {
-  return (
-    <svg {...base(props)}><path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+      <path
+        d="m8 12.5 2.5 2.5L16.5 9"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="12"
+        className="ab-morph"
+        style={{ strokeDashoffset: checked ? 0 : 12, opacity: checked ? 1 : 0 }}
+      />
+    </svg>
   )
 }

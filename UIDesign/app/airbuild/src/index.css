@@ -23,6 +23,21 @@
 html, body { background: #e9e9e6; }
 body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
+/* Frosted-glass control (T1-T4): fill close to the canvas colour, blurred,
+   with an inner top highlight and a soft shadow. Applied to top-bar round
+   buttons, pills, the draft URL pill + share button and the detail check
+   button. No official asset is involved; this is a CSS material only. */
+.ab-glass {
+  background: rgba(244, 244, 244, 0.72);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Morphing transitions (M1/M2/M5): every state switch animates, never cuts. */
+.ab-morph { transition: transform 0.35s ease, opacity 0.25s ease, stroke-dashoffset 0.35s ease; }
+
 @keyframes ab-typing {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
   30% { transform: translateY(-3px); opacity: 1; }

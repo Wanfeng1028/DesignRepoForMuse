@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { AirDailyCard, SalesReportCard } from './components/briefing-cards.tsx'
+import { ChevronMorphIcon, PlusCheckMorphIcon, TaskCheckMorphIcon } from './components/icons.tsx'
 import { Avatar } from './components/avatar.tsx'
 import { Composer } from './components/composer.tsx'
 import { DetailPanel } from './components/detail-panel.tsx'
@@ -87,7 +89,7 @@ function BriefingScreen() {
           Your daily report is ready. Hands Time led growth, while two new Mood reviews raised questions.
         </Message>
         <div className="flex gap-3 overflow-hidden -mr-4 pr-4">
-          <div className="w-[66%] shrink-0">
+          <div className="w-[62%] shrink-0">
             <AirDailyCard
               headline="Hands Time led the growth. Mood deserves a closer look."
               body="On Sep 13, your three apps recorded 360 downloads and $58 in estimated proceeds. Hands Time contributed most of the increase."
@@ -95,7 +97,7 @@ function BriefingScreen() {
               glance="Downloads and estimated proceeds for Sep 13, compared with the last seven days of downloads."
             />
           </div>
-          <div className="w-[66%] shrink-0">
+          <div className="w-[62%] shrink-0">
             <SalesReportCard
               title="Hands Time — Sales Report"
               body="Downloads are growing steadily over the past few months, showing a consistent upward trend that reflects stronger user engagement."
@@ -122,7 +124,7 @@ function DraftScreen() {
   return (
     <PhoneFrame label="Website draft — iphone-04">
       <ChatTopBar project="Colo" swatch="#c9b8f5" />
-      <MessageList>
+      <MessageList className="gap-3 py-2">
         <Message kind="user">Design a website for Hands Time. Keep it simple and let the app speak for itself.</Message>
         <Message author="Colo" role="Designer" avatarColor="#a78bfa">I kept the layout simple. Here&rsquo;s the first draft.</Message>
         <WebsiteDraftCard
@@ -165,12 +167,27 @@ function DetailScreen() {
 }
 
 function ComponentsScreen() {
+  const [morphOn, setMorphOn] = useState(false)
   return (
     <PhoneFrame label="Component inventory">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-4 py-3">
         <Typing author="Pluso" avatarColor="#45c8d8" />
         <FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" />
         <TaskListCard title="Make the first session rewarding" items={[{ label: 'Define the first-session flow' }, { label: 'Build the completion reveal', active: true }, { label: 'Check the layout on iPhone and iPad' }]} />
+        {/* Morphing demo (M1/M2/M5): one toggle animates all three pairs; no icon ever hard-cuts. */}
+        <div className="rounded-[20px] border border-black/[0.06] bg-white p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-[13px] font-bold text-[#11110f]">State transitions (morphing)</p>
+            <button type="button" onClick={() => setMorphOn((v) => !v)} className="rounded-full bg-[#11110f] px-3 py-1 text-[12px] font-medium text-white">
+              {morphOn ? 'On' : 'Off'}
+            </button>
+          </div>
+          <div className="mt-3 flex items-center justify-around text-[#11110f]">
+            <span className="flex flex-col items-center gap-1 text-[10px] text-black/45"><ChevronMorphIcon open={!morphOn} className="h-6 w-6" />chevron</span>
+            <span className="flex flex-col items-center gap-1 text-[10px] text-black/45"><PlusCheckMorphIcon checked={morphOn} className="h-6 w-6" />plus / check</span>
+            <span className="flex flex-col items-center gap-1 text-[10px] text-black/45"><TaskCheckMorphIcon checked={morphOn} className="h-6 w-6" />task</span>
+          </div>
+        </div>
         <Composer placeholder="Message" />
       </div>
     </PhoneFrame>

@@ -8,19 +8,40 @@ export type AirDailyCardProps = {
   onShare?: () => void
 }
 
+/** Folded page corner (Q7): own CSS dog-ear on the card's bottom-right. */
+function FoldCorner() {
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute bottom-0 right-0 h-5 w-5"
+      style={{ background: 'linear-gradient(135deg, transparent 49%, #e8e8e4 50%)', borderTopLeftRadius: 6, boxShadow: '-1px -1px 2px rgba(0,0,0,0.06)' }}
+    />
+  )
+}
+
 /** The Air Daily report card: eyebrow row, headline, body, teal cover block, At a glance. */
 export function AirDailyCard({ headline, body, date, glance, onShare }: AirDailyCardProps) {
   return (
-    <Card className="overflow-hidden rounded-[24px] p-3.5">
+    <Card className="relative overflow-hidden rounded-[15px] p-3.5">
+      <FoldCorner />
       <div className="flex items-center justify-between text-[10px] font-semibold text-black/45">
         <span>▦ Made in AirBuild</span>
         <button type="button" onClick={onShare} className="rounded-full bg-[#f4f4f2] px-2 py-0.5 text-[10px] font-medium">Share</button>
       </div>
       <h3 className="mt-3 text-[13px] font-bold leading-tight text-[#11110f]">{headline}</h3>
       <p className="mt-2 text-[11px] leading-relaxed text-black/55">{body}</p>
-      <div className="mt-3 flex h-[110px] flex-col justify-end rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#2e7d7b,#1f4f4a)' }}>
-        <p className="text-[16px] font-bold text-white">The Air Daily</p>
-        <p className="text-[12px] text-white/85">A little perspective on your apps</p>
+      <div className="relative mt-3 flex h-[110px] flex-col justify-end overflow-hidden rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#2e7d7b,#1f4f4a)' }}>
+        {/* C2: own vector dandelion abstraction (stem + seed head) instead of the official photo; no bitmap copied. */}
+        <svg className="absolute right-3 top-2 h-[72px] w-[72px] opacity-90" viewBox="0 0 72 72" aria-hidden>
+          <path d="M36 68C36 52 36 44 36 34" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M36 34 22 20M36 34 50 20M36 34 28 16M36 34 44 16M36 34V12" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" opacity="0.85" />
+          <circle cx="36" cy="32" r="4" fill="#ffffff" />
+          <circle cx="22" cy="20" r="1.8" fill="#ffffff" /><circle cx="50" cy="20" r="1.8" fill="#ffffff" />
+          <circle cx="28" cy="16" r="1.8" fill="#ffffff" /><circle cx="44" cy="16" r="1.8" fill="#ffffff" />
+          <circle cx="36" cy="12" r="1.8" fill="#ffffff" />
+        </svg>
+        <p className="relative text-[16px] font-bold text-white">The Air Daily</p>
+        <p className="relative text-[12px] text-white/85">A little perspective on your apps</p>
       </div>
       <p className="mt-3 text-[14px] font-bold text-[#11110f]">At a glance</p>
       <p className="mt-1 text-[12px] leading-snug text-black/55">{glance}</p>
@@ -47,7 +68,8 @@ export function SalesReportCard({ title, body, stats, series }: SalesReportCardP
   const pts = series.map((v, i) => `${x(i)},${y(v)}`).join(' ')
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
   return (
-    <Card className="rounded-[24px] p-3.5">
+    <Card className="relative overflow-hidden rounded-[15px] p-3.5">
+      <FoldCorner />
       <div className="flex items-center justify-between text-[10px] font-semibold text-black/45">
         <span>▦ Made in AirBuild</span>
         <span>Share</span>

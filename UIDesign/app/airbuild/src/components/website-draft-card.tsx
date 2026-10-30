@@ -29,8 +29,8 @@ export function WebsiteDraftCard({
           <span className="h-4 w-4 rounded-full bg-[#febc2e]" />
           <span className="h-4 w-4 rounded-full bg-[#28c840]" />
         </span>
-        <span className="rounded-full bg-[#f4f4f2] px-4 py-1.5 text-[15px] font-semibold text-[#11110f]">{url}</span>
-        <button type="button" aria-label="Share" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f4f4f2]">
+        <span className="ab-glass rounded-full px-4 py-1.5 text-[15px] font-semibold text-[#11110f]">{url}</span>
+        <button type="button" aria-label="Share" className="ab-glass flex h-10 w-10 items-center justify-center rounded-full">
           <ShareIcon className="h-5 w-5" />
         </button>
       </div>
@@ -43,10 +43,18 @@ export function WebsiteDraftCard({
           </button>
         </div>
         <div
-          className="flex min-h-[240px] items-end rounded-[20px] p-3.5"
+          className="relative flex aspect-square items-end overflow-hidden rounded-[20px] p-3.5"
           style={{ background: coverTone ?? 'linear-gradient(160deg,#3a4a44,#1c2422)' }}
         >
-          <span className="text-[12px] font-medium leading-snug text-white/90">3.0 available, built on iOS 26.</span>
+          {/* C1: own vector swan abstraction on the dark cover (S1: square 1.00, not title-bar height). No official photo copied. */}
+          <svg className="absolute inset-0 m-auto h-[70%] w-[70%]" viewBox="0 0 100 100" aria-hidden>
+            <ellipse cx="48" cy="66" rx="26" ry="14" fill="#ffffff" opacity="0.92" />
+            <path d="M62 62c6-4 8-14 6-24-1-7-6-12-11-11-3 1-3 5 0 6 2 1 4-1 5 1 2 4 0 12-4 18" fill="none" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" opacity="0.92" />
+            <circle cx="59" cy="28" r="2" fill="#1c2422" />
+            <path d="M20 84h56" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
+            <path d="M28 90h40" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" opacity="0.25" />
+          </svg>
+          <span className="relative text-[12px] font-medium leading-snug text-white/90">3.0 available, built on iOS 26.</span>
         </div>
       </div>
       <div className="mt-4 rounded-[16px] bg-[#f4f4f4] p-4">

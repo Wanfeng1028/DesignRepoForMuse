@@ -24,6 +24,8 @@ export const tokens = {
   actionOrange: '#f97316',
   bubbleRadius: 20,
   cardRadius: 20,
+  /** frosted-glass fill (T1-T4): canvas-coloured translucent material */
+  glass: 'rgba(244, 244, 244, 0.72)',
   fontStack:
     '"SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif',
 } as const
