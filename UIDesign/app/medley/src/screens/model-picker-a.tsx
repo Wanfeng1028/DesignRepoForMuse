@@ -30,7 +30,7 @@ export default function ModelPickerA() {
           </ModelSection>
           <ModelSection title="Flagship" desc="Strong all-rounders for serious work.">
             <ModelRow name="Claude Sonnet 5.5" desc="Writing and coding" dot="#dfc1ad" right={<ModelCost value="~80" />} />
-            <ModelRow name="Kimi K3" desc="Very long documents" dot="#d4da9f" last right={<ModelCost value="~120" />} />
+            <ModelRow name="Kimi K3" desc="Very long documents" dot="#d8c25a" last right={<ModelCost value="~120" />} />
           </ModelSection>
           <ModelSection title="Frontier" desc="The most capable models, for the hardest problems.">
             <ModelRow

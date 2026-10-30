@@ -24,6 +24,10 @@
   /* Accent / function */
   --color-accent: #e2a181;
   --color-brand-dot: #fd6718;
+  --color-cursor-dot: #6ea9dd;
+  --color-logo-dot-green: #5ec8a7;
+  --color-logo-dot-blue: #8fb0d8;
+  --color-logo-dot-pink: #d98cb4;
   --color-drawer-dot: #e2a181;
   --color-dark-pill: #303135;
   --color-black-btn: #111214;
@@ -35,9 +39,9 @@
   /* Model dots: v1.5 pastel, measured patches (see tokens/index.ts) */
   --color-model-claude: #dfc1ad;
   --color-model-glm: #e1b3c7;
-  --color-model-kimi: #d4da9f;
+  --color-model-kimi: #d8c25a;
   --color-model-deepseek: #a1bfd3;
-  --color-model-gpt: #afddc9;
+  --color-model-gpt: #4a8a76;
   /* Radii */
   --radius-input: 26px;
   --radius-button: 26px;

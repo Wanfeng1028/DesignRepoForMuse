@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { cn } from '../lib/utils'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
-import { ModelDots } from './Model'
+import { BrandDots, ModelDot } from './Model'
 import { Icon } from './icons'
 
 export function TopBar({
@@ -46,7 +46,7 @@ export function ModelPill({
             dark ? 'bg-dark-input text-dark-text' : 'bg-light-bubble text-light-text',
           )}
         >
-          <ModelDots />
+          {label === 'Auto' || label === '自动' ? <BrandDots size={6} /> : <ModelDot model={label} size={8} />}
           {label}
           <span className="morph-chevron flex">{Icon.chevronDown(sub)}</span>
         </button>

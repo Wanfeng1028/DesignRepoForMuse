@@ -39,11 +39,11 @@ export default function ModelPickerB() {
             hint="Auto picks the ideal for each message."
           />
           <div className="px-5 pt-2">
-            <ModelRow name="GPT-6.1 Sol" desc="Advanced reasoning" dot="#afddc9" right={<ModelCost value="~80" />} />
+            <ModelRow name="GPT-6.1 Sol" desc="Advanced reasoning" dot="#4a8a76" right={<ModelCost value="~80" />} />
             <ModelRow
               name="Kimi K3"
               desc="Very long documents"
-              dot="#d4da9f"
+              dot="#d8c25a"
               right={
                 <div className="w-[110px] text-right text-caption leading-[1.4] text-dark-dim">Not available in this chat</div>
               }

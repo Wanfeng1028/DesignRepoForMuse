@@ -334,3 +334,78 @@
 - round 5 残差重验结果：G14（home-en 问候 28px，本轮以行带 27–28 高 + 问候顶 +3/-2 确认，EN 行带噪声已收敛，记闭合（严格口径：问候顶 +3/-2 未精确 0，仍列入 welcome/home-en 残差行，不另单列））；G36（Thinking 倍率小字仍不渲染，源小字不可分辨；web 套数列未经 app 侧实测，不能套用，仍未闭合）；T3（lisbon-en 引用角标，角标存在但底不可见，带右 -3.5 字体噪声，记部分验证，不宣称 1:1）；T4/T5（lisbon EN/CN 末条橙点 9px，本轮 lisbon-en 正文 2 末尾 dot 保持 9px inline-block，lisbon-cn dot 同制，未重验原图 dot 尺寸，沿用 v1.5 9px，不另改）；T6（home-cn 分段控件 + 顶部图标圆，仍未隔离：白轨道在白底上不可见，顶栏内容带换算仍矛盾，不改）；T7（home-en Auto pill 五点，仍仅 2 点孤立（muted 色），5 点完整色序未隔离，不另定色序，沿用 pastel 映射）；T8（credits 图例圆点，仍部分验证：渲染色与源色逐字一致，原图仅一处蓝系簇孤立，其余未隔离，不统一猜）；T9（kyoto Kimi 圆点 #9b5de5，仍未尝试（仅 218px 总览裁切，无缩放系数），不动；AiMeta Kimi 点随 token 改淡 pastel，与 AiMeta 系统一致）；T13（pricing CTA 边距，仍未精定：CTA 约 354px 设备宽 ≈ 内容全宽，面板左缘容差 ±10px，边距无法精定，不改）；T14（全部圆角弧半径，像素方法极限，目视一致，不虚构数值）；T15（全部字重精确数值，像素只给观察档 + 代码权重，不虚构）；T16（picker 描述/模型名 cap，仍部分量出（亮核 6–10px，与 13px 描述 / 15px 模型名 + JPEG 腐蚀一致，无法逐行分离），字号不动；G40（折叠边缘：train/savings/credits/agent-team/search-drawer/info-sheet 折叠位置未逐项精定，VM 字体度量类）；G10（PlanFeature 12px 仍为 VM 度量 accommodation，原图该行字号未曾逐像素量出，待原设备字体证据出现时复议）。
 - AiMeta 全屏影响面未逐验：AiMeta 模型/副尺寸 + chevron 改动为全局（Chat.tsx），lisbon-cn/lisbon-en 已 HD 验，其余 AiMeta 屏（train/savings/kyoto/router 等）因无单屏 HD 原图未逐验，记影响面未逐验（不宣称全屏 1:1）。
 - 费用：本轮零裁判调用、零令牌取用（未取 /etc/botsrouter/muse_judge_token.txt）。未 commit、未 push、未 git add，工作区留待协调方统一提交。
+
+## v1.7 — 2026-10-30 — round 7 颜色层第一优先 + 全量主动重扫（v1.6 → v1.7）
+
+- 基准与口径：最高优先为用户 2026-10-30 15:32 亲发新截图 photo-9.jpg（1170x2532）。实测屏边界（非精确对半，右侧两屏在右缘被裁切）：左列屏 x 约 65–700，右列屏 x 约 730–1170（右缘外切）；上排 y 约 105–1335，图下中文注脚带 y 约 1340–1440，下排 y 约 1460–2532。颜色层服从新截图；其他维度（布局/字号/间距）仍以旧 HD 条 + round 6 实测为准，不平均、不和稀泥。旧 HD 条 welcome 平色 #111518 + 橙点是另一状态/旧 capture，与新截图冲突处只在颜色层服从新截图。
+- 标题轮换行为（注脚原文提示 + 像素为准）：新截图注脚“登录欢迎页（暖色）：大字轮换，光标是宝石蓝，每句接一种颜色”。静态渲染取本截图的暖色 + 宝石蓝状态；轮换的其他句子与配色未被本静帧捕获，故不伪造动画，只记录行为，不把动画画成静态橙点。
+
+### 颜色采样表（原图值 vs 改前值 vs 改后值 + 位置；JPEG 高光混合处注明去混合估计）
+
+- welcome 品牌簇绿点：原图中心 (133,199) #a4d2c7（高光混合）→ 改前 M 形标志无此点 → 改后 (27,67) #5ec8a7 精确命中（token logoDotGreen，去混合估计）。
+- welcome 品牌簇蓝点：原图中心 (144,194) #b0c5d6（高光混合）→ 改前无 → 改后 (35,64) #8fb0d8 精确命中（token logoDotBlue）。
+- welcome 品牌簇品红点：原图中心 (156,189) #d3afc9（高光混合）→ 改前无 → 改后 (41,60) #d98cb4 精确命中（token logoDotPink）。
+- welcome 标题光标：原图点体簇 #93c8f0/#aed2f2（高光混合，中心约 (527,613)）→ 改前 #fd6718 橙色 15px → 改后整盘 #6ea9dd 精确命中（token cursorDot；中心 (330,318) 实测）。
+- welcome 上部蓝晕：原图峰值差 (620,558) #1f2f46、样点 (580,520) #1a2a3a、patch 中值 #121a23 → 改前无（平色 #111518）→ 改后 patch (240,180,380,330) 中值 #1c2a37（在原图峰值与中值区间内）。
+- welcome 左下暖色：原图峰值 (182,1012) #482b1d、patch 中值 #41261e → 改前无 → 改后 patch (40,580,180,720) 中值 #3c291f（与原图 patch 中值差 R-5/G+3/B+1）。
+- welcome 右下绿色：原图峰值 (536,1296) #193d33、patch 中值 #203b35 → 改前无 → 改后 patch (260,720,380,830) 中值 #1a332e（与原图 patch 中值差约 -6/-8/-7，方向一致、略暗）。
+- welcome 基底：原图左上 patch 中值 #0d0e10 → 改前 #111518 → 改后 #111518（round 6 定论不变，JPEG 暗部差属正常波动）。
+- home Auto 簇：原图与 welcome 同簇（绿/蓝/品红三点，home 裁切图目视确认）→ 改前 5 点 pastel 平排 → 改后 3 点斜排，渲染精确命中 #5ec8a7 (158–161,57–60)、#8fb0d8 (163–166,54–57)、#d98cb4 (168–171,51–54)。
+- Kimi K3 点：原图顶栏中心 (301,1680) #e8dea3（高光混合）、核 #d8d19b → 改前京都顶栏硬编码 #9b5de5 紫色（round 6 未闭合 T9）、AiMeta/picker 为 #d4da9f 淡黄绿 → 改后全线 #d8c25a（京都顶栏 2 点 + AiMeta 点 + picker-a/b 行点均实测命中）。
+- GPT-6.1 Sol 点：原图顶栏核 #548d7c、消息头核 #3d7c6b → 改前 #afddc9 淡绿（pill 5 点 pastel 之一、AiMeta 点、picker-b 行点）→ 改后全线 #4a8a76（路由 pill 点 + AiMeta 点 + picker-b 行点均实测命中）。
+
+### 环境光渐变参数（welcome-dark.tsx，容器自身 background，见方法教训）
+
+- 蓝晕：radial-gradient(ellipse 320px 260px at 78% 30%, rgba(52,86,120,0.45), transparent 70%)。
+- 暖光：radial-gradient(ellipse 300px 240px at 21% 76%, rgba(114,66,40,0.55), transparent 70%)。
+- 绿光：radial-gradient(ellipse 280px 220px at 82% 92%, rgba(38,94,78,0.55), transparent 70%)。
+- 中心相对位置由 photo-9 换算：蓝晕 (560,430)、暖光 (200,1050)、绿光 (580,1220) 对左屏框（x 约 65–700、y 约 105–1335）取相对值；alpha 取值以渲染 patch 中值与原图 patch 同向为度，非原图 JPEG 弱晕的 1:1 alpha（弱晕在 token 系统里不可见，属可复现的取舍，已记录）。
+
+### 每屏改了什么（前后值；未列出的屏代码无改动）
+
+- welcome-dark：头标 M 形 MedleyMark（26px）→ BrandDots 簇（22x15，8px 点）；标题光标 bg-brand-dot #fd6718 → bg-cursor-dot #6ea9dd；新增三色环境光渐变（容器背景）；其余布局/字号/按钮不动。
+- home-light-en：ModelPill 内容 5 点 pastel 平排 → BrandDots 3 点斜排（Auto 语义）；pill 位置（居中）与背景不动（旧 HD 布局口径）。
+- chat-light-train-en / chat-light-savings-en：同上，Auto pill 改 BrandDots（共享 ModelPill，改动自动覆盖）。
+- chat-dark-kyoto-en：顶栏 Kimi 点硬编码 #9b5de5 → ModelDot model="Kimi K3"（#d8c25a）；AiMeta Kimi 点随 token 改 #d4da9f → #d8c25a。round 6 未闭合 T9 本轮闭合（新截图实测金色为据）。
+- chat-light-router-en：ModelPill 内容 5 点 pastel → 单点 ModelDot model="GPT-6.1 Sol"（#4a8a76）；AiMeta 点随 token 改 #afddc9 → #4a8a76。
+- model-picker-a：Kimi K3 行点 #d4da9f → #d8c25a。
+- model-picker-b：GPT-6.1 Sol 行点 #afddc9 → #4a8a76；Kimi K3 行点 #d4da9f → #d8c25a。
+- tokens/index.ts + index.css：modelKimi #d4da9f → #d8c25a；modelGpt #afddc9 → #4a8a76；新增 cursorDot #6ea9dd、logoDotGreen #5ec8a7、logoDotBlue #8fb0d8、logoDotPink #d98cb4；brandDot #fd6718 保留给里斯本流式末点（旧 HD 值，见下）。
+- Model.tsx：新增 BrandDots 矢量簇（3 点斜排，绿左下、蓝中、品红右上；无位图拷贝）；ModelDots（5 点 pastel 平排）与 ModelDotsArc（定价弧）不动。
+- TopBar.tsx：ModelPill 按 label 分流——Auto/自动用 BrandDots，其他模型名用该模型单点 ModelDot（路由 GPT pill 由此得绿单点）。
+
+### 已核查未改动（带实测原因，不编数）
+
+- lisbon-en / lisbon-cn 正文末流式点：仍为 #fd6718（渲染实测 lisbon-en (60–66,711–717) 45 像素命中）。原因：它是流式光标而非模型点，新截图无里斯本屏证据，旧 HD 橙点值仍成立；不与 welcome 标题光标混同。
+- home-light-cn 大 M 标志：不动。原因：新截图无 home-cn 屏；该 M 形为中文条 trace（Model.tsx 注释），与欢迎页头标簇是两个不同位置的元素，改前无 home-cn 簇证据，不跨屏套用。
+- credits-light 图例：Claude #e4754a、GLM #4a7de4、Kimi #9b5de5、DeepSeek #2eb5a5 不动。原因：图例是图表分类色板系统，非模型点系统；新截图无 credits 屏，旧 HD 口径未被推翻。京都顶栏紫点与图例紫点同值是旧复用，不等于图例错。
+- search-drawer-dark recent 行点（#e4754a/#4a7de4/#2eb5a5/#9b5de5/#3fa34d）：不动，逐会话配色，非模型点。
+- pricing-dark 顶弧 6 点 + Pro 卡平排 5 点 pastel、chat-info-sheet 平排 5 点：不动，旧 HD 定价弧/平排家族实测值，新截图无定价/信息屏。
+- agent-team-dark 行点：不动，状态色（Running #3fa34d / Done 白 / Queued 灰），非模型点。
+- ModelDots/ModelDotsArc pastel 色序：不动（上两条所用）；round 6 未闭合 T7 中“Auto pill 五点”一项由本轮 BrandDots 取代（新截图三簇为据），T7 其余“5 点完整色序未隔离”仍按旧 pastel 沿用，不另定。
+- 其余 11 屏（lisbon-en/cn、train、savings、info-sheet、search-drawer、pricing、credits、suspended、agent-team、language、home-cn）除上述共享组件波及外无代码改动；18 张 v1.7 截图已重拍；目视核查 welcome/home-en/router/kyoto 四屏变化均在上述范围内，其余屏未做 v1.6→v1.7 全量像素 diff，不宣称逐屏比对无扩散（共享 ModelPill 改动覆盖 train/savings，代码层面已列出）。
+
+### 未闭合项（带实测原因，不编数）
+
+- 标题轮换的其他句子与配色：新截图只捕获 "Let's discover" + 宝石蓝一帧；注脚称每句接一种颜色，但其余句子文本与配色均未捕获，轮换动画未实现（静态渲染不伪造）。
+- 右列两屏被裁切：home-en 右缘外文字（"Good evening, Alex" 尾部、建议行尾部）与路由屏右缘外正文无法采样；本轮 home/router 改动只覆盖顶栏点与已见区域，右缘外元素颜色未验。
+- 京都天气图标色：新截图天气卡太阳/雨图标过小（约 10px 级 JPEG 块），黄/灰倾向可见但无可报精确值；本轮未给天气卡加图标色（现有京都屏天气卡为纯文字 "19° clear"/"16° rain"，图标缺失本身记为未闭合，不虚构色值）。
+- home 建议行图标色：新截图建议行图标为灰绿倾向小图标，分辨率不足以定精确色；现有渲染用 #6b6c72 灰系图标，沿用旧 HD 口径，未改。
+- round 6 其余未闭合（pricing 整体漂移、picker-a 全屏、language 行距、总览 9 屏位置/字号等）本轮未动，沿用 v1.6 未闭合节，不重复抄录。
+- 费用：本轮零裁判调用、零令牌取用（未取 /etc/botsrouter/muse_judge_token.txt，裁判只作第二意见的口子未启用，因全部结论均有 PIL/DOM 实测数）。未 git add、未 commit、未 push，工作区留待协调方统一提交。
+
+### 方法补丁与教训（本轮新增）
+
+- 辉光层绘制顺序陷阱：绝对定位辉光 div 会压过静态标题内容（定位元素后绘），导致光标点采样 #5b8fbd 而非 token #6ea9dd；辉光必须落在容器自身 background（内容之下），修后光标整盘 #6ea9dd 精确命中。凡加背景光一律走容器背景，不叠 overlay div。
+- Meta 浏览器现况：/opt/meta-chromium/chrome 在本 VM 上启动即报 "Hatch WebGL domain policy is required"（headless 与 Xvfb headful 均失败，shoot2.js 时代的拉起方式已失效）；本轮改用 Playwright 自带 headless shell（~/.cache/ms-playwright/chromium_headless_shell-1243），截图正常。
+- pkill -f 自杀：pkill -f "vite preview" 会匹配执行命令自身的 bash 行，先杀自己、服务反留；停服务一律按端口查 pid 再 kill pid。
+- 预览监听地址：vite preview 监听 [::1] 时 127.0.0.1 会 ECONNREFUSED，截图 URL 改走 localhost。
+- nohup + & 链：`cd X && nohup ... &` 会把整条链挂后台，后续命令不在 X 目录执行；后台服务用绝对路径 + pnpm --dir，不依赖 cd。
+- 构建：本套 tsc + vite 通过（构建产物 dist 已更新；dist 是否进版本由协调方定，本轮不擅自 add）。
+- 截图：18 张存 docs/verification/rounds/v1.7/（17 张为第一次构建拍摄，welcome 为辉光容器背景修后、第二次构建重拍；第二次构建仅改 welcome-dark 一处，其余屏代码与第一次构建一致）；测量脚本与裁切证据存 docs/verification/rounds/v1.7/measure/（shot-v1.7.mjs、shot-welcome-only.mjs、color-sampling-v1.7.md 及 photo-9 裁切图）；measure/ 内无 __pycache__/.pyc 杂文件。
+
+### 协调方补丁（round 7 收尾，welcome 底色统一，不 bump 版本）
+- 原因：web/medley welcome-local 已按 photo-9 改为 #0D0E10，本套 welcome 仍沿用旧 HD #111518，同一屏两套底色不一致；任务规则“新截图只在颜色层优先”，故以 photo-9 为准统一，不平均、不和稀泥。
+- 证据：协调方亲测 photo-9 welcome 干净顶中（x300-400,y250-450）中值 (13,14,16)、左上 (13,14,18)；旧 HD #111518 是另一 capture 状态（与 web/medley U1 的 HD5 偏暗出口值同族）。另：photo-9 左中空带 (44,28,28) 暖调、底部中 (17,34,28) 绿调，证实环境光真实存在且延展，非平色。
+- 改动：welcome-dark.tsx 容器 backgroundColor #0D0E10 + Phone className bg-[#0D0E10]（只改本屏容器与 frame；global darkBg token #111518 不动，其他深色屏底色仍按旧 HD）。辉光三渐变不动，标题光标仍 #6ea9dd。
+- 验证：重建 + welcome 单张重拍；新图众数 (13,14,16)、状态栏 (195,30)、顶中 (195,100)、底条 (195,830) 均为 (13,14,16)，光标 (330,318) 仍 (110,169,221) #6EA9DD。角部圆角外像素为页面底色，不计入屏内底色。

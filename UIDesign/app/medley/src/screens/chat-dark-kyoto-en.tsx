@@ -3,6 +3,7 @@ import { TopBar } from '../components/TopBar'
 import { InputBar } from '../components/InputBar'
 import { UserBubble, AiMeta } from '../components/Chat'
 import { Icon } from '../components/icons'
+import { ModelDot } from '../components/Model'
 
 export const meta = { id: 'chat-dark-kyoto-en', title: 'Kyoto itinerary chat (dark)', source: 'ov_r1_c0' }
 
@@ -47,7 +48,7 @@ export default function ChatDarkKyotoEn() {
         left={Icon.menu('#f5f5f7')}
         center={
           <span className="inline-flex items-center gap-1.5 text-[16px] font-bold">
-            <span className="h-2 w-2 rounded-full bg-[#9b5de5]" />
+            <ModelDot model="Kimi K3" />
             Kimi K3
             {Icon.chevronDown('#9a9ba2', 16)}
           </span>

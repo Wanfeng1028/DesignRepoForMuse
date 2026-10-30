@@ -26,7 +26,11 @@ export const tokens = {
     lightDim: '#9a9ba2', // visual
     lightBubble: '#edeef0', // measured
     accent: '#e2a181', // measured (Lisbon mic centre), replaces old #e4754a; composer mic/stop only
-    brandDot: '#fd6718', // measured: welcome dot centre pixels (253,103,24); distinct from mic peach
+    brandDot: '#fd6718', // old-HD streaming dot (Lisbon trailing dot); welcome title cursor is cursorDot below since v1.7
+    cursorDot: '#6ea9dd', // v1.7 photo-9: welcome title cursor, gem blue; sampled dot body #93c8f0/#aed2f2 (JPEG highlight-blended), de-blended
+    logoDotGreen: '#5ec8a7', // v1.7 photo-9: brand cluster green dot, sampled centre (133,199) #a4d2c7 highlight-blended
+    logoDotBlue: '#8fb0d8', // v1.7 photo-9: brand cluster blue dot, sampled centre (144,194) #b0c5d6 highlight-blended
+    logoDotPink: '#d98cb4', // v1.7 photo-9: brand cluster pink dot, sampled centre (156,189) #d3afc9 highlight-blended
     drawerDot: '#e2a181', // v1.5 split: drawer running dot gets its own token (same value until measured)
     darkPill: '#303135', // measured: pricing Yearly pill sample (48,49,53)
     blackBtn: '#111214', // visual
@@ -34,9 +38,9 @@ export const tokens = {
     chartAmber: '#8c553c', // measured, replaces old #b07a3b
     modelClaude: '#dfc1ad', // v1.5 pastel: Lisbon-en Claude dot patch (223,193,173)
     modelGlm: '#e1b3c7', // v1.5 pastel: Lisbon-en GLM dot patch (225,179,199)
-    modelKimi: '#d4da9f', // v1.5 pastel: picker pale yellow-green (212,218,159)
+    modelKimi: '#d8c25a', // v1.7 photo-9: Kimi K3 gold; sampled top-bar centre (301,1680) #e8dea3 highlight-blended, core #d8d19b; replaces v1.5 pale yellow-green
     modelDeepseek: '#a1bfd3', // v1.5 pastel: picker pale blue (161,191,211)
-    modelGpt: '#afddc9', // v1.5 pastel: pricing arc pale green (166,213,192)
+    modelGpt: '#4a8a76', // v1.7 photo-9: GPT-6.1 Sol teal-green; sampled top-bar core #548d7c, message-header core #3d7c6b; replaces v1.5 pale green
   },
   font: {
     family:

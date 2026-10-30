@@ -1,0 +1,9 @@
+$ vite preview --port 5201 --strictPort
+error when starting preview server:
+Error: Port 5201 is already in use
+    a[ELIFECYCLE] Command failed with exit code 143.
+DesignRepoForMuse/UIDesign/app/medley/node_modules/.pnpm/vite@8.3.5_@types+node@24.19.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:14661:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async preview (file:///home/hatch/workspace/DesignRepoForMuse/UIDesign/app/medley/node_modules/.pnpm/vite@8.3.5_@types+node@24.19.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:35859:2)
+    at async CAC.<anonymous> (file:///home/hatch/workspace/DesignRepoForMuse/UIDesign/app/medley/node_modules/.pnpm/vite@8.3.5_@types+node@24.19.2_jiti@2.7.0/node_modules/vite/dist/node/cli.js:821:18)
+[ELIFECYCLE] Command failed with exit code 1.

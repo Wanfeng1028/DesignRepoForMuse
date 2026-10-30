@@ -14,6 +14,25 @@ export function ModelDots({ size = 6 }: { size?: number }) {
 }
 
 /**
+ * Brand dots cluster (v1.7, photo-9): the mark beside "Medley" and beside
+ * "Auto" is NOT the M trace and NOT the 5-dot pastel row — it is 3 dots on
+ * a rising diagonal: green bottom-left, blue middle, pink top-right.
+ * Vector redraw from sampled centres (photo-9 coords): green (133,199),
+ * blue (144,194), pink (156,189); cluster ~22x15 phone px. No bitmap copied.
+ */
+export function BrandDots({ size = 8 }: { size?: number }) {
+  const w = size * 2.75
+  const h = size * 1.875
+  return (
+    <span className="relative inline-block shrink-0" style={{ width: w, height: h }} aria-label="Medley">
+      <span className="absolute rounded-full" style={{ width: size, height: size, left: 0, bottom: 0, background: '#5ec8a7' }} />
+      <span className="absolute rounded-full" style={{ width: size, height: size, left: size * 0.875, top: size * 0.4375, background: '#8fb0d8' }} />
+      <span className="absolute rounded-full" style={{ width: size, height: size, right: 0, top: 0, background: '#d98cb4' }} />
+    </span>
+  )
+}
+
+/**
  * Pricing top dots arc, measured from the HD pricing strip (panel coords):
  * 6 pastel dots, 10px, pitch 24.8px @390 (v1.5: was 20px by crop-width error),
  * rising to the right. Used ONLY by the pricing top row; the Pro-card dots
