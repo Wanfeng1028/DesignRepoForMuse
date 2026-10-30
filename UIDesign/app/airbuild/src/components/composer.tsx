@@ -14,7 +14,7 @@ export type ComposerProps = {
 export function Composer({ placeholder = 'Message', initialValue = '', onSend }: ComposerProps) {
   const [value, setValue] = useState(initialValue)
   return (
-    <div className="rounded-[32px] border border-black/[0.06] bg-white p-3.5 shadow-[0_10px_28px_rgba(0,0,0,0.08)]">
+    <div className="rounded-[32px] border border-black/[0.045] bg-white p-3.5 shadow-[0_10px_28px_rgba(0,0,0,0.065)]">
       <div className="flex gap-2.5">
         <button type="button" aria-label="Quick actions" className="relative flex h-[68px] w-[68px] items-center justify-center rounded-[16px] bg-[#f4f4f2] text-[#11110f]">
           <HandSolidIcon className="h-8 w-8" />
@@ -36,9 +36,9 @@ export function Composer({ placeholder = 'Message', initialValue = '', onSend }:
           type="button"
           aria-label="Send"
           onClick={() => onSend?.(value)}
-          className="flex h-[35px] w-[35px] shrink-0 items-center justify-center rounded-full bg-[#268eff] text-white shadow-[0_4px_12px_rgba(38,142,255,0.4)]"
+          className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-[#268eff] text-white shadow-[0_4px_12px_rgba(38,142,255,0.4)]"
         >
-          <ArrowUpIcon className="h-4 w-4" />
+          <ArrowUpIcon className="h-[22px] w-[22px]" />
         </button>
       </div>
     </div>

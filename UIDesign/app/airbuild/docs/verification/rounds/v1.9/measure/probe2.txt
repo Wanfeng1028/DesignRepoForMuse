@@ -1,0 +1,52 @@
+== iphone-03-build-with-your-team.jpg
+ y=200 firstNonBg=-1 lastNonBg=-1 leftPx=None rightPx=None
+ y=400 firstNonBg=178 lastNonBg=769 leftPx=(173, 178, 184) rightPx=(52, 57, 63)
+ y=800 firstNonBg=253 lastNonBg=1061 leftPx=(225, 229, 238) rightPx=(217, 220, 225)
+ y=1200 firstNonBg=110 lastNonBg=1212 leftPx=(166, 167, 169) rightPx=(194, 195, 199)
+ y=1600 firstNonBg=102 lastNonBg=1242 leftPx=(191, 195, 198) rightPx=(222, 219, 248)
+ y=2000 firstNonBg=110 lastNonBg=1212 leftPx=(168, 168, 170) rightPx=(194, 195, 199)
+ y=2400 firstNonBg=61 lastNonBg=1212 leftPx=(209, 215, 227) rightPx=(194, 195, 200)
+ y=2700 firstNonBg=64 lastNonBg=1212 leftPx=(208, 217, 226) rightPx=(192, 195, 200)
+ y=2840 firstNonBg=110 lastNonBg=1212 leftPx=(158, 159, 163) rightPx=(200, 201, 206)
+ x=660 firstNonBgY=236 lastNonBgY=2867
+ x=400 firstNonBgY=234 lastNonBgY=2867
+ x=900 firstNonBgY=406 lastNonBgY=2867
+== iphone-06-daily-briefing.jpg
+ y=200 firstNonBg=110 lastNonBg=1212 leftPx=(167, 167, 169) rightPx=(194, 195, 199)
+ y=400 firstNonBg=102 lastNonBg=1212 leftPx=(211, 216, 222) rightPx=(192, 196, 199)
+ y=800 firstNonBg=102 lastNonBg=1319 leftPx=(191, 195, 198) rightPx=(255, 255, 255)
+ y=1200 firstNonBg=110 lastNonBg=1319 leftPx=(166, 167, 169) rightPx=(245, 245, 245)
+ y=1600 firstNonBg=110 lastNonBg=1212 leftPx=(167, 168, 170) rightPx=(194, 195, 199)
+ y=2000 firstNonBg=122 lastNonBg=1200 leftPx=(155, 158, 163) rightPx=(206, 211, 217)
+ y=2400 firstNonBg=-1 lastNonBg=-1 leftPx=None rightPx=None
+ y=2700 firstNonBg=157 lastNonBg=1319 leftPx=(210, 225, 244) rightPx=(230, 235, 241)
+ y=2840 firstNonBg=1258 lastNonBg=1319 leftPx=(225, 232, 240) rightPx=(228, 232, 241)
+ x=660 firstNonBgY=0 lastNonBgY=2526
+ x=400 firstNonBgY=0 lastNonBgY=2532
+ x=900 firstNonBgY=0 lastNonBgY=2364
+== iphone-04-website-draft.jpg
+ y=200 firstNonBg=0 lastNonBg=1319 leftPx=(230, 235, 241) rightPx=(227, 234, 242)
+ y=400 firstNonBg=149 lastNonBg=1071 leftPx=(227, 231, 242) rightPx=(211, 228, 246)
+ y=800 firstNonBg=261 lastNonBg=1061 leftPx=(212, 216, 219) rightPx=(217, 220, 225)
+ y=1200 firstNonBg=110 lastNonBg=1212 leftPx=(166, 167, 169) rightPx=(194, 195, 199)
+ y=1600 firstNonBg=102 lastNonBg=1221 leftPx=(191, 192, 196) rightPx=(204, 209, 213)
+ y=2000 firstNonBg=0 lastNonBg=1212 leftPx=(205, 214, 223) rightPx=(194, 195, 199)
+ y=2400 firstNonBg=0 lastNonBg=1212 leftPx=(205, 214, 223) rightPx=(194, 195, 200)
+ y=2700 firstNonBg=110 lastNonBg=1212 leftPx=(167, 167, 169) rightPx=(192, 195, 200)
+ y=2840 firstNonBg=110 lastNonBg=1212 leftPx=(158, 159, 163) rightPx=(198, 201, 206)
+ x=660 firstNonBgY=214 lastNonBgY=2867
+ x=400 firstNonBgY=375 lastNonBgY=2867
+ x=900 firstNonBgY=411 lastNonBgY=2867
+== iphone-05-submit-for-review.jpg
+ y=200 firstNonBg=-1 lastNonBg=-1 leftPx=None rightPx=None
+ y=400 firstNonBg=-1 lastNonBg=-1 leftPx=None rightPx=None
+ y=800 firstNonBg=170 lastNonBg=1152 leftPx=(168, 172, 175) rightPx=(191, 194, 199)
+ y=1200 firstNonBg=166 lastNonBg=1156 leftPx=(155, 156, 160) rightPx=(174, 175, 180)
+ y=1600 firstNonBg=166 lastNonBg=1156 leftPx=(156, 157, 161) rightPx=(175, 176, 181)
+ y=2000 firstNonBg=166 lastNonBg=1156 leftPx=(154, 158, 161) rightPx=(175, 176, 181)
+ y=2400 firstNonBg=166 lastNonBg=1156 leftPx=(156, 157, 161) rightPx=(176, 177, 182)
+ y=2700 firstNonBg=248 lastNonBg=1074 leftPx=(205, 210, 216) rightPx=(216, 219, 226)
+ y=2840 firstNonBg=-1 lastNonBg=-1 leftPx=None rightPx=None
+ x=660 firstNonBgY=267 lastNonBgY=2726
+ x=400 firstNonBgY=268 lastNonBgY=2726
+ x=900 firstNonBgY=268 lastNonBgY=2726

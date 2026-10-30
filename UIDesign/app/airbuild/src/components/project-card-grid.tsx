@@ -111,7 +111,7 @@ export function ProjectCardGrid({ projects }: ProjectCardGridProps) {
     <div className="grid grid-cols-2 gap-3">
       {projects.map((p) => (
         <div key={p.name} className="relative">
-          <div className="flex h-[132px] items-center justify-center rounded-[20px] border border-black/[0.05] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.04)]">
+          <div className="flex h-[132px] items-center justify-center rounded-[20px] border border-black/[0.045] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.04)]">
             <ProjectPreview name={p.name} />
           </div>
           <TileBadge name={p.name} />

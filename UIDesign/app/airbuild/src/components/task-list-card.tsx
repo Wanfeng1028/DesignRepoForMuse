@@ -11,7 +11,7 @@ export type TaskListCardProps = {
 /** Task checklist card: white ground, title row, circle items, optional action link. */
 export function TaskListCard({ title, items, actionLabel = 'View task', onAction }: TaskListCardProps) {
   return (
-    <section className="rounded-[20px] border border-black/[0.06] bg-white p-4 shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
+    <section className="rounded-[20px] border border-black/[0.045] bg-white p-4 shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
       <h3 className="flex items-center gap-2 text-[13px] font-bold text-[#11110f]">
         <TaskGlyphIcon className="h-5 w-5 shrink-0" />
         {title}

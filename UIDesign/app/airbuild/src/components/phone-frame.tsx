@@ -19,8 +19,7 @@ export function PhoneFrame({ children, width = 390, height = 844, className, lab
         style={{ width, height, borderRadius: 52, border: '10px solid #1c1c1e', boxSizing: 'border-box' }}
       >
         <div className="flex h-full flex-col">
-          <div className="relative flex items-center justify-between px-7 pt-3 pb-1 text-[13px] font-semibold text-[#11110f]">
-            <span>13:00</span>
+          <div className="relative flex items-center justify-between px-7 pt-3 pb-1 text-[13px] font-semibold text-[#11110f]">            <span>13:00</span>
             <span className="absolute left-1/2 top-2.5 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-black" aria-hidden />
             <span className="flex items-end gap-1" aria-hidden>
               <span className="flex items-end gap-[2px]"><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 4 }} /><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 6 }} /><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 8 }} /><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 10 }} /></span>
@@ -34,6 +33,8 @@ export function PhoneFrame({ children, width = 390, height = 844, className, lab
           </div>
           <div className="flex min-h-0 flex-1 flex-col">{children}</div>
         </div>
+        {/* iOS Home indicator (system chrome, not app UI): 134x5 bar, 8px above the inner-screen bottom, overlays content like the real indicator. The App Store marketing crops are cut at the bottom, so this geometry is iOS system chrome, not an App Store crop measurement. */}
+        <div className="pointer-events-none absolute bottom-2 left-1/2 z-50 h-[5px] w-[134px] -translate-x-1/2 rounded-full bg-black" aria-hidden />
       </div>
       {label ? <figcaption className="mt-4 text-center text-xs text-neutral-500">{label}</figcaption> : null}
     </figure>

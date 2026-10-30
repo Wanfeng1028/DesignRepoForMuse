@@ -16,23 +16,25 @@
   --color-taskink: #11110f;
   --color-taskmuted: rgba(17, 17, 15, 0.55);
   --color-action: #f97316;
-  --radius-bubble: 24px;
+  --radius-bubble: 13px;
   --radius-card: 24px;
 }
 
 html, body { background: #e9e9e6; }
 body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
-/* Frosted-glass control (T1-T4): fill close to the canvas colour, blurred,
-   with an inner top highlight and a soft shadow. Applied to top-bar round
-   buttons, pills, the draft URL pill + share button and the detail check
-   button. No official asset is involved; this is a CSS material only. */
+/* Frosted-glass control (round 8, REA set): floating-control gradient +
+   shadow from REA table A (window-control/header-action group), blur 34px +
+   saturate 1.24 from the REA chat-window glass (the only blur/saturate
+   numbers in evidence). Replaces the v1.6 flat fill (rgba 0.72 + blur 12 +
+   saturate 1.4 + white border + inset top highlight). Applied to top-bar
+   round buttons, pills, the draft URL pill + share button and the detail
+   check button. No official asset is involved; this is a CSS material only. */
 .ab-glass {
-  background: rgba(244, 244, 244, 0.72);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
-  backdrop-filter: blur(12px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(325deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.48) 48%, rgba(245, 247, 250, 0.24));
+  -webkit-backdrop-filter: blur(34px) saturate(1.24);
+  backdrop-filter: blur(34px) saturate(1.24);
+  box-shadow: inset 1px 1px rgba(255, 255, 255, 0.38), 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Morphing transitions (M1/M2/M5): every state switch animates, never cuts. */

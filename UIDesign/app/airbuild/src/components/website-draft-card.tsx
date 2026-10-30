@@ -23,7 +23,7 @@ export function WebsiteDraftCard({
   url, headline, subline, downloadLabel = 'Download', footnoteTitle, footnoteBody, coverTone, onDownload,
 }: WebsiteDraftCardProps) {
   return (
-    <section className="-mx-4 rounded-[24px] border border-black/[0.06] bg-white px-5 py-5 shadow-[0_10px_28px_rgba(0,0,0,0.08)]">
+    <section className="-mx-4 rounded-[24px] border border-black/[0.045] bg-white px-5 py-5 shadow-[0_10px_28px_rgba(0,0,0,0.08)]">
       <div className="flex items-center justify-between">
         <span className="flex gap-2" aria-hidden>
           <span className="h-[14px] w-[14px] rounded-full bg-[#ff736a]" />

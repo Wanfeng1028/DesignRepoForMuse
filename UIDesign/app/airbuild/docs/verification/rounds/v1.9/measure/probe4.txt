@@ -1,0 +1,40 @@
+== iphone-03 screen rect: inner x150..1179 (w1030), factor390=0.3786
+ canvas zones (11x11 median + center):
+  canvas (300,1050) med=#f2f2f2 center=#f1f1f1
+  canvas (600,1050) med=#eeeeee center=#eeeeee
+  canvas (900,1050) med=#f5f5f5 center=#f5f5f5
+  canvas (300,1800) med=#f5f5f5 center=#f5f5f5
+  canvas (900,1800) med=#e3e3e3 center=#e3e3e3
+  canvas (600,600) med=#000001 center=#000002
+ glass/topbar zone row scans:
+  y=920 150:#000000 170:#f4f4f4 190:#f4f4f4 210:#f4f4f4 230:#f4f4f4 250:#f4f4f4 270:#f4f4f4 290:#f1f1f1 310:#6c6c6c 330:#5a5a5a 350:#f6f6f6
+  y=950 150:#010101 170:#f4f4f4 190:#f4f4f4 210:#f4f4f4 230:#f4f4f4 250:#f4f4f4 270:#f4f4f4 290:#f4f4f4 310:#f4f4f4 330:#f4f4f4 350:#f4f4f4
+  y=980 150:#060606 170:#f4f4f4 190:#f4f4f4 210:#f4f4f4 230:#f4f4f4 250:#f4f4f4 270:#f4f4f4 290:#f4f4f4 310:#f4f4f4 330:#f4f4f4 350:#f5f5f5
+  y=1000 150:#f1f1f1 170:#f5f5f5 190:#f5f5f5 210:#f5f5f5 230:#efefef 250:#f0f0f0 270:#f0f0f0 290:#f5f5f5 310:#f5f5f5 330:#f5f5f5 350:#f5f5f5
+ user blue bbox scan y2500..2868, blue=(0,136,254) tol25:
+  blue x 446..1110 (w665, 251.8pt) y 2706..2866
+  blue pt (850,2700) med=#f2f2f2
+  blue pt (700,2750) med=#0586f9
+  blue pt (1000,2750) med=#0389fd
+  blue pt (600,2800) med=#0b87f9
+  blue pt (1050,2800) med=#0f8afc
+ status col x=300 y230..500 step10:
+  230:#d8e0eb 240:#cfe3fb 250:#3a84c5 260:#3a84c5 270:#3784c8 280:#3a83c7 290:#3785c3 300:#3680c7 310:#d4e0ee 320:#d8e0eb 330:#d8e0eb 340:#d8e0eb 350:#d8e0eb 360:#d8e0eb 370:#d8e0eb 380:#d8e0eb 390:#d8e0eb 400:#d0dae4 410:#dde2e8 420:#030408 430:#010000 440:#000000 450:#000000 460:#000000 470:#010101 480:#7d8087 490:#d7e1ed 500:#d8e0eb
+ status col x=660 y230..500 step10:
+  230:#d8e0eb 240:#3a84c5 250:#3a84c5 260:#cae5ff 270:#3887cc 280:#d2e3f5 290:#5688bb 300:#3784c8 310:#467eb1 320:#d8e0eb 330:#d8e0eb 340:#d8e0eb 350:#d8e0eb 360:#d8e0eb 370:#d8e0eb 380:#d8e0eb 390:#d8e0eb 400:#d8e0ed 410:#000000 420:#dbe2ec 430:#d7e1eb 440:#000000 450:#d9dfeb 460:#d8e0eb 470:#0e1116 480:#000000 490:#d8e0eb 500:#d8e0eb
+ top row y=300 x150..1180 step40:
+  150:#d8e0eb 190:#3984c7 230:#d8e0ed 270:#4282bf 310:#dae3ec 350:#3785c7 390:#3984c7 430:#3984c7 470:#d8e0eb 510:#3a83c7 550:#87b2d5 590:#3a85c8 630:#d9e0ea 670:#4082bc 710:#d4e0ee 750:#3c81c2 790:#3984c5 830:#d8e0eb 870:#d8e0eb 910:#d8e0eb 950:#d8e0eb 990:#d8e0eb 1030:#dce3ed 1070:#dce5ee 1110:#dde4ee 1150:#dde4ee
+== iphone-06 send button zone (prior 1080,2200): row/col scans
+  y=2150 1000:#d8e0eb 1020:#d8e0eb 1040:#d8e0eb 1060:#d8e0eb 1080:#d8e0eb 1100:#d8e0eb 1120:#d8e0eb 1140:#d8e0eb 1160:#d8e0eb
+  y=2180 1000:#d8e0eb 1020:#d8e0eb 1040:#d8e0eb 1060:#d8e0eb 1080:#d8e0eb 1100:#d8e0eb 1120:#d8e0eb 1140:#d8e0eb 1160:#d8e0eb
+  y=2200 1000:#d8e0eb 1020:#d8e0eb 1040:#d8e0eb 1060:#d8e0eb 1080:#d8e0eb 1100:#d8e0eb 1120:#d8e0eb 1140:#d8e0eb 1160:#d8e0eb
+  y=2230 1000:#d8e0eb 1020:#d8e0eb 1040:#d8e0eb 1060:#d8e0eb 1080:#d8e0eb 1100:#d8e0eb 1120:#d8e0eb 1140:#d8e0eb 1160:#d8e0eb
+  y=2260 1000:#d8e0eb 1020:#d8e0eb 1040:#d8e0eb 1060:#d8e0eb 1080:#d9e1ec 1100:#dde1ec 1120:#d8e0eb 1140:#d8e0eb 1160:#d8e0eb
+  send blue bbox y1900..2400:
+  send x 1022..1110 (w89, 33.7pt) y 1914..2002 (h89, 33.7pt)
+== iphone-05 col x=400 y500..900 step20 (find screen top):
+  500:#d5e1f1 520:#d8e0eb 540:#d8e0eb 560:#d8e0eb 580:#d8e0eb 600:#d8e0eb 620:#d8e0eb 640:#d8e1ea 660:#bcbbb6 680:#000000 700:#c4c4c4 720:#c4c4c4 740:#c3c3c3 760:#020202 780:#bdbdbd 800:#bebebe 820:#bbbbbb 840:#f5f5f5 860:#f5f5f5 880:#f5f5f5 900:#f5f5f5
+  row y=2650 x300..1100 step50 (home indicator hunt):
+  300:#ffffff 350:#ffffff 400:#ffffff 450:#ffffff 500:#ffffff 550:#ffffff 600:#ffffff 650:#ffffff 700:#ffffff 750:#ffffff 800:#ffffff 850:#ffffff 900:#ffffff 950:#ffffff 1000:#ffffff 1050:#ffffff 1100:#020202
+  row y=2600 x300..1100 step50:
+  300:#ffffff 350:#808080 400:#fcfcfc 450:#dedede 500:#f3f3f3 550:#f2f2f2 600:#ffffff 650:#ffffff 700:#ffffff 750:#ffffff 800:#ffffff 850:#ffffff 900:#ffffff 950:#ffffff 1000:#ffffff 1050:#ffffff 1100:#f5f5f5

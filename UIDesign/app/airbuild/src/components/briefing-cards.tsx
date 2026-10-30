@@ -51,7 +51,7 @@ export function AirDailyCard({ headline, body, date, glance, onShare }: AirDaily
         <span className="rounded-full bg-[#f4f4f2] px-2 py-0.5 text-[10px] font-medium text-black/55">{date}</span>
         <span className="rounded-full bg-[#f4f4f2] px-2 py-0.5 text-[10px] font-medium text-black/55">The Air Daily</span>
       </div>
-      <div className="relative mt-2 flex h-[77px] flex-col justify-end overflow-hidden rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#3f707e,#386b79)' }}>
+      <div className="relative mt-2 flex h-[103px] flex-col justify-end overflow-hidden rounded-[14px] p-3" style={{ background: 'linear-gradient(160deg,#3f707e,#386b79)' }}>
         {/* C2: own vector dandelion abstraction (stem + seed head) instead of the official photo; no bitmap copied. */}
         <svg className="absolute right-3 top-2 h-[72px] w-[72px] opacity-90" viewBox="0 0 72 72" aria-hidden>
           <path d="M36 68C36 52 36 44 36 34" stroke="#e8e2c8" strokeWidth="1.6" strokeLinecap="round" />
