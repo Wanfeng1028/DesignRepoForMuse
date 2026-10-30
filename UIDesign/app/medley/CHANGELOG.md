@@ -409,3 +409,98 @@
 - 证据：协调方亲测 photo-9 welcome 干净顶中（x300-400,y250-450）中值 (13,14,16)、左上 (13,14,18)；旧 HD #111518 是另一 capture 状态（与 web/medley U1 的 HD5 偏暗出口值同族）。另：photo-9 左中空带 (44,28,28) 暖调、底部中 (17,34,28) 绿调，证实环境光真实存在且延展，非平色。
 - 改动：welcome-dark.tsx 容器 backgroundColor #0D0E10 + Phone className bg-[#0D0E10]（只改本屏容器与 frame；global darkBg token #111518 不动，其他深色屏底色仍按旧 HD）。辉光三渐变不动，标题光标仍 #6ea9dd。
 - 验证：重建 + welcome 单张重拍；新图众数 (13,14,16)、状态栏 (195,30)、顶中 (195,100)、底条 (195,830) 均为 (13,14,16)，光标 (330,318) 仍 (110,169,221) #6EA9DD。角部圆角外像素为页面底色，不计入屏内底色。
+
+## v1.8 — 2026-10-30 — round 8 Apple iOS 质感打磨（v1.7 → v1.8，patch）
+
+- 性质与纪律：只动本套；不 commit、不 push、不 git add，改动留工作区由协调方统一提交（协调方只加本套文件）。零裁判调用（未取 /etc/botsrouter/muse_judge_token.txt；实测数据为唯一放行依据，裁判口子未启用）。构建：/home/hatch/.npm-global/bin/pnpm build 通过（tsc + vite，末次 1.34s；dist hash 已变，dist 是否进版本由协调方定）。基线锚点：开工重拍 pre 18 张与 v1.7 逐字节一致（18/18 identical），证实 v1.7 基线无漂移；最终 18 张 bare（390x844）存 docs/verification/rounds/v1.8/（根目录），过程重拍存 post1/post2/post3，测量脚本与裁切存 rounds/v1.8/measure/（measure-pre.py、measure-small.py、orig-panels.py、orig-lang.py、detail-geometry.py、detail-picker.py、picker-bands.py、measure-post1.py、measure-post3.py 及 crop-picker-orig.png、crop-welcome-orig.png、crop-lang-2x.png）；一切文件均在本套正式目录，未用 /tmp。
+- 追加精度门（2026-10-30 17:46 用户再令）执行证据（本节即执行记录，细节见下）：
+  - 1px 级：全部量值均报整数像素与色差，不四舍五入抹掉 1-2px；凡称“噪声放过”的项均给出 AA/JPEG 证据（见“1px 证据裁决”一节），其余 1-2px 项均修或记残留。
+  - 小元素一个不放过：状态栏、Home 指示条、分割线、tiny 标签、图标端点、阴影、hairline、圆角弧线全部实测（见“小元素审计”一节）。
+  - 分区采样：底色不用单众数，改 3x3 分区众数 + 定点 patch 中值（见“分区采样”一节）；welcome 辉光分区证实非平色。
+  - 两路核对：像素采样 + 源码算术 + 编译后 dist CSS 三路对关键值（h-[70px]=70px、pt-[17px]=17px、pb-[23px]=23px、py-[6px]=6px、--radius-sheet=24px、--color-dark-card=#1e1f23 均在 dist CSS 中逐字命中；bg-[#08090b] 的 CSS 类名因 Tailwind 转义未命中 grep，但像素 (8,9,11) 精确命中，记为像素单路 + 源码一路，不谎称三路）。
+  - 一眼比对：原图（中文 HD、细节 HD、photo-9）与渲染同尺寸全屏目视（见“一眼比对差异清单”一节）；本轮新发现的肉眼可见结构差即 picker-a 的 sheet 形态（已修），其余肉眼可见差均已量。
+
+### 质感打磨表（原图值 vs 改前值 vs 改后值；方法统一：同阈值同 x 范围，JPEG 细化说明见注）
+
+- W-1 welcome 标题带顶：原图 303.6（中文 HD 亮核带 crop 454-496 换算）vs 改前 303（-0.6）vs 改后 304（+0.4）。修法：中间容器 pb-[28px] → pb-[23px]（-5；居中块下移约 2.5，标题与副文案同移，见 W-2 联动）。
+- W-2 welcome 副文案顶：副 1 原图 361.4 vs 改前 358（-3.4，同方法）vs 改后 362（+0.6）；副 2 原图 387.9 vs 改前 385（-2.9）vs 改后 388（+0.1）。修法：副 1 mt-2.5（10）→ mt-3（12，+2）+ pb -5 联动（居中抵消 -2.5，净 +1 → +2.4→实测 +4？注：改前→改后实测副 1 为 358→362（+4），因 pb -5 使块下移 2.5、mt +2 使副相对块下移 2，合计 +4.5，取整 +4；与原图差由 -3.4 收至 +0.6）。副行距原图 26.5 vs 改后 26（388-362，-0.5）。
+- W-3 welcome 脚注：行 1 原图 775.8 vs 改前 773（-2.8）vs 改后 775（-0.8）；行 2 原图 791.8 vs 改前 791（-0.8）vs 改后 791（-0.8）。修法：脚注 pt-1（4）→ pt-[7px]（+3）+ leading 1.45 → 1.33（行距 17.4→16.0，原图行距 16.0 精确）。结论：两行均收至 1px 内（-0.8，方法不确定度约 1px，记为闭合，-0.8 不藏）。
+- W-4 welcome 标题光标：改后光标整盘 #6ea9dd（324,312）-（336,324），随标题块下移 1px（改前 311-323），与标题顶 +1 联动一致；round 7 颜色层未回退。
+- P-1 picker-a sheet 顶：原图 strip y232（细节 HD，手机顶 strip y129、指示条校验 scale 0.9929）→ 手机 y102.3 vs 改前无 sheet（全屏均匀底）vs 改后 102（状态栏 32 + 顶区 70）。修法：新增顶区 div h-[70px] bg-[#08090b]（原图顶区采样 (8,9,11) 精确）+ sheet 容器 rounded-t-sheet bg-dark-card。
+- P-2 picker-a sheet 底色：原图采样 (32,33,37) vs 改前 #111518（17,21,24）vs 改后 darkCard #1e1f23（30,31,35，-2/-2/-2，JPEG 容差内，沿用既有 token，不新立 #202125）。
+- P-3 picker-a 状态栏区底色：原图顶区 (8,9,11) 从屏顶起 vs 改前 Phone 帧 #111518（顶 32px 一截）vs 改后 Phone className bg-[#08090b]（post3 y0-80 全区 (8,9,11) 精确；顶区 div 与帧同色无缝）。
+- P-4 picker-a 拖柄：原图 110-113 vs 改前 44-48（-66）vs 改后 110-114（顶精确 110；底 +1 为 5px 代码高 vs JPEG 细化 4 行原图带，不算错）。修法：把手容器 pt-3（12）→ pt-2（8）。
+- P-5 picker-a 标题亮核顶：原图 phone 141.0（细节 HD 亮核带 crop 142-149 ×0.99285）vs 改前 66（-75）vs 改后 141（0.0）。修法：标题行 pt-2（8）→ pt-[17px]（分两步：先 pt-5（20）得 144（+3），再 -3 至 17 得 141；AutoCard/Up 联动见 P-7）。
+- P-6 picker-a 行核顶：GLM 原图 335.6 vs 改后 336（+0.4）；DeepSeek 原图 390.2 vs 改后 390（-0.2）；Sonnet 原图 608.6 vs 改后 606（-2.6，见注：原图带顶受 JPEG 细化影响 ±2-3，GLM/DeepSeek 两项干净带已证系统偏移约 0，Sonnet -2.6 记带边噪声、不另调）。Kimi 原图单行碎片 666-667 落在改后带 660-668 内；Fable 原图单行碎片 780 vs 改后带 767-776（碎片法不确定度约 7，记碎片一致、不宣称 1px 闭合）。
+- P-7 picker-a 间隙分配（全部实测驱动，非猜）：AutoCard→Up：Up 容器 pt-[14px] → pt-[6px]（-8）；行 py：ModelRow py-[11px] → py-[6px]（-5/侧）；分区 pt：ModelSection pt-5（20）→ pt-3（12，-8/区）。验证链：post1（仅 sheet+标题）Fable 被挤出首屏（865+）；Step A（行 py+分区 pt）Fable 回 778-787；Step B（标题 -3 + Up -8）行核顶与原图对齐（P-6）。行距验证：GLM→DeepSeek 核距改后 54（336→390）vs 原图 54（335.6→390.2）精确一致，证实行距本身无错、错的是上游间隙（单点偏移、非逐行累积）。
+- P-8 picker-a AutoCard 对比度（残留，不改）：原图卡 (40,41,45) vs sheet (32,33,37) = +7-8 vs 改后卡 darkRow (47,48,52) vs sheet (30,31,35) = +17。未改原因：AutoCard 为 picker-a/b/画廊共享组件，卡色证据仅 picker-a 一屏采样，picker-b 无 HD 卡色证据；全局改卡色有 picker-b 回退风险。记残留（+9-10 对比过强），待 picker-b 卡色证据出现时再定。
+- S-1 共享影响 picker-b：ModelRow/ModelSection 改动使 picker-b 亮核带整体上收：首区标题 -8、首行 -13、次区标题 -26、末带 -61（682-691 → 621-630）；顶部（状态栏/标题/Auto 卡，y≤121）字节级不动。定性：同组件在原应用中应为同一 py/pt（picker-a HD 已证），picker-b 本身仅总览原图、无 HD 带可直接验，故记为“共享组件推断、非 picker-b HD 直验”，不宣称 picker-b 已 1:1。
+
+### 小元素审计（改前 pre 值；无改动项附 1px 证据裁决）
+
+- 状态栏：全部 18 屏墨带 x28-356、y9-21（13 行）；时间簇 x28-69、图标簇 x287-356。代码 h-8（32px）+ 居中 (32-13)/2=9.5 → 9-21 实测一致；左右内边距 pl-7（28）/pr-8（32→右缘 390-32=358，图标右 356 在内边距内，-2 为电池 nub 余量）。无改动。
+- Home 指示条：深屏行 832-835（4 行）、x143-246（104px）、#515558 精确；浅屏精确色 #bababa 带 x144-245（102 行宽）+ 两侧 AA  blending → 真宽 104（与深屏阈值宽一致）。结论：精确色宽 102 是 AA 边，不是几何错（1px 证据裁决：放过，附 AA 解释）。
+- Hairline：language 分隔行 y141/182/244/306/367/429/491/553/615/676（#e6e7ea 满幅 350px）+ 脚注顶 y689；间距 41（无副行）/62（有副行）与行结构逐项吻合（名 20 + 副 18 + mt3 + py20 + 边 1 = 62；无副 41）。无改动；行距矛盾见残留 R-7（原图侧证据不足，不拟合噪声）。
+- Tiny 标签：SourcesChip 徽标 16x16（代码 h-4 w-4）、10px 字；Pro/Pro+ 角标 11px；Save 11px；credits 11px；picker 成本副行 11px——均与代码值一致，像素带与代码值对齐（徽标/角标带高即代码高，AA 边 1px 内）。无改动。
+- 图标端点：menu/back/close/plus/check/chevron/more/logout 仍为 v1.5 Lucide 包源（逐字核对结论沿用）；手绘 16 项仍保留（形态优先于换源）。本轮逐项复核渲染墨盒：停止钮 accent 圆精确色带 326-364（39 宽）+ AA 边 = 41px 代码值（高 41 行精确）；白色停止圆同理；里斯本末点精确色 7x7 + AA 边 = 9px 代码值；picker/info-sheet 把手精确色 34 宽 + AA 边 = 36px 代码值（中心 194.5 vs 屏心 195，-0.5）。以上 1px 差均为 AA 边证据裁决：放过。
+- 阴影：InputBar 浅色 pill shadow 0_2px_12px rgba(0,0,0,0.06) + border #e6e7ea；info-sheet sheet shadow 0_-12px_32px rgba(23,24,28,0.10)；slider 拇指 shadow 0_1px_4px rgba(0,0,0,0.15)；Phone 帧 shadow（画廊框，bare 截图已剥离，不计入屏内）。原图侧阴影存在性在拼贴分辨率下不可分辨（6%-10% 透明度阴影低于 JPEG 噪声），记未量，不增不减。
+- 圆角弧线：sheet 圆角 token 24px（radius-sheet，dist CSS 逐字命中）；pill/按钮圆角 26px（radius-input/button）；气泡小角 6px（rounded-tr-[6px]）；卡片 16px。原图侧弧半径像素拟合为方法极限（v1.5 T14 沿用），目视一致，不虚构数值。
+- 胶囊热区：Button 默认高 52px（welcome Google 钮亮带 644-695 = 52 行精确，Try 钮 h-[50px] 边框 50 行）；InputBar 单行 56px（里斯本深 pill 色带 768-823 = 56 行）、双行 88px（40+48）；home-en 白 pill 全宽行 54 行是圆角顶底行窄于 200px 阈值所致（非高度错，侧边量法：pill 上下边即 56 盒）。无改动。
+
+### 分区采样（3x3 分区众数 + 定点 patch；单众数会掩盖的分区）
+
+- welcome 最终：分区众数行 0：#0d0e10 86%/42%/32%（右上蓝晕区众数占比跌至 32%，证实辉光非平色）；行 1：53%/27%/41%；行 2：16%/16%（钮区）/22%。定点 patch：(195,100)/(60,100)/(330,100)/(60,450)/(330,450)/(195,830) 均为 #0d0e10，(195,250) #161e28（蓝晕边缘），(330,100) #0e1013（晕边 1 级亮，JPEG/晕染内）。
+- 深屏分区：lisbon/kyoto/agent-team/picker-b 全区 #111518 占 60-97%（卡片区 #1e1f23 占优的分区除外）；picker-a 最终分区为顶区 #08090b + sheet #1e1f23（新分区，见 P-1/P-2）；search-drawer 左 #16171a、右条 #090b0d（black/45 罩 #111518 的混合值，(9,11,13) 与计算一致）。
+- 浅屏分区：home-cn 全区 #ffffff 76-100%；home-en/train/router #f5f6f8 占优；language #fdfdfd；credits/savings/info-sheet 白卡区 #ffffff 与底 #f5f6f8 分区清晰（info-sheet 顶 dim 区 opacity-45 使行 0 众数混杂，属 dim 结构本身，非底色错）。
+- 结论：除 welcome 辉光与 picker-a sheet 分区外，全套底色分区与 token 一致，无隐藏渐变/分区色未报。
+
+### 字体（SF 验真声明）
+
+- 本平台无法验 SF：VM 渲染字体为 Noto Sans（系统 sans 回落），-apple-system 栈首位在真机 iOS 上即为 SF，但 VM 截图永远量的是回落字体。以下差值全部记为回落字体残留，不谎称是原字体：welcome 标题亮核带改后 304-332（29 行）vs 原图 303.6-332.9（29.3 行，-0.3 行）；副行宽 -5.2%（v1.6 已量，VM Noto 宽于原设备字体）；Google 钮宽 +6（同因）；G 角标圆心 x -6（居中单元 + 文本宽派生，非角标杠杆，不移角标）；Try 标签中心 -3.0（钮顶与高已 1:1，标签居中自动，无干净杠杆）。字重：像素只给观察档 + 代码权重（标题/问候 bold 700、副 regular、AiMeta semibold 600），精确字重数值记未量（T15 沿用）。绝无 Apple 系统字体文件拷入仓库。
+
+### 材质（iOS 玻璃/薄材质成套值；无证据不加 blur）
+
+- 全套 grep：无一处 backdrop-blur。逐项裁决：chat-info-sheet 顶 dim 为 opacity-45 实色罩（顶区气泡文字锐利可读，blur 会抹掉笔画，故 opacity 是原图证据支持的形态，不加 blur）；search-drawer 右条 black/45 实色罩（条下无可读内容，blur 有无不可分辨，记未量，不加）；InputBar/卡片/抽屉/面板均为实色 + 细阴影（见小元素审计），原图侧 6%-10% 级阴影与 blur 均低于拼贴可分辨度，记未量，现状保留。辉光三渐变（welcome 容器背景，非 overlay div，v1.7 教训沿用）参数不动；round 7 颜色层复验（最终图）：光标 #6ea9dd 整盘、品牌簇绿/蓝/品红逐值命中、home-en Auto 簇三点逐值命中、京都 Kimi #d8c25a 两点、路由 GPT #4a8a76 两点、里斯本流式点 #fd6718（60-66,711-717，45px）全部在位，无回退。
+
+### 动效（可观测的量时长与曲线，不可观测的记未量）
+
+- 现状：morph-chevron 旋转 200ms ease、poll 内点 scale 200ms ease、InputBar 容器 transition-all duration-200（Tailwind 默认 timing cubic-bezier(0.4,0,0.2,1)）；Sheet/Dialog 无进入动画类（Radix 默认，静态截图闭合态不受影响）。原图侧：全部参照物均为静态截图/拼贴，无视频源，面板切换/抽屉/页面转场的真实时长与弹簧曲线均记未量，不编造 iOS 弹簧参数；本轮不动任何动效参数（无观测源的改动无法验收，属 churn）。标题轮换：仅 photo-9 一帧（Let's discover + 宝石蓝）为静态渲染态；其余句子与配色仍记未量，不伪造动画。
+
+### 一眼比对差异清单（原图与渲染同尺寸全屏目视；逐项已量或记残留）
+
+- welcome（中文 HD 旧态 vs photo-9 新态 vs 渲染）：旧态 M 标 + 橙点与新态品牌簇 + 宝石蓝是两种 capture 状态，渲染从 photo-9（任务规则颜色层优先），不算差；辉光目视强度略强于 photo-9 弱晕（v1.7 已记录的 alpha 取舍：patch 中值落在原图峰值与中值区间内，本轮不动）。
+- home-en（细节 HD vs 渲染）：建议行图标灰色与原图灰绿倾向在拼贴分辨率下无法定色（v1.7 沿用 #6b6c72）；其余（Auto 簇斜排、问候、4 行、输入 pill、指示条）目视一致。
+- home-cn（中文 HD vs 渲染）：双行条、M 标、分段控件目视一致；顶栏图标圆与分段白轨道在白底上不可隔离（v1.5 T6 沿用，未量）。
+- lisbon-en/cn（细节/中文 HD vs 渲染）：顶栏、气泡、bullets 角标、来源 chip、操作行、末点、停止钮目视一致；lisbon-cn 顶栏双 pill 与双行条已按原图结构落地（v1.5 G23/G24/G25）。
+- pricing（细节 HD vs 渲染）：弧线 6 点、卡片、CTA、脚注目视一致；整体纵向漂移（v1.6：X 顶 -39、内容跨度 +46）仍为残留（见残留 R-6；本轮未动，因顶缺与中段 excess 的分配需卡底近色采样，单点顶 padding 会破坏已合底部，属编数风险）。
+- picker-a（细节 HD vs 渲染）：sheet 形态本轮已修（顶区/sheet/把手/标题/行核见 P-1-P-7）；AutoCard 对比度偏强目视可见（见 P-8 残留）。
+- picker-b（总览 vs 渲染）：结构目视一致；行距收紧后 Thinking 区上收 36-61px（见 S-1，共享推断）。
+- credits/language（细节/中文 HD vs 渲染）：credits 巨号/图表/图例/行距目视一致（图例圆点 T8 仍部分验证）；language 行距与脚注见残留 R-7（本轮重测未达 1px 级，见下）。
+- train/savings/kyoto/router/info-sheet/search-drawer/suspended/agent-team（总览 vs 渲染）：文案/数值/底色模式目视一致（v1.1/v1.6 已核验值本轮重验无变）；逐元素位置/字号/间距因总览分辨率记未闭合（见残留）。
+
+### 全套重扫残留计数与带数残留表（最终图；残留 = 未达 1px 级闭合的项，不藏在 clean 后）
+
+- 已闭合（本轮，带数）：welcome 标题/副 1/副 2/脚注行 1/行 2（5 带，全部 1px 内）；picker-a sheet 顶/把手顶/标题核顶/GLM 核顶/DeepSeek 核顶（5 带，1px 内）；picker-a 行距 GLM→DeepSeek 54（精确）；round 7 颜色层 8 处复验（光标/品牌簇 3 点/home 簇 3 点/Kimi/GPT/里斯本流式点，逐值命中）。
+- 残留计数：共 13 项（下表；另有 9 屏总览级未闭合打包计 1 类，见末项）。
+  - R-1 welcome 副行宽 -5.2% / Google 钮宽 +6 / G 圆心 x -6 / Try 标签中心 -3.0（字体度量与居中派生，无干净杠杆；VM 回落字体所致，真机 SF 下预期收敛，不硬调）。
+  - R-2 picker-a Sonnet 核顶 -2.6（带边 JPEG 细化噪声，系统偏移约 0，见 P-6）。
+  - R-3 picker-a Fable 核顶碎片差约 7（单行碎片法不确定度，见 P-6）。
+  - R-4 picker-a AutoCard 对比度 +9-10（P-8，共享组件证据不足）。
+  - R-5 picker-a sheet 圆角半径 24px（目视一致，未精量；T14 沿用）。
+  - R-6 pricing 整体漂移（v1.6：X 顶 -39、标题 -39、副 -40、切换 -42、Lite -45、Pro 头 -46、特性 -29 至 -32、Pro+ 头 -21、CTA -10、脚注 -5/-3/-3、页脚 +3、跨度 +46；本轮未动，原因见一眼清单）。
+  - R-7 language 行距与脚注（v1.6：行间距渲染 62/39/61-63 vs 原图 70/43/53-56；脚注 714 vs 642，+72。本轮重测：中文 HD 语言屏文本墨每行仅 29-66px（阈值 200），带顶不确定度约 4px 手机坐标，v1.6 原图行距数达不到 1px 级复现标准；按“未量不填”原则不做逐行 py 拟合（初算的 py-1.5 + 首行 +16/次行 +10 方案系拟合噪声，否决并记录）。行 py 保持 py-2.5（10），脚注保持 mt-3。）
+  - R-8 picker-b 位置（S-1：共享推断，非 HD 直验；末带 -61）。
+  - R-9 总览 9 屏（train/savings/kyoto/router/info-sheet/search-drawer/picker-b/suspended/agent-team）逐元素位置/字号/间距/底色未闭合（无单屏 HD 原图，总览 cell 约 256x566，仅大于 10% 的大差可行动；文案/数值/底色模式已核验，不宣称 1:1）。
+  - R-10 Thinking 倍率小字仍不渲染（G36 沿用：源小字不可分辨，web 套数列未经 app 侧实测）。
+  - R-11 全部字重精确数值与全部圆角弧半径（T14/T15 沿用：像素方法极限，不虚构）。
+  - R-12 标题轮换其余句子与配色、动效时长/曲线、阴影与 blur 存在性（未量，见动效/材质节）。
+  - R-13 credits 图例圆点 T8（部分验证：渲染色与源色逐字一致，原图仅一处蓝系簇孤立）、kyoto 天气图标色与 home 建议行图标精确色（分辨率不足，沿用旧口径）。
+- 未改动屏逐像素比对（最终 vs pre，同尺寸 bare）：15 屏字节一致（agent-team、kyoto、lisbon-cn、lisbon-en、info-sheet、router、savings、train、credits、home-cn、home-en、language、pricing、search-drawer、suspended）；welcome 差异 8864px（bbox x27-355、y301-786，全部位于标题/副/脚注文本区，按钮与状态栏像素不动）；picker-a 差异 328354px（全屏 sheet 重构）；picker-b 差异 53761px（bbox x19-370、y173-713，全部位于分区/行区，顶部 y173 以上不动）。
+
+### 改动文件（只本套）
+
+- src/screens/welcome-dark.tsx：副 1 mt-2.5 → mt-3；中间容器 pb-[28px] → pb-[23px]；脚注 pt-1 → pt-[7px]、leading-[1.45] → leading-[1.33]。
+- src/screens/model-picker-a.tsx：Phone className bg-[#08090b]；新增顶区 h-[70px] bg-[#08090b]；内容容器改为 rounded-t-sheet bg-dark-card；把手容器 pt-3 → pt-2；标题行 pt-2 → pt-[17px]；Up 行 pt-[14px] → pt-[6px]。
+- src/components/ModelPicker.tsx：ModelRow py-[11px] → py-[6px]；ModelSection pt-5 → pt-3（影响 picker-a/b 与画廊展示，见 S-1）。
+- tokens 未动（darkCard/darkBg/各模型点/cursorDot/logoDot 色值均已验证在位，无需新 token；顶区 #08090b 为 picker-a 局部值，沿用 search-drawer bg-[#16171a] 的局部色先例）。
+- 费用：零裁判调用、零令牌取用。未 git add、未 commit、未 push，工作区留待协调方统一提交。

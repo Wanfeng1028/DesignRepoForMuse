@@ -48,12 +48,12 @@ export default function WelcomeDark() {
           <BrandDots size={8} />
           <span className="text-[17px] font-bold text-dark-text">Medley</span>
         </div>
-        <div className="flex min-h-0 flex-1 flex-col justify-center px-7 pb-[28px]">
+        <div className="flex min-h-0 flex-1 flex-col justify-center px-7 pb-[23px]">
           <div className="flex items-baseline gap-2">
             <span className="text-welcome font-bold leading-[1.15] text-dark-text">Let&apos;s discover</span>
             <span className="h-[15px] w-[15px] shrink-0 self-center rounded-full bg-cursor-dot" />
           </div>
-          <div className="mt-2.5 text-[15px] text-[#b0b4b6]">Every top AI in one app.</div>
+          <div className="mt-3 text-[15px] text-[#b0b4b6]">Every top AI in one app.</div>
           <div className="mt-1 text-[15px] text-[#8d9195]">Claude, GPT, Gemini, DeepSeek, Kimi and GLM</div>
         </div>
         <div className="flex flex-col gap-2.5 px-6 pb-[19px]">
@@ -66,7 +66,7 @@ export default function WelcomeDark() {
           <Button variant="outline" className="h-[50px] border-[#2d3134] font-semibold text-dark-text">
             Try without an account
           </Button>
-          <div className="pl-[3.5px] pt-1 text-left text-caption leading-[1.45] text-[#808487]">
+          <div className="pl-[3.5px] pt-[7px] text-left text-caption leading-[1.33] text-[#808487]">
             By continuing, you confirm you&apos;re 18 or older and agree to the Terms and Privacy Policy.
           </div>
         </div>

@@ -1,0 +1,162 @@
+== agent-team-dark.png 390 844
+  zone row0: #111518 72% | #111518 72% | #111518 76%
+  zone row1: #1e1f23 52% | #1e1f23 64% | #1e1f23 58%
+  zone row2: #1e1f23 43% | #1e1f23 56% | #1e1f23 48%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== chat-dark-kyoto-en.png 390 844
+  zone row0: #111518 76% | #111518 62% | #111518 68%
+  zone row1: #111518 67% | #111518 61% | #111518 76%
+  zone row2: #111518 39% | #1e1f23 38% | #111518 39%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== chat-dark-lisbon-cn.png 390 844
+  zone row0: #111518 68% | #111518 64% | #111518 70%
+  zone row1: #111518 86% | #111518 88% | #111518 93%
+  zone row2: #111518 64% | #111518 60% | #111518 67%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== chat-dark-lisbon-en.png 390 844
+  zone row0: #111518 82% | #111518 68% | #111518 76%
+  zone row1: #111518 87% | #111518 86% | #111518 91%
+  zone row2: #111518 72% | #111518 69% | #111518 76%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== chat-info-sheet.png 390 844
+  zone row0: #f5f6f8 45% | #ffffff 34% | #f5f6f8 36%
+  zone row1: #ffffff 89% | #ffffff 96% | #ffffff 93%
+  zone row2: #ffffff 43% | #f5f6f8 48% | #ffffff 45%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #ffffff
+  status bg mode #f5f6f8
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== chat-light-router-en.png 390 844
+  zone row0: #f5f6f8 53% | #edeef0 63% | #edeef0 48%
+  zone row1: #f5f6f8 62% | #f5f6f8 60% | #f5f6f8 69%
+  zone row2: #f5f6f8 71% | #f5f6f8 69% | #f5f6f8 74%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #ffffff
+  status bg mode #f5f6f8
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== chat-light-savings-en.png 390 844
+  zone row0: #f5f6f8 79% | #f5f6f8 60% | #f5f6f8 73%
+  zone row1: #ffffff 69% | #ffffff 93% | #ffffff 77%
+  zone row2: #ffffff 67% | #ffffff 82% | #ffffff 68%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #ffffff
+  status bg mode #f5f6f8
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== chat-light-train-en.png 390 844
+  zone row0: #f5f6f8 85% | #f5f6f8 66% | #f5f6f8 81%
+  zone row1: #f5f6f8 89% | #f5f6f8 89% | #f5f6f8 92%
+  zone row2: #f5f6f8 68% | #f5f6f8 69% | #f5f6f8 76%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #ffffff
+  status bg mode #f5f6f8
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== credits-light.png 390 844
+  zone row0: #f5f6f8 74% | #f5f6f8 88% | #f5f6f8 97%
+  zone row1: #f5f6f8 85% | #f5f6f8 81% | #f5f6f8 74%
+  zone row2: #f5f6f8 84% | #f5f6f8 95% | #f5f6f8 94%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #f5f6f8
+  status bg mode #f5f6f8
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== home-light-cn.png 390 844
+  zone row0: #ffffff 99% | #ffffff 94% | #ffffff 98%
+  zone row1: #ffffff 92% | #ffffff 97% | #ffffff 100%
+  zone row2: #ffffff 76% | #ffffff 89% | #ffffff 88%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #ffffff
+  status bg mode #ffffff
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== home-light-en.png 390 844
+  zone row0: #f5f6f8 99% | #f5f6f8 91% | #f5f6f8 98%
+  zone row1: #f5f6f8 96% | #f5f6f8 96% | #f5f6f8 99%
+  zone row2: #f5f6f8 68% | #f5f6f8 66% | #f5f6f8 76%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #ffffff
+  status bg mode #f5f6f8
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== language-light.png 390 844
+  zone row0: #fdfdfd 86% | #fdfdfd 98% | #fdfdfd 98%
+  zone row1: #fdfdfd 86% | #fdfdfd 97% | #fdfdfd 98%
+  zone row2: #fdfdfd 93% | #fdfdfd 96% | #fdfdfd 99%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #fdfdfd
+  status bg mode #fdfdfd
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== model-picker-a.png 390 844
+  zone row0: #111518 72% | #111518 69% | #111518 76%
+  zone row1: #111518 85% | #111518 93% | #111518 97%
+  zone row2: #111518 84% | #111518 92% | #111518 94%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== model-picker-b.png 390 844
+  zone row0: #111518 69% | #111518 71% | #111518 75%
+  zone row1: #111518 75% | #111518 80% | #111518 85%
+  zone row2: #111518 91% | #111518 96% | #111518 95%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== pricing-dark.png 390 844
+  zone row0: #111518 70% | #111518 67% | #111518 75%
+  zone row1: #1e1f23 69% | #1e1f23 82% | #1e1f23 69%
+  zone row2: #111518 58% | #111518 49% | #111518 60%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== search-drawer-dark.png 390 844
+  zone row0: #16171a 67% | #16171a 71% | #16171a 44%
+  zone row1: #16171a 77% | #16171a 80% | #090b0d 48%
+  zone row2: #16171a 67% | #16171a 73% | #090b0d 44%
+  indicator rows 820-835 width 28-246
+  indicator row y=833 mode #515558
+  status bg mode #111518
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420
+== suspended-light.png 390 844
+  zone row0: #f5f6f8 83% | #f5f6f8 90% | #f5f6f8 93%
+  zone row1: #f5f6f8 88% | #f5f6f8 92% | #f5f6f8 98%
+  zone row2: #f5f6f8 85% | #f5f6f8 90% | #f5f6f8 97%
+  indicator rows 820-843 width 0-389
+  indicator row y=820 mode #f5f6f8
+  status bg mode #f5f6f8
+  status ink bbox x28-9 y356-21 n=734
+  status left bbox x28-9 y69-20 n=314 ; right bbox x287-10 y356-21 n=420
+== welcome-dark.png 390 844
+  zone row0: #0d0e10 86% | #0d0e10 42% | #0d0e10 32%
+  zone row1: #0d0e10 53% | #0d0e10 27% | #0d0e10 41%
+  zone row2: #0d0e10 16% | #edeef2 16% | #0d0e10 22%
+  indicator rows 832-835 width 143-246
+  indicator row y=833 mode #515558
+  status bg mode #0d0e10
+  status ink bbox x28-9 y356-21 n=749
+  status left bbox x28-9 y69-20 n=329 ; right bbox x287-10 y356-21 n=420

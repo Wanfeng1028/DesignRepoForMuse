@@ -23,7 +23,7 @@ export function ModelRow({
   last?: boolean
 }) {
   return (
-    <div className={cn('flex items-center gap-2.5 py-[11px]', !last && 'border-b border-dark-divider')}>
+    <div className={cn('flex items-center gap-2.5 py-[6px]', !last && 'border-b border-dark-divider')}>
       <ModelDot8 color={dot} />
       <div className="min-w-0 flex-1">
         <div className="text-item font-semibold text-dark-text">{name}</div>
@@ -53,7 +53,7 @@ export function ModelSection({
   children: ReactNode
 }) {
   return (
-    <div className="px-5 pt-5">
+    <div className="px-5 pt-3">
       <div className="text-[15px] font-bold text-dark-text">{title}</div>
       <div className="mt-0.5 text-secondary text-dark-sub">{desc}</div>
       <div>{children}</div>

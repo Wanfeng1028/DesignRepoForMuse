@@ -1,0 +1,49 @@
+home-light-en.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+home-light-cn.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+language-light.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+credits-light.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+suspended-light.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+chat-light-train-en.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+chat-light-router-en.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+chat-light-savings-en.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+chat-info-sheet.png light-indicator exact #bababa bbox (144, 832, 245, 835, 404) width 102 rows 4
+language hairline rows (count of #e6e7ea in x20-370 >200):
+  y=141 n=350
+  y=182 n=350
+  y=244 n=350
+  y=306 n=350
+  y=367 n=350
+  y=429 n=350
+  y=491 n=350
+  y=553 n=350
+  y=615 n=350
+  y=676 n=350
+  y=689 n=350
+welcome cursor #6ea9dd bbox (324, 311, 336, 323, 143)
+welcome brand-green (25, 65, 30, 70, 36)
+welcome brand-blue (32, 62, 37, 67, 36)
+welcome brand-pink (39, 58, 44, 63, 36)
+welcome google-btn #edeef2 rows (644, 695, 43)
+welcome patch (195,100) median #0d0e10
+welcome patch (60,100) median #0d0e10
+welcome patch (330,100) median #0e1013
+welcome patch (195,250) median #161e28
+welcome patch (60,450) median #0d0e10
+welcome patch (330,450) median #0d0e10
+welcome patch (60,650) median #edeef2
+welcome patch (330,650) median #edeef2
+welcome patch (195,830) median #0d0e10
+chat-dark-lisbon-en.png pill color rows (768, 823, 48)
+home-light-en.png pill color rows (769, 822, 54)
+chat-dark-lisbon-cn.png pill color rows (736, 823, 88)
+lisbon-en trailing #fd6718 bbox (60, 711, 66, 717, 45)
+lisbon-en stop-accent #e2a181 bbox (bottom area) (326, 776, 364, 816, 1152)
+lisbon-cn trailing #fd6718 bbox (355, 645, 361, 651, 45)
+pricing arc1 (21, 77, 28, 84, 56)
+pricing arc2 (46, 69, 53, 76, 55)
+pricing arc3 (71, 62, 78, 69, 56)
+pricing arc4 (96, 54, 103, 61, 56)
+pricing arc5 (121, 48, 128, 55, 56)
+pricing arc6 (146, 42, 153, 49, 55)
+picker-a handle #3a3b40 bbox (178, 44, 211, 48, 166)
+info-sheet handle #d8d9dd bbox (178, 202, 211, 205, 132)
