@@ -2,7 +2,7 @@
 
 @theme {
   /* Medley colors — measured values from muse/DESIGN-TOKENS.md (JPEG sampling +/-3). */
-  --color-dark-bg: #121316;
+  --color-dark-bg: #111518;
   --color-dark-card: #1e1f23;
   --color-dark-input: #1f2024;
   --color-dark-row: #2f3034;
@@ -18,15 +18,15 @@
   --color-light-dim: #9a9ba2;
   --color-accent: #e2a181;
   /* v1.3 accent split (Q12) — see src/tokens/index.ts. */
-  --color-welcome-dot: #d95e27;
+  --color-welcome-dot: #ff6521;
   --color-composer-mic-dark: #d95e27;
-  --color-composer-stop: #d66f44;
+  --color-composer-stop: #dfa282;
   --color-drawer-running-dot: #ffffff;
   --color-model-dots-first: #e2a181;
   --color-black-btn: #111214;
   --color-white-btn: #ffffff;
   --color-chart-amber: #8c553c;
-  --color-user-bubble-dark: #191a1e;
+  --color-user-bubble-dark: #1d242e;
   --color-user-bubble-light: #edeef0;
   --color-model-claude: #b0703c;
   --color-model-glm: #c65d7b;

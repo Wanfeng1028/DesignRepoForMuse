@@ -8,7 +8,7 @@
  */
 export const tokens = {
   colors: {
-    darkBg: "#121316",
+    darkBg: "#111518",
     darkCard: "#1E1F23",
     darkInput: "#1F2024",
     darkRow: "#2F3034",
@@ -26,9 +26,9 @@ export const tokens = {
     /** v1.3 accent split (Q12): one shared token painted four different
      * original colors, so each site now owns its token. Values are
      * measured, not copied from the shared token. */
-    welcomeDot: "#D95E27",
+    welcomeDot: "#FF6521",
     composerMicDark: "#D95E27",
-    composerStop: "#D66F44",
+    composerStop: "#DFA282",
     drawerRunningDot: "#FFFFFF",
     modelDotsFirst: "#E2A181",
     legendClaude: "#966955",
@@ -38,7 +38,7 @@ export const tokens = {
     blackBtn: "#111214",
     whiteBtn: "#FFFFFF",
     chartAmber: "#8C553C",
-    userBubbleDark: "#191A1E",
+    userBubbleDark: "#1D242E",
     userBubbleLight: "#EDEEF0",
     modelClaude: "#B0703C",
     modelGlm: "#C65D7B",

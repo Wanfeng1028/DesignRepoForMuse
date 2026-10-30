@@ -38,7 +38,7 @@ function LisbonChat({ dark }: { dark: boolean }) {
     <div className="px-6 py-2">
       <ChatMessage dark={dark} role="user">{d.lisbon.user}</ChatMessage>
       <ChatMessage
-        dark={dark} role="ai" model="GLM-5 · Auto" credits="28 credits"
+        dark={dark} role="ai" model="GLM-5 · Auto" sub="Searched 6 sites, thought for 3s" credits="28 credits" meta="1.1s 71 tok/s"
         blocks={[
           { kind: "paragraph", text: d.lisbon.aiIntro },
           { kind: "heading", text: d.lisbon.day1 },
@@ -347,6 +347,7 @@ export default function App() {
         <div className="flex flex-col gap-4">
           <Composer dark placeholder="Message Claude Sonnet 5.5" />
           <Composer dark={false} placeholder="Ask anything" mic="plain" />
+          <Composer dark={false} placeholder="有问题，尽管问" modelLabel="自动" sendDark stacked />
           <Composer dark={false} placeholder="有问题，尽管问" modelLabel="自动" sendDark />
           <Composer dark placeholder="有问题，尽管问" modelLabel="Sonnet 5.5" mic="stop" />
         </div>

@@ -25,7 +25,7 @@ export function SuggestionRow({ icon, text, badge, dark = false }: Suggestion & 
       <span className="inline-flex" style={{ color: sub }}>{suggestionIcon(icon, sub)}</span>
       <span className="flex-1">{text}</span>
       {badge && (
-        <span className={cn("rounded-[6px] border px-1.5 py-0.5 text-[11px] font-bold", dark ? "border-dark-divider text-dark-sub" : "border-light-divider text-light-sub")}>
+        <span className={cn("text-[13px]", dark ? "text-dark-sub" : "text-light-sub")}>
           {badge}
         </span>
       )}
@@ -82,7 +82,7 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
       <div className="px-5">
         {variant === "cn" && (
           <div className="mb-3.5">
-            <MedleyMark size={30} color={text} />
+            <MedleyMark size={27} color={text} />
           </div>
         )}
         <div className="text-greeting font-bold leading-[1.25] mb-[18px]">{greeting}</div>
@@ -100,6 +100,7 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
           modelLabel={composerModelLabel}
           mic={variant === "en" ? "plain" : "circle"}
           sendDark={variant === "cn"}
+          stacked={variant === "cn"}
         />
       </div>
     </div>

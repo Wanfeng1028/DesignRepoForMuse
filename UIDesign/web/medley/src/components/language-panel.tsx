@@ -11,7 +11,10 @@ export type LanguageRow = { name: string; sub?: string; selected?: boolean };
 export function LanguagePanel({ title, rows, footnote }: { title: string; rows: LanguageRow[]; footnote: string }) {
   return (
     <div className="bg-light-bg text-light-text">
-      <div className="px-5 pt-1 pb-2 text-page-title font-bold leading-[1.3]">{title}</div>
+      <div className="flex items-center gap-2 px-5 pt-1 pb-2 text-page-title font-bold leading-[1.3]">
+        <span className="inline-flex shrink-0">{Icon.back("#17181C")}</span>
+        {title}
+      </div>
       <div className="px-5">
         {rows.map((row) => (
           <div key={row.name} className="flex items-center border-b border-light-divider py-2.5">

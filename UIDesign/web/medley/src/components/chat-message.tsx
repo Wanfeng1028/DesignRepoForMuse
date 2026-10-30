@@ -57,12 +57,14 @@ export function AiMeta({ dark, model, sub }: { dark: boolean; model: string; sub
   );
 }
 
-/** Copy / refresh / like / dislike / more row, with optional leading credits label. */
-export function ActionRow({ dark, credits }: { dark: boolean; credits?: string }) {
+/** Copy / refresh / like / dislike / more row, with optional leading credits label.
+ * v1.4: optional meta (time + tok/s, CN Lisbon: 1.1s, 71 tok/s) appended to credits. */
+export function ActionRow({ dark, credits, meta }: { dark: boolean; credits?: string; meta?: string }) {
   const c = dark ? "#9A9BA2" : "#6B6C72";
+  const label = credits ? (meta ? `${credits} ${meta}` : credits) : meta;
   return (
     <div className="flex items-center gap-4 my-3">
-      {credits ? <span className={cn("text-secondary mr-auto", dark ? "text-dark-sub" : "text-light-sub")}>{credits}</span> : <span className="mr-auto" />}
+      {label ? <span className={cn("text-secondary mr-auto", dark ? "text-dark-sub" : "text-light-sub")}>{label}</span> : <span className="mr-auto" />}
       {Icon.copy(c)}
       {Icon.refresh(c)}
       {Icon.like(c)}
@@ -107,6 +109,7 @@ export function ChatMessage({
   model,
   sub,
   credits,
+  meta,
   blocks,
   children,
 }: {
@@ -115,6 +118,7 @@ export function ChatMessage({
   model?: string;
   sub?: string;
   credits?: string;
+  meta?: string;
   blocks?: ChatBlock[];
   children?: ReactNode;
 }) {
@@ -124,7 +128,7 @@ export function ChatMessage({
       {model && <AiMeta dark={dark} model={model} sub={sub} />}
       {blocks && <ChatBody dark={dark} blocks={blocks} />}
       {children}
-      <ActionRow dark={dark} credits={credits} />
+      <ActionRow dark={dark} credits={credits} meta={meta} />
     </div>
   );
 }

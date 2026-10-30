@@ -184,7 +184,7 @@ export const homeEnSuggestions: Suggestion[] = [
 export const homeCnSuggestions: Suggestion[] = [
   { icon: "news", text: "今天有什么新闻" },
   { icon: "pdf", text: "总结一份 PDF" },
-  { icon: "searchOrbit", text: "深度研究一个话题", badge: "Pro+" },
+  { icon: "searchOrbit", text: "深度研究一个话题", badge: "Pro" },
   { icon: "cards", text: "把笔记做成闪卡" },
 ];
 

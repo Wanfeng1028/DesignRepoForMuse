@@ -3,6 +3,136 @@
 > Scope: UIDesign/web/medley only. Desktop layout itself has no original
 > image; 1:1 covers tokens and component forms (see README residual 1).
 
+## v1.4 — 2026-10-30 (fix round; welcome full re-measure + full-set leak sweep)
+
+- Fix round, not a review round. No judge call was made in this round:
+  every verdict below rests on pixel samples / glyph-band measurements /
+  computed styles read out of the render, not on any judge verdict.
+  Build passes: pnpm build (tsc -b && vite build). No commit, no push,
+  no git add; changes left in the worktree for the coordinator.
+- Screenshots: docs/verification/rounds/v1.4/ — gallery-fullpage.png,
+  sec-*.png per section, measure/welcome-v13|v14.png+json (welcome
+  element shots + computed styles), measure-welcome.cjs, shot-sections.cjs,
+  crops/ (original-image crops used as measurement evidence).
+- BG VERDICT (the login-page question: is the original welcome bg one
+  colour throughout?). YES — flat solid #111518, no gradient, no glow,
+  no segmentation, inside the painted panel. Evidence (CN HD welcome,
+  panel interior x~32..534): clean band y620-950 x40-510 is 155,100 /
+  155,100 pixels exactly (17,21,24); rows y200/700/900 x40-510 and
+  columns x100/300/500 y620-950 each have exactly one distinct value.
+  A gradient or glow would vary per row/column; variance here is zero.
+  The two deviating values are NOT bg variation: (a) top-right
+  (23,27,30) = status-bar icon glyph anti-aliasing / JPEG halo cluster
+  at x470-510, y46-63 (plus logo halo); clean bg next to the icons is
+  (17,21,24). (b) (15,18,23) = the collage mockup drop-shadow strip at
+  x536-576, y64-1232 (96.8% of that value's pixels sit in the strip;
+  it repeats at the same right-edge offset on the Lisbon panel, its
+  colour is a blend toward the (12,13,17) collage canvas, and it is
+  outside the app's painted bg) — not reproduced on web, where there is
+  no phone-frame shadow. (c) (12,13,17) = collage canvas outside the
+  cards (top/bottom strips, gaps). (d) (19,20,24) top-left block = JPEG
+  halo around the "10:24" time glyphs; centre-top same rows read
+  (17,21,24). Web fix: darkBg #121316 (18,19,22) -> #111518 (17,21,24)
+  in tokens + index.css (flows to all dark surfaces; CN Lisbon interior
+  also reads (17,21,24), so this is consistent, not welcome-only).
+- WELCOME fixes (original -> v1.3 -> v1.4, all re-measured on CN HD):
+  W1 bg #111518 (above). W2 Try button: v1.3 filled dark pill #2F3034
+  was wrong — original interior is panel bg exactly, a transparent
+  outline pill with a 1px border ~#43474C (JPEG-blurred line peak
+  ~50; blur-corrected estimate, +-10): now transparent + border
+  #43474C, verified in render (interior (17,21,24), border (67,71,76)).
+  W3 Google fill #ECEEF2 -> #EDEEF2 (measured (237,238,242)); G disc
+  22px + grey ring -> plain white 20px disc, no ring (disc 28 img px,
+  sharp 236->254 edge, no grey ring pixels; G glyph 13px kept).
+  W4 dot #D95E27 -> #FF6521 (disc-interior median (255,101,33), centre
+  pixel (255,103,30); v1.3 value was a downscaled-crop average); dot
+  16px kept (22 img px -> 15.7 CSS). W5 wordmark 17 -> 19px (M-cap /
+  mark-height ratio 19/37 = 0.514, scale-free). W6 modelLine 15 -> 14px
+  local (C-cap 14 img px -> 13.9 CSS) + colour #8E9295 (glyph-core
+  median (142,146,149)). W7 tagline colour -> #B0B4B6 (core median
+  (176,180,182)); size 16 kept (E-cap 16 img px -> 15.9 CSS). W8 footnote
+  11px/1.45/dark-dim -> 12px/1.31/#84878B (B-cap 12 img px -> 12.0 CSS,
+  line pitch 22 img px -> 15.7 CSS, core median (132,135,139)) and
+  left edge aligned with the title (px-5 removed: footnote x matched
+  title x ~60 img px in the original). W9 gaps (glyph-to-glyph, render
+  screenshot px vs original converted at 390-width): title->tagline
+  32 -> 29 (orig 27.8-29.2, mt-4 -> mt-3); tagline->modelLine 17 kept
+  (orig 12.8-16.4, within range); Google->Try 13 -> 9 (orig 9.3,
+  gap-3 -> gap-2); Try->footnote 18 -> 19 (orig 18.5, footnote pt-2).
+  W10 title 41 kept: measured 42.8 CSS (L-cap 43 img px) is within
+  combined cap-ratio + anti-aliasing uncertainty; dot vertical kept
+  (dot bottom 1px from original relative to baseline). W11 footnote
+  wraps to 1 line at the 560px web panel width vs 2 lines at phone
+  width: platform adaptation, not forced.
+- SWEEP fixes (beyond welcome):
+  S1 userBubbleDark #191A1E -> #1D242E (CN Lisbon bubble fill dominant
+  (29,36,46), second bubble same family; token + css var; render
+  verified rgb(29,36,46)). S2 composerStop #D66F44 -> #DFA282 (HD5
+  Lisbon stop peach median (223,162,130); v1.3 value came from the
+  small overview collage and is demoted; CN Lisbon stop is a THIRD
+  form — white disc (237,238,242) + dark square — a locale variant,
+  see U2; gallery Lisbon is EN so it takes the peach form, render
+  verified rgb(223,162,130)). S3 CN home badge: data "Pro+" -> "Pro"
+  (original reads plain "Pro", glyph band 13 img px -> ~13px) and
+  badge rendering pill (11px bold bordered) -> plain 13px grey text
+  (no border/bg); the picker Fable "Pro+" badge is a different badge
+  and is untouched. S4 CN home mark 30 -> 27 (mark band 38 img px ->
+  27.1 CSS; greeting 27 confirmed exact: glyph band 38 img px ->
+  27.1 CSS). S5 CN home composer: single-row 48px -> stacked two-line
+  form (new Composer `stacked` prop: 46px placeholder row + 48px
+  controls row, ~94px total; CN home box ~103 CSS and CN Lisbon input
+  box 130 img px -> 93 CSS measured; EN composers unchanged
+  single-row; stacked demo added to the composer section). S6 Lisbon
+  GLM action row: "28 credits" -> "28 credits 1.1s 71 tok/s" (CN
+  Lisbon action line measured; numbers are locale-independent) via a
+  new ActionRow `meta` prop + ChatMessage passthrough; GLM sub line
+  "Searched 6 sites, thought for 3s" added (numbers measured from CN;
+  EN wording follows the Train pattern — flagged, see U8). S7 language
+  panel: back chevron added before "App language" (present in the CN
+  original, Icon.back exists in icons.tsx); rows/checkmark/footnote
+  otherwise match. S8 pricing card fill + credits bar colour families
+  cross-checked against HD5 (card (26,27,31) vs render #1E1F23 and
+  bar olive-gold/pink/rose families): consistent once HD5's overall
+  darker export is accounted for (its bg reads (13,14,16) vs CN
+  (17,21,24), its whites ~233-238 vs 255) — no token change.
+- UNCLOSED (not silently carried, not claimed as 1:1):
+  U1 HD5 dark bg (13,14,16) vs CN (17,21,24): source conflict; CN HD
+  wins for this set (precedent v1.3 Q12), HD5's darker export is the
+  likely cause but is not proven pixel-for-pixel. U2 CN Lisbon thread
+  is not rendered in the gallery (no CN Lisbon section): its stacked
+  composer and white-disc stop are locale variants on record only.
+  U3 No HD source exists in the three HD images for: drawer recent
+  colours (v1.3 C5), drawer pinned dots, legend/by-model direct-centre
+  samples (v1.3 P2-12), savings big-number size (P2-3), credits bar
+  exact height sequence (C9 remains a shape approximation), activity
+  dot colour (S13 inferred), agent-team / suspended / chat-info /
+  picker row-level colours — all rest on the v1.3 audit / OV15 small
+  collage (px-unreliable) and are unchanged here. U4 The 390px
+  CSS-width conversion (v1.3 P2-1) is still unprovable from JPEGs;
+  where possible this round used scale-free ratios instead. U5 Welcome
+  secondary greys come from JPEG glyph cores (+-~5 levels; title-white
+  calibration delta <=3); global dark-sub/dark-dim tokens untouched,
+  overrides are welcome-local only. U6 Try border #43474C is a
+  blur-corrected estimate (+-10). U7 Dark circle mic orange #D95E27
+  was not re-measured against an isolated HD dark-mic still; kept.
+  U8 Lisbon Claude action row (EN complete state, icons only) vs CN
+  streaming state (no action row yet): state difference, unresolved.
+  U9 Phone chrome (status bar, home indicator) is omitted in gallery
+  panels by design (no device frames); web layout is platform-adapted,
+  never claimed as screenshot 1:1. U10 Icon forms are Lucide
+  substitutions for the original custom icons (mandated library),
+  not pixel-identical. U11 Sections not re-measured at HD depth this
+  round (pricing, credits, picker, drawer, agent-team, suspended,
+  chat-info, desktop examples) were swept visually against v1.3
+  evidence + HD colours where available; their remaining per-element
+  values rest on the v1.3 audit and are NOT re-certified 1:1 here.
+- Scope discipline: only UIDesign/web/medley files were touched (see
+  git status: src/App.tsx, chat-message, composer, home-panel,
+  language-panel, welcome-panel, demo/data, index.css, tokens/index.ts,
+  plus the new docs/verification/rounds/v1.4/ evidence). Other sets'
+  worktree changes (app/*, web/airbuild) belong to parallel workers
+  and were not touched. No commit, no push, no git add.
+
 ## v1.3 — 2026-10-30 (fix round; audit-20261030 all 58 gaps + full-screen sweep)
 
 - Fix round, not a review round. Acceptance rests on measured data
