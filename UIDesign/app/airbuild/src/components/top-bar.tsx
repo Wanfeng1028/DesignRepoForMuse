@@ -1,4 +1,5 @@
-import { ChevronLeftIcon, CloudIcon, CloverIcon, EllipsisIcon, PlusIcon } from './icons.tsx'
+import { AirMarkIcon, ChevronLeftIcon, CloudIcon, EllipsisIcon, PlusIcon } from './icons.tsx'
+import { Avatar } from './avatar.tsx'
 import { Pill } from './ui/pill.tsx'
 
 export type ProjectIconProps = { label: string; swatch?: string }
@@ -35,22 +36,35 @@ export function ProjectMark({ label, swatch = '#dbe7d2' }: ProjectIconProps) {
 export type ChatTopBarProps = {
   project: string
   swatch?: string
+  /** 'project' = town mark (iphone-03 chat); 'person' = member avatar tile
+   *  (iphone-06 Ato / iphone-04 Colo top bars centre on the speaker, not a project) */
+  mark?: 'project' | 'person'
+  avatarColor?: string
+  /** compact bottom padding, used where the 844 frame must also fit a second
+   *  message below a tall cards row (briefing) */
+  compact?: boolean
   onBack?: () => void
   onMenu?: () => void
 }
 
-/** Chat top bar: back chevron (left circle) + centred project pill + … menu (right circle). */
-export function ChatTopBar({ project, swatch, onBack, onMenu }: ChatTopBarProps) {
+/** Chat top bar: back chevron (left circle) + centred mark + pill + … menu (right circle). */
+export function ChatTopBar({ project, swatch, mark = 'project', avatarColor, compact, onBack, onMenu }: ChatTopBarProps) {
   return (
-    <header className="relative flex items-start justify-between px-4 pt-2 pb-4">
-      <button type="button" aria-label="Back" onClick={onBack} className="ab-glass flex h-[42px] w-[42px] items-center justify-center rounded-full">
+    <header className={`relative flex items-start justify-between px-4 pt-2 ${compact ? 'pb-2' : 'pb-4'}`}>
+      <button type="button" aria-label="Back" onClick={onBack} className="ab-glass flex h-[46px] w-[46px] items-center justify-center rounded-full">
         <ChevronLeftIcon className="h-5 w-5" />
       </button>
       <div className="absolute left-1/2 top-1 flex -translate-x-1/2 flex-col items-center gap-1">
-        <ProjectMark label={project} swatch={swatch} />
+        {mark === 'person' ? (
+          <span className="flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-[12px] shadow-sm" aria-label={project}>
+            <Avatar name={project} color={avatarColor} size={38} />
+          </span>
+        ) : (
+          <ProjectMark label={project} swatch={swatch} />
+        )}
         <Pill className="px-2.5 py-0.5 text-[13px]">{project}</Pill>
       </div>
-      <button type="button" aria-label="More" onClick={onMenu} className="ab-glass flex h-[42px] w-[42px] items-center justify-center rounded-full">
+      <button type="button" aria-label="More" onClick={onMenu} className="ab-glass flex h-[46px] w-[46px] items-center justify-center rounded-full">
         <EllipsisIcon className="h-5 w-5" />
       </button>
     </header>
@@ -59,18 +73,22 @@ export function ChatTopBar({ project, swatch, onBack, onMenu }: ChatTopBarProps)
 
 export type HomeTopBarProps = { onAdd?: () => void }
 
-/** Home top bar: cloud icon (left circle) + four-leaf mark (centre) + + (right circle). */
+/** Home top bar: cloud icon (left circle, green sync arc at the bottom — the
+ *  original shows an arc, not a dot) + four-petal mark (centre) + + (right circle). */
 export function HomeTopBar({ onAdd }: HomeTopBarProps) {
   return (
     <header className="flex items-center justify-between px-4 pt-2 pb-1">
-      <button type="button" aria-label="Cloud" className="ab-glass relative flex h-[42px] w-[42px] items-center justify-center rounded-full">
+      <button type="button" aria-label="Cloud" className="ab-glass relative flex h-[46px] w-[46px] items-center justify-center rounded-full">
         <CloudIcon className="h-5 w-5" />
-        <span className="absolute bottom-1.5 right-2 h-1.5 w-1.5 rounded-full bg-[#2ecb70]" aria-hidden />
+        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 46 46" aria-hidden>
+          <path d="M6.5 26A17 17 0 0 0 14.5 37.7" fill="none" stroke="#2ecb70" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M14.5 37.7A17 17 0 0 0 31.5 37.7" fill="none" stroke="rgba(0,0,0,0.12)" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
       </button>
-      <span className="text-[#11110f]/25" aria-hidden>
-        <CloverIcon className="h-10 w-10" />
+      <span className="text-[#e0e0dc]" aria-hidden>
+        <AirMarkIcon className="h-10 w-10" />
       </span>
-      <button type="button" aria-label="New project" onClick={onAdd} className="ab-glass flex h-[42px] w-[42px] items-center justify-center rounded-full">
+      <button type="button" aria-label="New project" onClick={onAdd} className="ab-glass flex h-[46px] w-[46px] items-center justify-center rounded-full">
         <PlusIcon className="h-5 w-5" />
       </button>
     </header>

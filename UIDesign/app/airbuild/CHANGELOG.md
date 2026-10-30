@@ -171,3 +171,81 @@
 - 简报折角边长 20px 为自定值（原图待量）。
 - 头像为自绘区分形象，非官方肖像逐像素复刻。
 - 截图：`docs/verification/rounds/v1.6/`（framed）+ `bare/`（去边框）；量测脚本 `docs/verification/measure-orig.py`、`measure-v16*.py` 随证据留存。
+
+## v1.7 — 2026-10-30 — round 6：登录形态核查 + 全套漏网重扫重修（未 commit、未 push，留待协调方提交）
+
+- 决策总则（用户 2026-10-30 亲令）：只看结果、直接做、不许问；歧义按原图实测证据自行定夺并记入本条；round 5 接受过的残差不自动沿用，逐项重测；“已修复”只认实测到 1:1 的项，其余一律进未闭合。本轮零裁判调用（只认 PIL/DOM 实测）。
+
+### 工作一：登录形态核查——结论：本套无登录形态屏，不造屏
+
+- 核查过的屏（原图基准）：App Store iPhone 图 iphone-01（home）、iphone-02（home 全景）、iphone-03（聊天串）、iphone-04（网站草稿）、iphone-05（详情面板）、iphone-06（每日简报）——全部为已登录态应用内屏；App Store iPad 图 ipad-01（home+聊天）、ipad-02（聊天）、ipad-03（详情面板）、ipad-05（草稿+聊天）——同为已登录态（ipad-04 缺失 404，v1.0 已知）；~/workspace/airbuild-refs/user-photo-chatroom-crop.jpg（macOS 三栏聊天室，已登录）；~/workspace/airbuild-rea/AIRBUILD-REA-20261029.md（声明未登录分析的仅为公开网页层，其唯一账号提及为网页 mockup 的 account-button 控件，非登录屏）。
+- 包内资产核查：~/workspace/airbuild-pkg/app/AirBuild.app 的 en.lproj/Localizable.strings（725,312 字节）中 Sign / Log in / Welcome / password / Password 均为 0 次；Assets.car 为编译二进制、Linux 无官方读取工具（见未闭合 U13）；environment-local.bundle 内无 .xcassets。
+- 结论：本套不存在 welcome / sign-in / 账号入口屏；所谓“登录页底色”问题属于另一套的 welcome 屏，不导入本套。本套不新增任何登录屏。
+- 本套现有屏亦无账号入口控件可比对：顶栏仅有云同步钮、+ 钮、返回/更多钮，均已按原图核对（见下）。
+
+### round 5 漏网清单（本轮补修，每项：原图值 → 改前值 → 改后值）
+
+- L1 聊天气泡行高：原图行带 pitch 46–48px@1024（17.5–18.3px@390），改前 leading 1.35，改后 1.52（agent 与用户气泡同改）。正文 11.5px 经字带与行宽双重验证，维持。
+- L2 作者行：原图作者/正文字带比约 0.77–0.79、作者行宽 14px/字@1024（约 10px@390），改前 11px/mb-1，改后 10px/mb-[7px]（气泡顶-作者底 19px@1024 = 7.2px@390）。
+- L3 agent 气泡宽：原图 657px@1024 = 250px@390，改前行 pr-8 时渲染 266px，改后行 pr-12，实测 247px（Δ3，近 1:1）。
+- L4 文件卡宽：原图 659px@1024 = 251px@390，改前 68%（渲染 230px），改后 74%，实测 247px（Δ4，近 1:1；余差为头像半叠与舍入）。
+- L5 文件卡字：原图文件名/元数据字带 33px@1024（em 约 10.8px@390），改前 13/13px + py-3，改后 11/11px + py-3.5（高 58px vs 原图 60px，Δ2）。
+- L6 任务卡标题 glyph：原图为两行“圆+线”（首圆带勾），Lucide list-checks（线上的勾）形态错误；改后自绘 TaskGlyphIcon（同手形/tray share 的 Lucide 缺位先例）。标题 14→13px、条目 14→12px（原图条目圆 16px 已确认）。
+- L7 任务卡结构：原图 iphone-03 卡底完整圆角、无 View-task 行（iPad 卡有该行，手机基准优先），改前带 onAction 行，改后去掉；卡左下原图有 Ato 式重叠头像，改后任务行加 32px Ato 头像（items-end gap-2，卡 flex-1，行 pr-8），实测卡宽 263px（原图 257–264px，1:1）。
+- L8 顶栏圆钮：原图 120px@1024 = 45.7px@390（v1.5 的 48px 为误估），改前 42px，改后 46px（chat + home 通用）。
+- L9 home 云钮：原图为左下绿色弧段 + 淡灰轨迹，改前为绿圆点，改后为 SVG 双弧（绿弧 165°→120°、灰弧过底部）。home 中央标：原图为淡色实心四叶标（方孔、无茎），Lucide Clover（描边+茎）形态错误，改后自绘 AirMarkIcon（四圆角瓣 + 方孔，#e0e0dc）。
+- L10 状态栏：原图含信号 + wifi + 电池三组，改前缺 wifi，改后补三弧 wifi glyph（信号与电池之间）。
+- L11 作曲器手形：原图为实心黑手 + 白色掌心点，Lucide 描边手形态错误，改后 HandSolidIcon + 白点（v1.6 详情手形已确立的先例；v1.6 残留“掌心圆点因 Lucide 优先而去除”就此作废）。
+- L12 作曲器输入字：原图字带 31px@1024（含升降部，JPEG 阈值下限）+ 行宽 406px/25 字 → em 约 12px@390，改前 18px（约 2 倍），改后 12px（py-3 不变，行高与原图一致）。复核说明：初值 10px 系按 0.94em 带高误算，行宽法纠正为 12px。
+- L13 简报消息形态：原图 iphone-06 / iphone-04 的简报与草稿消息均无作者行、无头像（顶栏人物即发言人标识），改前为标准作者行消息，改后新增 Message bare 变体（仅气泡，行 pr-[72px]，气泡上限 266px，与聊天 agent 气泡一致；11.5px/1.52）。
+- L14 简报/草稿顶栏：原图顶栏中央为人物（简报 Ato 绿 #8fd14f、草稿 Colo 紫 #a78bfa 的圆角方 tile + 名字 pill），非项目标，改后 ChatTopBar 新增 mark="person" 变体（38px Avatar 裁成 rounded-[12px] 方 tile）。
+- L15 简报首卡结构：改前顺序为眉标→标题→正文→照片→At a glance→底部 plain 日期行，改后按原图重排为眉标（AirMark + Made in airbuild 小写）→标题→正文→药丸行（手形白 tile + 蓝/橙头像点 + Sep 14, 2026 pill + The Air Daily pill）→照片→At a glance；底部 plain 日期行删除（App 侧 date 入参相应改为 Sep 14, 2026）。
+- L16 简报折角：v1.6 的 20px 自定值错误，原图折边底腿约卡宽 35–40%、右腿约卡高 17%（227px 卡约 84×56px），改后 FoldCorner 改为 84×56px 渐变三角 + 投影，两卡同改。
+- L17 销售卡统计：原图 1204 Downloads +18%、$386 Est. Proceeds +10%（改前 +22% 系误读）+ 第三项 4.8 / US App Store，改后三列（label 10→9px 使 label+delta 单行），统计值 18→16px、label 11→10px。
+- L18 销售卡标题：原图两行“Hands Time [小手标] / Sales Report”，改后 title 入参改为 ReactNode（手形标 + br），两卡眉标 Share 由 plain 文本改为 pill。
+- L19 Performance 区：改前仅有点线无坐标，改后补副标题行（A STRONGER FINISH TO THE WORK 左 + Daily first downloads 右，单行不折）、Y 轴 100k/50k/20k/10k/0、面积填充 + 点线、周一至周五 5 点 [0.18, 0.5, 0.75, 0.3, 0.5]（改前 8 点配 5 日标签，点数与标签错位）。
+- L20 Discovery & Monetization 区：改前整区缺失，改后新增（标题、FROM DISCOVERY TO DOWNLOAD + Product page conversion: 14%、Search/Browse/Referrals 约 100%/88%/72% 蓝渐变条）。
+- L21 简报卡宽：原图首卡 598px@1024 = 227px@390，改前 62%（渲染 210px），改后 67%，实测 223px（Δ4，近 1:1）。
+- L22 简报第二消息被裁：改前第二消息被 overflow-hidden 卡行推出 844 框（v1.2 起的残留），改后经 DOM 量测逐轮裁剪直至完整可见：销售卡图表 64→22px 高、统计/标题/副标题间距收紧、首卡封面 105→70px（见 U12 取舍）、简报顶栏 compact（pb-4→pb-2）、列表 gap-4→gap-1.5、作曲器包 pb-3→pb-2；终态第二消息三行 + 气泡底 padding 全部在作曲器之上（截图目视确认）。
+- L23 草稿卡：流量灯原图 13.1px@390（34–35px@1024，pitch 57–58），改前 16px，改后 14px；分享标原图为 iOS tray+arrow，Lucide Share（三节点）形态错误，改后自绘 ShareTrayIcon；标题 24→20px、副标题 14→11px；网格 grid-cols-2 改为 grid-cols-[170px_1fr]（封面 144px）使标题折 2 行（Shape time / with your hands）、副标题 1 行；窗口圆角 28→24px、封面圆角 20→12px、封面注脚 12→10px。
+- L24 详情标题与 chevron：原图标题字带 28px@1024（em 11–13px@390），改前 17px，改后 12px；chevron 原图为 24px 浅灰圆 badge + 白色箭头（改前为裸灰箭头），改后灰圈白箭头，旋转 morph 保留（ChevronMorphIcon）。
+- L25 详情状态卡：原图状态字带 34px（12px@390）、更新字带 24px（9px@390）、绿点 22px@1024（10px@390）、角标 55px@1024（24px@390）且 glyph 为白色画笔（非勾选），改前 16/14/8/20px + 蓝圈白勾，改后 12/9/10/24px + 蓝圈白画笔（BrushIcon）；tile 52→56px、勾选钮 44px 维持（原图 100px@1024 = 43px@390，确认无误）。
+- L26 详情版本/进度/商店：原图 section label 27px@1024（12px@390），改前 15px/mt-5，改后 12px/mt-4；版本行 label/value/action-sub 改前 15/16/13px + py-3.5，改后 12/14/11px + py-3；进度行改前 15/13px + py-3.5，改后 13/11px + py-3；商店 glyph 28→30px（原图 70px@1024）、店名 16→15px、卡 padding p-4→p-3.5。
+- L27 详情进度第 4 行：改前 DetailPanel 忽略 done、一律渲染绿勾且只有 3 行；原图面板（ipad-03 同款面板完整版）实有第 4 行 Prepare Version / Build 3.1.5 (373) is ready to test，且未完成态为空心蓝环（非绿勾）；改后 done=false 渲染空心蓝环，App 侧补第 4 行；面板经上述缩尺寸后在 844 框内完整容纳（终态截图：Progress 卡底在 824 内高内，见验证）。
+- L28 项目 tile 预览：改前 Hands Time 为单表盘、Sleepy Coffee 为杯子、Casehot 为落日横幅；按 ipad-01 改后：Hands Time 为双 widget（Dot Counter 29 + Angle 时钟）+ 底部中央黑手 badge；Hourtown 地图 + 右下小地图 badge；Sleepy Coffee 为 mini 列表 + 杯 badge；Casehot 为气泡 note + 蓝头像点 + 手机 tile。tile 132px、pill 13px 维持（v1.6 已验证）。附：iphone-01 倾斜照的“白卡包 tile”旧读法已由 ipad-01 平铺裁图纠正——tile 本为全幅圆角矩形，无包层改动。
+
+### 决策与依据（本轮新定）
+
+- 手机基准优先：iphone-05 面板被营销裁切时，以 ipad-03 同款完整面板补全第 4 进度行；iPad 卡的 View-task 行不导入手机任务卡。
+- 字体量测方法：字带高度在 JPEG 阈值下易低估（细笔画丢失），凡行宽可算者以行宽法（字符均 advance 约 0.52em）校核字带法；作曲器 10px→12px、作者行 9px→10px 均为此次校核结果。
+- 844 框适配优先于单元素绝对值：简报封面 105→70px、图表 64→22px 为框内放下第二消息的显式取舍（记入 U12），其余文字与结构量测值未动。
+- 图标口径：Lucide 优先；仅当原图 glyph 类在 Lucide 中不存在时自绘（本轮新增 AirMarkIcon、ShareTrayIcon、BrushIcon、TaskGlyphIcon；状态切换类图标仍 morph、不硬切）。
+- 官方位图零复制：本轮量测用的原图裁图仅存于 docs/verification/work-v17/crops/，交付前已删除；仓库内不含任何官方位图（见清理项）。
+
+### 验证
+
+- 构建：`/home/hatch/.npm-global/bin/pnpm build`（tsc -b && vite build）通过。
+- 截图：docs/verification/rounds/v1.7/（framed：home/chat/briefing/draft/detail/components-390.png、chat-430.png）+ bare/（六张 370×824 去边框版）。出图方式沿用本套 shoot2 系（Playwright headless shell + dist 本地服务），未发明新方式。
+- 改后实测值（bare 图 PIL 量测）：文件卡 247px（目标 251）、任务卡 263px（目标 257–264）、agent 气泡 247px（目标 250）、简报首卡 223px（目标 227）；简报第二消息三行完整可见；详情面板 4 行进度全部在框内；草稿标题 2 行、副标题 1 行。
+
+### 未闭合（带实测原因，不编数）
+
+- U1 详情面板顶圆角 32px：未获可靠弧线拟合（营销裁切 + 面板底与画布近色），维持 32px（iOS sheet 惯例值）。
+- U2 详情商店卡高度：原图约 90px@1024 vs 渲染 87px，卡高维持（padding 已按量改 p-3.5；高度差 3px 内不硬凑）。
+- U3 成员行字号绝对值：iPad 左栏字带仅得名/状态比（约等大），无手机屏绝对 px；渲染 15/14px 维持，记为比值量测、非绝对量测。
+- U4 草稿封面注脚折行：原图 1 行，渲染在 Linux 回退字体下折 2 行（回退字体宽于 SF Rounded）；不改文案、不缩字号硬凑，记为字体回退适配残差。
+- U5 简报卡内文字行数：首卡 glance、销售卡 body 在回退字体下行数与原图营销裁图不完全一致；内容与字号已按量，行数差记为字体回退残差。
+- U6 项目 tile 预览细节：ipad-01 裁图仅能定结构（widget/地图/列表/note），tile 内小元素绝对尺寸未逐项量出；预览为结构级矢量重绘，非逐像素复刻。
+- U7 home 中央标瓣形：原图瓣为花瓣形（外凸弧），渲染为四圆角方瓣 + 方孔（40px 下观感一致）；瓣弧曲率未拟合，记为近似。
+- U8 作曲器手形掌心点位置：原图白点位于掌心，渲染白点位于 tile 中央偏上 2px；手形路径为 Lucide hand 实心化改绘，掌心坐标未逐像素标定。
+- U9 详情状态卡角标底色：画笔 glyph 已确认，角标底色在裁图中与 tile/阴影混杂，维持旧蓝 #0088fe，未独立取样。
+- U10 顶栏 pill 与玻璃材质：玻璃钮直径 46px 已量，pill 内边距与玻璃高光参数无独立量测值，维持 v1.6。
+- U11 iPad 双栏 / ipad-04 / 深色 / 设置账号屏：沿用 v1.6 未闭合（本套只渲染手机单列；ipad-04 官方图 404；无公开图不造屏）。
+- U12 简报封面与图表高度取舍：封面 105→70px、图表 64→22px 偏离原图量测值，系为 844 框内放下第二消息的显式取舍；如后续放宽框高或改滚动呈现，应先恢复 105px/64px 再重验。
+- U13 Assets.car：沿用 v1.6 未闭合（Linux 无官方读取工具）。
+- U14 v1.6 残留清理：v1.6 残留中的“详情底溢”本轮已闭合（L27）；“掌心圆点去除”已作废（L11）；“折角 20px 自定值”已纠正（L16）；其余 v1.6 残留（头像非逐像素复刻、SF 回退）继续有效。
+
+### 清理与范围确认
+
+- 已删除 docs/verification/work-v17/crops/（全部官方原图裁图）；保留 work-v17/before/（v1.6 渲染基线）、量测/探针脚本与 shoot.cjs、measure17*.cjs 作为工作证据。
+- 本轮只改 UIDesign/app/airbuild/ 内文件；未动其他三套、未动 UIDesign/CHANGELOG.md 总账、未动服务器/令牌/BotsRouter/X/其他项目；未 git add、未 commit、未 push。

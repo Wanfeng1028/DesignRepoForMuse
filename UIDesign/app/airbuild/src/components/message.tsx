@@ -11,25 +11,36 @@ export type MessageProps = {
   avatarColor?: string
 }
 
-/** Chat message row: avatar + author line + bubble. User bubbles carry no avatar/author line. */
-export function Message({ author, role, children, kind = 'agent', avatarColor }: MessageProps) {
+/** Chat message row: avatar + author line + bubble. User bubbles carry no avatar/author line.
+ *  `bare` = briefing/draft style (iphone-06/iphone-04): no avatar, no author line,
+ *  bubble only — the top bar already identifies the speaker there. */
+export function Message({ author, role, children, kind = 'agent', avatarColor, bare }: MessageProps & { bare?: boolean }) {
   if (kind === 'user') {
     return (
       <div className="flex justify-end pl-16">
-        <div className="rounded-[20px] bg-[#0088fe] px-4 py-3 text-[11.5px] leading-[1.35] text-white shadow-[0_5px_16px_rgba(0,0,0,0.05)]">
+        <div className="rounded-[20px] bg-[#0088fe] px-4 py-3 text-[11.5px] leading-[1.52] text-white shadow-[0_5px_16px_rgba(0,0,0,0.05)]">
+          {children}
+        </div>
+      </div>
+    )
+  }
+  if (bare) {
+    return (
+      <div className="flex pr-[72px]">
+        <div className="rounded-[20px] border border-black/[0.045] bg-white px-4 py-3 text-[11.5px] leading-[1.52] text-[#11110f] shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
           {children}
         </div>
       </div>
     )
   }
   return (
-    <div className="flex items-end gap-2 pr-8">
+    <div className="flex items-end gap-2 pr-12">
       <Avatar name={author ?? 'Agent'} color={avatarColor} size={32} className="shrink-0" />
       <div className="min-w-0">
-        <p className="mb-1 ml-1 text-[11px] font-semibold text-[#11110f]">
+        <p className="mb-[7px] ml-1 text-[10px] font-semibold text-[#11110f]">
           {author} {role ? <span className="font-normal text-black/45">@{role}</span> : null}
         </p>
-        <div className="rounded-[20px] border border-black/[0.045] bg-white px-4 py-3 text-[11.5px] leading-[1.35] text-[#11110f] shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
+        <div className="rounded-[20px] border border-black/[0.045] bg-white px-4 py-3 text-[11.5px] leading-[1.52] text-[#11110f] shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
           {children}
         </div>
       </div>

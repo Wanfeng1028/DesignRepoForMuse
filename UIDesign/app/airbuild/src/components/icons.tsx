@@ -48,7 +48,57 @@ export function HandSolidIcon(props: P) {
   )
 }
 
-/** M1 — chevron down/up morph: pure rotation transition, no hard cut. */
+/** AirBuild four-petal mark (own vector redraw): four rounded petals around a
+ *  square hole, pale solid fill, no stem. The home top-bar centre mark and the
+ *  briefing eyebrow use this — Lucide clover (outline + stem) is visibly wrong
+ *  against iphone-01/ipad-01, where the mark is a pale solid. */
+export function AirMarkIcon(props: P) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 40 40" fill="currentColor" aria-hidden {...props}>
+      <rect x="2" y="2" width="16" height="16" rx="8" />
+      <rect x="22" y="2" width="16" height="16" rx="8" />
+      <rect x="2" y="22" width="16" height="16" rx="8" />
+      <rect x="22" y="22" width="16" height="16" rx="8" />
+    </svg>
+  )
+}
+
+/** iOS share glyph (own vector redraw): arrow up out of a tray. Lucide Share
+ *  (three nodes) is the wrong glyph class against iphone-04's chrome. */
+export function ShareTrayIcon(props: P) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
+      <path d="M12 15V4m0 0 3.5 3.5M12 4 8.5 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 11v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+/** Paintbrush glyph (own vector redraw) for the detail status-card badge:
+ *  iphone-05's badge carries a diagonal brush, not a check. */
+export function BrushIcon(props: P) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
+      <path d="M17.5 3.5c1.2 1.2 1 3-.3 4.6L9.6 16.2c-.5.5-1.2.7-1.9.5l-2.4-.6c-.7-.2-1-1-.6-1.6l1.4-2.2c.3-.5.8-.8 1.4-.8l7.4-7.2c1.3-1.2 3-1.3 4.2-.3Z" />
+      <path d="M6.5 18.5c-1.3.3-2.3 1.3-2.6 2.6-.1.6.4 1.1 1 1 .9-.2 1.7-.9 2.1-1.9.2-.7-.1-1.4-.5-1.7Z" />
+    </svg>
+  )
+}
+
+/** Task-list title glyph (own vector redraw): two rows of circle + line, the
+ *  first circle checked. Lucide list-checks (checks on lines) misses the
+ *  circles visible in iphone-03's task card title. */
+export function TaskGlyphIcon(props: P) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
+      <circle cx="5" cy="7" r="2.6" fill="currentColor" />
+      <path d="m3.8 7 1 1 1.6-1.8" stroke="#fff" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11 7h9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="5" cy="17" r="2.6" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M11 17h9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  )
+}
 export function ChevronMorphIcon({ open, ...props }: P & { open: boolean }) {
   return (
     <ChevronDown

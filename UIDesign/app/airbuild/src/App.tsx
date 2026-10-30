@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AirDailyCard, SalesReportCard } from './components/briefing-cards.tsx'
-import { ChevronMorphIcon, PlusCheckMorphIcon, TaskCheckMorphIcon } from './components/icons.tsx'
+import { ChevronMorphIcon, HandSolidIcon, PlusCheckMorphIcon, TaskCheckMorphIcon } from './components/icons.tsx'
 import { Avatar } from './components/avatar.tsx'
 import { Composer } from './components/composer.tsx'
 import { DetailPanel } from './components/detail-panel.tsx'
@@ -57,21 +57,23 @@ function ChatScreen() {
           I&rsquo;ve put together a direction for the first-session experience. The town stays at the center, with just enough guidance to help someone get started.
         </Message>
         <div className="flex items-center justify-end">
-          <div className="w-[68%]"><FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" /></div>
+          <div className="w-[74%]"><FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" /></div>
           <Avatar name="Ampo" color="#9b7bf3" size={36} className="-ml-2 shrink-0" />
         </div>
         <Message author="Ampo" role="Product manager" avatarColor="#9b7bf3">
           I&rsquo;ll keep the same visual language across both sizes. On iPad, the wider canvas gives the town more space while keeping the session controls easy to reach.
         </Message>
-        <div className="pr-14"><TaskListCard
-          title="Make the first session rewarding"
-          items={[
-            { label: 'Define the first-session flow' },
-            { label: 'Build the completion reveal' },
-            { label: 'Check the layout on iPhone and iPad' },
-          ]}
-          onAction={() => undefined}
-        /></div>
+        <div className="flex items-end gap-2 pr-8">
+          <Avatar name="Ato" color="#8fd14f" size={32} className="shrink-0" />
+          <div className="min-w-0 flex-1"><TaskListCard
+            title="Make the first session rewarding"
+            items={[
+              { label: 'Define the first-session flow' },
+              { label: 'Build the completion reveal' },
+              { label: 'Check the layout on iPhone and iPad' },
+            ]}
+          /></div>
+        </div>
         <Message kind="user">
           Yes. Keep the soft green palette. And please make sure the town has room to breathe on iPad rather than just stretching the phone layout.
         </Message>
@@ -83,37 +85,38 @@ function ChatScreen() {
 function BriefingScreen() {
   return (
     <PhoneFrame label="Daily briefing — iphone-06">
-      <ChatTopBar project="Ato" swatch="#cfe8a8" />
-      <MessageList>
-        <Message author="Ato" role="Product Manager" avatarColor="#8fd14f">
+      <ChatTopBar project="Ato" swatch="#cfe8a8" mark="person" avatarColor="#8fd14f" compact />
+      <MessageList className="gap-1.5">
+        <Message bare author="Ato" role="Product Manager" avatarColor="#8fd14f">
           Your daily report is ready. Hands Time led growth, while two new Mood reviews raised questions.
         </Message>
         <div className="flex gap-3 overflow-hidden -mr-4 pr-4">
-          <div className="w-[62%] shrink-0">
+          <div className="w-[67%] shrink-0">
             <AirDailyCard
               headline="Hands Time led the growth. Mood deserves a closer look."
               body="On Sep 13, your three apps recorded 360 downloads and $58 in estimated proceeds. Hands Time contributed most of the increase."
-              date="Sep 14, 2026 · The Air Daily"
+              date="Sep 14, 2026"
               glance="Downloads and estimated proceeds for Sep 13, compared with the last seven days of downloads."
             />
           </div>
-          <div className="w-[62%] shrink-0">
+          <div className="w-[67%] shrink-0">
             <SalesReportCard
-              title="Hands Time — Sales Report"
+              title={<>Hands Time <HandSolidIcon className="inline h-3.5 w-3.5 align-baseline" /><br />Sales Report</>}
               body="Downloads are growing steadily over the past few months, showing a consistent upward trend that reflects stronger user engagement."
               stats={[
                 { value: '1204', label: 'Downloads', delta: '+18%' },
-                { value: '$386', label: 'Est. Proceeds', delta: '+22%' },
+                { value: '$386', label: 'Est. Proceeds', delta: '+10%' },
+                { value: '4.8', label: 'US App Store' },
               ]}
-              series={[0.15, 0.3, 0.25, 0.45, 0.55, 0.5, 0.7, 0.85]}
+              series={[0.18, 0.5, 0.75, 0.3, 0.5]}
             />
           </div>
         </div>
-        <Message author="Ato" role="Product Manager" avatarColor="#8fd14f">
+        <Message bare author="Ato" role="Product Manager" avatarColor="#8fd14f">
           Check Mood&rsquo;s first-entry flow. Both reviews mention difficulty starting. Try the latest version before deciding changes.
         </Message>
       </MessageList>
-      <div className="px-4 pb-3">
+      <div className="px-4 pb-2">
         <Composer initialValue="Any updates on Hands Time?" />
       </div>
     </PhoneFrame>
@@ -123,10 +126,10 @@ function BriefingScreen() {
 function DraftScreen() {
   return (
     <PhoneFrame label="Website draft — iphone-04">
-      <ChatTopBar project="Colo" swatch="#c9b8f5" />
+      <ChatTopBar project="Colo" swatch="#c9b8f5" mark="person" avatarColor="#a78bfa" />
       <MessageList className="gap-3 py-2">
         <Message kind="user">Design a website for Hands Time. Keep it simple and let the app speak for itself.</Message>
-        <Message author="Colo" role="Designer" avatarColor="#a78bfa">I kept the layout simple. Here&rsquo;s the first draft.</Message>
+        <Message bare author="Colo" role="Designer" avatarColor="#a78bfa">I kept the layout simple. Here&rsquo;s the first draft.</Message>
         <WebsiteDraftCard
           url="handstime.app"
           headline="Shape time with your hands"
@@ -159,6 +162,7 @@ function DetailScreen() {
             { title: 'First Build', sub: 'com.time.JustTime', done: true },
             { title: 'Create app', done: true },
             { title: 'Upload to TestFlight', sub: 'Build 3.1.5 (373)', done: true },
+            { title: 'Prepare Version', sub: 'Build 3.1.5 (373) is ready to test', done: false },
           ]}
         />
       </div>

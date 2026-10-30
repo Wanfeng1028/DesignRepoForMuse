@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowUpIcon, HandIcon, PlusIcon } from './icons.tsx'
+import { ArrowUpIcon, HandSolidIcon, PlusIcon } from './icons.tsx'
 
 export type ComposerProps = {
   placeholder?: string
@@ -16,8 +16,9 @@ export function Composer({ placeholder = 'Message', initialValue = '', onSend }:
   return (
     <div className="rounded-[32px] border border-black/[0.06] bg-white p-3.5 shadow-[0_10px_28px_rgba(0,0,0,0.08)]">
       <div className="flex gap-2.5">
-        <button type="button" aria-label="Quick actions" className="flex h-[68px] w-[68px] items-center justify-center rounded-[16px] bg-[#f4f4f2] text-[#11110f]">
-          <HandIcon className="h-8 w-8" />
+        <button type="button" aria-label="Quick actions" className="relative flex h-[68px] w-[68px] items-center justify-center rounded-[16px] bg-[#f4f4f2] text-[#11110f]">
+          <HandSolidIcon className="h-8 w-8" />
+          <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-[2px] rounded-full bg-white" aria-hidden />
         </button>
         <button type="button" aria-label="Attach" className="flex h-[68px] w-[68px] items-center justify-center rounded-[16px] bg-[#f4f4f2] text-black/50">
           <PlusIcon className="h-7 w-7" />
@@ -29,7 +30,7 @@ export function Composer({ placeholder = 'Message', initialValue = '', onSend }:
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           aria-label="Message input"
-          className="min-w-0 flex-1 bg-transparent py-3 text-[18px] text-[#11110f] outline-none placeholder:text-black/35"
+          className="min-w-0 flex-1 bg-transparent py-3 text-[12px] text-[#11110f] outline-none placeholder:text-black/35"
         />
         <button
           type="button"

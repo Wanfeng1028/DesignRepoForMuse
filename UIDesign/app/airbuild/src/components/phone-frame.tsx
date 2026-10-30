@@ -24,6 +24,11 @@ export function PhoneFrame({ children, width = 390, height = 844, className, lab
             <span className="absolute left-1/2 top-2.5 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-black" aria-hidden />
             <span className="flex items-end gap-1" aria-hidden>
               <span className="flex items-end gap-[2px]"><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 4 }} /><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 6 }} /><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 8 }} /><span className="block w-[3px] rounded-[1px] bg-black" style={{ height: 10 }} /></span>
+              <svg className="ml-1" width="16" height="11" viewBox="0 0 16 11" aria-hidden>
+                <path d="M1.5 8.5a9 9 0 0 1 13 0" fill="none" stroke="black" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M4 6a5.5 5.5 0 0 1 8 0" fill="none" stroke="black" strokeWidth="1.6" strokeLinecap="round" />
+                <circle cx="8" cy="4" r="1.3" fill="black" />
+              </svg>
               <span className="ml-1 inline-block h-[11px] w-[22px] rounded-[3px] border border-black/40 px-[2px]"><span className="block h-full w-3/4 rounded-[1px] bg-black/80" /></span>
             </span>
           </div>
