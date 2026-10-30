@@ -131,3 +131,55 @@ shadcn 式源码进仓；禁 Ant Design / MUI / Next.js。
 - 两套 Medley 的每轮比对一律以这 3 张为准；中文屏文字、模型价格、
   积分图表等此前“看不清”的项不再列为不可确认，必须逐项抠到 1:1。
   AirBuild 两套依据不变（App Store 高清图 + 用户照片 + rea 报告）。
+
+## 第 3 轮（2026-10-30，裁判：deepseek-v4-flash-vision，经新裁判密钥）
+
+- 结论：四套全部无 verdict、无代码改动、无 bump、各套 CHANGELOG 未写条目。
+  本轮唯一提交内容是各套裁判工具与验证证据（见下），产品代码零改动。
+  四套构建协调人逐一重验全过（pnpm build）。
+- 裁判通道：新裁判密钥 id=11（muse-judge-20261030，白名单限制关），值只存
+  服务器 /etc/botsrouter/muse_judge_token.txt，调用时 SSH sudo cat 现取现用、
+  只放内存；本站密钥为 48 字符无前缀，带 sk- 前缀会 401。08:37 探针曾 200
+  通过，但本轮实测三路失败，互不相同：
+  - app/medley：唯一有效调用回 429 Cluster TPM rate limit exceeded
+   （upstream_request_rejected），与上一轮免费额度限流不同；welcome v1.3
+    重验等 6 屏全部 pending；Kyoto 裁切已备好（rounds/round3/orig-kyoto.jpg），
+    6 张并排图已备好待送。版本 v1.3 保持。
+  - web/airbuild：2 次调用无 verdict——第 1 次传输 IncompleteRead，第 2 次
+    HTTP 200 但 reasoning 占满 6000 tokens（finish_reason length，content 为
+    空），实耗 7788 tokens 未产出 verdict；collapsed 两屏未送判。版本 v1.1 保持。
+  - app/airbuild：6 次调用无有效 verdict——3 次 200 但推理式全文无 VERDICT 行
+    （约 18000 completion tokens 耗尽，prompt 长短无关）、2 次间歇性 402、
+    1 次传输失败；chat/detail/home 无效，draft/briefing 未发；v1.5 保持，
+    v1.6 候选一项未落地；5 张合成图与修正后裁切坐标已备好
+    （judge/CROPS-v1.6.md）。上一轮 chat 的 8 项差异未获本轮复核确认。
+  - web/medley：4 次调用 0 verdict——3 次 402 Insufficient balance、1 次 200 流
+    截断；J1–J12 全部 pending；D-01 未动。版本 v1.1 保持。
+- 402 裁决：402 不在“连续 429/401/403 三次”字面停手条件内，但属余额硬失败
+  且两屏独立复现，协调人裁决按停手处理；另 app/airbuild 的 402 为间歇性
+  （同屏重试可 200），更像路由到余额不足上游渠道的抖动，需核查余额与路由。
+- 传输教训重申：urllib 遇 chunked 大响应多次 IncompleteRead/RemoteDisconnected；
+  web/airbuild 与 app/airbuild 已改走 curl（token 不进 argv、不落文件），
+  下一轮 judge 脚本优先 curl。
+- 旧管线作废提醒：web/medley 旧 run-judge.sh/judge.py（conatus + pipeline
+  密钥 + 自动补 sk- 前缀）、app/airbuild 旧 judge-single.py（conatus + sk-
+  前缀）均已作废，下一轮不要误用。新管线：web/airbuild judge-v2.py、
+  app/airbuild judge/judge-vision.py、web/medley scripts/judge-deepseek.py、
+  app/medley rounds/round3/judge-runner.py。
+- 本轮提交文件（仅新增验证产物 + 本总账条目；另有两处清理：web/airbuild
+  两张 gallery 重出图无 verdict 故还原、web/medley J1.err 还原回上一轮 429
+  证据，402 证据记在 round3-attempts.log 里不丢失）：
+  - web/airbuild：docs/verification/judge-v2.py、judge-v2-main.json、
+    window-main.png、window-sidebar-collapsed.png、window-preview-collapsed.png
+  - app/airbuild：docs/verification/judge/（judge-vision.py、make-composites.py、
+    CROPS-v1.6.md、prompts/、composites/、renders/、verdicts/、cropcheck/）
+  - web/medley：scripts/judge-deepseek.py、scripts/run-judge-deepseek.sh、
+    docs/verification/rounds/v1.1/judge/round3-attempts.log、verdicts/J2.err、verdicts/J2.txt
+  - app/medley：docs/verification/rounds/round3/（orig-kyoto.jpg、6 张并排图、
+    judge-runner.py、prompt 两份、429 证据）
+- 下一轮开工前需拍板（选择题，见最终报告）：① 裁判模型/参数（reasoning 吃
+  预算：换无推理模型 / 调 max_tokens / 换可分离 reasoning 字段的调用方式）；
+  ② 402 路由余额核查（哪条渠道余额不足、是否充值）；③ 429 Cluster TPM 窗口
+  （何时恢复）。
+- 版本状态：web/airbuild v1.1 pending、app/airbuild v1.5 pending、web/medley
+  v1.1 pending、app/medley v1.3 pending；无一套 clean。

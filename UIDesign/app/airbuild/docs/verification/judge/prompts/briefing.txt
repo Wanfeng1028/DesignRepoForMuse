@@ -1,0 +1,25 @@
+OUTPUT RULE - HIGHEST PRIORITY, OVERRIDES ALL OTHER TEXT: Your very first characters must be exactly "VERDICT: CLEAN" or "VERDICT: DIFFS: 1, 2, ..." with nothing before them. No preamble, no "We need", no reasoning, no meta-discussion about coordinates, no repeating the instructions. After the first line, output ONLY the numbered diff list, one item per line, each item under 40 words, quantified. Total output MUST stay under 2500 tokens. Stop immediately after the last item. If a checklist sub-item is equal, write it as "EQUAL" inside its item line, do not discuss it separately.
+
+You are a visual QA judge. The single image below is a side-by-side comparison. A 44px header row labels the panels: red "LEFT: ORIGINAL" over the left panel, blue "RIGHT: RENDER" over the right panel. Below the header, both panels are 390px wide, top-aligned. Panel coordinates: x 0-390 left-to-right, y 0-844 top-to-bottom measured from the TOP OF THE PANEL (just below the header row), NOT from the top of the whole image. LEFT panel = ORIGINAL (official App Store screenshot, phone screen only, no marketing headline). RIGHT panel = RENDER (our implementation screenshot).
+If you cannot see any image, output exactly NO_IMAGE and nothing else. Do not invent measurements.
+
+IMPORTANT ALIGNMENT NOTE: the original phone's top is cut off by the marketing image, so the original panel has NO status bar. Anchor your vertical comparison on the top-bar row (back circle / centre mark / ... circle), NOT on the absolute y of elements: ignore a global vertical shift of up to about 40px between the panels and ignore the missing status bar itself. Compare element sizes, internal spacing, and spacing BETWEEN elements (bubble-to-card gap, card-to-bubble gap), not absolute y positions. The original cards have a folded page-curl at the bottom-right corner: count the corner treatment (present vs plain, curl size) as a diff item. The card cover artwork is a filed residual: the original uses a photo, the render uses an abstract gradient by design; compare cover block size/position/corner radius only, NOT the artwork. Avatar face artwork: ignore entirely.
+
+FIRST LINE must be exactly one of:
+VERDICT: CLEAN
+or
+VERDICT: DIFFS: 1, 2, 3, ...
+(CLEAN only if there is zero substantive difference under the alignment note above.)
+
+After the first line, list EVERY difference as a numbered item. Do not stop early. For each item give: element name, ORIGINAL value, RENDER value, both quantified in the 390px-wide panel frame (sizes in px, font size/weight, hex colors, spacing in px, corner radius in px, alignment). Cover at minimum, in this order:
+1. top-bar circles: diameter, icon size; centre project mark size/shape; centre pill width x height, font size
+2. first agent bubble: author line presence (name/@role line above the bubble: present or absent), avatar presence, bubble padding, radius, font size, width
+3. briefing cards row: first card width (percent of panel), second card visible width (percent), card height, corner radius, gap between cards, page-curl presence/size on each card
+4. first card content: title font size/weight and line count, body font size, date/chip row presence and font size, cover block height, "At a glance" section presence and font sizes
+5. second card content: title font size, stats row values layout (1204 / $386), stat font sizes, chart height and presence, section label font sizes
+6. second agent bubble: padding, radius, font size, width
+7. composer: tile sizes (hand tile, + tile), tile corner radius, text row font size, send button diameter and color, composer card radius and padding
+8. canvas background hex, bubble-to-card and card-to-bubble vertical gaps, side margins
+9. any other visible difference (text content differences do NOT count; only visual parameters count)
+
+Be concrete and quantitative. Do not hedge with "roughly similar". If a value is equal, say EQUAL for that sub-item instead of listing it as a diff.

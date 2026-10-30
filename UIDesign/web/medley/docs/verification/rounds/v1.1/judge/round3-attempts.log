@@ -1,0 +1,5 @@
+round3 attempt log (no tokens recorded; judge key via live SSH fetch only)
+J1 attempt1: HTTP 402 {"error":{"message":"Insufficient balance. Please top up.","type":"insufficient_quota","param":"","code":402}}
+J1 attempt2: HTTP 200 stream truncated in transit: http.client.IncompleteRead (18104 bytes read, 6391 more expected); no verdict obtained
+J1 attempt3: HTTP 402 {"error":{"message":"Insufficient balance. Please top up.","type":"insufficient_quota","param":"","code":402}} (same as attempt1; attempt2's 200-stream truncation looks like the exception, not the norm)
+J2 attempt1: HTTP 402 {"error":{"message":"Insufficient balance. Please top up.","type":"insufficient_quota","param":"","code":402}} -- confirms systemic billing failure, not J1-specific; queue halted, no further judge calls made
