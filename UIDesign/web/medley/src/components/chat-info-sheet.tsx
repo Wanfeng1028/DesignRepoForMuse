@@ -1,4 +1,4 @@
-import { ModelDots, ModelDot } from "./medley-mark";
+import { BrandDots, ModelDot } from "./medley-mark";
 import { Icon } from "./icons";
 
 export type ChatInfoTool = { name: string; right: string };
@@ -86,7 +86,7 @@ export function ChatInfoSheet({
         </div>
       </div>
       {replies.map((r) => (
-        <div key={r.model} className="flex items-center justify-between border-t border-light-divider py-[9px]">
+        <div key={r.model} className="flex items-center justify-between border-t-[0.5px] border-light-divider py-[9px]">
           <span className="inline-flex items-center gap-2 text-[14px] font-bold">
             <span className="h-2 w-2 rounded-full" style={{ background: r.dot }} />
             {r.model}
@@ -107,9 +107,10 @@ export function ChatInfoBackdrop({ bubbleText, modelLine }: { bubbleText: string
     <div className="opacity-45 bg-light-bg px-5 py-3" aria-hidden="true">
       <div className="flex items-center justify-between pb-3">
         <span className="inline-flex" style={{ color: sub }}>{Icon.menu("#17181C")}</span>
-        {/* v1.3 sweep: thread top-bar Auto is bare (no pill), unlike Home's. */}
+        {/* v1.3 sweep: thread top-bar Auto is bare (no pill). v1.6: its
+            dots are the 3-dot diagonal BrandDots, like every other Auto. */}
         <span className="inline-flex items-center gap-1.5 px-1 py-[7px] text-[14px] font-semibold text-light-text">
-          <ModelDots />
+          <BrandDots />
           Auto
           {Icon.chevronDown(sub, 14)}
         </span>
@@ -119,7 +120,7 @@ export function ChatInfoBackdrop({ bubbleText, modelLine }: { bubbleText: string
         </span>
       </div>
       <div className="flex justify-end">
-        <div className="max-w-[85%] bg-user-bubble-light px-4 py-3 text-body leading-[1.35]" style={{ borderRadius: 20, borderTopRightRadius: 6 }}>
+        <div className="max-w-[85%] bg-user-bubble-light px-4 py-3 text-body leading-[1.35]" style={{ borderRadius: 20 }}>
           {bubbleText}
         </div>
       </div>

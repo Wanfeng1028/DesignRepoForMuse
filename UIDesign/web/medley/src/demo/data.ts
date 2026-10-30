@@ -137,7 +137,11 @@ export const pricingPlans: PlanData[] = [
   { name: "Pro+", monthly: "$56.00/mo", yearly: "$671.99 a year" },
 ];
 
-export const creditsBars = [14, 15, 14, 16, 18, 20, 22, 26, 30, 36, 42, 50, 58, 66, 76, 86, 94, 101, 106, 110];
+/** v1.6: 30 bars (one per day), measured from HD5 credits — 19 tiny days
+ * (4px) before the Oct 15 Pro upgrade, then 11 tall days. Stored tall
+ * values are the measured heights minus 3 (the 3 white 1px segment
+ * dividers inside each tall bar); tiny bars render as a single segment. */
+export const creditsBars = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 106, 112, 115, 110, 122, 104, 118, 104, 115, 108, 65];
 export const creditsLegend = [
   { label: "Claude", color: "#966955" },
   { label: "GLM", color: "#916478" },
@@ -163,7 +167,7 @@ export const agentRows: AgentRowData[] = [
 export const drawerNav: DrawerNavItem[] = [
   { label: "Images", icon: "image" },
   { label: "Projects", icon: "folder" },
-  { label: "Agent tasks", icon: "dots", badge: "1 running" },
+  { label: "Agent tasks", icon: "list-checks", badge: "1 running" },
   { label: "Flashcards", icon: "cards" },
 ];
 export const drawerRecent: DrawerRecentItem[] = [

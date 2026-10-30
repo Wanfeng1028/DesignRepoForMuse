@@ -290,8 +290,8 @@ export default function App() {
 
       <Section id="picker" title="Model picker — A and B" note="Picker B renders no section title above GPT-6.1 Sol / Kimi K3 / Claude Opus 5.5 (none exists in the original). Thinking figures ~110/~10/~110/~140/~200/~400 measured from the Thinking zoom (v1.3).">
         <div className="grid items-start gap-6 lg:grid-cols-2">
-          <div className="rounded-card bg-dark-bg px-5 pb-5"><ModelPickerA sections={d.pickerASections} howCreditsText="Credits are based on each provider's official API price, and every answer shows what it used." /></div>
-          <div className="rounded-card bg-dark-bg px-5 pb-5">
+          <div className="rounded-card bg-dark-card px-5 pb-5"><ModelPickerA sections={d.pickerASections} howCreditsText="Credits are based on each provider's official API price, and every answer shows what it used." /></div>
+          <div className="rounded-card bg-dark-card px-5 pb-5">
             <ModelPickerB sections={d.pickerBSections} untitledRows={d.pickerBUntitled} thinkingValue={thinking} onThinkingChange={setThinking} howCreditsText="Credits are based on each provider's official API price, and every answer shows what it used." />
           </div>
         </div>

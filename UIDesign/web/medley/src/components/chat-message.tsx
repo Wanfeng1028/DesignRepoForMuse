@@ -6,7 +6,12 @@ import { ModelDot } from "./medley-mark";
 export type Theme = "dark" | "light";
 export const isDark = (t: Theme) => t === "dark";
 
-/** User bubble: right-aligned, radius 20 with a small top-right corner, line-height 1.35. */
+/** User bubble: right-aligned, uniform radius 20, line-height 1.35.
+ * v1.6: the old 6px top-right corner is retired — the original bubble
+ * corners read uniformly round at pair scale (the render 6px corner
+ * reads as a visible squareness against them); a 1px arc measurement
+ * is not separable from the dark JPEG, so this is eye evidence, not a
+ * pixel fit, and is recorded as such. */
 export function UserBubble({ dark, children }: { dark: boolean; children: ReactNode }) {
   return (
     <div className="flex justify-end my-2">
@@ -15,7 +20,7 @@ export function UserBubble({ dark, children }: { dark: boolean; children: ReactN
           "max-w-[85%] px-4 py-3 text-body leading-[1.35]",
           dark ? "bg-user-bubble-dark text-dark-text" : "bg-user-bubble-light text-light-text",
         )}
-        style={{ borderRadius: 20, borderTopRightRadius: 6 }}
+        style={{ borderRadius: 20 }}
       >
         {children}
       </div>

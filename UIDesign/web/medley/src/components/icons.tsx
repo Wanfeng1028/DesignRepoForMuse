@@ -18,8 +18,12 @@ function base(size: number, color: string, strokeWidth = 2) {
 
 /** Line icons in the Medley mobile screens' style: 2px round strokes. */
 export const Icon = {
-  menu: (c: string, s = 20) => (
-    <svg {...base(s, c)}><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+  /** v1.6: home top-bar menu measured 15.9 CSS bars / 2.07 stroke / 4.84
+   * pitch (HD5 home-en) — 24px box with bars at y7/12/17 (pitch 5), not the
+   * old 20px / y6/12/18 (bars 13.3, pitch 5.0, stroke 1.67). All nav-bar
+   * usages (home, drawer, chat-info backdrop) share this form. */
+  menu: (c: string, s = 24) => (
+    <svg {...base(s, c)}><path d="M4 7h16M4 12h16M4 17h16" /></svg>
   ),
   back: (c: string, s = 20) => (
     <svg {...base(s, c)}><path d="M15 18l-6-6 6-6" /></svg>
@@ -53,8 +57,18 @@ export const Icon = {
   ),
   /** v1.3 P2-6: home top-bar clock is a dashed ring + hands in the original
    * (ov-home-en top-right), not the solid-ring clock used elsewhere. */
-  clockDashed: (c: string, s = 20) => (
+  clockDashed: (c: string, s = 18) => (
     <svg {...base(s, c)}><circle cx="12" cy="12" r="9" strokeDasharray="2.5 3" /><path d="M12 7v5l3 2" /></svg>
+  ),
+  /** v1.6: Lucide 1.63.0 lock — verbatim geometry (picker Fable "Pro+"
+   * badge carries a lock glyph before the pill in the original). */
+  lock: (c: string, s = 20) => (
+    <svg {...base(s, c)}><rect width="18" height="11" x="3" y="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+  ),
+  /** v1.6: Lucide 1.63.0 list-checks — verbatim geometry (drawer "Agent
+   * tasks" icon is a check-list, not three dots, per the OV drawer zoom). */
+  listChecks: (c: string, s = 20) => (
+    <svg {...base(s, c)}><path d="M13 5h8" /><path d="M13 12h8" /><path d="M13 19h8" /><path d="m3 17 2 2 4-4" /><path d="m3 7 2 2 4-4" /></svg>
   ),
   /** v1.3 S11: Lucide 1.63.0 pause — two rounded rects, verbatim geometry. */
   pause: (c: string, s = 20) => (

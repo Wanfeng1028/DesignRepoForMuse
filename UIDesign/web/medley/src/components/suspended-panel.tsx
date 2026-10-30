@@ -51,7 +51,7 @@ export function SuspendedPanel({
       <div className="ml-7 mt-2 text-list-item font-semibold underline">{manageLabel}</div>
       <div className="mt-5 text-list-item text-light-sub">{stillLabel}</div>
       {stillRows.map((row) => (
-        <div key={row.label} className="flex items-center justify-between border-b border-light-divider py-[14px]">
+        <div key={row.label} className="flex items-center justify-between border-b-[0.5px] border-light-divider py-[14px]">
           <span className="flex items-center gap-2.5 text-list-item font-medium">
             <span className="inline-flex" style={{ color: sub }}>
               {row.icon === "download" ? Icon.download(sub) : row.icon === "trash" ? Icon.trash(sub) : Icon.logout(sub)}

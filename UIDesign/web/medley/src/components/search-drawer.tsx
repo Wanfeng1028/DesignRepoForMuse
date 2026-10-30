@@ -2,7 +2,7 @@ import { cn } from "../lib/utils";
 import { tokens } from "../tokens";
 import { Icon } from "./icons";
 
-export type DrawerNavItem = { label: string; icon: "image" | "folder" | "cards" | "dots"; badge?: string };
+export type DrawerNavItem = { label: string; icon: "image" | "folder" | "cards" | "list-checks"; badge?: string };
 export type DrawerRecentItem = { label: string; dot: string; dots?: string[] };
 
 /**
@@ -53,7 +53,7 @@ export function SearchDrawer({
           <div key={r.label} className="flex items-center justify-between py-[13px]">
             <div className="flex items-center gap-3">
               <span className="inline-flex" style={{ color: sub }}>
-                {r.icon === "image" ? Icon.image(sub) : r.icon === "folder" ? Icon.folder(sub) : r.icon === "cards" ? Icon.cards(sub) : (
+                {r.icon === "image" ? Icon.image(sub) : r.icon === "folder" ? Icon.folder(sub) : r.icon === "cards" ? Icon.cards(sub) : r.icon === "list-checks" ? Icon.listChecks(sub) : (
                   <span className="flex h-[18px] w-[18px] items-center justify-center gap-0.5">
                     {[0, 1, 2].map((i) => (
                       <span key={i} className="h-[3px] w-[3px] rounded-full bg-dark-sub" />
@@ -106,7 +106,7 @@ export function SearchDrawer({
         {Icon.chevronRight(sub, 16)}
       </div>
       <div className="mt-4 flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-dark-row text-list-item font-bold">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-dark-row text-list-item font-bold">
           {userName.charAt(0)}
         </span>
         {/* v1.3 S7: Pro is a sub-line under the name, not a pill. */}

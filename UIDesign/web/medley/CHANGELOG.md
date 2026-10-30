@@ -3,6 +3,449 @@
 > Scope: UIDesign/web/medley only. Desktop layout itself has no original
 > image; 1:1 covers tokens and component forms (see README residual 1).
 
+## v1.6 — 2026-10-30 (fix round; round 8: Apple iOS texture inside 1:1 + precision gates)
+
+- Fix round, not a review round. No judge call was made in this round:
+  every verdict below rests on pixel samples / computed values / eye
+  pairs, not on any judge verdict. Build passes: pnpm build
+  (tsc -b && vite build) — one type error caught and fixed mid-round
+  (drawer nav icon union gained "list-checks"). No commit, no push, no
+  git add; changes left in the worktree for the coordinator. Scope:
+  UIDesign/web/medley only (16 source files + this entry; nothing else
+  in the repo touched, verified by git status).
+- Screenshots: docs/verification/rounds/v1.6/ — gallery-fullpage.png
+  (post-fix; pre-fix copy kept as pre-fix-gallery-fullpage.png),
+  sec-*.png per section (post-fix), panel-*.png (panel-only shots),
+  sidebyside/pair-*.png (original crop + render panel at equal width,
+  post-fix; sidebyside/pre-fix/ keeps the pre-fix pairs),
+  measure/*.py + *.cjs (sampling / screenshot / computed scripts),
+  crops/ (magnified original crops + render crops, measurement evidence
+  only; no official bitmap is copied into the design system — all marks,
+  dots and icons are vector redraws), panel-language-dpr2.png +
+  hairline-test.png (hairline paint investigation, see R14).
+- iOS TEXTURE READING (user order 2026-10-30 17:44): the originals are
+  themselves an iOS app, so "Apple texture" here means restoring iOS
+  native details, never restyling: SF-style metrics via the -apple-system
+  stack (unchanged), hairline separators (0.5px), iOS easing curves on
+  morphing, native component forms (segmented control, sheets, pills,
+  drawers), Lucide icons redrawn to measured line weights. No redesign
+  was done; every change below traces to a measured original value.
+- PRECISION GATES (user order 2026-10-30 17:46), evidence:
+  (1) 1px level: 1-2px / 1-4 level deltas are recorded per item in the
+  fix table; the only deltas excused as noise are the ones with a stated
+  noise proof (agent-team pair diff = 30 pixels at +/-1 level on rounded
+  card corners, resize anti-aliasing; drawer avatar edge blur +/-3 CSS
+  at OV resolution).
+  (2) Small elements: status-bar icons, dividers, tiny labels, icon
+  endpoints, shadows, hairlines, corner arcs all appear in the eye-diff
+  list and the fix table (menu bars, clock ring, badge, lock, dots,
+  footer links, avatar, bar dividers, bubble corners).
+  (3) Multi-point / zone sampling: welcome base + 3 glows + home wash
+  are zone medians, not single points (see tables); drawer bg is a
+  10-point median grid; pricing badge fill is a 355-pixel median.
+  (4) Pixel + computed cross-check: every geometry fix was verified
+  both ways post-fix (see cross-check table); the two traps found are
+  recorded (mic-circle 30.6px was an offscreen animation freeze, true
+  value 36px; computed style rounds 0.5px borders to 1px, so hairlines
+  are verified by CSS rule + class presence, not by computed width).
+  (5) Eye comparison: all 11 pairs were viewed pre-fix (eye-diff list
+  below, E-W/E-H/E-P/E-C/E-L/E-K/E-I/E-D/E-S/E-G/E-A); post-fix pairs
+  were re-viewed for pricing, credits, picker, home, chat-info and the
+  desktop examples, and every listed diff is closed except the
+  documented adaptations (panel widths, footnote line counts) and
+  residuals.
+
+- FIX TABLE (original value -> pre-fix render -> post-fix render).
+  Geometry first, then missing layers, typography, cropping, spacing,
+  motion, per the method.
+  * F1 Home EN Auto pill: orig bare (HD5 row y=145 reads wash across;
+    photo-9 TR home also bare) -> pill bg #EDEEF2 + padding -> bare
+    inline-flex (BrandDots + "Auto" + chevron, no bg, no padding).
+    Retires the v1.3 "Auto pill is correct" claim (it rested on the
+    small OV collage). CN segmented control is a real pill and stays.
+  * F2/F3/F4 Auto dots motif: orig 3-dot diagonal everywhere (welcome
+    header, home, picker Auto card, chat-info backdrop) -> 5-dot
+    horizontal ModelDots in picker/chat-info/desktop -> BrandDots in
+    all four places. Desktop chrome keeps its pill (desktop chrome has
+    no mobile original; only the dot motif changes there).
+  * F5 Pricing top dots: orig 6 dots DIAGONAL, centres (106,206)
+    (139,196) (172,186) (203,175) (237,168) (271,160), pitch ~23 CSS,
+    rises [0,6,13,19,26,32], palette pink/blue/yellow-green/teal/
+    purple/peach -> horizontal 6-dot row, gap 2, wrong order -> new
+    DiagonalDots (size 10, gap 13, rises as measured, gloss finish,
+    palette [#C65D7B, #4A7DE4, #9A9A3E (yellow slot, documented
+    estimate: measured median is gloss-mixed), #2EB5A5, #9B5DE5,
+    #E2A181]).
+  * F6 Pricing Pro-row dots: orig pitch 13.1-15.2 CSS (saturation peaks
+    x165/184/206/226/247/265) -> pitch 10 (size 8 + gap 2) -> gap 6
+    (pitch 14, centred in the measured range). ModelDots gains a gap
+    prop (default 2); it is now used only by this row.
+  * F7 Pricing plans structure (major correction): orig Lite and Pro+
+    are PLAIN ROWS on bg (row scans read bg throughout); only the
+    selected Pro plan is a card (fill (28-35), top y~557, bottom
+    y~818, left x~98, border lines visible) -> all three rendered as
+    rounded-card bg-dark-card divs -> unselected plans are plain rows
+    (px-4 py-[5px], no bg, no radius); selected plan keeps the card
+    and gains border border-dark-sub (1px #9A9BA2, blur-corrected
+    estimate +/-25: a 1 CSS px line blurred peaks at ~0.7x true +
+    0.3x bg over the (18,19,21) bg, giving true ~120-154). The old
+    comment claiming borderless cards is corrected. Pro card radius
+    stays 16 (measured arc range 16-21 CSS, low end kept, blur range
+    recorded as residual R9).
+  * F8 Pricing segmented: orig container 54 img px = 37.3 CSS ->
+    computed 47 (button 39, py 9) -> buttons py-[4px] (button 29,
+    container 37, delta 0.3).
+  * F9 Pricing CTA: orig white band 70 img px = 48.4 CSS -> 52 ->
+    h-12 (48, delta 0.4). Welcome buttons stay 52 (measured 51.9).
+  * F10 Pricing footer: orig links spread full width (Restore left,
+    Terms centre, Privacy right, NO "|" separators — magnified footer
+    crop shows spaces only) -> centred group with "|" separators ->
+    justify-between, separators removed.
+  * F11 Pricing "7 days free" badge: orig fill median (156,157,161)
+    = darkSub #9A9BA2 (355-pixel median), dark text, total 45 CSS
+    wide, ~9.7 CSS tall -> white pill #F5F5F7, 11px text, ~72 wide,
+    20 tall -> bg-dark-sub, text-[8px] leading-none, px-1 py-[1px]
+    (computed 10 tall, 49.8 wide; width delta 4.8 is a Linux-font
+    artefact — Noto renders wider than SF, see R12).
+  * F12 Pricing price block leading: orig block ~36-37 CSS (16px
+    monthly + 12px yearly at iOS-ish leading) -> 44.2 (1.55/1.45) ->
+    monthly leading-[1.25] (20), yearly leading-[1.2] (14.4), gap 2
+    (block 36.4).
+  * F13/F14/F15 Pricing Pro-card rhythm (from Pro card internal bands:
+    header glyphs 580-617, detail lines 643-658 + 670-684, check rows
+    704/736/768, dots 799-813, card 556-818 = 181 CSS): detail mt-3
+    -> mt-2.5 + leading-[1.45]; feature rows mt-2 -> mt-1 (check pitch
+    orig 22.1 CSS, render was 26.9); dots row mt-2.5 -> mt-2; card
+    pt-3 pb-0 (orig border-to-glyph pads 16.6 top / ~3.5 bottom, minus
+    line-box slack). Post-fix Pro card computed 179.8 (delta 0.7-1.2
+    vs orig 180.5-181).
+  * F16 Pricing plan gaps: orig radio-centre pitches Lite->Pro 96 img
+    px = 66.4 CSS, Pro->Pro+ 291 img px = 201.3 CSS; seg->Lite gap
+    ~19-23 CSS, Pro+->CTA gap ~24 CSS -> mt-2.5 (10) everywhere ->
+    uniform mt-5 (20) on all plan rows, CTA mt-6 (24). Post-fix Lite
+    row computed 46.4 (header 36.4 + py 10); Lite->Pro pitch = 46.4 +
+    20 = 66.4 exact; Pro->Pro+ pitch = 179.8 + 20 = 199.8 (delta 1.5).
+  * F17 Home EN composer: orig light card band 77-78 img px =
+    53.2-53.9 CSS, plus/mic/placeholder all centred on bar centre
+    (1203.5/1203.5/1206 vs bar centre 1204) -> 48 -> tall variant 54
+    (computed 54, delta 0.1-0.8). Home-EN only; Lisbon/Train/Savings/
+    Kyoto/Router/agent single-row composers stay 48 (Lisbon composer
+    measured 48.4, stop disc 35.3 vs 36, stop square 11.1 vs 12 — all
+    kept, within ~1px).
+  * F18 CN stacked composer: orig total 177 img px = 122.4 CSS
+    (placeholder row 47.7, controls row 47, bottom padding 27.7 with
+    JPEG slop at the screen edge) -> 96 (46 + 48 + border 2) ->
+    placeholder h-[48px] + pb-6 (24) = 48 + 48 + 24 + 2 = 122
+    (computed 122, delta 0.4). Controls row stays 48 (delta 1.0).
+  * F19 Composer black disc: orig CN black mic/send disc 58 img px =
+    40.1 CSS -> 36 -> h-10 w-10 (40, computed 40, delta 0.1) for the
+    black variant (sendDark and light-black circles); orange disc
+    stays 36 (unmeasured). Stop disc (36) and arrow circle (36) stay.
+  * F20 Menu icon: orig bars 23 img px = 15.9 CSS, stroke 3 img px =
+    2.07, pitch 7 img px = 4.84 -> 20px box, bars 13.3, stroke 1.67,
+    pitch 5.0 -> 24px box, path y7/12/17 (bars 16.0, stroke 2.0, pitch
+    5.0; deltas 0.1/0.07/0.16). All nav-bar usages (home, drawer
+    hamburger, chat-info backdrop).
+  * F21 ClockDashed: orig bbox ~26 img px = 18 CSS diameter -> 20 ->
+    18 (computed 18). Home top bar only (verified sole usage); solid
+    clock stays 20.
+  * F22 Hairline separators 1px -> 0.5px (iOS hairline convention +
+    orig dividers read as ~1 img px faint lines, +11-16 levels over
+    wash, i.e. a sub-CSS-px core blurred): home SuggestionRow border-b
+    + suggestion container border-t; language rows border-b; chat-info
+    reply rows border-t; credits By-model rows (inline borderBottom);
+    suspended rows border-b. Structural borders stay 1px (Try button,
+    composer light border, chips, buttons, slider thumb, sheet/card
+    outlines, pricing selected card border). Picker rows lose borders
+    entirely (F23), so they are excluded. VERIFICATION LIMIT (R14):
+    this VM's Chromium paints 0.5px CSS borders as full-strength
+    1-device-px lines at DPR1 and DPR2 (isolated test + DPR1/DPR2 panel
+    shots prove it), and getComputedStyle rounds 0.5px to 1px — so the
+    hairline change is verified by CSS rule presence in dist CSS +
+    class presence on all five sites, NOT by screenshot; on a real
+    iOS device (DPR 2-3) 0.5px CSS paints a true hairline.
+  * F23 Picker rows: orig NO divider lines (column scan finds no clean
+    divider band; viewed image shows clean rows) -> border-b on every
+    row -> borders removed; the `last` prop is removed from Row and
+    both call sites (Section rows + Picker B untitled rows).
+  * F24 Picker sheet bg: orig empty-area samples (27,28,32)-(32,33,37)
+    = darkCard #1E1F23, not darkBg -> ModelPickerA/B roots bg-dark-bg
+    -> bg-dark-card; App picker section wrappers likewise
+    bg-dark-bg -> bg-dark-card (else the wrapper would double-edge
+    against the panel). DialogContent dark already uses bg-dark-card
+    (consistent). Pricing/Lisbon/welcome bg stays #111518 (confirmed
+    by contrast); drawer bg stays darkBg (10-point median grid reads
+    (13,12,17)-(14,13,18), i.e. darkBg at OV export; the pair-scale
+    "lighter drawer" impression was OV upscale brightening).
+  * F25 Token/code consistency: CSS var --color-model-deepseek
+    #5b8a99 -> #5F788C (matches tokens + data legend/dot values).
+    No component uses the model-deepseek utility, so this changes zero
+    rendered pixels (expected and noted). BAR_COLORS #5B8A99 in
+    credits-panel is a DIFFERENT element (bar teal, v1.3 C9) and is
+    NOT touched by this fix — but see F27, where the bar palette
+    itself is re-measured.
+  * F26 Motion (iOS platform convention, NOT original-measured —
+    original durations/curves are unobservable in static screenshots
+    and are recorded as unmeasured, not invented): .morph-rotate
+    200ms ease -> 200ms cubic-bezier(0.32,0.72,0,1); .morph-in 180ms
+    ease -> 180ms cubic-bezier(0.22,1,0.36,1); durations unchanged;
+    prefers-reduced-motion block disables morph animations (iOS
+    Reduce Motion parity, zero visual change otherwise). No new morph
+    pairs (M1/M5/M6/M7 remain unwired per v1.3).
+  * F27 User bubble corners: orig corners read uniformly round at
+    pair scale (render 6px top-right reads as visible squareness
+    against them) -> uniform radius 20 (UserBubble + chat-info
+    backdrop bubble). 1px arc measurement FAILED (dark JPEG + text
+    contamination: corner scan edges are non-monotonic), so this is
+    an eye-evidence decision, recorded as such. Post-fix render arc
+    measured: rightmost fill x grows 543 -> 562 over dy 0-19, i.e.
+    radius 19-20px. Lisbon bubble fill family (29,36,46) confirmed at
+    multiple points; render #1D242E sits inside it.
+  * F28 Credits white section (major correction): orig Last-30-days
+    block is a WHITE edge-to-edge section (card top y~438, bottom
+    y~766, spans x17..576, rounded corners ~16, header glyphs
+    y464-476, legend inside) -> bars rendered on panel bg (245) with
+    no card -> white section (-mx-5, bg-light-card #FFFFFF,
+    rounded-card, px-5 pt-4 pb-2.5; section mt-6 above it matches the
+    orig buttons-to-card gap 22.8 CSS). Desktop rightPanel aside
+    gains overflow-x-hidden so the -mx-5 bleed clips cleanly there
+    (4px each side, corners only) instead of scrolling.
+  * F29 Credits bars (major correction): orig 30 bars (one per day),
+    19 tiny pre-upgrade days + 11 tall post-upgrade days (the Oct 15
+    upgrade boundary is visible in the data story) -> 20 flex-1 bars
+    -> 30 fixed bars (w-2 = 8px, gap 3px, pitch 11 vs orig 10.8;
+    container h-[126px], bars row 327 wide centred; x-axis row shares
+    the w-fit wrapper, upgrade label absolute at left 59% — orig
+    label centre sits at 58.6% of chart width, vs centred 50%).
+    Heights measured per bar (baseline y~680, scale 1.446): tiny days
+    1.4-4.8 CSS (stored 4); tall days [109,115,118,113,125,107,121,
+    107,118,111,68] (last day partial, ~60% of neighbours — Oct 25 is
+    "today"); stored tall values are measured minus 3 (the 3 white
+    1px segment dividers inside each tall bar). Post-fix computed:
+    container 126 tall, 327 wide; first bar 4, last bar 65.
+  * F30 Credits bar segment colours (measured, two tall bars agree):
+    brown (145,88,55) = #8C553C kept; rose (157,69,100) -> #9D4564
+    (was #C65D7B); olive (123,103,48) -> #7B6730 (was teal #5B8A99);
+    steel blue (70,108,140) -> #466C8C (was green #3FA34D). White
+    1px dividers between segments confirmed (column scan shows a
+    (237,189,179) divider row inside tall bars). Tiny bars render as
+    a single dark-rose segment #7E4E60 (measured ~(126,78,96) across
+    two tiny bars; at 4px tall their model attribution is
+    unresolvable, so the measured colour stands even though it
+    differs from the tall-bar rose — see R11). Legend + By-model dot
+    colours (data) are NOT changed on this evidence (legend dots are
+    8px edge samples, unreliable at 1px).
+  * F31 Drawer Agent tasks icon: orig magnified glyph is a check-list
+    (checks + lines, OV drawer zoom) -> three dots -> Lucide
+    list-checks (verbatim 1.63.0 geometry: M13 5h8 / M13 12h8 /
+    M13 19h8 / m3 17 2 2 4-4 / m3 7 2 2 4-4), data icon "dots" ->
+    "list-checks", drawer union type updated.
+  * F32 Drawer avatar: orig disc ~30 +/-3 CSS (magnified disc edges
+    ~52 orig px wide, OV blur) -> 36 -> h-8 w-8 (32, computed 32).
+    Midpoint choice: worst-case delta 2-5 vs 6-9 if kept at 36.
+  * F33 Picker Fable lock: orig Fable row shows a lock glyph before
+    "Pro+" -> badge pill only -> Lucide lock (verbatim 1.63.0: rect
+    x3 y11 w18 h11 rx2 + M7 11V7a5 5 0 0 1 10 0v4), 14px, dark-sub,
+    rendered only for badge "Pro+" in Row (AutoCard "Recommended"
+    has no lock).
+  * F34 Font: NO stack change (-apple-system stack is correct for
+    Apple targets). Canvas proof on this VM: title string width
+    242.54 at 700 41px = Noto Sans SC exactly (DejaVu 319.79,
+    Liberation/Arial 274.09) — i.e. the Linux render substitutes Noto
+    Sans SC for SF. Recorded as standing residual R12; no Apple font
+    file is copied into the repo.
+
+- EYE-DIFF LIST (pre-fix pairs, viewed; disposition):
+  * E-W1/W2 welcome header M mark + orange dot vs BrandDots + sapphire
+    dot: KNOWN state difference, photo-9 wins per round 7 — not a fix.
+  * E-W3 title position, E-W5 footnote line count: panel-height /
+    panel-width adaptations, not diffs.
+  * E-W4 Try button looking filled: transparent over photo-9 warm glow,
+    correct per round 7. E-W6 glows: all three present, correct hues.
+  * E-H1 home Auto pill vs bare -> F1. E-H2 menu weight -> F20. E-H7
+    clock size -> F21. E-H5 composer height + shadow -> F17 (shadow
+    value kept: orig darkest 213 vs bg 230 over ~11 CSS matches render
+    0 2 12 rgba(0,0,0,0.06) in extent and depth).
+  * E-P1 top dots diagonal vs horizontal -> F5. E-P2 segmented height
+    -> F8. E-P3 Lite/Pro+ cards vs plain rows -> F7. E-P4 Pro card
+    border missing -> F7. E-P5 Pro dots cramped -> F6. E-P6 CTA height
+    -> F9. E-P7 badge grey vs white -> F11. E-P12 footer spread ->
+    F10. E-P8/E-P9/E-P10/E-P11/E-P13: radios, title, intro, prices,
+    footnote line count — match / adaptation, kept.
+  * E-C1 huge number, E-C2 buttons, E-C4 legend, E-C5 rows, E-C6
+    activity, E-C7 x-axis: match, kept. E-C8 chart card missing ->
+    F28. E-C3 bar shape (tiny left + tall right) -> F29/F30. E-C9 Buy
+    width: match (Buy height band was inconclusive in isolation but
+    the pair shows equal heights; render 48 kept, see R13).
+  * E-L1 user bubble corner squareness -> F27. E-L2 body text size:
+    pair-scale artefact (render panel 560 wide vs phone 390; computed
+    16px both sides), not a diff. E-L3-L7 chips/action row/follow-up/
+    composer/stop disc/GLM dot: match, kept. E-L8 chat-section card
+    has no top bar: composition (threads, not screens); the top bar
+    lives in the desktop-lisbon section — not a fix.
+  * E-K1 Auto dots -> F2. E-K2 row dividers -> F23. E-K3 sheet bg dark
+    -> F24. E-K4 Fable lock -> F33. E-K5-E-K10 Up-to-Advanced, section
+    titles, costs, How-credits-work, Choose-a-model title, check icon:
+    match, kept.
+  * E-I1 backdrop Auto dots -> F3. E-I2 backdrop bubble corner -> F27.
+    E-I3-E-I10 handle, stats, model dots, tools rows, reply cards,
+    footnote, close X, backdrop dim: match, kept.
+  * E-D1 pill, E-D2 hamburger, E-D4 running dot, E-D5 pinned card,
+    E-D6 recent dots, E-D7 messages-left card, E-D10 gear: match,
+    kept. E-D3 Agent tasks icon -> F31. E-D8 avatar size -> F32. E-D9
+    drawer bg "lighter": OV upscale artefact, grid medians prove
+    darkBg — no change.
+  * E-S1-S5 badge, title, body, bold line, note, Manage link, still
+    rows: match, kept (rows take the 0.5px hairline). E-S6 buttons at
+    bottom: SuspendedPanel buttons already use mt-auto (verified in
+    code) — full-height usage pins them; the gallery card's natural
+    height shows them after the rows. No change needed.
+  * E-G1 language dividers faint vs 1px -> F22 (with R14 paint limit).
+    E-G2 row pitch: unmeasured (see R8). E-G3 check, E-G4 back chevron
+    + title, E-G5 footnote: match, kept.
+  * E-A1-E-A11 agent title, meta, credits/step, progress bar (20%
+    fill kept; bar height unmeasured, see R10), lead card, agent rows,
+    buttons, composer, dots, card bg, Agents label: match, kept.
+
+- ZONE SAMPLING TABLES (post-fix renders, multi-point):
+  * Welcome panel (560x481): top-centre base median (14,16,19) over
+    70 samples, with clean points exactly (13,14,16) at (200,15) and
+    (260,15); the +1/+2/+3 drift toward centre-right is the blue
+    radial's tail (300px radius at 88% 42%: at ~290px distance the
+    0.46-alpha glow contributes ~(1,2,2)), not a regression.
+    Upper-right blue glow median (25,35,47) (blue-dominant).
+    Lower-left warm glow median (68,42,32) (red-dominant).
+    Bottom-right green glow median (36,67,66) (green/teal-dominant).
+    Header dots row y30: green (100,181,165) at x20-25, blue
+    (80,115,145) at x35, pink body x40-45 y18-26 (raised 8px) —
+    cluster intact (magnified header crop viewed).
+  * Home EN wash (588x561), centre column: y28 (244,246,241), y140
+    (241,244,246), y280 (232,239,240), y420 (214,231,229) — top-to-
+    bottom light-to-greenish gradient intact; y532 white = composer
+    card over wash.
+  * Drawer bg (OV crop, 10-point median grid): (13,12,17), (13,12,17),
+    (18,17,22), (28,27,32) [pinned card], (14,13,18), (14,13,18),
+    (14,13,18), (14,13,18), (19,18,23), (25,21,20) [messages-left
+    card] — content bg is darkBg; the two bright cells are cards.
+  * Pricing badge fill median (156,157,161) over 355 pixels
+    (y598-602, x215-282, dark text excluded) = darkSub.
+
+- PIXEL vs COMPUTED CROSS-CHECKS (post-fix; all agree unless noted):
+  * Home composer 54 (computed) vs orig 53.2-53.9 (pixel) — agree.
+  * Menu 24 / clock 18 / stacked 122 / sendDark disc 40 / pricing
+    segmented 37 (button 29) / CTA 48 / Lite row 46.4 / Pro card
+    179.8 / Pro+ row 46.4 / badge 10 tall / picker bg (30,31,35) /
+    picker row border 0 / drawer avatar 32 / drawer menu 24 /
+    credits bars container 126x327 / first bar 4 / last bar 65 /
+    credits white section 718 wide (#FFFFFF) / backdrop dots 9,9,9 /
+    morph curves cubic-bezier(0.32,0.72,0,1) + (0.22,1,0.36,1) —
+    all computed values match their pixel targets within the deltas
+    stated in the fix table.
+  * KNOWN TRAPS (do not re-litigate): (a) mic circles read 30.6px when
+    the composer section is below the fold — headless Chromium had
+    not advanced the morph-in animation (scale 0.85) for offscreen
+    elements; after scrollIntoView + 400ms they read 36px. True render
+    size is 36; 30.6 was a measurement artefact, not a code bug.
+    (b) getComputedStyle rounds 0.5px borders to 1px (verified by
+    isolated test); hairlines are verified by CSS rule + class
+    presence (R14). (c) Pair-scale text comparisons are invalid
+    (render panels are 560-720 wide vs 390 phones); text sizes are
+    compared by computed px, not by pair width.
+
+- RESIDUALS (numbered, with numbers; nothing hidden behind "clean"):
+  * R1 Dark-base state conflict (carried from v1.5): welcome local
+    base #0D0E10 vs global darkBg #111518 — unresolved which the App
+    itself uses outside welcome; other dark sections still rest on
+    old-HD evidence.
+  * R2 Headline rotation sentences beyond "Let's discover": unknown
+    (only the captured state is rendered; rotation documented, not
+    faked).
+  * R3 No HD source for: drawer recent colours, pinned dots, legend
+    direct centres, savings big-number size, credits bar height
+    sequence (now re-measured for bars, but per-bar segment splits
+    remain approximate), activity dot colour, agent-team details,
+    suspended details, chat-info details, picker row colours.
+  * R4 Brand-dot blue/green bases are blur-corrected estimates
+    (photo-9 gloss); DiagonalDots yellow base #9A9A3E is an estimate
+    (measured median is gloss-mixed).
+  * R5 Home wash mid-panel: up to ~9 levels cooler than the photo-9
+    column (carried); CN home wash assumed from EN evidence.
+  * R6 Pro card border colour #9A9BA2 is a blur-corrected estimate
+    (+/-25 levels); Pro card radius kept at 16 within the measured
+    16-21 range.
+  * R7 Pricing badge width: computed 49.8 vs orig 45 (delta 4.8) —
+    Linux Noto renders wider than SF; on Apple devices the same 8px
+    text should land near 46. Height matches (10 vs 9.7).
+  * R8 Language row pitch: unmeasured (column/row band scans fragment
+    on text strokes; render keeps py-2.5 + content structure).
+    Last-row divider presence in orig is unmeasured (detection gaps
+    in the CN crop); render keeps a border under all rows (v1.5
+    behaviour, unchanged).
+  * R9 Pro card radius 16 vs measured range 16-21 (JPEG blur range,
+    low end kept, not chased).
+  * R10 Agent progress bar height (4px) and "Pause all"/"Stop all"
+    button details: visual-consistency only, not 1px-measured.
+  * R11 Tiny-bar colour #7E4E60 vs tall-bar rose #9D4564: same-model
+    consistency would predict one colour; the tiny bars measure
+    darker. At 4px tall the reading is blur-affected but the darkening
+    is not fully explained by blur (white mixing lightens, not
+    darkens). The measured colour is rendered; the cause is open.
+  * R12 Font substitution: Linux renders Noto Sans SC (title string
+    242.54 at 700 41px) where Apple devices render SF Pro/SF Pro Text.
+    Glyph widths on this VM must NOT be compared directly to SF
+    widths; the -apple-system stack itself is correct for targets.
+  * R13 Credits Buy button height: render 48 kept; the original button
+    band was never cleanly isolated (two black bands y345..365 and
+    y382..403 at x=150, likely button + label/edge confusion). Pair
+    view shows equal heights; recorded as unmeasured-at-1px.
+  * R14 Hairline paint limit: this VM's Chromium renders 0.5px CSS
+    borders as full-strength 1-device-px lines at DPR1 and DPR2
+    (proven by isolated test + DPR1/DPR2 panel shots); the 0.5px
+    change is correct CSS for real iOS devices but produces no
+    visible difference in VM screenshots. A device check would show
+    it; the shipped CSS differs from v1.5 regardless.
+  * R15 Lisbon bubble corner: 1px arc unmeasured (dark JPEG + text
+    contamination); uniform 20 rests on eye evidence (F27), not a
+    pixel fit. GLM AiMeta dot centre: unmeasured (gloss + blur).
+  * R16 Chart x-axis/legend gaps: legend mt-1 leaves ~3.5 CSS of
+    line-height slack vs the orig x-axis-to-legend gap (~7 CSS);
+    x-axis upgrade label at 59% vs orig 58.6% (delta 0.4% of chart
+    width). Chart bars keep phone metrics (8px/11px pitch) inside
+    wider desktop panels, so side margins grow with panel width —
+    platform adaptation, not a metric change.
+  * R17 Full-set rescan counts: changed sections — home, chat
+    (bubble corner only, 98 pair px, +/-1 level at the corner arc),
+    pricing, credits, picker, chat-info, drawer, composer, desktop
+    chrome. Unchanged at pair scale — welcome (0 px), language
+    (0 px; hairlines paint identically here per R14), agent-team
+    (30 px, all +/-1 level corner anti-aliasing noise), suspended
+    (33 px, +/-1-3 levels on one hairline row). No section regressed.
+
+- EXPLICITLY NOT CHANGED (with reasons): welcome title/dot/buttons/
+  footnote (all confirmed); Lisbon composer 48, stop disc 36, stop
+  square 12 (within ~1px); greeting 27; home mic/plus glyph sizes;
+  Try border #43474C; pricing radio outer 20 / inner 10 (confirmed via
+  ASCII brightness maps — the first "ring" reading was the card's
+  corner + left border, corrected in-round); credits huge 37 / buttons
+  48 / legend dots 8; chat-info handle 36x4 / sheet radius 24 /
+  shadow; drawer pill 48 / dots 8; suspended structure + buttons 52;
+  agent dot 7 / buttons 48 / arrow circle 36; CN segment geometry
+  (white-on-wash contrast too low to separate); credits bar splits
+  (approximation stands); picker "Recommended" chip; home shadow
+  value (matches orig decay); BAR_COLORS-adjacent legend colours
+  (edge samples unreliable); desktop layout arrangement (no original
+  image; adaptation only).
+
+- UNMEASURED ITEMS (carried + new): headline rotation sentences
+  beyond "Let's discover"; original motion durations/curves (iOS
+  convention substituted, durations unchanged); CN segment
+  height/radius; Pro card radius within 16-21 (kept 16); Lisbon bubble
+  corner arc at 1px; GLM dot centre; credits Buy height at 1px;
+  language row pitch + last-row divider; agent progress bar height;
+  tiny-bar colour cause (R11); drawer avatar within +/-3 CSS
+  (render 32 is the midpoint choice); savings card shadow + big-number
+  size; chat-message bubbles other than Lisbon fill + stop disc.
+
 ## v1.5 — 2026-10-30 (fix round; round 7: photo-9 colour layer first + full-set active rescan)
 
 - Fix round, not a review round. No judge call was made in this round:

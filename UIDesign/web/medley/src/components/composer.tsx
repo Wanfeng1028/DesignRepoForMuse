@@ -6,15 +6,19 @@ import { Input } from "./ui/input";
 export type ComposerMic = "circle" | "plain" | "stop" | "arrow";
 
 /**
- * Desktop composer: wide pill input bar (v1.3: 48px — original bar band
- * ~70px@600 / ~80px@660, i.e. ~46px CSS, measured in P2-11) with plus,
- * placeholder, optional model label pill, and the mic/send states from the
- * mobile screens: circle (dark: vivid-orange mic / light: black mic),
- * plain (grey line mic), stop (v1.3 M-stop: vivid-orange circle + dark
- * square, Lisbon-EN generating state), arrow (agent instruction composer:
- * white circle + dark up-arrow, no plus). sendDark = black mic circle.
- * The model-label chevron morphs (M4: 180deg rotation on tap); the end
- * glyph fade-scales in on state change (M2/M3 transition).
+ * Desktop composer: wide pill input bar (v1.3: 48px single-line; v1.6:
+ * home-EN is 54px — its light card band measures 77-78 img px = 53.2-53.9
+ * CSS in HD5 home-en, with plus/mic/placeholder all centred on the bar
+ * centre, so the 54px height is real, not an edge misread; all other
+ * single-row composers stay 48px) with plus, placeholder, optional model
+ * label pill, and the mic/send states from the mobile screens: circle
+ * (dark: vivid-orange mic 36px / light: black mic 40px — the CN black disc
+ * measures 58 img px = 40.1 CSS), plain (grey line mic), stop (v1.3
+ * M-stop: vivid-orange circle + dark square, Lisbon-EN generating state),
+ * arrow (agent instruction composer: white circle + dark up-arrow, no
+ * plus). sendDark = black mic circle. The model-label chevron morphs
+ * (M4: 180deg rotation on tap); the end glyph fade-scales in on state
+ * change (M2/M3 transition).
  */
 export function Composer({
   dark,
@@ -24,6 +28,7 @@ export function Composer({
   sendDark = false,
   hidePlus = false,
   stacked = false,
+  tall = false,
   className,
 }: {
   dark: boolean;
@@ -33,8 +38,12 @@ export function Composer({
   sendDark?: boolean;
   hidePlus?: boolean;
   /** Two-line CN form: placeholder row on top, plus / model pill / mic row
-   * below (CN home + CN Lisbon stills; ~93px tall vs 48px single-line). */
+   * below (CN home + CN Lisbon stills). v1.6: placeholder 48 + controls 48
+   * + bottom safe-area padding 24 + light border 2 = 122 CSS, matching the
+   * measured CN stacked card (177 img px = 122.4 CSS). */
   stacked?: boolean;
+  /** Home-EN only: 54px single-row bar (see header comment). */
+  tall?: boolean;
   className?: string;
 }) {
   const sub = dark ? "#9A9BA2" : "#6B6C72";
@@ -67,7 +76,10 @@ export function Composer({
     ) : (
       <span
         key="circle"
-        className="morph-in flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white"
+        className={cn(
+          "morph-in flex shrink-0 items-center justify-center rounded-full text-white",
+          dark && !sendDark ? "h-9 w-9" : "h-10 w-10",
+        )}
         style={{ background: sendDark ? "#111214" : dark ? "#D95E27" : "#111214" }}
       >
         {Icon.mic("#FFFFFF")}
@@ -79,11 +91,11 @@ export function Composer({
       <div className={cn("w-full", className)}>
         <div
           className={cn(
-            "flex flex-col rounded-input",
+            "flex flex-col rounded-input pb-6",
             dark ? "bg-dark-input" : "bg-light-card border border-light-divider shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
           )}
         >
-          <div className="flex h-[46px] items-center pl-5 pr-4">
+          <div className="flex h-[48px] items-center pl-5 pr-4">
             <span className="text-body" style={{ color: placeholderColor }}>{placeholder}</span>
           </div>
           <div className="flex h-[48px] items-center gap-2.5 px-2 pl-3.5">
@@ -100,7 +112,8 @@ export function Composer({
     <div className={cn("w-full", className)}>
       <div
         className={cn(
-          "flex h-[48px] items-center gap-2.5 rounded-input px-2 pl-3.5",
+          "flex items-center gap-2.5 rounded-input px-2 pl-3.5",
+          tall ? "h-[54px]" : "h-[48px]",
           dark ? "bg-dark-input" : "bg-light-card border border-light-divider shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
         )}
       >

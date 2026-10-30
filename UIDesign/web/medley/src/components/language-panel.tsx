@@ -17,7 +17,7 @@ export function LanguagePanel({ title, rows, footnote }: { title: string; rows: 
       </div>
       <div className="px-5">
         {rows.map((row) => (
-          <div key={row.name} className="flex items-center border-b border-light-divider py-2.5">
+          <div key={row.name} className="flex items-center border-b-[0.5px] border-light-divider py-2.5">
             <div className="min-w-0 flex-1 pr-3">
               <div className="text-list-item font-medium leading-[1.35]">{row.name}</div>
               {row.sub && <div className="mt-[3px] text-secondary leading-[1.35] text-light-sub">{row.sub}</div>}

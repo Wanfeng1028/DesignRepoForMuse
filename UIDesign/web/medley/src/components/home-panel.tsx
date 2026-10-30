@@ -21,7 +21,7 @@ function suggestionIcon(kind: Suggestion["icon"], color: string) {
 export function SuggestionRow({ icon, text, badge, dark = false }: Suggestion & { dark?: boolean }) {
   const sub = dark ? "#9A9BA2" : "#6B6C72";
   return (
-    <div className={cn("flex items-center gap-3 border-b py-[14px] text-list-item font-medium", dark ? "border-dark-divider text-dark-text" : "border-light-divider text-light-text")}>
+    <div className={cn("flex items-center gap-3 border-b-[0.5px] py-[14px] text-list-item font-medium", dark ? "border-dark-divider text-dark-text" : "border-light-divider text-light-text")}>
       <span className="inline-flex" style={{ color: sub }}>{suggestionIcon(icon, sub)}</span>
       <span className="flex-1">{text}</span>
       {badge && (
@@ -64,10 +64,11 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
         <span className="inline-flex w-[72px]" style={{ color: text }}>{Icon.menu(text)}</span>
         <span className="flex flex-1 items-center justify-center">
           {variant === "en" ? (
-            <span onClick={() => setAutoOpen((v) => !v)} className="inline-flex cursor-pointer items-center gap-1.5 rounded-chip bg-user-bubble-light px-3 py-[7px] text-[14px] font-semibold">
-              {/* v1.5: photo-9 Auto pill carries the 3-dot diagonal cluster,
-                  not the 5-dot horizontal row (ModelDots stays for
-                  chat-info / picker / pricing, which rest on older evidence). */}
+            <span onClick={() => setAutoOpen((v) => !v)} className="inline-flex cursor-pointer items-center gap-1.5 text-[14px] font-semibold">
+              {/* v1.6: home Auto is BARE (no pill fill) — HD5 home-en row
+                  y=145 reads wash across the whole row, and photo-9 TR home
+                  shows bare dots + "Auto" + chevron. The v1.3 "Auto pill"
+                  claim rested on the small OV collage and is retired. */}
               <BrandDots />
               Auto
               <span className="morph-rotate inline-flex" data-open={autoOpen}>
@@ -92,7 +93,7 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
           </div>
         )}
         <div className="text-greeting font-bold leading-[1.25] mb-[18px]">{greeting}</div>
-        <div className="border-t border-light-divider">
+        <div className="border-t-[0.5px] border-light-divider">
           {suggestions.map((s) => (
             <SuggestionRow key={s.text} {...s} dark={dark} />
           ))}
@@ -107,6 +108,7 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
           mic={variant === "en" ? "plain" : "circle"}
           sendDark={variant === "cn"}
           stacked={variant === "cn"}
+          tall={variant === "en"}
         />
       </div>
     </div>

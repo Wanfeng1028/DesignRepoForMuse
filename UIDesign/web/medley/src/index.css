@@ -34,7 +34,7 @@
   --color-model-claude: #b0703c;
   --color-model-glm: #c65d7b;
   --color-model-kimi: #9a9a3e;
-  --color-model-deepseek: #5b8a99;
+  --color-model-deepseek: #5F788C;
   --color-model-gpt: #3fa34d;
 
   /* Type scale — visual estimates at the 390px render frame, per DESIGN-TOKENS.md. */
@@ -84,9 +84,12 @@ body {
  * rotates 180deg on toggle; mic/stop/send glyphs fade-scale in when the
  * composer state prop changes. No keyframe morphing is faked for pairs
  * with no toggle in the original (M1/M5/M6/M7 — see CHANGELOG). */
+/* v1.6: iOS easing (platform convention — original motion durations and
+ * curves are unobservable in static screenshots, so durations are
+ * unchanged and only the curves move to iOS standards; see CHANGELOG). */
 .morph-rotate {
   display: inline-flex;
-  transition: transform 200ms ease;
+  transition: transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .morph-rotate[data-open="true"] {
   transform: rotate(180deg);
@@ -102,5 +105,14 @@ body {
   }
 }
 .morph-in {
-  animation: morph-in 180ms ease;
+  animation: morph-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph-rotate {
+    transition: none;
+  }
+  .morph-in {
+    animation: none;
+  }
 }

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "../lib/utils";
 import { Icon } from "../components/icons";
-import { MedleyMark, ModelDots } from "../components/medley-mark";
+import { MedleyMark, BrandDots } from "../components/medley-mark";
 
 export type DesktopLayoutProps = {
   /** Left session/nav column. */
@@ -38,7 +38,10 @@ export function DesktopLayout({ sidebar, children, rightPanel, dark = false, top
         <div className="flex flex-1 items-center justify-center">
           {topCenter ?? (
             <span className="inline-flex items-center gap-1.5 rounded-chip bg-user-bubble-light px-3 py-[7px] text-[14px] font-semibold text-light-text">
-              <ModelDots />
+              {/* v1.6: Auto dots are BrandDots (desktop chrome keeps its
+                  pill — it is desktop chrome, not a mobile screen, and no
+                  mobile evidence covers it; only the dot motif changes). */}
+              <BrandDots />
               Auto
               {Icon.chevronDown(sub)}
             </span>
@@ -57,7 +60,7 @@ export function DesktopLayout({ sidebar, children, rightPanel, dark = false, top
           {children}
         </main>
         {rightPanel && (
-          <aside className="hidden w-[360px] shrink-0 overflow-y-auto border-l border-light-divider bg-light-card p-4 xl:block">
+          <aside className="hidden w-[360px] shrink-0 overflow-y-auto overflow-x-hidden border-l border-light-divider bg-light-card p-4 xl:block">
             {rightPanel}
           </aside>
         )}

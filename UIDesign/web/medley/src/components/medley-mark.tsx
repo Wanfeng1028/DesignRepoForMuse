@@ -38,13 +38,13 @@ export function ModelDot({ model, size = 8 }: { model: string; size?: number }) 
 
 /**
  * v1.5 brand dot cluster (photo-9): three glossy balls on a rising diagonal
- * beside the Medley wordmark (welcome header) and beside "Auto" (home pill).
+ * beside the Medley wordmark (welcome header) and beside "Auto".
  * Centres in photo-9 TL: green (132,200), blue (143,193), pink (156,188):
  * ~11-13 photo px apart horizontally, rising ~12 photo px overall, discs
  * ~14 photo px. At web scale that is 9px discs, 0/4/8px rises, touching.
- * Vector redraw only; no brand bitmap is copied. This is NOT ModelDots
- * (the 5-dot horizontal row used by chat-info / picker / pricing rows,
- * which rest on older evidence and are untouched here).
+ * Vector redraw only; no brand bitmap is copied. v1.6: this is the Auto
+ * motif everywhere (home, picker Auto card, chat-info backdrop, desktop
+ * chrome) — the old 5-dot horizontal Auto row is retired.
  */
 export function BrandDots({ size = 9 }: { size?: number }) {
   const dots = [tokens.colors.brandDotGreen, tokens.colors.brandDotBlue, tokens.colors.brandDotPink];
@@ -62,17 +62,44 @@ export function BrandDots({ size = 9 }: { size?: number }) {
 }
 
 /**
- * Dot cluster. Default 5 dots (Auto pill, chat-info model line — home Auto
- * pill count is unconfirmed past ~5 in JPEG, see audit待量15, so it is
- * left at 5). Pricing rows pass count={6} (v1.3 C10: 6 dots per row in the
- * original, pink 6th dot appended to the existing five hues).
+ * Dot cluster. v1.6: Auto everywhere is BrandDots now (welcome header,
+ * home, picker Auto card, chat-info backdrop, desktop chrome); ModelDots
+ * remains ONLY for the pricing Pro-card dot row (horizontal, 6 dots).
+ * Gap is a prop because the Pro row pitch measures ~14 CSS (size 8 +
+ * gap 6), not the old gap-2 pitch 10 (HD5 pricing, saturation peaks
+ * x165/184/206/226/247/265).
  */
-export function ModelDots({ size = 6, count = 5 }: { size?: number; count?: number }) {
+export function ModelDots({ size = 6, count = 5, gap = 2 }: { size?: number; count?: number; gap?: number }) {
   const dots = [tokens.colors.modelDotsFirst, "#4A7DE4", "#2EB5A5", "#9B5DE5", "#3FA34D", "#C65D7B"];
   return (
-    <span style={{ display: "inline-flex", gap: 2, alignItems: "center" }} aria-hidden="true">
+    <span style={{ display: "inline-flex", gap, alignItems: "center" }} aria-hidden="true">
       {dots.slice(0, count).map((d, i) => (
         <span key={i} style={{ width: size, height: size, borderRadius: "50%", background: d, display: "inline-block" }} />
+      ))}
+    </span>
+  );
+}
+
+/**
+ * v1.6 pricing top dot row: SIX glossy dots on a RISING DIAGONAL, not a
+ * horizontal row (HD5 pricing centres (106,206) (139,196) (172,186)
+ * (203,175) (237,168) (271,160): pitch ~23 CSS, rises [0,6,13,19,26,32]).
+ * Palette in original left-to-right order; the yellow slot reuses the
+ * Kimi olive #9A9A3E as a documented estimate (the measured yellow-green
+ * median is gloss-mixed, its base is not directly separable). Gloss
+ * finish matches BrandDots/ModelDot (saturated base + white highlight).
+ */
+export function DiagonalDots({ size = 10 }: { size?: number }) {
+  const dots = ["#C65D7B", "#4A7DE4", "#9A9A3E", "#2EB5A5", "#9B5DE5", "#E2A181"];
+  const rises = [0, 6, 13, 19, 26, 32];
+  const pitch = 23;
+  return (
+    <span style={{ display: "inline-flex", alignItems: "flex-end", gap: pitch - size, flexShrink: 0 }} aria-hidden="true">
+      {dots.map((d, i) => (
+        <span
+          key={i}
+          style={{ width: size, height: size, marginBottom: rises[i], borderRadius: "50%", background: `radial-gradient(circle at 35% 30%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 55%), ${d}`, display: "inline-block" }}
+        />
       ))}
     </span>
   );

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
-import { cn } from "../lib/utils";
 import { Icon } from "./icons";
-import { ModelDots, ModelDot } from "./medley-mark";
+import { BrandDots, ModelDot } from "./medley-mark";
 import { Tabs, TabsList, TabsTrigger } from "./ui/controls";
 import { Dialog, DialogTrigger, DialogContent } from "./ui/dialog";
 
@@ -17,15 +16,18 @@ export type ModelRowData = {
 
 export type ModelSectionData = { title: string; desc: string; rows: ModelRowData[] };
 
-function Row({ row, last }: { row: ModelRowData; last?: boolean }) {
+function Row({ row }: { row: ModelRowData }) {
   return (
-    <div className={cn("flex items-center gap-2.5 py-[11px]", !last && "border-b border-dark-divider")}>
+    <div className="flex items-center gap-2.5 py-[11px]">
       <ModelDot model={row.name} />
       <div className="min-w-0 flex-1">
         <div className="text-list-item font-semibold text-dark-text">{row.name}</div>
         <div className="text-secondary text-dark-sub">{row.desc}</div>
       </div>
       <div className="flex shrink-0 items-center gap-2">
+        {/* v1.6: the Fable "Pro+" badge carries a lock glyph before the pill
+            in the original (HD5 pickerA) — Lucide lock, 14px, dark-sub. */}
+        {row.badge === "Pro+" && <span className="inline-flex" style={{ color: "#9A9BA2" }}>{Icon.lock("#9A9BA2", 14)}</span>}
         {row.badge && <BadgeOutline label={row.badge} />}
         {row.unavailableNote ? (
           <div className="w-[110px] text-right text-caption leading-[1.4] text-dark-dim">{row.unavailableNote}</div>
@@ -53,19 +55,21 @@ function Section({ section }: { section: ModelSectionData }) {
       <div className="text-section-title font-bold text-dark-text">{section.title}</div>
       <div className="text-secondary text-dark-sub mt-0.5">{section.desc}</div>
       <div>
-        {section.rows.map((r, i) => (
-          <Row key={r.name} row={r} last={i === section.rows.length - 1} />
+        {section.rows.map((r) => (
+          <Row key={r.name} row={r} />
         ))}
       </div>
     </div>
   );
 }
 
-/** Auto card shared by both picker variants, with the 5-dot cluster. */
+/** Auto card shared by both picker variants. v1.6: the Auto row carries
+ * the 3-dot diagonal BrandDots cluster (HD5 pickerA shows the same
+ * green/blue/pink diagonal as welcome/home), not the 5-dot row. */
 export function AutoCard({ recommended = true }: { recommended?: boolean }) {
   return (
     <div className="mt-3.5 flex items-center gap-2.5 rounded-card bg-dark-row px-4 py-[13px]">
-      <ModelDots />
+      <BrandDots />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-body font-bold text-dark-text">Auto</span>
@@ -109,7 +113,7 @@ export function ModelPickerHeader({ howCreditsText }: { howCreditsText?: string 
  */
 export function ModelPickerA({ sections, howCreditsText }: { sections: ModelSectionData[]; howCreditsText?: string }) {
   return (
-    <div className="bg-dark-bg text-dark-text">
+    <div className="bg-dark-card text-dark-text">
       <ModelPickerHeader howCreditsText={howCreditsText} />
       <AutoCard />
       <div className="flex items-center justify-center gap-0.5 pt-3.5 text-secondary text-dark-sub">
@@ -161,7 +165,7 @@ export function ModelPickerB({
   howCreditsText?: string;
 }) {
   return (
-    <div className="bg-dark-bg text-dark-text">
+    <div className="bg-dark-card text-dark-text">
       <ModelPickerHeader howCreditsText={howCreditsText} />
       <AutoCard />
       {sections.map((s) => (
@@ -186,8 +190,8 @@ export function ModelPickerB({
         <div className="text-secondary text-dark-sub mt-2">Auto picks the level for each message.</div>
       </div>
       <div className="pt-2">
-        {untitledRows.map((r, i) => (
-          <Row key={r.name} row={r} last={i === untitledRows.length - 1} />
+        {untitledRows.map((r) => (
+          <Row key={r.name} row={r} />
         ))}
       </div>
     </div>
