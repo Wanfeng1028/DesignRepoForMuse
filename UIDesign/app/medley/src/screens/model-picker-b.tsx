@@ -17,17 +17,17 @@ export default function ModelPickerB() {
           </div>
           <AutoCard />
           <ModelSection title="Advanced" desc="Better at writing and reasoning.">
-            <ModelRow name="GLM-5" desc="Long documents and writing" dot="#4a7de4" last right={<ModelCost value="-31" />} />
+            <ModelRow name="GLM-5" desc="Long documents and writing" dot="#e1b3c7" last right={<ModelCost value="~31" />} />
           </ModelSection>
           <ModelSection title="Flagship" desc="Strong all-rounders for serious work.">
             <ModelRow
               name="Claude Sonnet 5.5"
               desc="Writing and coding"
-              dot="#e2a181"
+              dot="#dfc1ad"
               last
               right={
                 <div className="flex items-center gap-2">
-                  <ModelCost value="-80" />
+                  <ModelCost value="~80" />
                   {Icon.check('#f5f5f7')}
                 </div>
               }
@@ -39,16 +39,16 @@ export default function ModelPickerB() {
             hint="Auto picks the ideal for each message."
           />
           <div className="px-5 pt-2">
-            <ModelRow name="GPT-6.1 Sol" desc="Advanced reasoning" dot="#3fa34d" right={<ModelCost value="-80" />} />
+            <ModelRow name="GPT-6.1 Sol" desc="Advanced reasoning" dot="#afddc9" right={<ModelCost value="~80" />} />
             <ModelRow
               name="Kimi K3"
               desc="Very long documents"
-              dot="#9b5de5"
+              dot="#d4da9f"
               right={
                 <div className="w-[110px] text-right text-caption leading-[1.4] text-dark-dim">Not available in this chat</div>
               }
             />
-            <ModelRow name="Claude Opus 5.5" desc="Deep, careful work" dot="#e2a181" last right={<ModelCost value="-160" />} />
+            <ModelRow name="Claude Opus 5.5" desc="Deep, careful work" dot="#dfc1ad" last right={<ModelCost value="~160" />} />
           </div>
         </div>
       </div>

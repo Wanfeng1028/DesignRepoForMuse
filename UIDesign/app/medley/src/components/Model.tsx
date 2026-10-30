@@ -1,7 +1,9 @@
 import { modelDotColor } from '../tokens'
 
 export function ModelDots({ size = 6 }: { size?: number }) {
-  const dots = ['#e2a181', '#4a7de4', '#2eb5a5', '#9b5de5', '#3fa34d']
+  // v1.5 pastel: same family as the pricing arc (orig Pro-card/Auto rows are
+  // pale pastel, not saturated). Order follows the arc's first five dots.
+  const dots = ['#dcb1c2', '#abceee', '#dfdda7', '#afddc9', '#cdb9e8']
   return (
     <span className="inline-flex items-center gap-0.5">
       {dots.map((d, i) => (
@@ -12,16 +14,18 @@ export function ModelDots({ size = 6 }: { size?: number }) {
 }
 
 /**
- * Pricing top dots arc, measured from the HD pricing crop (side-image coords):
- * 6 pastel dots, 10px, pitch 20px, rising to the right with drops
- * 8/7/7/6/5px (gentle arc, flattening right). Used ONLY by the pricing
- * top row; the Pro-card dots row stays a flat ModelDots (orig shows it flat).
+ * Pricing top dots arc, measured from the HD pricing strip (panel coords):
+ * 6 pastel dots, 10px, pitch 24.8px @390 (v1.5: was 20px by crop-width error),
+ * rising to the right. Used ONLY by the pricing top row; the Pro-card dots
+ * row stays a flat ModelDots (orig shows it flat).
  */
 export function ModelDotsArc({ size = 10 }: { size?: number }) {
   const dots = ['#dcb1c2', '#abceee', '#dfdda7', '#afddc9', '#cdb9e8', '#eab6a3']
-  const rise = [5, 13, 20, 27, 33, 38]
+  // v1.5: rise tuned so per-point drops match orig strip drops
+  // (0/8.2/15.4/22.6/28.7/34.9) within 0.4px; total rise 35px vs orig 34.9.
+  const rise = [5, 13, 20, 28, 34, 40]
   return (
-    <span className="inline-flex items-start gap-[10px]">
+    <span className="inline-flex items-start gap-[15px]">
       {dots.map((d, i) => (
         <span
           key={i}

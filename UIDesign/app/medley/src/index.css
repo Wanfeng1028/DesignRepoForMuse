@@ -24,6 +24,7 @@
   /* Accent / function */
   --color-accent: #e2a181;
   --color-brand-dot: #fd6718;
+  --color-drawer-dot: #e2a181;
   --color-dark-pill: #303135;
   --color-black-btn: #111214;
   --color-white-btn: #ffffff;
@@ -31,12 +32,12 @@
   --color-chart-amber: #8c553c;
   --color-chart-pink: #c65d7b;
   --color-chart-teal: #5b8a99;
-  /* Model dots: measured approximations only (4-5px dots, see README residual) */
-  --color-model-claude: #b0703c;
-  --color-model-glm: #c65d7b;
-  --color-model-kimi: #9a9a3e;
-  --color-model-deepseek: #5b8a99;
-  --color-model-gpt: #3fa34d;
+  /* Model dots: v1.5 pastel, measured patches (see tokens/index.ts) */
+  --color-model-claude: #dfc1ad;
+  --color-model-glm: #e1b3c7;
+  --color-model-kimi: #d4da9f;
+  --color-model-deepseek: #a1bfd3;
+  --color-model-gpt: #afddc9;
   /* Radii */
   --radius-input: 26px;
   --radius-button: 26px;
@@ -46,9 +47,9 @@
   --radius-chip: 20px;
   --radius-phone: 44px;
   /* Font sizes (visual estimates unless noted; see tokens/index.ts) */
-  --text-welcome: 38px;
+  --text-welcome: 43px;
   --text-welcome--line-height: 1.15;
-  --text-greeting: 27px;
+  --text-greeting: 28px;
   --text-greeting--line-height: 1.25;
   --text-page: 20px;
   --text-page--line-height: 1.3;
@@ -62,7 +63,7 @@
   --text-secondary--line-height: 1.45;
   --text-caption: 12px;
   --text-caption--line-height: 1.45;
-  --text-huge: 44px;
+  --text-huge: 51px;
   --text-huge--line-height: 1.1;
   --text-status: 13px;
   --text-status--line-height: 1;
@@ -81,4 +82,27 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+/* v1.5 morphing: state-change transitions only, no static visual change. */
+.morph-chevron svg {
+  transition: transform 200ms ease;
+}
+[data-state='open'] .morph-chevron svg {
+  transform: rotate(180deg);
+}
+.morph-poll-dot {
+  transition: transform 200ms ease;
+}
+.morph-poll-ring {
+  transition: border-color 200ms ease;
+}
+
+/* v1.5 bare verification shots (?screen=<id>&bare=1): screen content only,
+ * no device frame. The gallery view (no bare param) keeps the frame. */
+.shot-bare .phone-frame {
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  height: 844px;
 }

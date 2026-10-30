@@ -51,7 +51,7 @@ export default function SearchDrawerDark() {
                 </div>
                 {r.badge && (
                   <span className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-accent" />
+                    <span className="h-2 w-2 rounded-full bg-drawer-dot" />
                     <span className="text-secondary text-dark-sub">{r.badge}</span>
                   </span>
                 )}

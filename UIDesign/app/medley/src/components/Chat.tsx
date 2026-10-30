@@ -19,11 +19,23 @@ export function UserBubble({ dark, children, className }: { dark: boolean; child
   )
 }
 
-export function AiMeta({ dark, model, sub }: { dark: boolean; model: string; sub?: string }) {
+export function AiMeta({
+  dark,
+  model,
+  sub,
+  dot = true,
+}: {
+  dark: boolean
+  model: string
+  sub?: string
+  /** v1.5: lisbon-cn orig has NO dot on either AiMeta row (en orig has dots);
+   *  the two screens must not share one dot logic, so cn passes dot={false}. */
+  dot?: boolean
+}) {
   return (
     <div className="my-4 mb-2">
       <div className={cn('flex items-center gap-1.5 text-[14px] font-semibold', dark ? 'text-dark-text' : 'text-light-text')}>
-        <ModelDot model={model} />
+        {dot && <ModelDot model={model} />}
         {model}
       </div>
       {sub && <div className={cn('mt-1 text-[13px]', dark ? 'text-dark-sub' : 'text-light-sub')}>{sub}</div>}
@@ -89,16 +101,19 @@ export function SourcesChip({
   dark,
   badges,
   countLabel,
+  className,
 }: {
   dark: boolean
   badges: string[]
   countLabel: string
+  className?: string
 }) {
   return (
     <div
       className={cn(
         'mt-[14px] inline-flex items-center gap-1 rounded-chip border px-3 py-[5px] text-caption',
         dark ? 'border-dark-divider text-dark-sub' : 'border-light-divider text-light-sub',
+        className,
       )}
     >
       {badges.map((b) => (

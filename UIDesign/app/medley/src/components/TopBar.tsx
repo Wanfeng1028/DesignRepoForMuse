@@ -48,7 +48,7 @@ export function ModelPill({
         >
           <ModelDots />
           {label}
-          {Icon.chevronDown(sub)}
+          <span className="morph-chevron flex">{Icon.chevronDown(sub)}</span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

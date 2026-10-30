@@ -10,8 +10,8 @@ export const meta = { id: 'home-light-cn', title: 'Home (light, CN)', source: 'c
 
 export default function HomeLightCn() {
   return (
-    <Phone theme="light">
-      <div className="flex min-h-0 flex-1 flex-col bg-light-bg">
+    <Phone theme="light" className="bg-white">
+      <div className="flex min-h-0 flex-1 flex-col bg-white">
         <TopBar
           dark={false}
           left={Icon.menu('#17181c')}
@@ -41,7 +41,7 @@ export default function HomeLightCn() {
           <SuggestionRow dark={false} icon={Icon.cards('#6b6c72')} text="把笔记做成闪卡" />
         </div>
         <div className="h-3" />
-        <InputBar dark={false} placeholder="有问题，尽管问" modelLabel="自动" sendDark />
+        <InputBar dark={false} placeholder="有问题，尽管问" modelLabel="自动" sendDark variant="double" />
       </div>
     </Phone>
   )

@@ -68,7 +68,7 @@ export function Phone({
   return (
     <div
       className={cn(
-        'flex h-[852px] w-[390px] shrink-0 flex-col overflow-hidden rounded-phone border-2 border-[#1c1c1e] font-sans shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
+        'phone-frame flex h-[852px] w-[390px] shrink-0 flex-col overflow-hidden rounded-phone border-2 border-[#1c1c1e] font-sans shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
         dark ? 'bg-dark-bg text-dark-text' : 'bg-light-bg text-light-text',
         className,
       )}

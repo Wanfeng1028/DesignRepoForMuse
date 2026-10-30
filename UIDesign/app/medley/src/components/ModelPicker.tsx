@@ -5,7 +5,8 @@ import { ModelDots } from './Model'
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 
 export function ModelDot8({ color }: { color: string }) {
-  return <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: color }} />
+  // v1.5: 8px -> 7px (orig ~4-7px @390, erosion allowance; 7px is the top of range)
+  return <span className="h-[7px] w-[7px] shrink-0 rounded-full" style={{ background: color }} />
 }
 
 export function ModelRow({
@@ -53,7 +54,7 @@ export function ModelSection({
 }) {
   return (
     <div className="px-5 pt-5">
-      <div className="text-section font-bold text-dark-text">{title}</div>
+      <div className="text-[15px] font-bold text-dark-text">{title}</div>
       <div className="mt-0.5 text-secondary text-dark-sub">{desc}</div>
       <div>{children}</div>
     </div>

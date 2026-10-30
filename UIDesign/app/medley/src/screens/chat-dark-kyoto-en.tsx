@@ -26,11 +26,13 @@ function PollOption({ label, selected }: { label: string; selected?: boolean }) 
       }`}
     >
       <span
-        className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 ${
+        className={`morph-poll-ring flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 ${
           selected ? 'border-light-text' : 'border-dark-sub'
         }`}
       >
-        {selected && <span className="h-[9px] w-[9px] rounded-full bg-light-text" />}
+        <span
+          className={`morph-poll-dot h-[9px] w-[9px] rounded-full bg-light-text ${selected ? 'scale-100' : 'scale-0'}`}
+        />
       </span>
       {label}
     </div>

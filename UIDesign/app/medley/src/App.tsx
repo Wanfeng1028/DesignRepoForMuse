@@ -110,7 +110,7 @@ function Showcase() {
         <div className="rounded-card bg-dark-card p-5">
           <div className="mb-3 text-[13px] font-bold text-dark-sub">Model picker: AutoCard / ModelRow / Thinking</div>
           <div className="mx-[-20px]"><AutoCard /></div>
-          <ModelRow name="GLM-5" desc="Long documents and writing" dot="#4a7de4" last right={<ModelCost value="-31" />} />
+          <ModelRow name="GLM-5" desc="Long documents and writing" dot="#e1b3c7" last right={<ModelCost value="~31" />} />
           <ThinkingControl segments={['Auto', 'Off', 'Low', 'Med', 'High', 'Max']} value="Auto" hint="Auto picks the ideal for each message." />
         </div>
         <div className="rounded-card bg-dark-card p-5">
@@ -144,13 +144,18 @@ function Showcase() {
 export default function App() {
   const params = new URLSearchParams(window.location.search)
   const single = params.get('screen')
+  // bare=1: verification shots without the device frame (Q8); the gallery
+  // view below keeps the frame. Bare renders at scale 1.0 in a 390x844
+  // window; .shot-bare CSS (index.css) strips the Phone frame and fits its
+  // 852px height to 844px, so element sizes read exactly as coded.
+  const bare = params.get('bare') === '1'
   if (single) {
     const found = screens.find((s) => s.meta.id === single)
     if (found) {
       const C = found.default
       return (
-        <div style={{ width: 390, height: 844, overflow: 'hidden', background: '#0b0b0e' }}>
-          <div style={{ transform: 'scale(0.9906)', transformOrigin: 'top left' }}>
+        <div className={bare ? 'shot-bare' : undefined} style={{ width: 390, height: 844, overflow: 'hidden', background: '#0b0b0e' }}>
+          <div style={bare ? undefined : { transform: 'scale(0.9906)', transformOrigin: 'top left' }}>
             <C />
           </div>
         </div>

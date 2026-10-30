@@ -19,10 +19,10 @@ const rows = [
 
 export default function LanguageLight() {
   return (
-    <Phone theme="light">
+    <Phone theme="light" className="bg-[#fdfdfd]">
       <div className="flex min-h-0 flex-1 flex-col">
         <TopBar dark={false} left={Icon.back('#17181c')} center={<span />} right={<span />} />
-        <div className="px-5 pb-2 pt-1 text-page font-bold leading-[1.3] text-light-text">App language</div>
+        <div className="px-5 pb-2 pt-1 text-[18px] font-bold leading-[1.3] text-light-text">App language</div>
         <div className="px-5">
           {rows.map((row) => (
             <div key={row.name} className="flex items-center border-b border-light-divider py-2.5">

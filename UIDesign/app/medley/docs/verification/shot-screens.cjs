@@ -16,12 +16,19 @@ const IDS = ['welcome-dark','home-light-en','home-light-cn','chat-dark-lisbon-en
 const SHELL = '/home/hatch/.cache/ms-playwright/chromium_headless_shell-1243/chrome-linux/headless_shell'
 
 function main() {
-  const outDir = __dirname
+  // Default: framed shots into this dir (existing behaviour).
+  // Bare mode: node shot-screens.cjs --bare <outdir> [screen-id]
+  // writes frameless verification shots (?screen=<id>&bare=1) for Q8.
+  const args = process.argv.slice(2)
+  const bare = args.includes('--bare')
+  const rest = args.filter((a) => a !== '--bare')
+  const outDir = bare ? path.resolve(__dirname, rest[0] || 'rounds/v1.5') : __dirname
+  const only = bare ? rest[1] : rest[0]
   const dist = path.resolve(__dirname, '../../dist/index.html')
-  const only = process.argv[2]
   const ids = only ? [only] : IDS
   for (const id of ids) {
-    execFileSync(SHELL, ['--headless','--disable-gpu','--no-sandbox','--allow-file-access-from-files','--hide-scrollbars','--window-size=390,844','--virtual-time-budget=8000','--screenshot=' + path.join(outDir, id + '.png'), 'file://' + dist + '?screen=' + id], { stdio: 'ignore' })
+    const url = 'file://' + dist + '?screen=' + id + (bare ? '&bare=1' : '')
+    execFileSync(SHELL, ['--headless','--disable-gpu','--no-sandbox','--allow-file-access-from-files','--hide-scrollbars','--window-size=390,844','--virtual-time-budget=8000','--screenshot=' + path.join(outDir, id + '.png'), url], { stdio: 'ignore' })
     console.log('shot', id)
   }
 }

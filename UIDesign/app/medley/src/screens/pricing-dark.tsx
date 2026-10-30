@@ -11,9 +11,7 @@ export default function PricingDark() {
     <Phone theme="dark">
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-0 pt-1">
         <div className="my-1 mb-[14px]">{Icon.close('#f5f5f7')}</div>
-        <div className="ml-[72px]">
-          <ModelDotsArc size={10} />
-        </div>
+        <ModelDotsArc size={10} />
         <h1 className="my-2 mt-2 text-greeting font-bold leading-[1.25]">Every top AI in one app</h1>
         <p className="mb-3 text-[14px] leading-[1.5] text-dark-sub">
           Credits are based on each provider&apos;s official API price, and every answer shows what it used.

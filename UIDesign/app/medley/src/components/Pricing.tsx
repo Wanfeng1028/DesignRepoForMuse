@@ -49,8 +49,13 @@ export function PlanCard({
 }
 
 export function PlanFeature({ text }: { text: string }) {
+  // v1.5: 13px -> 12px. The orig Pro feature line is single-line; at 13px the
+  // VM's wider Noto font wraps "K3" onto a second line (278px vs 264px text
+  // width). 12px fits single-line in the VM (257px); the orig device font
+  // size for this line was never pixel-measured, so this is recorded as a
+  // VM-metric accommodation, not a confirmed orig size.
   return (
-    <div className="ml-[30px] mt-1.5 flex gap-2 text-[13px] leading-[1.45]">
+    <div className="ml-[30px] mt-1.5 flex gap-2 text-[12px] leading-[1.45]">
       <span className="shrink-0">{Icon.check('#f5f5f7', 16)}</span>
       <span>{text}</span>
     </div>

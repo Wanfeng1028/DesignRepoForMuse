@@ -25,30 +25,31 @@ export const tokens = {
     lightSub: '#6b6c72', // visual
     lightDim: '#9a9ba2', // visual
     lightBubble: '#edeef0', // measured
-    accent: '#e2a181', // measured (Lisbon mic centre), replaces old #e4754a
+    accent: '#e2a181', // measured (Lisbon mic centre), replaces old #e4754a; composer mic/stop only
     brandDot: '#fd6718', // measured: welcome dot centre pixels (253,103,24); distinct from mic peach
+    drawerDot: '#e2a181', // v1.5 split: drawer running dot gets its own token (same value until measured)
     darkPill: '#303135', // measured: pricing Yearly pill sample (48,49,53)
     blackBtn: '#111214', // visual
     whiteBtn: '#ffffff',
     chartAmber: '#8c553c', // measured, replaces old #b07a3b
-    modelClaude: '#b0703c', // approx
-    modelGlm: '#c65d7b', // approx
-    modelKimi: '#9a9a3e', // approx
-    modelDeepseek: '#5b8a99', // approx
-    modelGpt: '#3fa34d', // approx
+    modelClaude: '#dfc1ad', // v1.5 pastel: Lisbon-en Claude dot patch (223,193,173)
+    modelGlm: '#e1b3c7', // v1.5 pastel: Lisbon-en GLM dot patch (225,179,199)
+    modelKimi: '#d4da9f', // v1.5 pastel: picker pale yellow-green (212,218,159)
+    modelDeepseek: '#a1bfd3', // v1.5 pastel: picker pale blue (161,191,211)
+    modelGpt: '#afddc9', // v1.5 pastel: pricing arc pale green (166,213,192)
   },
   font: {
     family:
       "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Noto Sans SC', sans-serif",
-    welcomeTitle: 38,
-    greeting: 27,
+    welcomeTitle: 43, // v1.5: 38 -> 43 by cap scaling (render cap 26px @38 -> target 29.9px)
+    greeting: 28, // v1.5: 27 -> 28 (home-en greeting band -7% callback; home-cn -3% stays in range)
     pageTitle: 20,
     sectionTitle: 16,
     body: 16,
     listItem: 15,
     secondary: 13,
     caption: 12,
-    hugeNumber: 44,
+    hugeNumber: 51, // v1.5: 44 -> 51 by digit-height scaling (render 31px @44 -> target 35.9px)
     statusBar: 13, // measured: 10:24 cap height
   },
   spacing: { pagePadding: 20, sectionGap: 28, rowPaddingY: 14, cardGap: 12 },

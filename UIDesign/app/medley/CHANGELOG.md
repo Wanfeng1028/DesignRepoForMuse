@@ -75,3 +75,102 @@
 - 残差（无 verdict 引用，未改代码，列为问题）：① home-cn 原图底部输入条为双行高条（占位行+控制行），渲染为单行 52px InputBar；② home-cn 分段控件宽度与顶部图标圆圈与原图有目视差异；③ picker-a 原图积分数字前缀为 ~（~5/~11/~31/~80/~120/~400），渲染为 -（-5/-11/…）；④ lisbon-cn 原图顶栏中/右区亦为 pill 容器、底部输入条亦为双行（本轮只修了 verdict 引用的左钮圆圈）；⑤ AiMeta 圆点色：原图呈淡色辉光感，渲染为饱和模型色（v1.0 备案“实测近似”延续，lisbon-en 第 5 判“缺失”误读即源于此）；⑥ 旧残差沿用 v1.2/v1.3（VM 字体度量致折叠/折行类）。
 - 费用：claude 备选 18 次调用、约 72.5 万 prompt tokens（含 1 次无 verdict 畸形回复）；nemotron 6 次出 verdict（cost 0）+ 多次空 content/429；mimo 2 次（1 次 reasoning 耗尽无 verdict、1 次成功兜底）。密钥全程只放内存，未打印、未落文件。
 - 证据：rounds/round4/（全量：并排图、历次 verdict、日志、裁切、runner 与一次性探针脚本）与 rounds/v1.4/（18 张终版截图 + judge/ 终版并排图与终判）。未 commit、未 push、未 git add，工作区留待协调人统一提交。
+
+## v1.5 — 2026-10-30 — 修复轮（audit-20261030 全部 G 项 + T1–T16 + 图标迁移；P0 自行定夺）
+
+- 本轮性质：修复轮（控制块：用户只看最后结果，不中途汇报；P0 由本 agent 按原图实测证据自行定夺，全部记入本节；不 commit、不 push，工作区留待协调方统一提交）。构建：pnpm build 通过（tsc + vite，含 lucide-react）；18 张去边框验证截图存 docs/verification/rounds/v1.5/（bare 模式：`node docs/verification/shot-screens.cjs --bare rounds/v1.5`，390x844、scale 1.0，元素尺寸即代码值）；带框演示截图同步刷新于 docs/verification/*.png。裁判：本轮零调用（未取裁判密钥、未调 nemotron/claude/mimo）。理由：任务验收条明言“验收只认实测数据”，且往轮裁判幻觉率高；本轮以 PIL 实测为唯一放行依据，裁判仅为可选第二意见故跳过。
+- P0 决策（定夺 + 依据）：
+  - Q12/J1 圆点源：以 HD 中文源为准（鲜艳橙红）。welcome 圆点 token brandDot #fd6718 保持不动——该值是 welcome 圆点中心实测 (253,103,24)，与中文源 25x25 区域均值 (217,94,39) 一致（区域均值含深色底 blending，不是另一个颜色）；英文侧淡蓝灰 blob 来自小总览图、不可靠，不采用。
+  - accent token 拆分：此前 accent #e2a181 承载四处（welcome 圆点/composer 圆钮/drawer 运行点/ModelDots 首点）。现 welcome 圆点仍用 brandDot（早已独立），composer mic/stop 继续用 accent，drawer 运行点新立 drawerDot token（值同为 #e2a181，结构分离以便日后独立改色），ModelDots 首点改走淡 pastel 弧线色（不再用 accent 值）。
+  - Q16/Q17 contested：按已确认的修复算，不重判、不重跑裁判。L1/L2/L3 与 Fable Pro+ 在位均经本轮实测证实；G31 位置差另行修复（见下）。
+  - Q18/Q20：双行输入条与顶栏药丸按原图量值落地，范围覆盖原图有此形态的屏：双行条仅 home-cn 与 lisbon-cn（lisbon-en 原图确为单行，G21；home-en 未量出双行，不动）；顶栏双 pill 仅 lisbon-cn。
+  - Q21 圆点色：按原图实测淡 pastel 色改，不统一猜。映射见“圆点 pastel”一节。
+  - Q13/Q19 前缀：模型行成本前缀 `-` 改 `~`（G30 已确认字形错误，约数 vs 负值）；Thinking 行无数字前缀可改（本套 Thinking 控件根本不渲染倍率数字，G36 备案延续，原因见下）。
+  - Q8：验证截图去边框出图（bare 模式），gallery 演示保留设备框。
+- 修复逐项（原图值 vs 改后值；PIL 量出 + 代码 token 读出）：
+  - G01 welcome 标题：代码 38px → 43px（按 cap 缩放：渲染 cap 26px @38 → 目标 29.9px）。复量：标题 L 簇 cap 29px vs 原图 29.9px（-3%，原 -13%）。
+  - G02 副文案：首行 16px → 15px（原图估计 15.4px；第二行 15px 不动）。复量：E cap 11 行 vs 目标 11.1（原 12）。
+  - G03 脚注左缘：加 pl-[3.5px]。复量：脚注左缘比按钮内缩约 3–4px vs 原图 3.5px（原仅 1px）。
+  - G04 MedleyMark：审计以代码 size（26）比原图 painted 高（25.1）混了单位；本轮实测：标志路径纵跨 viewBox 高 19 单位中的 18，故 painted 高 = size x 18/19；size 26 → 24.6px（-2%），size 25 → 23.7px（-5.7%）。结论：26 更接近原图，v1.5 初改的 25 已回退为 26（复量 bright 区跨度 24 行，与 24.6 一致）。G04 记为“复量纠正、维持 26”，不是一次尺寸改动。
+  - G05 pricing 弧线起点：删 ml-[72px] 包裹，弧线直接顶内容左缘。复量：首点中心距内容左缘 +4.5px vs 原图约 4px（原 77px）。
+  - G06 弧线点距：ModelDotsArc gap 10px → 15px。复量：点距 25px vs 原图 24.8px（+0.8%，原 -20%）。
+  - G07 弧线抬升：rise [5,13,20,27,33,38] → [5,13,20,28,34,40]。复量（重建重拍后）：6 点中心落差 [0,8,15,23,29,35] vs 原图 [0,8.2,15.4,22.6,28.7,34.9]，逐点偏差 ≤0.4px（原末点 -1.9px）。G07 闭合。
+  - G08 单点直径：复量 10x10px，与上限吻合，下限腐蚀可解释，确认不改。
+  - G09 Pro 卡五点：ModelDots 改弧线同系淡 pastel（见圆点一节）。复量：五点逐值 (220,177,194)/(171,206,238)/(223,221,167)/(175,221,201)/(205,185,232)，与 token 逐值一致。
+  - G10 Pro 特性行折行：初版复量曾误判单行（亮带阈值漏掉了仅 2 字“ K3”的弱带）；目视全屏发现仍折行后修正：PlanFeature 字号 13px → 12px（VM Noto 比原设备字体宽，13px 下全文宽约 278px vs 文本区 264px；12px 下约 257px，单行）。复量：特性行单带 468–476，无第二带。注明：原图该行字号未曾逐像素量出，12px 是 VM 度量 accommodation，不是确认的原图字号。
+  - G11 页脚链接首屏位置：G10 单行后内容上收 19px，页脚行复量 y810–821，首屏内（原在首屏外）。G10/G11 同闭合；v1.4 带框截图 0.9906 缩放致有效宽少约 3px，恰在折行边界上，是旧误判的另一成因。
+  - G12 home-cn 双行条：InputBar 新增 variant="double"（占位行 32px + 控制行 56px = 88px），仅 home-cn 与 lisbon-cn 用。复量：88px vs 原图 87–91px。
+  - G13 home-cn 底色：Phone 与内层 bg-light-bg → bg-white。复量：(255,255,255)（原图同值）。home-en 不动：其原图约 246 与 lightBg (245,246,248) 吻合，复量 (245,246,248)。
+  - G14 home-en 问候行高：greeting token 27px → 28px，记部分闭合。依据：两个直接量在 28px 时均已入 ±1%（home-cn 中文字形高 26→27.0px vs 原图 26.7px，+1%；pricing 标题 E cap 19→19.7px vs 原图 19.5px，+1%）；唯 EN 行带法噪声大且受 InputBar +4px 致 spacer 收缩的位置移动干扰（v1.4 带 (489,508) → v1.5 主带 (486,504) + 降部点 508，顶缘上移 3px 是位置移动、非字号变化），若为 EN 单指标加到 29px 会把两项直接量推到约 +5%。故停在 28px，EN 行带在噪声内未进一步闭合。
+  - G15 顶栏下拉箭头：chevron svg 16px → 14px。复量：灰簇宽 8px vs 原图 8.2px（原 9px）。
+  - G16 lisbon-en 停止钮圆底：stop-accent 圆 36px → 41px。复量：41x41px vs 原图 41.0px（原渲染 35px）。
+  - G17 停止钮内黑方块：方块 12px → 9px。复量：9x9px vs 原图 9.2x8.2px（原 11x11px）。
+  - G18 lisbon-en GLM 圆点：token modelGlm #e1b3c7。复量：中心 patch (225,179,199)，与原图逐值一致。
+  - G19 Claude 圆点：token modelClaude #dfc1ad。复量：淡桃在位（GLM 已逐值验过同码路径）。
+  - G20 lisbon-en 正文：腐蚀修正后约 -0–10%，在 allowance 内；复量 H 列带 229–240（12 行含抗锯齿），确认不扩大、不改字号。
+  - G21 lisbon-en 单行输入条：InputBar 单行高 52px → 56px。复量：56px vs 原图 56.4px（影响 home-en、train、savings、kyoto、router、lisbon-en；home-cn/lisbon-cn 走 double；agent-team 自定义 52px 条不动）。
+  - G22 lisbon-cn 顶栏左钮：36px → 46px。复量：46x46px vs 原图约 45.5px。
+  - G23 lisbon-cn 中 pill：新增（bg #1c2026 即 (28,32,38)，标题 12px bold + 副行 10px，px-2 py-[1px] leading-[1.15]）。复量：100x27px，与原图约 100x27px 逐值一致。
+  - G24 lisbon-cn 右 pill：新增（bg #1a202a 即 (26,32,42)，px-1.5 py-[5px] gap-2，edit/more 均为 18px；edit 新增 size 参数，默认 20）。复量：56x28px，宽与原图约 56px 一致。
+  - G25 lisbon-cn 双行条：variant="double"。复量：88px（同 G12）。
+  - G26 lisbon-cn 白色停止钮：stop 圆 36px → 29px、方块 12px → 9px（与 stop-accent 分开，不再共用尺寸）。复量：白圆 29x29px vs 原图 28.9px、方块 9x9px vs 原图 9.4px。
+  - G27 lisbon-cn AiMeta 多余圆点：Chat.tsx AiMeta 新增 dot?: boolean = true，lisbon-cn 两处传 dot={false}。复量：GLM 区饱和簇为零，Claude 区仅余正文笔画细簇（无 8px 圆点，文字改从 x20 起排）；en 屏保留圆点，两屏逻辑分开。
+  - G28 lisbon-cn 第三条 bullet 折行：标签 px-[7px] → px-[6px]、gap-1.5 → gap-1。复量：第三条仅单带 (376,390)，单行。
+  - G29 lisbon-cn 来源行：原图裁切目视确认结构为 chip 独行 + 统计/图标同行（非拥挤单行）；SourcesChip 新增 className 透传（经 cn() 合并，cn 屏传 mt-0 覆盖默认 mt-[14px]），来源行改为两行结构（SourcesChip T/L/V + “3个来源”独行，其下 ActionRow credits="28积分 1.1秒 71 tok/s"）。复量：chip 三方块 16x16 在位。
+  - G30 成本前缀：picker-a/b 全部 `-` → `~`（~5/~11/~31/~80/~120/~400 与 ~31/~80/~80/~160）；全 src grep 确认无 `value="-` 残留；App 展示行同步 `~31`。
+  - G31 Fable Pro+ 角标：右区由上下叠放改为同行（flex items-start gap-2，Pro+ 角标 mt-[2px] 与成本首行同基线对齐）。目视确认：Pro+ 与 ~400 同行同基线；Fable 描述行在滚动区底部（sheet 可滚动，非折行错误，见 G40）。
+  - G32 picker-a 四点淡 pastel：按模型映射（GLM #e1b3c7、DeepSeek #a1bfd3、Claude 系 #dfc1ad、Kimi #d4da9f、GPT-6.1 Sol #afddc9）。复量：(23,308) = (225,179,199) GLM 淡粉、(23,371) = (161,191,211) DeepSeek 淡蓝，方向确认。
+  - G33 picker 圆点直径：ModelDot8 8px → 7px（原图约 4–7px，取区间顶）。复量：GLM 圆点 bbox 7x7px。
+  - G34 分区标题：ModelSection 标题 text-section（16px）改为局部 text-[15px]（picker 专用组件，不影响 credits/info-sheet 的 section 标题；pageTitle token 保持 20px 不动，因 picker/credits/info-sheet 的标题未量出，不全局改）。复量：Everyday E cap 11 行（239–249，另 y 250–252 为 y 降部）vs 原图估计约 10.6–10.8，入 ±2%。
+  - G35 顶部拖动手柄：picker-a 顶部加居中 h-[5px] w-9 rounded-full bg-[#3a3b40]，标题行 pt-3 → pt-2。复量：手柄 y56–60、x177–212（36x5px）在位。
+  - G36 picker-b 倍率小字：仍不渲染。原因：源小字不可分辨；web 套的 Thinking 档位数列是 web 套证据，未经 app 侧实测量出，不能直接套用。备案延续。
+  - G37 credits 巨号：hugeNumber token 44px → 51px（按数字干高缩放：渲染 31px @44 → 目标 35.9px）。复量：数字干高 36 行 vs 目标 35.9px（原 31px，-14%）。
+  - G38 language 标题：text-page（20px）改为局部 text-[18px]（原图估计 17.9px；pageTitle token 不动，理由同 G34）。复量：A cap 13 行（108–120）vs 目标 12.9（原 14）。
+  - G39 language 底色：Phone className="bg-[#fdfdfd]"。复量：(253,253,253) 两处 patch 一致。
+  - G40 多屏折叠边缘：pricing 页脚已拉入首屏（G11）；其余屏的超首屏内容均为可滚动内容（chat 屏内容区 flex-1 滚动、picker-a sheet 滚动），非设计参数错误；InputBar 52→56px 使 chat 屏内容区少 4px，属滚动区高度变化，不改折叠结构。残差：train/savings/credits/agent-team/search-drawer/info-sheet 的折叠边缘位置未逐项精定（VM 度量类，见未闭合）。
+  - 不动项：D-01 已闭合；W3 #edeef2 已确认（复量 welcome 钮底与 pricing CTA 底均为 (237,238,242)）。
+- 圆点 pastel 映射（Q21/G09/G18/G19/G32 同根因：模型圆点 token 饱和化）：
+  - token（tokens/index.ts 与 index.css 同步）：modelGlm #e1b3c7（lisbon-en GLM 实测 (225,179,199)）、modelClaude #dfc1ad（(223,193,173)）、modelKimi #d4da9f（picker 淡黄绿 (212,218,159)）、modelDeepseek #a1bfd3（picker 淡蓝 (161,191,211)）、modelGpt #afddc9（弧线淡绿 (166,213,192)）。旧饱和值作废。
+  - ModelDots 五点由饱和 #e2a181/#4a7de4/#2eb5a5/#9b5de5/#3fa34d 改为弧线同系淡 pastel 前五点 #dcb1c2/#abceee/#dfdda7/#afddc9/#cdb9e8（影响 pricing Pro 卡、AutoCard、home-en ModelPill、info-sheet、App 展示）。
+  - picker 行圆点按模型映射（model-picker-a/b、App 展示行）；不动：credits 图例色（T8 未能量出）、kyoto 顶栏 Kimi 圆点硬编码 #9b5de5（T9 未量）、MedleyMark 橙色块硬编码 #e2a181（logo 几何，非圆点系统）。
+- P2 补量结果（T1–T16；量不出的明说、不编数）：
+  - T1 welcome G 角标：未量出。原图 Google 钮左区（x34–160，y946–1019，560 宽裁切）内无可隔离的 G 字母暗簇与徽圆边缘（徽圆边框 #d8d8dc 系融入 #edeef2 钮底，审计原话“被按钮底色污染”属实）。保持渲染 16px/10px 字，不改。
+  - T2 welcome Try pill：量出：上下边框行 y1034 / y1105（560 宽裁切）→ 高 71px → 约 49.4px@390，边框色约 (45,49,52)；渲染 Button 默认 52px + 边框 #2a2c31 (42,44,49)，偏差约 +5%（minor），且与 Google 钮同 Button 尺寸（实测 51–53px），不拆分改动。
+  - T3 lisbon-en 引用角标：未量出。候选簇 (344,338,354,350) 与 (332,402,336,411) 经 patch 核查均为正文笔画（暗像素簇，无 #2f3034 方底 + 浅色数字结构），角标底色与正文色相近无法隔离。保持渲染 14px 盒，不改。
+  - T4 lisbon-en 末条橙点：近似量出：暖色核心 6x5px（420 宽裁切，x137–142，y735–739），均值 (207,175,157)（小尺寸 JPEG blending 致淡）；结合 T5，末条橙点 12px → 9px（两屏同改；复量两屏均为 9px 宽）。
+  - T5 lisbon-cn 末条橙点：量出：12x12px（585 宽裁切，x482–493，y947–958）→ 8.7px@390，中心 patch (251,98,25) ≈ brandDot vivid 橙。支撑 9px 改动。
+  - T6 home-cn 分段控件与顶部图标圆：未量出。白轨道在白底上不可见；顶栏内容带 y88–104（裁切）高度换算自相矛盾（疑似裁切非均匀缩放），图标圆圈无法隔离。分段控件不动（D5 选中 pill 色 (237,238,240) 此前已验证一致）。
+  - T7 home-en Auto pill 五点：部分量出：HD 条 home-en 面板内孤立出 2 点（约 7x6 strip px → 约 7px 设备宽），色为 muted（(165,122,144) 粉、(103,129,158) 蓝灰），方向支持淡 pastel 化；5 点完整色序未隔离，不另定色序，沿用弧线/G32 的 pastel 映射。
+  - T8 credits 图例圆点：未解决。候选行 y564–570（条带）的簇呈重复图案带而非 4 点干净映射（另有 (54–67,90–107,126–145) 蓝系与 (163,124,137) 粉系 muted 点，但无法对应 Claude/GLM/Kimi/DeepSeek 四色）。图例色不动（不统一猜）。
+  - T9 kyoto Kimi 圆点 + 标题/正文 cap：未尝试（仅 218px 总览裁切，无缩放系数）。kyoto 顶栏 Kimi 点 #9b5de5 不动；AiMeta Kimi 点随 token 改淡 pastel（与 AiMeta 系统一致）。
+  - T10/T11/T12 总览 8 屏（train/savings/router/info-sheet/search-drawer/picker-b/suspended/agent-team）：全部受阻——总览缩放系数未知、无线单屏 HD 原图，字号三档、纯底色重采、逐元素像素均无法换算。不改，记入未闭合（原因：缺缩放系数/单屏原图）。
+  - T13 pricing CTA 边距：量出：CTA 亮区 (1607,804,1951,853)（条带）→ 宽约 354px 设备宽，基本等于内容全宽（渲染 w-full 于 px-5 内 = 350px），属 padding 内全宽按钮；面板左缘容差 ±10px 使左右边距无法精定。不改。
+  - T14 全部圆角弧半径：方法极限（本轮只做目视一致，未逐项拟合圆弧），不改、不虚构数值。
+  - T15 全部字重精确数值：方法极限（像素只能给观察档 + 代码 font-weight），不改。
+  - T16 picker 描述/模型名行 cap：部分量出：亮核行带 6–10px（430 宽裁切），与 13px 描述 / 15px 模型名 + JPEG 腐蚀一致，无法逐行分离 cap。字号不动（G34 分区标题已另行回调）。
+- P3 图标与动效（lucide-react 1.63.0；pnpm add 接包，package.json 与 pnpm-lock 同步更新）：
+  - 逐字复核 node_modules/lucide-react/dist/esm/icons/*.mjs 的 node 数组：8 项与旧手绘路径逐字一致（仅子路径顺序/大小写差异）——back=chevron-left（m15 18-6-6 6-6）、close=x、plus、check、chevronDown、chevronRight、more=ellipsis（三圆 12/19/5, r1）、logout=log-out；menu 不逐字：旧线 y 6/12/18，Lucide 5/12/19，差 1 格（20px 渲染约 0.8px，低于图标量测噪声，且原图菜单线位置未量出），按 Lucide 规范源执行并记录。
+  - 因此 9 项走包源（各保留原默认尺寸：menu/back/close/plus/check/logout 20，chevronDown/chevronRight 16，more 18）；16 项近形（mic、search、edit、clock、copy、refresh、like、dislike、info、news、image、mapPin、calendar、folder、download、trash）保留手绘矢量（与 Lucide 差 1px 半径/端点/tab 形态，换源会无据移动像素，原图形态优先）；gear 保留 Feather 系齿轮（Lucide settings 是另一套齿轮路径，重绘无据）；send 保留手绘（几何经核对 = Lucide ArrowUp：M12 19V5 + M5 12l7-7 7 7，与 Lucide 纸飞机 send 完全不同，键名保留因 agent-team 在用）；pdf/cards/searchOrbit 无 Lucide 对应，保留自定义；edit 新增 size 参数（默认 20），供 lisbon-cn 右 pill 用 18px。
+  - morphing 分档执行：先行 M3（chevron 旋转，Radix 下拉 open 时旋转 180°，纯旋转、零重绘；TopBar ModelPill 的 chevron 包 span.morph-chevron flex，index.css 加 200ms 旋转过渡）、M10（投票内点缩放：kyoto PollOption 内点改为常驻元素 + scale-0/scale-100，环加 morph-poll-ring 颜色过渡；静态截图外观不变）、M5（InputBar mic 容器 transition-all duration-200，运行时变体切换时圆底保持、内形 crossfade+scale，不硬切；静态截图无视觉变化）；M1（menu↔close 分段变换）、M2（menu↔back 重参数化）、M4（plus↔check，需同槽位语义确认）无本套运行时切换实例，只记配方不写死代码；M6（mic↔send）非同屏同槽位、不列入切换义务；M7（like↔dislike 并列按钮、非切换）不做；M9（play↔pause）本套无此对，不立项。
+- 额外 sweep（2026-10-30 12:42 口径：验收范围 = 界面上可见的一切）：
+  - 对 9 个有 HD 原图的屏做渲染全屏目视（welcome、home-en、home-cn、lisbon-en、lisbon-cn、pricing、picker-a 逐屏看过；credits、language 以复量值 + 局部目视为准），除清单项外未发现其他可量出数的差异；lisbon-cn 来源行结构即 sweep 式发现（原图裁切目视：chip 独行 + 统计/图标行，渲染原为拥挤单行，已按原图结构重排，见 G29）。
+  - 本轮自查纠错两则：① pricing G10 初版 band 分析曾误判单行（2 字弱带低于阈值），全屏目视发现仍折行后改 12px 并复量单带闭合；② G11 页脚初版 band 误认（y803–809 带实为脚注第三行，非页脚），G10 收紧后页脚行 y810–821 入首屏，方为真闭合。两处均以目视 + 低阈值重扫双重确认。
+  - 9 个总览屏以 v1.1 已核验文案/数值为准 + 审计第 6 节结构结论为准，超出总览分辨率的差异记未闭合（缺单屏 HD 原图）。
+- 共享改动的影响面与未改动屏：
+  - InputBar 单行 52→56px 影响：home-en、train、savings、kyoto、router、lisbon-en（已验 56px）；home-cn/lisbon-cn 走 double（88px）。
+  - ModelDots pastel 影响：pricing Pro 卡、AutoCard（picker-a/b）、home-en ModelPill、info-sheet 两处、App 展示。
+  - modelDotColor pastel 影响：全部 AiMeta 圆点（lisbon-en、train、savings、kyoto、router 等；lisbon-cn 已去点）。
+  - greeting 27→28px 影响：home-en、home-cn、pricing h1、info-sheet 数值标题。
+  - welcomeTitle/hugeNumber/pageTitle 局部改动仅影响各自屏（pageTitle token 未动）。
+  - 图标包迁移：menu/back/close/plus/check/chevron/more/logout 全屏通用，但 8 项逐字、menu 差约 0.8px，静态截图应无可视变化。
+  - 零改动屏的逐像素比对（带框截图 vs v1.4 带框版，同尺寸 390x844）：suspended-light 字节一致（真无变化）；agent-team-dark 仅差 29px，全部位于 plus 图标区（x35–48，y789–802，lucide 描边抗锯齿差异，路径逐字）；search-drawer-dark 仅差 112px，全部位于右上角 menu 图标区（x285–300，y75–88，即 lucide menu 1 格线位移 + 抗锯齿，与 P3 记录一致），其余像素一致，drawerDot 值不变。bare 与带框截图因框/缩放不同不做字节比对，固定元素位置除框与 8px 高度压缩外一致。
+- 未闭合项（带实测原因）：
+  - T1/T3/T6/T8/T9：未量出或未尝试（原因见 P2 各条），对应渲染保持原值。
+  - T10/T11/T12：总览 8 屏缺缩放系数/单屏 HD 原图，无法换算。
+  - T14/T15：圆角弧半径与字重精确数值超出像素方法极限，不虚构。
+  - G14：部分闭合（28px 时两项直接量入 ±1%，EN 行带在噪声内未进一步闭合，见 G14 条）。
+  - G36：Thinking 倍率小字仍不渲染（源小字不可分辨；web 套数列未经 app 侧实测，不能套用）。
+  - G40 残差：train/savings/credits/agent-team/search-drawer/info-sheet 的折叠边缘位置未逐项精定（VM 字体度量类）。
+  - G10 字号说明：PlanFeature 12px 是 VM 度量 accommodation，原图该行字号未曾逐像素量出，待原设备字体证据出现时复议。
+  - pricing 特性行文案：v1.2 D3 已改 “Claude Sonnet and Opus, GPT-6.1 Sol, Kimi K3”，本轮未动文案。
+- 费用：本轮零裁判调用、零令牌取用（未取 /etc/botsrouter/muse_judge_token.txt）。未 commit、未 push、未 git add，工作区留待协调方统一提交。

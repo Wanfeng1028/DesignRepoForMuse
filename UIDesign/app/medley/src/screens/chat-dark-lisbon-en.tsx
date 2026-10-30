@@ -24,7 +24,7 @@ export default function ChatDarkLisbonEn() {
             <span className="flex items-center gap-1.5 text-[16px] font-bold text-dark-text">
               <ModelDot model="Claude Sonnet 5.5" />
               Claude Sonnet 5.5
-              {Icon.chevronDown('#9a9ba2')}
+              {Icon.chevronDown('#9a9ba2', 14)}
             </span>
           }
           right={Icon.edit('#f5f5f7')}
@@ -62,7 +62,7 @@ export default function ChatDarkLisbonEn() {
           <div className="text-body leading-[1.55] text-dark-text">
             Day 2 works best as a slow eating day. Start at Time Out Market around 11am, before the lunch rush, and share a
             few small plates instead of one big meal. In the afternoon, walk up to Bairro Alto for a pastel de nata.
-            <span className="ml-1.5 inline-block h-3 w-3 rounded-full bg-brand-dot align-middle" />
+            <span className="ml-1.5 inline-block h-[9px] w-[9px] rounded-full bg-brand-dot align-middle" />
           </div>
         </div>
         <InputBar dark placeholder="Message Claude Sonnet 5.5" mic="stop-accent" />
