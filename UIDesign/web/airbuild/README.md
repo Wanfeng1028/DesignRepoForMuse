@@ -169,11 +169,13 @@ Comparison against the references (v1.1 state, measured from code + shots):
    改编（非原版）; the original is the right-hand column.
 4. Avatar portraits have no vector source: avatars are vector-redrawn
    illustrated figures (one distinct face per roster member: Ato green +
-   sprout, Pluso blue open smile, Colo amber + freckles, Camo yellow
-   happy-arc eyes, Ampo blue + glasses, Leto pink + blush and hair tuft),
-   not the official webp portraits, and their exact colours and faces
-   are not claimed. The demo roster has no Qesto member, so no Qesto
-   figure is drawn; Leto carries the pink figure.
+   sprout, Pluso cyan open smile, Colo purple + freckles, Camo yellow
+   happy-arc eyes, Ampo blue + glasses, Leto orange + blush and dark
+   hair tuft), not the official webp portraits. Disc colours are
+   pixel-measured from the originals (v1.4: ipad-01 sidebar discs +
+   REA roster portraits); exact face shapes are not claimed. The demo
+   roster has no Qesto member, so no Qesto figure is drawn; the pink
+   disc in ipad-01 belongs to Qesto, not Leto.
 9. Composer send button, platform conflict: the web demo's base CSS makes
    the send button near-black `#111` (its Shadow DOM layer restyles the
    floating controls as white gradient), while the native App Store shots

@@ -15,7 +15,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(
           'inline-flex items-center justify-center rounded-full font-medium transition-colors disabled:opacity-50',
-          variant === 'default' && 'bg-[linear-gradient(325deg,rgba(255,255,255,0.78),rgba(255,255,255,0.48)_48%,rgba(245,247,250,0.24))] text-[#686868] shadow-[inset_0_1px_0_rgba(255,255,255,0.38),0_3px_8px_rgba(0,0,0,0.08)]',
+          variant === 'default' && 'bg-[linear-gradient(325deg,rgba(255,255,255,0.78),rgba(245,247,250,0.24))] text-[#686868] shadow-[inset_0_1px_0_rgba(255,255,255,0.38),0_3px_8px_rgba(0,0,0,0.08)]',
           variant === 'ghost' && 'bg-transparent text-[#686868] hover:bg-white/50',
           variant === 'blue' && 'bg-[#1987f7] text-white',
           size === 'icon' && 'h-9 w-9',

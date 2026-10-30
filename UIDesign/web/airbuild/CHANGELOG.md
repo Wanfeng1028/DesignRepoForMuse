@@ -9,6 +9,182 @@ crop, App Store iPad/iPhone shots). A round is clean only when the judge
 reports zero substantive differences item by item; "looks alike" is not
 a pass.
 
+## v1.4 — 2026-10-30 (round 7: same-type colour check + full active re-scan; v1.3 -> v1.4 patch bump)
+
+- Round: same-type colour check (work one) first, then a full active
+  re-scan of every screen and every visible element (work two). No
+  judge call this round (zero-judge rule): every fix below is grounded
+  in an original code token (base stylesheet vs Shadow DOM override
+  layer, shadow wins per v1.3 D1) or a pixel sample from an original
+  image. No token was fetched, no BotsRouter call was made. No commit,
+  no push: changes stay in the working tree for the coordinator.
+  Composer backdrop is UNCHANGED at blur(4px) saturate(1.45) (DOM-verified
+  after all edits); it was not flipped back to blur(16px) or deleted.
+- Work one — colour check table. Original value = pixel sample or
+  Shadow DOM token; before = v1.3 render; after = v1.4 DOM/pixel value.
+  Positions are the elements the values sit on.
+  - Avatar discs (sidebar rows, message avatars, phone feed): original
+    discs are SATURATED, v1.3 rendered pale tints. ipad-01 sidebar discs
+    (scan_ipad.py + mean_colors.py, 2064x2752 shot): Pluso mean
+    (82,204,219) #52ccdb, Camo (249,208,31) #f9d01f, Ato green-only mean
+    (151,193,81) #97c151, Ampo (77,183,218) #4db7da, Leto (248,173,67)
+    #f8ad43; REA roster portraits: Colo purple mean (133,93,254)
+    #855dfe, Leto coral mean (254,138,93) (same orange family as the
+    ipad disc), Qesto pink (249,101,195) (not in this roster).
+    Before: Ato #2f7d4f on #cdeed9, Pluso #0b6fa4 on #cdeaff, Colo
+    #b45309 on #ffe4c2, Camo #92400e on #fde68a, Ampo #1d4ed8 on
+    #dbeafe, Leto #be185d on #fbcfe8 (pale disc + lightened blob).
+    After: disc = measured colour itself, no pale disc, no blob patch
+    (DOM row-avatar fill #97c151; render sidebar-strip histogram shows
+    all six saturated families present). Wrong-family corrections:
+    Leto pink -> orange (pink belongs to Qesto), Colo amber -> purple
+    (REA portrait dominant + ipad-01 Colo message avatar purple disc),
+    Camo dark brown -> golden yellow.
+  - Shared floating-control gradient (capsules, composer, attach,
+    account, footer, phone appbar buttons, Button primitive): original
+    Shadow DOM gradient is 2-stop, v1.3 shipped the base 3-stop form.
+    Before: linear-gradient(325deg, rgba(255,255,255,0.78),
+    rgba(255,255,255,0.48) 48%, rgba(245,247,250,0.24)). After:
+    linear-gradient(325deg, rgba(255,255,255,0.78),
+    rgba(245,247,250,0.24)) (DOM backgroundImage on capsule, composer,
+    attach, account, footer, appbar buttons). Angle 325deg unchanged.
+  - Shared-control backdrop (same elements): original shared block
+    blur(4px) saturate(145%), untouched by the shadow layer; v1.3 had it
+    only on the composer. Before: none on capsules/toggles/account/
+    footer/appbar/attach. After: blur(4px) saturate(1.45) on all of them
+    (DOM backdropFilter). Composer backdrop unchanged.
+  - Capsule inner-button icon colour (window-control + action-group
+    buttons): original shadow ink rule, v1.3 used shared #686868.
+    Before: #686868. After: #11110f (DOM color rgb(17,17,15)). Bright
+    toggle, account, footer, phone-appbar buttons stay #686868 per the
+    shared list (shadow ink rule does not cover them).
+  - Preview tab inactive text: original shadow muted, v1.3 base 0.48.
+    Before: rgba(0,0,0,0.48). After: rgba(17,17,15,0.46) (DOM, measured
+    on the inactive tab after adding a second device tab; active tab
+    stays ink #11110f on transparent).
+  - New-tab button text: original shadow muted, v1.3 base 0.5. Before:
+    rgba(0,0,0,0.5). After: rgba(17,17,15,0.46) (DOM).
+  - Phone project-tile border: original shadow hairline, v1.3 base
+    #e7e7e7. Before: 1px solid #e7e7e7. After: 1px solid
+    rgba(17,17,15,0.045) (DOM 0.043 after rounding).
+  - Phone feed divider: original shadow hairline, v1.3 base
+    rgba(60,60,67,0.08). Before: rgba(60,60,67,0.08). After: hairline
+    (DOM 0.043 after rounding). Inset from left stays 33px.
+  - Task card working-step text: original shadow #53412e (same as the
+    title), v1.3 base #675039. Before: #675039. After: #53412e (DOM
+    rgb(83,65,46)).
+  - Composer input text / placeholder: original shadow ink / muted,
+    v1.3 base #191919 / 0.36. Before: #191919 / rgba(0,0,0,0.36).
+    After: #11110f / rgba(17,17,15,0.46) (DOM, placeholder via
+    ::placeholder computed style).
+  - User blue bubble: VERIFIED, NOT changed. ipad-01 user-bubble blue
+    bucket (0,128,240) + REA token #1987f7 both match the shipped
+    #1987f7 (render histogram top bucket (16,128,240), 18483px).
+  - Window glass: bg rgba(244,246,244,0.42) + blur(34px) saturate(1.24)
+    VERIFIED unchanged (tokens + DOM). Window outer shadow: original
+    shadow layer says box-shadow none (base had a 28px/80px shadow +
+    white border); v1.3 shipped an invented 0 24px 64px shadow + inset
+    white ring. After: box-shadow none (DOM), border none (unchanged).
+    Window edges still read in screenshots via the zone bg steps.
+  - Colour items checked and deliberately NOT changed (no evidence for
+    a change): project-tile tints (originals are photo/illustration
+    covers, not tints — vector minis stay, see unclosed U1); service
+    column bg (user-photo right column unreadable — see U2); brand
+    glyph / clover mark (redrawn vector, no colour sample contradicts
+    it); traffic-light colours (match base tokens); online green
+    #2ecb70 (matches REA token); task-card #fffaf2 / track #e9e0d4 /
+    fill #72a682 (match shadow values); toast rgba(18,18,18,0.88)
+    (matches base + shadow).
+- Work two — full active re-scan fixes (each re-measured, not carried
+  from an old list):
+  - Sidebar section headings REMOVED. Evidence: the official template
+    contains no heading elements (0 occurrences of `sidebar-heading`
+    in mockup_window-template.js, none injected by mockup_mockup.js),
+    and the ipad-01 left column shows tiles then agent rows with no
+    heading rows. v1.3 rendered PROJECTS / AGENTS heading rows styled
+    from the unused CSS class. After: project grid and agent list are
+    direct sidebar children (aria-labels "Projects" / "AI team" kept
+    from the template), agent list margin-top 9px per base CSS, footer
+    still pinned to the bottom. DOM: no "Projects"/"Agents" spans in
+    the window (probe headingSpansInWindow 0; probe-dom2 headingColor
+    MISSING, expected). Screenshots: rows move up, footer unchanged.
+  - Avatar inset ring now only on agent rows (original .agent-row img
+    box-shadow inset 1px rgba(0,0,0,0.06)); message / typing / feed
+    avatars had the ring in v1.3 but the original gives them none.
+    DOM: row ring present, message ring absent.
+  - Scrollbars hidden per the original (.app-window * scrollbar-width
+    none + webkit display none). v1.3 showed a 6px .ab-scroll thumb
+    rule and an unhidden phone feed. After: .ab-scroll and
+    .ab-phone-feed both hide scrollbars (CSS + scrollbarWidth none).
+  - Column resizers + window corner resizer now rendered (template
+    chrome, previously defined but never mounted): sidebar resizer at
+    left 198px, preview resizer at left 58%, both 8px col-resize
+    translateX(-50%), hidden in their collapsed states; window corner
+    resizer 22x22 nwse-resize radius 0 0 13px 0. All transparent, so
+    screenshots are unchanged; DOM presence verified.
+  - Gallery stale base values corrected: section-3 messages box bg
+    0.92 -> 0.54, tokens swatch "conversation" 0.92 -> 0.54, @theme
+    conversation 0.92 -> 0.54, conversation-title 0.94 -> 0.54,
+    task-border 0.12 -> hairline, composer var -> 0.78 stop (unused
+    vars except --color-ab-window; values now match effective tokens).
+  - Unchanged by the re-scan (re-measured, still correct): titlebar
+    40px + inset white highlight; traffic lights 17px gap 7 + hover
+    brightness/saturate/scale; control capsule 64x32 + inner dividers
+    0.1 / 0.09; project icon centres main 487 / sidebar-collapsed 470
+    / preview-collapsed 720 (page-x, same as v1.3); conversation
+    padding 18/16/14 gap 14; agent bubble #fff 13px 12px/1.38; user
+    bubble max min(78%,310px); task card 12px padding, 12px/0 margins,
+    4px track, 450ms fill, 700ms working pulse; typing 5px #aaa dots
+    800ms delays 0/160/320; composer 32px grid 24/1fr/24 gap 4 margin
+    0 14 10 padding 3; toast bottom 16 absolute blur(18px) font 11
+    padding 10 14 (centre now exactly 640 = window centre, was 639);
+    phone 270px aspect 0.51 7px #d8d8d6 frame radius 38 shadow alpha
+    0.24 + inset #fefefe, device shadow min(58%,300px) 45px bottom 8%
+    blur(30px), statusbar 8px/700 padding 8 16 2, island 48x15 #050505,
+    appbar 42px padding 0 13 buttons 30px icons 15px opacity 0.72,
+    projects gap 8 padding 8 14 12 tile 71px icon 44px, feed rows 48px
+    grid 26/1fr/auto gap 7 name 9px/600 ink + em 7px muted + text 8px
+    muted + time 6.5px muted; drawer 240ms cubic-bezier(0.32,0.72,0,1);
+    message-in 260ms cubic-bezier(0.22,1,0.36,1); collapsed paddings
+    174px / 48px; tile hover 0.5 + row hover 0.5 (DOM hover probes).
+- Files changed (this set only): src/tokens/tokens.ts,
+  src/components/Titlebar.tsx, Sidebar.tsx, AvatarBlob.tsx,
+  Message.tsx, Preview.tsx, FollowUpComposer.tsx, AppWindow.tsx,
+  src/components/ui/button.tsx, src/data/demo.ts, src/index.css,
+  src/App.tsx, README.md (residual 4 wording), CHANGELOG.md (this
+  entry). New evidence: docs/verification/rounds/v1.4/ (gallery x3,
+  three window shots, phone-stage probe shot, probe-dom.cjs,
+  probe-dom2.cjs, probe-v14.cjs, shoot-v14.cjs, probes/*.txt,
+  measure/sample_orig2.py, scan_ipad.py, mean_colors.py,
+  tab-inactive-check.cjs). No __pycache__ / .pyc files in the set.
+- Build: tsc + vite pass (pnpm absolute path). No commit, no push.
+- Unclosed (with measured reason, not invented):
+  - U1. Project tiles stay vector mini-icons on flat tints; ipad-01
+    tiles are full-bleed photo/illustration covers with white name
+    pills below. Bitmap copying is forbidden, so no cover colours
+    were sampled into tiles; the web demo itself is icon-only.
+  - U2. ServiceModuleColumn bg stays rgba(249,249,247,0.92): the
+    user-photo right column is unreadable, so no evidenced value
+    exists; changing it would be invention.
+  - U3. Avatar faces stay our redrawn geometry (sprout / open smile /
+    freckles / arc eyes / glasses / blush + tuft); only disc colours
+    are now measured. Official face shapes are not claimed.
+  - U4. Gallery page backdrop stays flat #ececea, not the marketing
+    page's colourful gradient the original demo window sits over.
+    Window glass params are exact, but glass tint over flat grey
+    differs from glass over the colourful backdrop. The gallery is
+    presentation, not a screen element, so it was not restyled.
+  - U5. Native iPad differences stay as documented platform gaps
+    (README residuals 10/11): native task card is white with a
+    "View task >" link and no track; native tiles carry name pills;
+    native status text is coloured. Web-demo values are kept.
+  - U6. macOS package Assets.car is unreadable on Linux (no .car
+    reader); no .car values were used or fabricated.
+  - U7. Send button stays native blue #1987f7 (README residual 9)
+    against the web demo's gradient/black variant, per the
+    high-resolution native evidence.
+  - U8. Dark mode stays unrendered (light only, table B reserve).
+
 ## v1.3 — 2026-10-30 (full re-measure round; v1.2 -> v1.3 patch bump)
 
 - Round: full re-scan of every screen and every visible element, NOT a

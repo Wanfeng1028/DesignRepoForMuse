@@ -82,6 +82,16 @@ export function AppWindow({ title = 'Hourtown', sidebarCollapsed = false, previe
         </div>
       </div>
       {showToast ? <Toast text={showToast} /> : null}
+      {!sbCollapsed ? (
+        <div role="separator" aria-orientation="vertical" aria-label="Resize sidebar" title="Drag to resize · Double-click to reset"
+          style={{ position: 'absolute', top: 0, bottom: 0, left: 198, zIndex: 35, width: 8, transform: 'translateX(-50%)', background: 'transparent', cursor: 'col-resize' }} />
+      ) : null}
+      {!pvCollapsed ? (
+        <div role="separator" aria-orientation="vertical" aria-label="Resize preview" title="Drag to resize · Double-click to reset"
+          style={{ position: 'absolute', top: 0, bottom: 0, left: '58%', zIndex: 35, width: 8, transform: 'translateX(-50%)', background: 'transparent', cursor: 'col-resize' }} />
+      ) : null}
+      <button type="button" aria-label="Resize app window" title="Drag to resize · Double-click to reset"
+        style={{ position: 'absolute', right: 0, bottom: 0, zIndex: 120, width: 22, height: 22, padding: 0, background: 'transparent', border: 0, borderRadius: '0 0 13px 0', cursor: 'nwse-resize' }} />
     </div>
   )
 }

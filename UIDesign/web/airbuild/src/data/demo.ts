@@ -8,14 +8,14 @@
  * Roles, status lines and online dots are demo state, not live data.
  */
 import type { ProjectIconKey } from '../components/icons.tsx'
-export interface Agent { key: string; name: string; role: string; status: string; color: string; bg: string; online: boolean }
+export interface Agent { key: string; name: string; role: string; status: string; color: string; online: boolean }
 export const agents: Agent[] = [
-  { key: 'ato', name: 'Ato', role: '@product', status: 'The new screens are ready to review.', color: '#2f7d4f', bg: '#cdeed9', online: true },
-  { key: 'pluso', name: 'Pluso', role: '@developer', status: 'Action needed', color: '#0b6fa4', bg: '#cdeaff', online: true },
-  { key: 'colo', name: 'Colo', role: '@design', status: 'The design is ready.', color: '#b45309', bg: '#ffe4c2', online: false },
-  { key: 'camo', name: 'Camo', role: '@gaming', status: 'Still working on, new app released', color: '#92400e', bg: '#fde68a', online: true },
-  { key: 'ampo', name: 'Ampo', role: '@appstore', status: 'The latest build is ready to test.', color: '#1d4ed8', bg: '#dbeafe', online: true },
-  { key: 'leto', name: 'Leto', role: '@website', status: 'The sync issue is fixed.', color: '#be185d', bg: '#fbcfe8', online: false },
+  { key: 'ato', name: 'Ato', role: '@product', status: 'The new screens are ready to review.', color: '#97c151', online: true },
+  { key: 'pluso', name: 'Pluso', role: '@developer', status: 'Action needed', color: '#52ccdb', online: true },
+  { key: 'colo', name: 'Colo', role: '@design', status: 'The design is ready.', color: '#855dfe', online: false },
+  { key: 'camo', name: 'Camo', role: '@gaming', status: 'Still working on, new app released', color: '#f9d01f', online: true },
+  { key: 'ampo', name: 'Ampo', role: '@appstore', status: 'The latest build is ready to test.', color: '#4db7da', online: true },
+  { key: 'leto', name: 'Leto', role: '@website', status: 'The sync issue is fixed.', color: '#f8ad43', online: false },
 ]
 export const projects: { name: string; icon: ProjectIconKey; tint: string }[] = [
   { name: 'Hands Time', icon: 'clock', tint: '#e8e4da' },

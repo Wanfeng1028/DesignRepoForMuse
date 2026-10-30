@@ -56,7 +56,7 @@ export default function App() {
       </Section>
 
       <Section id="messages" title="3 · Messages" note="Agent bubble #fff / 13px radius / 12px·1.38; user bubble white on #1987f7, max-width min(78%, 310px); task card #fffaf2; typing = three 5px dots, 800ms stagger 0/160/320ms; message entry 260ms cubic-bezier(.22,1,.36,1).">
-        <div style={{ background: 'rgba(249,249,247,0.92)', borderRadius: 18, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 720 }}>
+        <div style={{ background: 'rgba(249,249,247,0.54)', borderRadius: 18, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 720 }}>
           {thread.map((m, i) => m.kind === 'agent' ? <AgentMessage key={i} agent={agents.find((a) => a.key === m.agentKey) ?? agents[0]} text={m.text} task={m.task} index={i} /> : m.kind === 'user' ? <UserMessage key={i} text={m.text} index={i} /> : <TypingRow key={i} agent={agents.find((a) => a.key === m.agentKey) ?? agents[0]} />)}
           <TypingRow agent={agents[1]} />
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}><StatusPill>Ready to test</StatusPill><StatusPill tone="neutral">Updated 12h ago</StatusPill></div>
@@ -97,7 +97,7 @@ export default function App() {
 
       <Section id="tokens" title="7 · Tokens" note="Table A values, rendered as swatches. Dark table B is stored only in src/tokens/dark-tokens.ts and is not rendered as a main style.">
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {[['ink', '#11110f'], ['blue', '#1987f7'], ['green', '#2ecb70'], ['sidebar', 'rgba(226,228,226,0.56)'], ['conversation', 'rgba(249,249,247,0.92)'], ['task', '#fffaf2'], ['success bg', '#e7f8ed']].map(([n, c]) => (
+          {[['ink', '#11110f'], ['blue', '#1987f7'], ['green', '#2ecb70'], ['sidebar', 'rgba(226,228,226,0.56)'], ['conversation', 'rgba(249,249,247,0.54)'], ['task', '#fffaf2'], ['success bg', '#e7f8ed']].map(([n, c]) => (
             <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#fff', borderRadius: 999, padding: '6px 10px 6px 6px', fontSize: 11 }}>
               <span style={{ width: 22, height: 22, borderRadius: '50%', background: c, border: '1px solid rgba(0,0,0,0.08)' }} />{n} · {c}
             </div>

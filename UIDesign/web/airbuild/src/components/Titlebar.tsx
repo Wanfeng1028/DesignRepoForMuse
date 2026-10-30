@@ -16,7 +16,8 @@ export function TrafficLights() {
 function ControlCapsule({ children }: { children: ReactNode }) {
   return (
     <span style={{ flex: 'none', width: 64, height: 32, display: 'flex', alignItems: 'center', overflow: 'hidden',
-      background: tokens.controlBg, borderRadius: 999, boxShadow: tokens.controlShadow }}>{children}</span>
+      background: tokens.controlBg, borderRadius: 999, boxShadow: tokens.controlShadow,
+      backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)' }}>{children}</span>
   )
 }
 
@@ -26,7 +27,7 @@ function CapsuleButton({ label, onClick, icon, divider, dividerColor = 'rgba(0,0
     <button type="button" aria-label={label} onClick={onClick}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ position: 'relative', width: 32, height: 32, flex: '0 0 32px', display: 'grid', placeItems: 'center',
-        padding: 0, color: '#686868', background: hovered ? 'rgba(255,255,255,0.22)' : 'transparent', border: 'none', borderRadius: 999, cursor: 'pointer' }}>
+        padding: 0, color: '#11110f', background: hovered ? 'rgba(255,255,255,0.22)' : 'transparent', border: 'none', borderRadius: 999, cursor: 'pointer' }}>
       {divider ? <span style={{ position: 'absolute', left: 0, top: 6, width: 1, height: 20, background: dividerColor }} /> : null}
       <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}>{icon}</span>
     </button>
@@ -82,6 +83,7 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
           onMouseEnter={() => setHoverStrip(true)} onMouseLeave={() => setHoverStrip(false)}
           style={{ width: 32, height: 32, display: 'grid', placeItems: 'center', padding: 0, color: '#686868',
             background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: 999, cursor: 'pointer',
+            backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)',
             filter: hoverStrip ? 'brightness(1.035)' : 'none' }}>
           <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><PanelRightToggle open={!previewCollapsed} size={17} /></span>
         </button>
@@ -99,7 +101,7 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
                 onMouseEnter={() => setHoverTab(t)} onMouseLeave={() => setHoverTab(null)}
                 style={{ height: 36, minWidth: 76, maxWidth: 180, flex: '0 0 auto', display: 'grid',
                   gridTemplateColumns: 'auto minmax(0,1fr) auto', gap: 6, alignItems: 'center', padding: '0 9px',
-                  color: isActive ? '#11110f' : 'rgba(0,0,0,0.48)',
+                  color: isActive ? '#11110f' : 'rgba(17,17,15,0.46)',
                   background: isActive ? 'transparent' : hovered ? '#f2f2f0' : '#f7f7f5', border: '1px solid transparent', borderRadius: 9,
                   cursor: 'pointer', fontSize: 10 }}>
                 <span style={{ display: 'flex', opacity: 0.45 }}><IconIPhone size={12} /></span>
@@ -112,7 +114,7 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
           <button type="button" aria-label="Open new preview tab" onClick={onNewDevice}
             onMouseEnter={() => setHoverNewTab(true)} onMouseLeave={() => setHoverNewTab(false)}
             style={{ width: 36, height: 36, flex: '0 0 36px', display: 'grid', placeItems: 'center', padding: 0,
-              color: 'rgba(0,0,0,0.5)', background: hoverNewTab ? 'rgba(255,255,255,0.5)' : 'transparent', border: 'none', borderRadius: 9, cursor: 'pointer' }}>
+              color: 'rgba(17,17,15,0.46)', background: hoverNewTab ? 'rgba(255,255,255,0.5)' : 'transparent', border: 'none', borderRadius: 9, cursor: 'pointer' }}>
             <span style={{ display: 'flex', opacity: 0.48 }}><IconPlus size={14} /></span>
           </button>
         </div>
@@ -125,6 +127,7 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
             onMouseEnter={() => setHoverBright(true)} onMouseLeave={() => setHoverBright(false)}
             style={{ width: 32, height: 32, display: 'grid', placeItems: 'center', padding: 0, color: '#686868',
               background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: 999, cursor: 'pointer',
+              backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)',
               filter: hoverBright ? 'brightness(1.035)' : 'none' }}>
             <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><PanelRightToggle open={!previewCollapsed} size={17} /></span>
           </button>

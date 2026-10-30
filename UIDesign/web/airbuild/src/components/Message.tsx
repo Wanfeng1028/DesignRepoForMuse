@@ -30,7 +30,7 @@ export function TaskCard({ task }: { task: TaskCardData }) {
                 background: s.state === 'done' ? '#72a682' : s.state === 'active' ? '#c49b65' : 'transparent', color: '#fff' }}>
               {s.state === 'done' ? <CheckDraw /> : null}
             </span>
-            <span style={{ color: s.state === 'done' ? '#467458' : s.state === 'active' ? '#675039' : '#88755e' }}>{s.label}</span>
+            <span style={{ color: s.state === 'done' ? '#467458' : s.state === 'active' ? '#53412e' : '#88755e' }}>{s.label}</span>
           </div>
         ))}
       </div>
@@ -44,7 +44,7 @@ export function TaskCard({ task }: { task: TaskCardData }) {
 export function AgentMessage({ agent, text, task, index = 0 }: { agent: Agent; text: string; task?: TaskCardData; index?: number }) {
   return (
     <div className="ab-message-in" style={{ display: 'flex', gap: 8, alignItems: 'flex-end', animationDelay: `${index * 40}ms` }}>
-      <AvatarBlob name={agent.name} color={agent.color} bg={agent.bg} size={28} />
+      <AvatarBlob name={agent.name} color={agent.color} size={28} />
       <div style={{ minWidth: 0, flex: 1, maxWidth: 'min(84%, 330px)' }}>
         <div style={{ fontSize: 10, fontWeight: 600, margin: '0 2px 5px' }}>{agent.name} <span style={{ fontWeight: 400, color: tokens.muted }}>{agent.role}</span></div>
         <div className="ab-agent-bubble" style={{ display: 'inline-block' }}>{text}</div>
@@ -65,7 +65,7 @@ export function UserMessage({ text, index = 0 }: { text: string; index?: number 
 export function TypingRow({ agent }: { agent: Agent }) {
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-      <AvatarBlob name={agent.name} color={agent.color} bg={agent.bg} size={28} />
+      <AvatarBlob name={agent.name} color={agent.color} size={28} />
       <div style={{ background: '#fff', borderRadius: 13, padding: '9px 11px', display: 'flex', gap: 3 }}>
         {[0, 160, 320].map((d) => (<span key={d} className="ab-typing-dot" style={{ animationDelay: `${d}ms` }} />))}
       </div>

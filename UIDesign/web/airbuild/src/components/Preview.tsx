@@ -14,7 +14,7 @@ export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[
           <button key={t} onClick={() => onSelect(t)}
             onMouseEnter={() => setHoverTab(t)} onMouseLeave={() => setHoverTab(null)}
             style={{ height: 36, minWidth: 76, maxWidth: 180, padding: '0 9px', borderRadius: 9, border: '1px solid transparent', cursor: 'pointer',
-              background: isActive ? 'transparent' : hovered ? '#f2f2f0' : '#f7f7f5', color: isActive ? '#11110f' : 'rgba(0,0,0,0.48)',
+              background: isActive ? 'transparent' : hovered ? '#f2f2f0' : '#f7f7f5', color: isActive ? '#11110f' : 'rgba(17,17,15,0.46)',
               fontSize: 10, fontWeight: 500, display: 'grid', gridTemplateColumns: 'auto minmax(0,1fr) auto', gap: 6, alignItems: 'center', whiteSpace: 'nowrap' }}>
             <span style={{ display: 'flex', opacity: 0.45 }}><IconIPhone size={12} /></span>
             <strong style={{ overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 500 }}>{t}</strong>
@@ -27,12 +27,12 @@ export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[
 }
 
 const phoneFeed = [
-  { key: 'ato', name: 'Ato', role: '@product', text: 'Session ready to review', time: '10:24', color: '#2f7d4f', bg: '#cdeed9' },
-  { key: 'pluso', name: 'Pluso', role: '@developer', text: 'Build is ready to test', time: 'Now', color: '#0b6fa4', bg: '#cdeaff' },
-  { key: 'colo', name: 'Colo', role: '@design', text: 'The design is ready.', time: '09:41', color: '#b45309', bg: '#ffe4c2' },
-  { key: 'camo', name: 'Camo', role: '@gaming', text: 'New app released', time: '09:12', color: '#92400e', bg: '#fde68a' },
-  { key: 'ampo', name: 'Ampo', role: '@appstore', text: 'Latest build ready to test', time: '08:58', color: '#1d4ed8', bg: '#dbeafe' },
-  { key: 'leto', name: 'Leto', role: '@website', text: 'Sync issue is fixed.', time: '08:30', color: '#be185d', bg: '#fbcfe8' },
+  { key: 'ato', name: 'Ato', role: '@product', text: 'Session ready to review', time: '10:24', color: '#97c151' },
+  { key: 'pluso', name: 'Pluso', role: '@developer', text: 'Build is ready to test', time: 'Now', color: '#52ccdb' },
+  { key: 'colo', name: 'Colo', role: '@design', text: 'The design is ready.', time: '09:41', color: '#855dfe' },
+  { key: 'camo', name: 'Camo', role: '@gaming', text: 'New app released', time: '09:12', color: '#f9d01f' },
+  { key: 'ampo', name: 'Ampo', role: '@appstore', text: 'Latest build ready to test', time: '08:58', color: '#4db7da' },
+  { key: 'leto', name: 'Leto', role: '@website', text: 'Sync issue is fixed.', time: '08:30', color: '#f8ad43' },
 ]
 
 export function PhonePreview() {
@@ -60,11 +60,11 @@ export function PhonePreview() {
             </span>
           </div>
           <div style={{ height: 42, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 13px' }}>
-            <button type="button" aria-label="App settings" style={{ width: 30, height: 30, display: 'grid', placeItems: 'center', padding: 0, background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: '50%', cursor: 'pointer', color: '#686868' }}>
+            <button type="button" aria-label="App settings" style={{ width: 30, height: 30, display: 'grid', placeItems: 'center', padding: 0, background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: '50%', cursor: 'pointer', color: '#686868', backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)' }}>
               <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconGear size={15} /></span>
             </button>
             <span style={{ display: 'flex', color: '#11110f' }}><CloverMark size={16} /></span>
-            <button type="button" aria-label="App menu" style={{ width: 30, height: 30, display: 'grid', placeItems: 'center', padding: 0, background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: '50%', cursor: 'pointer', color: '#686868' }}>
+            <button type="button" aria-label="App menu" style={{ width: 30, height: 30, display: 'grid', placeItems: 'center', padding: 0, background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: '50%', cursor: 'pointer', color: '#686868', backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)' }}>
               <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconLineDecrease size={15} /></span>
             </button>
           </div>
@@ -72,24 +72,24 @@ export function PhonePreview() {
             {tiles.map((n) => {
               const Mini = projectIconMap[n.icon]
               return (
-                <div key={n.label} style={{ background: '#fff', border: '1px solid #e7e7e7', borderRadius: '32%', aspectRatio: 1, display: 'grid', placeItems: 'center', color: 'rgba(17,17,15,0.75)' }}>
+                <div key={n.label} style={{ background: '#fff', border: '1px solid rgba(17,17,15,0.045)', borderRadius: '32%', aspectRatio: 1, display: 'grid', placeItems: 'center', color: 'rgba(17,17,15,0.75)' }}>
                   <span style={{ display: 'flex', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.16))' }}><Mini size={44} /></span>
                 </div>
               )
             })}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', padding: '6px 12px 16px', overflowY: 'auto' }}>
+          <div className="ab-phone-feed" style={{ display: 'flex', flexDirection: 'column', padding: '6px 12px 16px', overflowY: 'auto', scrollbarWidth: 'none' }}>
             {phoneFeed.map((r, i) => (
               <div key={r.key}>
                 <div style={{ height: 48, minHeight: 48, display: 'grid', gridTemplateColumns: '26px minmax(0,1fr) auto', columnGap: 7, alignItems: 'center', padding: '5px 0' }}>
-                  <AvatarBlob name={r.name} color={r.color} bg={r.bg} size={26} />
+                  <AvatarBlob name={r.name} color={r.color} size={26} />
                   <span style={{ minWidth: 0, display: 'grid', gap: 2 }}>
                     <span style={{ display: 'block', fontSize: 9, fontWeight: 600, color: '#11110f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name} <em style={{ marginLeft: 2, fontSize: 7, fontStyle: 'normal', fontWeight: 400, color: tokens.muted }}>{r.role}</em></span>
                     <span style={{ display: 'block', fontSize: 8, color: tokens.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.text}</span>
                   </span>
                   <span style={{ fontSize: 6.5, color: tokens.muted, alignSelf: 'start', paddingTop: 2 }}>{r.time}</span>
                 </div>
-                {i < phoneFeed.length - 1 ? <div style={{ marginLeft: 33, height: 1, background: 'rgba(60,60,67,0.08)' }} /> : null}
+                {i < phoneFeed.length - 1 ? <div style={{ marginLeft: 33, height: 1, background: 'rgba(17,17,15,0.045)' }} /> : null}
               </div>
             ))}
           </div>
