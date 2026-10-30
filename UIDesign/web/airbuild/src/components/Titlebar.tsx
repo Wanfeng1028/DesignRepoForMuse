@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { tokens } from '../tokens/tokens.ts'
-import { IconIPhone, IconPlus, IconShare, IconSidebarLeft, IconSidebarRight, IconX } from './icons.tsx'
+import { IconIPhone, IconPlus, IconShare, IconX, PanelLeftToggle, PanelRightToggle } from './icons.tsx'
 
 export function TrafficLights() {
   return (
@@ -21,12 +21,14 @@ function ControlCapsule({ children }: { children: ReactNode }) {
 }
 
 function CapsuleButton({ label, onClick, icon, divider }: { label: string; onClick?: () => void; icon: ReactNode; divider?: boolean }) {
+  const [hovered, setHovered] = useState(false)
   return (
     <button type="button" aria-label={label} onClick={onClick}
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ position: 'relative', width: 32, height: 32, flex: '0 0 32px', display: 'grid', placeItems: 'center',
-        padding: 0, color: 'rgba(0,0,0,0.78)', background: 'transparent', border: 'none', borderRadius: 999, cursor: 'pointer' }}>
+        padding: 0, color: '#686868', background: hovered ? 'rgba(255,255,255,0.22)' : 'transparent', border: 'none', borderRadius: 999, cursor: 'pointer' }}>
       {divider ? <span style={{ position: 'absolute', left: 0, top: 6, width: 1, height: 20, background: 'rgba(0,0,0,0.1)' }} /> : null}
-      {icon}
+      <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}>{icon}</span>
     </button>
   )
 }
@@ -46,6 +48,9 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
   onToggleSidebar: () => void
   onTogglePreview: () => void
 }) {
+  const [hoverTab, setHoverTab] = useState<string | null>(null)
+  const [hoverNewTab, setHoverNewTab] = useState(false)
+  const [hoverStrip, setHoverStrip] = useState(false)
   const sidebarZone = (
     <div style={sidebarCollapsed
       ? { position: 'absolute', left: 0, top: 0, bottom: 0, width: 170, zIndex: 4, display: 'flex', gap: 14, alignItems: 'center', padding: '4px 12px 0', background: 'transparent' }
@@ -53,13 +58,13 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
       <TrafficLights />
       <ControlCapsule>
         <CapsuleButton label="Create a new project" icon={<IconPlus size={13} />} />
-        <CapsuleButton label="Toggle left sidebar" onClick={onToggleSidebar} divider icon={<IconSidebarLeft size={16} />} />
+        <CapsuleButton label="Toggle left sidebar" onClick={onToggleSidebar} divider icon={<PanelLeftToggle open={!sidebarCollapsed} size={16} />} />
       </ControlCapsule>
     </div>
   )
   const conversationZone = (
     <div style={{ gridColumn: 2, display: 'grid', placeItems: 'center', background: 'rgba(249,249,247,0.94)',
-      padding: `4px ${previewCollapsed ? 48 : 10}px 0 ${sidebarCollapsed ? 174 : 10}px` }}>
+      padding: `4px ${previewCollapsed ? 58 : 10}px 0 ${sidebarCollapsed ? 174 : 10}px` }}>
       <button type="button" aria-label={`Current project: ${projectName}`} title={projectName}
         style={{ width: 32, height: 32, display: 'grid', placeItems: 'center', padding: 0, overflow: 'visible',
           background: projectTint, border: 'none', borderRadius: '32%', cursor: 'pointer', color: 'rgba(17,17,15,0.75)',
@@ -73,9 +78,11 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
       <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 48, zIndex: 6, display: 'flex',
         justifyContent: 'flex-end', alignItems: 'center', padding: '4px 8px 0 0', background: 'transparent' }}>
         <button type="button" aria-label="Toggle preview" onClick={onTogglePreview}
+          onMouseEnter={() => setHoverStrip(true)} onMouseLeave={() => setHoverStrip(false)}
           style={{ width: 32, height: 32, display: 'grid', placeItems: 'center', padding: 0, color: '#686868',
-            background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: 999, cursor: 'pointer' }}>
-          <span style={{ display: 'flex', opacity: 0.72 }}><IconSidebarRight size={17} /></span>
+            background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: 999, cursor: 'pointer',
+            filter: hoverStrip ? 'brightness(1.035)' : 'none' }}>
+          <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><PanelRightToggle open={!previewCollapsed} size={17} /></span>
         </button>
       </div>
     )
@@ -85,30 +92,33 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', overflow: 'hidden', minWidth: 0 }}>
           {deviceTabs.map((t) => {
             const isActive = t === activeDevice
+            const hovered = hoverTab === t
             return (
               <button key={t} type="button" role="tab" aria-selected={isActive} onClick={() => onSelectDevice(t)}
+                onMouseEnter={() => setHoverTab(t)} onMouseLeave={() => setHoverTab(null)}
                 style={{ height: 36, minWidth: 76, maxWidth: 180, flex: '0 0 auto', display: 'grid',
                   gridTemplateColumns: 'auto minmax(0,1fr) auto', gap: 6, alignItems: 'center', padding: '0 9px',
-                  color: isActive ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0.48)',
-                  background: isActive ? 'transparent' : '#f7f7f5', border: '1px solid transparent', borderRadius: 9,
+                  color: isActive ? '#11110f' : 'rgba(0,0,0,0.48)',
+                  background: isActive ? 'transparent' : hovered ? '#f2f2f0' : '#f7f7f5', border: '1px solid transparent', borderRadius: 9,
                   cursor: 'pointer', fontSize: 10 }}>
                 <span style={{ display: 'flex', opacity: 0.45 }}><IconIPhone size={12} /></span>
                 <strong style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>{t}</strong>
                 <span onClick={(e) => { e.stopPropagation(); onCloseDevice(t) }}
-                  style={{ display: 'flex', opacity: isActive ? 0.3 : 0 }}><IconX size={9} /></span>
+                  style={{ display: 'flex', opacity: isActive || hovered ? 0.3 : 0 }}><IconX size={9} /></span>
               </button>
             )
           })}
           <button type="button" aria-label="Open new preview tab" onClick={onNewDevice}
+            onMouseEnter={() => setHoverNewTab(true)} onMouseLeave={() => setHoverNewTab(false)}
             style={{ width: 36, height: 36, flex: '0 0 36px', display: 'grid', placeItems: 'center', padding: 0,
-              color: 'rgba(0,0,0,0.5)', background: 'transparent', border: 'none', borderRadius: 9, cursor: 'pointer' }}>
+              color: 'rgba(0,0,0,0.5)', background: hoverNewTab ? 'rgba(255,255,255,0.52)' : 'transparent', border: 'none', borderRadius: 9, cursor: 'pointer' }}>
             <span style={{ display: 'flex', opacity: 0.48 }}><IconPlus size={14} /></span>
           </button>
         </div>
         <div style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
           <ControlCapsule>
             <CapsuleButton label="Share build" icon={<IconShare size={16} />} />
-            <CapsuleButton label="Toggle preview" onClick={onTogglePreview} divider icon={<IconSidebarRight size={16} />} />
+            <CapsuleButton label="Toggle preview" onClick={onTogglePreview} divider icon={<PanelRightToggle open={!previewCollapsed} size={16} />} />
           </ControlCapsule>
         </div>
       </div>

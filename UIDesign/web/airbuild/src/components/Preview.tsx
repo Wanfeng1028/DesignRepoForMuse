@@ -1,19 +1,23 @@
+import { useState } from 'react'
 import { AvatarBlob } from './AvatarBlob.tsx'
 import { IconIPhone, IconX, projectIconMap } from './icons.tsx'
 
 export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[]; active: string; onSelect: (t: string) => void; onClose?: (t: string) => void }) {
+  const [hoverTab, setHoverTab] = useState<string | null>(null)
   return (
     <div style={{ display: 'flex', gap: 4, alignItems: 'center', overflow: 'hidden' }}>
       {tabs.map((t) => {
         const isActive = t === active
+        const hovered = hoverTab === t
         return (
           <button key={t} onClick={() => onSelect(t)}
+            onMouseEnter={() => setHoverTab(t)} onMouseLeave={() => setHoverTab(null)}
             style={{ height: 36, minWidth: 76, maxWidth: 180, padding: '0 9px', borderRadius: 9, border: '1px solid transparent', cursor: 'pointer',
-              background: isActive ? 'transparent' : '#f7f7f5', color: isActive ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0.48)',
+              background: isActive ? 'transparent' : hovered ? '#f2f2f0' : '#f7f7f5', color: isActive ? '#11110f' : 'rgba(0,0,0,0.48)',
               fontSize: 10, fontWeight: 500, display: 'grid', gridTemplateColumns: 'auto minmax(0,1fr) auto', gap: 6, alignItems: 'center', whiteSpace: 'nowrap' }}>
             <span style={{ display: 'flex', opacity: 0.45 }}><IconIPhone size={12} /></span>
             <strong style={{ overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 500 }}>{t}</strong>
-            <span onClick={(e) => { e.stopPropagation(); onClose?.(t) }} style={{ opacity: isActive ? 0.3 : 0, display: 'flex' }}><IconX size={9} /></span>
+            <span onClick={(e) => { e.stopPropagation(); onClose?.(t) }} style={{ opacity: isActive || hovered ? 0.3 : 0, display: 'flex' }}><IconX size={9} /></span>
           </button>
         )
       })}
@@ -35,21 +39,21 @@ export function PhonePreview({ projectName = 'Hourtown' }: { projectName?: strin
       <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '6px 24px 14px', overflow: 'hidden' }}>
         <div style={{ width: 'min(270px, calc(100% - 28px))', minWidth: 180, aspectRatio: 0.51, borderRadius: 38,
           background: 'rgba(255,255,255,0.98)', border: '7px solid #d8d8d6',
-          boxShadow: '0 24px 48px rgba(0,0,0,0.14), inset 0 0 0 1px #fefefe', overflow: 'hidden',
+          boxShadow: '0 24px 48px rgba(0,0,0,0.24), inset 0 0 0 1px #fefefe', overflow: 'hidden',
           display: 'grid', gridTemplateRows: '34px 42px auto 1fr', flex: 'none' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px 2px', fontSize: 8, fontWeight: 700 }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px 2px', fontSize: 8, fontWeight: 700 }}>
             <span>9:41</span>
-            <span style={{ width: 56, height: 14, borderRadius: 999, background: '#11110f' }} />
+            <span style={{ position: 'absolute', left: '50%', top: 7, transform: 'translateX(-50%)', width: 48, height: 15, borderRadius: 999, background: '#050505' }} />
             <span style={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
               <span style={{ width: 3, height: 4, background: '#11110f', borderRadius: 1 }} />
               <span style={{ width: 3, height: 6, background: '#11110f', borderRadius: 1 }} />
               <span style={{ width: 3, height: 8, background: '#11110f', borderRadius: 1 }} />
-              <span style={{ width: 16, height: 9, border: '1px solid #11110f', borderRadius: 2, marginLeft: 3, position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 1, top: 1, bottom: 1, width: 10, background: '#11110f', borderRadius: 1 }} />
+              <span style={{ width: 16, height: 8, border: '1px solid #11110f', borderRadius: 2, marginLeft: 3, position: 'relative', boxSizing: 'border-box' }}>
+                <span style={{ position: 'absolute', left: 1, top: 1, bottom: 1, width: 6, background: '#11110f', borderRadius: 1 }} />
               </span>
             </span>
           </div>
-          <div style={{ height: 42, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', borderBottom: '1px solid rgba(60,60,67,0.08)' }}>
+          <div style={{ height: 42, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 13px', borderBottom: '1px solid rgba(60,60,67,0.08)' }}>
             <span style={{ fontSize: 12, fontWeight: 700 }}>{projectName}</span>
             <span style={{ fontSize: 9, color: '#727279' }}>Today</span>
           </div>

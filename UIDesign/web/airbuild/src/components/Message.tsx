@@ -1,6 +1,20 @@
 import type { Agent, TaskCardData } from '../data/demo.ts'
+import { tokens } from '../tokens/tokens.ts'
 import { AvatarBlob } from './AvatarBlob.tsx'
-import { IconCheck } from './icons.tsx'
+
+/**
+ * Task-step morph (audit M01). The done check is the Lucide check geometry
+ * (M20 6 9 17l-5-5) drawn as its own SVG so the stroke can be animated:
+ * dash draw 260ms (message-in duration) instead of a hard pop-in.
+ * todo -> active is a background/border-color transition (.ab-task-dot).
+ */
+function CheckDraw() {
+  return (
+    <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="ab-check-draw" aria-hidden>
+      <path d="M20 6 9 17l-5-5" pathLength={100} />
+    </svg>
+  )
+}
 
 export function TaskCard({ task }: { task: TaskCardData }) {
   return (
@@ -10,11 +24,11 @@ export function TaskCard({ task }: { task: TaskCardData }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, margin: '12px 0' }}>
         {task.steps.map((s) => (
           <div key={s.label} style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
-            <span className={s.state === 'active' ? 'ab-task-active-dot' : undefined}
+            <span className={`ab-task-dot${s.state === 'active' ? ' ab-task-active-dot' : ''}`}
               style={{ width: 12, height: 12, borderRadius: '50%', flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 border: s.state === 'done' ? '1px solid #72a682' : `1px solid ${s.state === 'active' ? '#c49b65' : '#d8cfc1'}`,
                 background: s.state === 'done' ? '#72a682' : s.state === 'active' ? '#c49b65' : 'transparent', color: '#fff' }}>
-              {s.state === 'done' ? <IconCheck size={9} /> : null}
+              {s.state === 'done' ? <CheckDraw /> : null}
             </span>
             <span style={{ color: s.state === 'done' ? '#467458' : s.state === 'active' ? '#675039' : '#a2998c' }}>{s.label}</span>
           </div>
@@ -32,7 +46,7 @@ export function AgentMessage({ agent, text, task, index = 0 }: { agent: Agent; t
     <div className="ab-message-in" style={{ display: 'flex', gap: 8, alignItems: 'flex-end', animationDelay: `${index * 40}ms` }}>
       <AvatarBlob name={agent.name} color={agent.color} bg={agent.bg} size={28} />
       <div style={{ minWidth: 0, flex: 1, maxWidth: 'min(84%, 330px)' }}>
-        <div style={{ fontSize: 10, fontWeight: 600, margin: '0 2px 5px' }}>{agent.name} <span style={{ fontWeight: 400, color: 'rgba(0,0,0,0.38)' }}>{agent.role}</span></div>
+        <div style={{ fontSize: 10, fontWeight: 600, margin: '0 2px 5px' }}>{agent.name} <span style={{ fontWeight: 400, color: tokens.muted }}>{agent.role}</span></div>
         <div className="ab-agent-bubble" style={{ display: 'inline-block' }}>{text}</div>
         {task ? <TaskCard task={task} /> : null}
       </div>

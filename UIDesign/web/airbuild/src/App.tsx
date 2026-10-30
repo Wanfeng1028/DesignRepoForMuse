@@ -64,7 +64,7 @@ export default function App() {
         </div>
       </Section>
 
-      <Section id="preview" title="4 · Preview tabs + iPhone preview" note="Preview tabs live in the titlebar (36px high, 76–180px wide, 9px radius, 10px device label, #f7f7f5, active transparent) — see section 1. The phone below is the standalone stage: 270px wide, aspect 0.51, 7px #d8d8d6 frame, 38px radius, 0 24px 48px shadow (alpha 0.14); statusbar 8px/700, appbar 42px; feed rows 48px, avatar 26px, name 9px/600 #242426, divider inset from left 33px.">
+      <Section id="preview" title="4 · Preview tabs + iPhone preview" note="Preview tabs live in the titlebar (36px high, 76–180px wide, 9px radius, 10px device label, #f7f7f5, active transparent) — see section 1. The phone below is the standalone stage: 270px wide, aspect 0.51, 7px #d8d8d6 frame, 38px radius, 0 24px 48px shadow (alpha 0.24); statusbar 8px/700, appbar 42px; feed rows 48px, avatar 26px, name 9px/600 #242426, divider inset from left 33px.">
         <div className="ab-preview-bg" style={{ borderRadius: 18, height: 560, maxWidth: 720, overflow: 'hidden' }}><PhonePreview /></div>
       </Section>
 

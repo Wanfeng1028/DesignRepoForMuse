@@ -56,10 +56,11 @@ radius 9px, name 11px/600, role em 400 `rgba(0,0,0,0.4)`, status 8px
 `rgba(0,0,0,0.34)`, online dot 8px `#2ecb70`; project-tile grid 3 columns
 gap 6px, aspect 1.25, radius 12px, bg `rgba(255,255,255,0.34)`, icon-only
 32px / 32% radius (no name label); preview-tab 36px high,
-76–180px wide, radius 9px, bg `#f7f7f5`, 10px/500 device label, icon 12px
+76–180px wide, radius 9px, bg `#f7f7f5`, hover `#f2f2f0`, active
+transparent + ink label, 10px/500 device label, icon 12px
 opacity 0.45, close 9px (opacity 0, 0.3 on hover/active); phone 270px wide,
 aspect 0.51, 7px `#d8d8d6` frame, radius 38px, shadow
-`0 24px 48px rgba(0,0,0,0.14)`, statusbar 8px/700, appbar 42px, feed divider
+`0 24px 48px rgba(0,0,0,0.24)`, statusbar 8px/700, appbar 42px, feed divider
 inset from left 33px; follow-up composer 32px high,
 capsule 999px, margin `0 14px 10px`, bg `rgba(255,255,255,0.94)`,
 `0 10px 28px rgba(0,0,0,0.065)` shadow; task card bg `#fffaf2`, border
@@ -77,15 +78,15 @@ resizer 8px wide. See `src/tokens/tokens.ts`.
 |---|---|---|
 | `AppWindow` + `ScaleCanvas` | `src/components/AppWindow.tsx` | Three-column grid + scale; device-tab state lives here; both collapsed states |
 | `Titlebar` / `TrafficLights` | `src/components/Titlebar.tsx` | 40px, same three grid zones as the body: sidebar zone (17px lights + 64×32 control capsule), conversation zone (centred 32px project icon), preview zone (device tabs + new-tab + 64×32 action capsule); divider only at the preview boundary |
-| `Sidebar` / `ProjectTile` / `AgentRow` | `src/components/Sidebar.tsx` | Icon-only project grid (3 cols, gap 6px) + agent list (blob avatar + name + @role + status line + green online dot) + Account pill + 3 round footer buttons |
+| `Sidebar` / `ProjectTile` / `AgentRow` | `src/components/Sidebar.tsx` | Icon-only project grid (3 cols, gap 6px) + agent list (illustrated avatar + name + @role + status line + green online dot) + Account pill + 3 round footer buttons; tile hover white 0.58 + up 1px, row hover white 0.5 |
 | `AgentMessage` / `UserMessage` / `TypingRow` / `TaskCard` | `src/components/Message.tsx` | Avatar bottom-aligned; typing = 3× 5px `#aaa` dots, 800ms, 0/160/320ms stagger; task card = title, status line, steps, track |
 | `FollowUpComposer` | `src/components/FollowUpComposer.tsx` | 32px capsule composer, `onSend` prop; attach `#ededeb`, send blue `#1987f7` (see Residuals 9) |
 | `PreviewTabs` / `PhonePreview` | `src/components/Preview.tsx` | Tabs live in the titlebar; phone-statusbar (8px/700) / phone-appbar (42px) / phone-projects / phone-feed (divider inset 33px) |
 | `ServiceModuleColumn` | `src/components/ServiceModuleColumn.tsx` | ORIGINAL right column: AirFeedback / AirPayment / AirRouter / AirKnowledge / AirTraffic |
 | `BottomModuleBar` | `src/components/BottomModuleBar.tsx` | ADAPTED variant, labelled 改编（非原版） — not the original |
 | `Toast` / `Resizer` | `src/components/Toast.tsx` | Toast bottom 30px, 11px; resizer 8px col-resize |
-| `AvatarBlob` | `src/components/AvatarBlob.tsx` | Self-drawn blob character (tinted disc + lightened blob + two eyes; see Residuals) |
-| `icons` | `src/components/icons.tsx` | All 12 official icon semantics redrawn as vector SVG, plus vector mini project icons |
+| `AvatarBlob` | `src/components/AvatarBlob.tsx` | Vector-redrawn illustrated member figures, one face per roster member (see Residuals) |
+| `icons` | `src/components/icons.tsx` | Lucide (lucide-react) for all 19 used icons, strokeWidth 2; panel toggles are Lucide-geometry morph SVGs (divider slides, never hard-cuts) |
 | `Button` / `Input` / `StatusPill` / `Separator` | `src/components/ui/` | shadcn-style; Button/Input via Radix Slot, Separator via Radix |
 | `cn` | `src/lib/utils.ts` | clsx + tailwind-merge |
 | `tokens` / `dark-tokens` | `src/tokens/` | Table A (live) / table B (reserve only, not rendered) |
@@ -164,9 +165,13 @@ Comparison against the references (v1.1 state, measured from code + shots):
 3. No official evidence exists for a bottom module bar: the bottom bar in
    this package is an adaptation (BotsTalk-style), explicitly labelled
    改编（非原版）; the original is the right-hand column.
-4. Avatar portraits have no vector source: avatars are self-drawn blob
-   characters (tinted disc + lightened blob + two eyes), not the official
-   webp portraits, and their exact colours and faces are not claimed.
+4. Avatar portraits have no vector source: avatars are vector-redrawn
+   illustrated figures (one distinct face per roster member: Ato green +
+   sprout, Pluso blue open smile, Colo amber + freckles, Camo yellow
+   happy-arc eyes, Ampo blue + glasses, Leto pink + blush and hair tuft),
+   not the official webp portraits, and their exact colours and faces
+   are not claimed. The demo roster has no Qesto member, so no Qesto
+   figure is drawn; Leto carries the pink figure.
 9. Composer send button, platform conflict: the web demo's base CSS makes
    the send button near-black `#111` (its Shadow DOM layer restyles the
    floating controls as white gradient), while the native App Store shots
@@ -185,9 +190,9 @@ Comparison against the references (v1.1 state, measured from code + shots):
 5. Font fallback on non-Apple devices: SF Pro Rounded exists only on Apple
    devices; elsewhere the stack falls back to SF Pro Display /
    -apple-system / Helvetica Neue / Arial, so rendering there will differ.
-6. Official bitmap assets are not used anywhere: the 12 icons are redrawn
-   vector SVGs in the same semantics, so stroke weight and corner details
-   may differ slightly from the official raster icons.
+6. Official bitmap assets are not used anywhere: icons are Lucide
+   (lucide-react) at strokeWidth 2, so stroke weight and corner details
+   follow Lucide, not the official raster icons.
 7. The real in-app chat room (native iOS) is not open source and is not in
    the public web bundles; this package reproduces the official web demo
    model (REA) + the user photo layout, not the native app's internals.
