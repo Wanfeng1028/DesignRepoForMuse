@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { tokens } from '../tokens/tokens.ts'
 import { AvatarBlob } from './AvatarBlob.tsx'
-import { CloverMark, IconGear, IconIPhone, IconLineDecrease, IconX, projectIconMap } from './icons.tsx'
+import { CloverMark, IconGear, IconIPhone, IconLineDecrease, IconX, WifiMark, projectIconMap } from './icons.tsx'
 
 export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[]; active: string; onSelect: (t: string) => void; onClose?: (t: string) => void }) {
   const [hoverTab, setHoverTab] = useState<string | null>(null)
@@ -18,7 +18,7 @@ export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[
               fontSize: 10, fontWeight: 500, display: 'grid', gridTemplateColumns: 'auto minmax(0,1fr) auto', gap: 6, alignItems: 'center', whiteSpace: 'nowrap' }}>
             <span style={{ display: 'flex', opacity: 0.45 }}><IconIPhone size={12} /></span>
             <strong style={{ overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 500 }}>{t}</strong>
-            <span onClick={(e) => { e.stopPropagation(); onClose?.(t) }} style={{ opacity: isActive || hovered ? 0.3 : 0, display: 'flex' }}><IconX size={9} /></span>
+            <span onClick={(e) => { e.stopPropagation(); onClose?.(t) }} style={{ opacity: isActive || hovered ? 0.3 : 0, display: 'flex', transition: 'opacity 120ms ease' }}><IconX size={9} /></span>
           </button>
         )
       })}
@@ -47,14 +47,17 @@ export function PhonePreview() {
           background: 'rgba(255,255,255,0.98)', border: '7px solid #d8d8d6',
           boxShadow: '0 24px 48px rgba(0,0,0,0.24), inset 0 0 0 1px #fefefe', overflow: 'hidden',
           display: 'grid', gridTemplateRows: '34px 42px auto 1fr', flex: 'none' }}>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px 2px', fontSize: 8, fontWeight: 700 }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px 2px', fontSize: 8, fontWeight: 700, lineHeight: 'normal' }}>
             <span>9:41</span>
             <span style={{ position: 'absolute', left: '50%', top: 7, transform: 'translateX(-50%)', width: 48, height: 15, borderRadius: 999, background: '#050505' }} />
-            <span style={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
-              <span style={{ width: 3, height: 4, background: '#11110f', borderRadius: 1 }} />
-              <span style={{ width: 3, height: 6, background: '#11110f', borderRadius: 1 }} />
-              <span style={{ width: 3, height: 8, background: '#11110f', borderRadius: 1 }} />
-              <span style={{ width: 16, height: 8, border: '1px solid #11110f', borderRadius: 2, marginLeft: 3, position: 'relative', boxSizing: 'border-box' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+              <span style={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
+                <span style={{ width: 3, height: 4, background: '#11110f', borderRadius: 1 }} />
+                <span style={{ width: 3, height: 6, background: '#11110f', borderRadius: 1 }} />
+                <span style={{ width: 3, height: 8, background: '#11110f', borderRadius: 1 }} />
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', height: 8 }}><WifiMark /></span>
+              <span style={{ width: 16, height: 8, border: '1px solid #11110f', borderRadius: 2, position: 'relative', boxSizing: 'border-box' }}>
                 <span style={{ position: 'absolute', left: 1, top: 1, bottom: 1, width: 6, background: '#11110f', borderRadius: 1 }} />
               </span>
             </span>
@@ -84,10 +87,10 @@ export function PhonePreview() {
                 <div style={{ height: 48, minHeight: 48, display: 'grid', gridTemplateColumns: '26px minmax(0,1fr) auto', columnGap: 7, alignItems: 'center', padding: '5px 0' }}>
                   <AvatarBlob name={r.name} color={r.color} size={26} />
                   <span style={{ minWidth: 0, display: 'grid', gap: 2 }}>
-                    <span style={{ display: 'block', fontSize: 9, fontWeight: 600, color: '#11110f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name} <em style={{ marginLeft: 2, fontSize: 7, fontStyle: 'normal', fontWeight: 400, color: tokens.muted }}>{r.role}</em></span>
-                    <span style={{ display: 'block', fontSize: 8, color: tokens.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.text}</span>
+                    <span style={{ display: 'block', fontSize: 9, fontWeight: 600, lineHeight: 1.25, color: '#11110f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name} <em style={{ marginLeft: 2, fontSize: 7, fontStyle: 'normal', fontWeight: 400, color: tokens.muted }}>{r.role}</em></span>
+                    <span style={{ display: 'block', fontSize: 8, lineHeight: 1.3, color: tokens.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.text}</span>
                   </span>
-                  <span style={{ fontSize: 6.5, color: tokens.muted, alignSelf: 'start', paddingTop: 2 }}>{r.time}</span>
+                  <span style={{ fontSize: 6.5, lineHeight: 1.4, color: tokens.muted, alignSelf: 'start', paddingTop: 2 }}>{r.time}</span>
                 </div>
                 {i < phoneFeed.length - 1 ? <div style={{ marginLeft: 33, height: 1, background: 'rgba(17,17,15,0.045)' }} /> : null}
               </div>

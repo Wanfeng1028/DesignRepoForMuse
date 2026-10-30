@@ -1,0 +1,27 @@
+{
+  "sbCollapsedTitlebarSidebarBoxShadow": "none",
+  "sbCollapsedTitlebarSidebarBg": "rgba(0, 0, 0, 0)",
+  "sbCollapsedTitlebarSidebarRect": {
+    "x": 40,
+    "y": 1157,
+    "w": 170,
+    "h": 40
+  },
+  "pvStripIconFilter": "none",
+  "pvStripBackdrop": "blur(4px) saturate(1.45)",
+  "iconCentreMain": 487,
+  "iconCentreSidebarCollapsed": 470,
+  "iconCentrePreviewCollapsed": 720,
+  "sbWindowRect": {
+    "x": 40,
+    "y": 1157,
+    "w": 1200,
+    "h": 668
+  },
+  "pvWindowRect": {
+    "x": 40,
+    "y": 1849,
+    "w": 1200,
+    "h": 668
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "windowRect": {
+    "x": 40,
+    "y": 307,
+    "w": 1200,
+    "h": 668,
+    "cx": 640,
+    "cy": 641
+  },
+  "titlebarTransition": "all",
+  "titlebarBoxShadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset",
+  "tbSidebarBoxShadow": "none",
+  "tbSidebarBorderRight": "1px solid rgba(17, 17, 15, 0.043)",
+  "tbConvTransition": "all",
+  "tbConvPadding": "4px 10px 0px",
+  "sidebarBoxShadow": "rgba(255, 255, 255, 0.42) -1px 0px 0px 0px inset",
+  "sidebarBorderRight": "1px solid rgba(17, 17, 15, 0.043)",
+  "convBorderRight": "1px solid rgba(17, 17, 15, 0.043)",
+  "windowBackdrop": "none",
+  "sidebarBackdrop": "none",
+  "convBackdrop": "none",
+  "capsuleBtnIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "capsuleBtnIconOpacity": "0.72",
+  "brightToggleIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "accountIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "footHomeIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "attachIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "sendIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "appSettingsIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "appMenuIconFilter": "drop-shadow(rgba(255, 255, 255, 0.52) 0px 1px 0px)",
+  "composerBackdrop": "blur(4px) saturate(1.45)",
+  "toastBackdrop": "blur(18px)",
+  "toastAnimation": "none",
+  "toastTransition": "all",
+  "galleryBtnBackdrop": "none",
+  "separatorBg": "rgba(17, 17, 15, 0.22)",
+  "feedNameLineHeight": "24px",
+  "feedNameFont": "16px/400",
+  "feedTextLineHeight": "13.5px",
+  "agentNameLineHeight": "16.5px",
+  "agentStatusLineHeight": "12px",
+  "bodyLineHeight": "24px",
+  "windowLineHeight": "24px",
+  "bubbleLineHeight": "16.56px",
+  "composerInputLineHeight": "16px",
+  "tabLabelLineHeight": "15px",
+  "tabCloseTransition": "MISSING",
+  "tileTransition": "background 0.15s, transform 0.15s",
+  "rowTransition": "background 0.15s",
+  "trafficCursor": "auto",
+  "trafficRect": {
+    "x": 52,
+    "y": 321,
+    "w": 17,
+    "h": 17,
+    "cx": 61,
+    "cy": 329
+  },
+  "onlineDotRect": "MISSING",
+  "onlineDotFont": "MISSING",
+  "rowAvatarRects": [
+    {
+      "x": 54,
+      "y": 466,
+      "w": 28,
+      "h": 28,
+      "cx": 68,
+      "cy": 480
+    },
+    {
+      "x": 54,
+      "y": 511,
+      "w": 28,
+      "h": 28,
+      "cx": 68,
+      "cy": 525
+    },
+    {
+      "x": 54,
+      "y": 556,
+      "w": 28,
+      "h": 28,
+      "cx": 68,
+      "cy": 570
+    },
+    {
+      "x": 54,
+      "y": 601,
+      "w": 28,
+      "h": 28,
+      "cx": 68,
+      "cy": 615
+    },
+    {
+      "x": 54,
+      "y": 646,
+      "w": 28,
+      "h": 28,
+      "cx": 68,
+      "cy": 660
+    },
+    {
+      "x": 54,
+      "y": 691,
+      "w": 28,
+      "h": 28,
+      "cx": 68,
+      "cy": 705
+    }
+  ],
+  "phoneRect": {
+    "x": 853,
+    "y": 392,
+    "w": 270,
+    "h": 529,
+    "cx": 988,
+    "cy": 657
+  },
+  "statusbarRect": {
+    "x": 860,
+    "y": 399,
+    "w": 256,
+    "h": 34,
+    "cx": 988,
+    "cy": 416
+  },
+  "statusIconsHTML": "<span>9:41</span><span style=\"position: absolute; left: 50%; top: 7px; transform: translateX(-50%); width: 48px; height: 15px; border-radius: 999px; background: rgb(5, 5, 5);\"></span><span style=\"display: flex; align-items: flex-end; gap: 1px;\"><span style=\"width: 3px; height: 4px; background: rgb(17, 17, 15); border-radius: 1px;\"></span><span style=\"width: 3px; height: 6px; background: rgb(17, 17, 15); border-radius: 1px;\"></span><span style=\"width: 3px; height: 8px; background: rgb(17, 17, 15); border-radius: 1px;\"></span><span style=\"width: 16px; height: 8px; border: 1px solid rgb(17, 17, 1",
+  "appbarRect": {
+    "x": 860,
+    "y": 433,
+    "w": 256,
+    "h": 42,
+    "cx": 988,
+    "cy": 454
+  },
+  "wifiPresent": false,
+  "iconCentreMain": 487,
+  "iconCentreSidebarCollapsed": 470,
+  "iconCentrePreviewCollapsed": 720,
+  "toastCentreX": 640,
+  "dividerLeft": {
+    "x": 736,
+    "y": 307,
+    "w": 1,
+    "h": 40,
+    "cx": 737,
+    "cy": 327
+  }
+}

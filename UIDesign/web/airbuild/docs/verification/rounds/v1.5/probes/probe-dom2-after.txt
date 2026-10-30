@@ -1,0 +1,22 @@
+{
+  "shareSvg": {
+    "w": "11",
+    "h": "11"
+  },
+  "inboundSvg": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"7\" y=\"2\" width=\"10\" height=\"20\" rx=\"2\"></rect>",
+  "toggleSvgSize": "17",
+  "feedTextColor": "rgba(17, 17, 15, 0.46)",
+  "feedTextSize": "8px",
+  "feedTimeColor": "rgba(17, 17, 15, 0.46)",
+  "feedTimeSize": "6.5px",
+  "headingColor": "MISSING",
+  "agentSmallColor": "rgba(17, 17, 15, 0.46)",
+  "taskBorder": "1px solid rgba(17, 17, 15, 0.043)",
+  "todoStepColor": "rgb(136, 117, 94)",
+  "newTabIconOpacity": "0.48",
+  "collapsedConvPadding": "4px 48px 0px 10px",
+  "sbCollapsedConvPadding": "4px 10px 0px 174px",
+  "typingAnim": "0.8s infinite alternate ab-typing",
+  "activeDotAnim": "0.7s ease-in-out infinite alternate ab-task-working"
+}
+newTabHoverBg: rgba(255, 255, 255, 0.5)

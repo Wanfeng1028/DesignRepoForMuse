@@ -40,7 +40,7 @@ window is always light; the dark chat variant (REA table B) lives only in
 Canvas 1200×668 fixed + whole-canvas `transform: scale()` adaptation (never
 reflowed); window radius 18px; window bg `rgba(244,246,244,0.42)` +
 `blur(34px) saturate(1.24)`; ink `#11110f`; muted `rgba(17,17,15,0.46)`;
-hairline `rgba(17,17,15,0.045)`; divider `rgba(17,17,15,0.22)`; blue `#1987f7`;
+hairline `rgba(17,17,15,0.045)`; divider hairline `rgba(17,17,15,0.045)` (Shadow layer; base 0.22 out, v1.3 D1); blue `#1987f7`;
 green `#2ecb70`; grid `sidebar 198px / conversation min 320px 1fr / preview
 min 310px 42%`; titlebar 40px in the same three zones (sidebar zone:
 traffic lights 17px gap 7px + 64×32 control capsule; conversation zone:

@@ -9,6 +9,519 @@ crop, App Store iPad/iPhone shots). A round is clean only when the judge
 reports zero substantive differences item by item; "looks alike" is not
 a pass.
 
+## v1.5 — 2026-10-30 (round 8: Apple iOS quality polish inside 1:1 fidelity; v1.4 -> v1.5 patch bump)
+
+- Round: user orders 2026-10-30 12:30 / 13:35 / 13:41 / 15:34
+  (only results, fix directly, no batches for approval) and 17:44
+  (Apple iOS design quality, strictly inside 1:1 fidelity: Apple
+  quality means faithfully restoring the original's native details,
+  not redesigning to Apple taste), plus the tightened acceptance of
+  the same day: 1px level, no small element skipped, multi-point /
+  zoned sampling, pixel + DOM cross-check, side-by-side eye
+  comparison before delivery. Method is measured_visual_replication
+  in full: measure before building, same state at same size, repair
+  order geometry -> missing layer -> typography -> cropping ->
+  spacing -> motion, before/after values for every repair, a repair
+  stays open until the after value matches the reference.
+- Zero judge calls this round. Measured data decides. No token was
+  fetched, no BotsRouter call was made, no judge verdict is claimed.
+- No commit, no push: changes stay in the working tree for the
+  coordinator to submit and verify. Build is green (see below).
+- Scope: only UIDesign/web/airbuild. No other set, no server
+  database, no token, no BotsRouter routing / capability / channel /
+  group / pricing / settlement, no X, no other project was touched.
+- Baseline: v1.4 screenshots and probes in
+  docs/verification/rounds/v1.4/. New evidence in
+  docs/verification/rounds/v1.5/ (gallery x3, three window shots,
+  phone-stage probe, side-by-side v1.4 vs v1.5 composite, stripe
+  before/after, corrected probe v15b, DOM regression probes, zone
+  measurements before/after/final, collapsed-state probe).
+- Reference rule unchanged: REA table A is the main source; where
+  base stylesheet and Shadow DOM override layer disagree, shadow
+  wins (v1.3 D1). User-photo desktop crop is structure reference
+  only, never a pixel baseline. Marketing dark (#141414 / #202020)
+  and chat light glass are never mixed in one comparison.
+
+### Quality / polish table (original value vs before value vs after value)
+
+1. Phone statusbar wifi icon (geometry, missing layer). Original:
+   .phone-status-icons is flex, gap 3px, signal 11x8, wifi 11x7,
+   battery 16x8, group total 44px wide. Before: signal + battery
+   only, group 31px wide at page (1069,415), wifiPresent false.
+   After: custom 11x7 WifiMark redraw (three arcs + dot, stroke
+   1.2, round caps; documented as custom, not a Lucide export,
+   because Lucide Wifi is a square 24x24 while the original status
+   icon is a wide 11x7 crop) inserted between signal and battery,
+   group now page (1056,415) 44x8, wifiPresent true, battery
+   unchanged page (1084,415) 16x8, island unchanged page (964,406)
+   48x15, phone unchanged page (853,392) 270x529. Status group
+   structure now matches the original: outer gap 3px, signal
+   subgroup (bars 3px wide, heights 4/6/8, gap 1px, bottom-aligned
+   internally), wifi wrapper 8px tall centred, battery marginLeft
+   removed (gap now handles it). Eye check at 2x: signal bars +
+   wifi arcs + battery all visible in the statusbar, correct order.
+   Residual: wifi glyph form is a redraw approximation (stroke
+   1.2 vs raster about 1px at 11x7); see residual R14.
+2. Titlebar sidebar inset highlight (missing layer). Original
+   shadow rule: background + box-shadow inset -1px 0
+   rgba(255,255,255,0.42) on both .titlebar-sidebar and .sidebar.
+   Before: body sidebar had it, titlebar sidebar zone had only the
+   border-right hairline and box-shadow none. Pixel proof before,
+   titlebar row y20: x196 = (232,233,232) plain sidebar background,
+   x197 = (223,225,223) border, x198+ conversation. Body row y300
+   for comparison: x196 = (242,242,242) inset highlight, x197 =
+   (223,223,223) border. After: titlebar sidebar zone (non-collapsed
+   only) carries box-shadow inset -1px 0 rgba(255,255,255,0.42);
+   DOM reads rgba(255,255,255,0.42) -1px 0px 0px 0px inset, identical
+   to body sidebar. Pixel after, titlebar row y20: x196 =
+   (241,242,241) inset present, x197 = (224,225,223) border, x198+
+   conversation (245,245,244). The titlebar inset reads 1 level
+   below the body inset (241 vs 242); DOM values are identical and
+   the 1-level gap is border-edge antialiasing, recorded as
+   residual R18, not hidden. Collapsed overlay titlebar zone
+   stays box-shadow none, per the shadow collapsed rule (verified
+   in the collapsed probe).
+3. Icon drop-shadow scope (material). Original base shared icon
+   rule gives opacity 0.72 + drop-shadow(0 1px 0
+   rgba(255,255,255,0.52)), but the later shadow override sets
+   filter none for window-control, header-action, preview-sidebar,
+   account, footer-action, attach, send, preview-tab and phone-logo
+   icons (light mode default none; the invert(1) value in theme.css
+   applies only under dark site theme), and re-applies the
+   drop-shadow + opacity 0.72 only for .phone-appbar button.ui-icon
+   via --mockup-phone-icon-filter. Before: all control icons
+   including capsule, bright toggles, account, footer, attach and
+   send carried the drop-shadow. After: drop-shadow removed from
+   capsule-button icons, both bright-toggle icons, account icon,
+   all three footer icons, attach icon and send icon; DOM filter
+   reads none for all of them. Phone-appbar icons keep
+   drop-shadow(rgba(255,255,255,0.52) 0px 1px 0px), verified by DOM.
+4. Window backdrop material (build defect, missing layer). Original:
+   background rgba(244,246,244,0.42) + blur(34px) saturate(1.24).
+   Before: source index.css declared both backdrop-filter and
+   -webkit-backdrop-filter for .ab-window, but the built CSS kept
+   only the -webkit- declaration (Tailwind/Lightning drops the
+   unprefixed twin when both are declared in one rule); headless
+   Chromium computed backdrop-filter none and
+   -webkit-backdrop-filter empty, so no blur rendered at all.
+   Stripe proof before: black/white 60px stripes behind the window
+   showed a perfect 1px step at screenshot x19-20 and x79-80 on
+   rows y500 and y600 (172 -> 237, zero transition pixels).
+   After: .ab-window div carries inline backdropFilter and
+   WebkitBackdropFilter from tokens.windowFilter (blur(34px)
+   saturate(1.24)), bypassing the stylesheet minifier; the
+   stylesheet rule is kept as the -webkit- fallback and a comment
+   in index.css explains the build behaviour. DOM after: inline
+   backdrop blur(34px) saturate(1.24), computed backdrop identical
+   (was none). Stripe proof after: rows y500 and y600 across x0-120
+   now read a smooth gradient (208 -> 214 -> 196 across the stripe
+   period) instead of the flat 172 / sharp step / 237 pattern; 1px
+   edge profile x12-29 now reads 208,209,209,209,209,209,210,210,
+   210,210,211,211,212,212, a gradual ramp versus before 172 flat
+   then a single jump to 237 at x20. Blur is now actually rendering
+   in this browser. Note: in headless Chromium the inline
+   webkitBackdropFilter reads back empty because Chromium aliases
+   it to the unprefixed slot, but the computed unprefixed value is
+   correct and the stylesheet -webkit- remains for older Safari.
+   Correction: the v1.2 stripe-swing observation is explained by
+   alpha compositing alone, not proven blur, and is not relied on
+   here; only the v1.5 stripe before/after pair proves blur.
+5. Window line-height (typography). Original has no preflight, so
+   unspecified texts render at font-natural line-height. Before:
+   built CSS html line-height 1.5 inflated every unspecified text
+   (feed name 13.5px for 9px x 1.5, feed text 12px for 8px x 1.5,
+   agent name 16.5px, agent status 12px, author 15px, tab label
+   15px, window/body 24px for 16px x 1.5). Bubbles (16.56px =
+   12 x 1.38) and composer input (16px) were already explicit and
+   correct. After: .ab-window carries line-height normal, so window
+   texts render at font-natural line-height like the original;
+   DOM window line-height reads normal (was 24px), body line-height
+   stays 24px (gallery outside the window keeps Tailwind 1.5).
+   Explicit line-heights are unaffected. Cross-context consistency
+   fix (no window pixel change, verified): the same normal value
+   is now set explicitly on AgentMessage author, AgentRow name +
+   status, TaskCard container, and PhonePreview statusbar time,
+   because those components also render outside .ab-window in
+   gallery sections 3 / 4 / 5, where they previously inherited
+   Tailwind 1.5 and rendered 2px looser than inside the window.
+   Proof the addition is window-neutral: probe-v15b values are
+   identical before and after the addition, and a full-window pixel
+   diff between the two builds shows only 133 pixels, all inside
+   the task card dots column (72 of them are the pulsing active
+   dot, amber (197,156,103) -> (213,183,143), max channel delta 40,
+   i.e. 700ms pulse phase at two screenshot times; the rest are
+   1-level done-dot / card-edge rounding). Zone measurements on
+   the final window are identical to the after measurements.
+   Glyph-band proof of the line-height fix: sidebar Ato name band
+   y162-169 (8 rows) before -> y164-171 (8 rows) after, +2px down,
+   height unchanged; feed Ato name band y278-283 (6 rows) before
+   -> y279-284 (6 rows) after, +1px down, height unchanged. Both
+   shifts are the tightened block recentring toward original
+   normal geometry, not a layout break.
+6. Feed line-heights (typography). Original specified values: name
+   1.25, text 1.3. Before: name 13.5px (9px x 1.5), text 12px
+   (8px x 1.5). After: name span lineHeight 1.25 -> DOM 11.25px,
+   text span 1.3 -> DOM 10.4px, time span 1.4 (original specified).
+   Agent name/status, author and tab label line-heights now read
+   normal (were 16.5px, 12px, 15px, 15px).
+7. Divider / separator alignment (spacing / gallery). Original
+   shadow hairline is rgba(17,17,15,0.045); base value 0.22 is out
+   per v1.3 D1. Before: index.css --color-ab-divider was 0.22 and
+   the gallery Separator computed rgba(17,17,15,0.22), while
+   tokens.ts divider was already hairline 0.045 and all window
+   dividers were hairline. After: theme variable 0.045, Separator
+   background rgba(17,17,15,0.045); DOM separator now reads
+   rgba(17,17,15,0.043) (0.045 x 255 = 11.475 rounds to 11/255 =
+   0.043, 8-bit alpha rounding, not a deviation; it appears
+   consistently on all hairlines). Window dividers unchanged.
+   Note: the built CSS drops unused theme variables, so the theme
+   variable itself may not appear in built output; the DOM
+   separator value is authoritative.
+8. Titlebar transitions (motion). Original base CSS: titlebar
+   grid-template-columns 240ms drawer easing, titlebar-conversation
+   padding-left/right 240ms drawer easing (+ border-color 160ms).
+   Before: decomposed computed transitions were all / 0s / ease,
+   i.e. no animation. After: titlebar container transition
+   grid-template-columns 240ms cubic-bezier(0.32,0.72,0,1);
+   conversation zone transition padding-left, padding-right
+   240ms with the same drawer easing. Collapsed-state DOM checks
+   confirm the transitions do not change collapsed geometry
+   (collapsed titlebar paddings 4px 48px 0px 10px and
+   4px 10px 0px 174px unchanged, see regression section).
+9. Tab close transition (motion). Original: opacity 120ms ease.
+   Before: 0s. After: close span transition opacity 120ms ease,
+   in Titlebar and in PreviewTabs (PreviewTabs is currently unused
+   by AppWindow but kept correct for hosts).
+10. Tile / row hover transitions (motion). Original .project-tile:
+    background 140ms ease, border-color 140ms ease, transform 140ms
+    ease. Before: tile was background, transform / 0.15s, 0.15s.
+    After: tile transition background, border-color, transform /
+    0.14s x3 / ease. Original .agent-row: no transition, hover is
+    instant. Before: row was background / 0.15s. After: row
+    transition removed entirely (DOM reads all / 0s / ease, i.e.
+    none).
+11. Toast enter (motion). Original toast transition: opacity 180ms
+    ease, transform 180ms ease, from translate(-50%,10px) to
+    translate(-50%,0). Before: toast animation none, transition 0s.
+    After: toast div carries class ab-toast-in; keyframes ab-toast-in
+    from opacity 0, translate(-50%,10px) to opacity 1,
+    translate(-50%,0), animation 180ms ease both. DOM after: toast
+    animation ab-toast-in / 0.18s / ease (was none), backdrop still
+    blur(18px). Built minifier renders the final keyframe as
+    translate(-50%), which is equivalent (Y defaults to 0).
+    Screenshots at 1200ms show the final state. Toast background
+    row y630 x555-645 step 10: flat (46,46,46)-(47,47,47) before ->
+    flat (47,47,47) after; the centre-row value changes in the same
+    measurement are white antialiased toast text glyphs on the dark
+    pill, not background. Toast centre page x640 = window centre,
+    exact, unchanged.
+12. Reduced motion (motion, base CSS). Original
+    @media (prefers-reduced-motion: reduce) rule (all animations /
+    transitions to 0.01ms, single iteration) was missing. After:
+    added to index.css. No effect on normal-mode screenshots.
+13. Traffic-light cursor (native feel). Original traffic lights are
+    buttons with cursor pointer. Before: computed cursor auto.
+    After: .ab-traffic-light cursor pointer; DOM reads pointer.
+    Screenshots unchanged.
+14. Gallery Button primitive backdrop (deliberately NOT changed,
+    with a wording correction). The original shared-control list is
+    window-control-group, header-action-group, bright,
+    account-button, sidebar-footer-action, follow-up, attach, send,
+    phone-appbar button. The gallery Button primitive is not in
+    that list (v1.4 CHANGELOG wording that included it was
+    overstated, corrected here). It is gallery presentation, not an
+    original screen (v1.3 U9), and its backdrop computes none;
+    changing it would be invention for gallery chrome. No code
+    change; only this correction.
+15. Re-verified v1.4 colour items, all still in place (no regression):
+    user blue #1987f7; window glass params; task card #fffaf2 /
+    track #e9e0d4 / fill #72a682; toast rgba(18,18,18,0.88);
+    traffic-light colours; online green #2ecb70; avatar discs Ato
+    #97c151, Pluso #52ccdb, Colo #855dfe, Camo #f9d01f, Ampo
+    #4db7da, Leto #f8ad43 (pink belongs to Qesto, not in this
+    roster); capsule gradient 325deg 2-stop shadow form; capsule
+    icon ink #11110f; shared icon colour #686868 and opacity 0.72;
+    composer backdrop blur(4px) saturate(1.45); window 1200x668,
+    radius 18px, three columns 198 / 696 / 1200, preview boundary
+    at 58% (window x696).
+
+### Multi-point / zoned sampling tables (tightened rule 3)
+
+- Sidebar pad strip x4, all y: flat (232,233,232) before and after,
+  unchanged.
+- Conversation right strip x688, all y: (245,245,243) before ->
+  (245,245,244) after, a 1-level B-channel shift, recorded as
+  residual R19 (see below). Conversation titlebar zones x350/x600
+  show the same +1 B shift. Preview strip x720 unchanged
+  (242,242,240).
+- Capsule interior, four corners: NW (237,238,238) -> (238,238,238),
+  NE unchanged (244,245,245), SW (241,241,242) -> (240,241,241),
+  SE (248,248,248) -> (248,249,248); divider top still
+  (216,217,217), divider bottom (245,246,245) -> (246,246,246).
+  Gradient direction (SE brightest, NW darkest, about 10-11 level
+  spread) preserved within 1 level.
+- Titlebar sidebar edge y20: x196 (232,233,232) -> (241,242,241)
+  (inset now present, body sidebar 242 within 1 level), x197
+  (223,225,223) -> (224,225,223) (border, within 1 level), x198+
+  conversation (245,245,243) -> (245,245,244).
+- Body sidebar edge y300 unchanged: x196 (242,242,242) inset,
+  x197 border, x198+ conversation. Titlebar divider y20 unchanged
+  except the same +1 B shift: x696 (232,233,230) -> (232,233,231).
+  Conversation border y300: x695 (235,235,233) -> (236,236,235),
+  within 1 level.
+- Toast background row y630: flat (47,47,47) after (see item 11).
+- Avatar discs, phone frame top, phone tile edge, feed divider
+  inset, user-blue bbox: unchanged in the diff except the file-size
+  line and the user-blue bbox top y164 -> y160 (4px shift,
+  consistent with the line-height change tightening message blocks;
+  blue pixel count 19213 -> 19216, bbox x369-678, y-653 unchanged
+  otherwise; the centre sample still reads task-card colour
+  (255,250,242) because the centre point falls on the task card,
+  not on blue; the bbox itself is the blue evidence).
+- Feed divider: y313 hairline (245,245,245), inset starts exactly
+  at x865 (x860-864 white 255, x865+ hairline), i.e. phone left
+  813 + 7 border + 12 padding + 33 = 865. Feed Ato avatar at window
+  (845,289) reads exact disc colour (151,193,81).
+- Window corner radius, re-measured in v1.5 (1px level): top row
+  y0 transition at x12-14, y1 at x10-12, y2 at x8-10, y5 at x4-6,
+  y10 at x0-2, y17 at x0 with traffic light at x14-26. All arc
+  points match circle radius 18 centred at (18,18) within 1px
+  (predicted x at y5 is 5.55, at y10 is 1.88, at y17 is 0.03).
+  Traffic light at y17 reads (255,95,87) centre, (244,91,84) edge.
+- Stripe backdrop zones, before vs after: see item 4. Before: flat
+  172, sharp 1px step to 237 at x20 and x80. After: smooth gradient
+  208 -> 214 -> 196 across the stripe period, no step anywhere.
+
+### Pixel + DOM cross-check (tightened rule 4)
+
+- Every fix above has both a DOM/computed value and a pixel value,
+  and they agree: titlebar inset (DOM box-shadow inset -1px white
+  0.42 AND pixel x196 241/242), icon filters (DOM filter none /
+  phone drop-shadow AND gradient pixel spread unchanged within 1
+  level), window backdrop (DOM computed blur(34px) saturate(1.24)
+  AND stripe gradient ramp), line-heights (DOM 11.25px / 10.4px /
+  normal AND glyph bands +2px / +1px), divider (DOM 0.043 AND
+  hairline pixel (245,245,245) on feed divider), transitions (DOM
+  0.24s / 0.12s / 0.14s / 0.18s AND collapsed geometry unchanged),
+  toast (DOM animation 0.18s AND flat 47 background), traffic
+  cursor (DOM pointer), wifi (DOM group 44x8 AND phone-stage eye
+  check), icon centres (DOM 487 / 470 / 720 AND pixel geometry
+  unchanged). No item was passed on a single channel.
+- Hairline rounding: 0.045 x 255 = 11.475 rounds to 11/255 = 0.043;
+  this is 8-bit alpha rounding, not a deviation, and it appears
+  consistently on all hairlines.
+- 1-level shifts after the backdrop fix (conversation B +1,
+  capsule corners +/-1, toast 46 -> 47, border columns +1) are
+  explained by saturate(1.24) now actually applying to the window
+  backdrop (previously it was ignored, so no saturate ran); tokens
+  are unchanged (DOM background values identical before/after).
+  They are recorded as residual R19, not averaged away.
+- Probe-script note: the first v1.5 probe (probe-v15.cjs) had
+  selector bugs (feed-name finder returned the container span at
+  16px, online-dot index and tab-close index were off by one).
+  Its outputs for those three items are superseded by the corrected
+  probe-v15b.cjs (probes/probe-before.txt vs probe-before2.txt /
+  probe-after.txt). Do not reuse the buggy numbers.
+
+### Regression probes (v1.4 scripts re-run against the new dist)
+
+- probe-dom.cjs and probe-dom2.cjs re-run: diff against the v1.4
+  records is EMPTY. Every v1.4 DOM value is unchanged: window rect,
+  sidebar padding/background, conversation background/border,
+  titlebar backgrounds/padding, divider, toast bottom + backdrop,
+  composer background/border/shadow/backdrop, attach/account/footer,
+  tile idle, phone rect/shadow, device shadow, appbar rects, feed
+  name colour, phone tile rect/svg, icon centres, tile hover,
+  row hover, share SVG 11x11, toggle SVG 17, feed text/time colours
+  and sizes, heading spans absent, agent small colour, task border
+  hairline, todo step colour rgb(136,117,94), new-tab icon opacity
+  0.48, collapsed conversation paddings, typing 0.8s infinite
+  alternate, active dot 0.7s ease-in-out infinite alternate, task
+  fill width 0.45s ease. The only changes versus v1.4 are the
+  intentional v1.5 items above.
+- Collapsed-state probe (probe-collapsed.cjs): sidebar-collapsed
+  titlebar sidebar zone box-shadow none, background transparent,
+  rect 170x40; preview-collapsed strip toggle icon filter none,
+  backdrop blur(4px) saturate(1.45); icon centres 487 / 470 / 720
+  unchanged; collapsed window rects 1200x668 at page x40.
+
+### Eye comparison (tightened rule 5)
+
+- Side-by-side composite probes/side-by-side-v14-v15.png (2400 wide:
+  v1.4 window-main left, v1.5 window-main right, same size, full
+  screen) read at full size, plus v1.5 window-main,
+  window-sidebar-collapsed, window-preview-collapsed,
+  probes/phone-stage.png, phone-crop-2x.png, and gallery-1280.png.
+- Visible differences between v1.4 and v1.5, then measured: (a)
+  phone statusbar now shows the wifi icon between signal bars and
+  battery (was missing; measured group 31px -> 44px); (b) sidebar
+  agent name glyphs sit about 2px lower (measured band +2px) and
+  feed name glyphs about 1px lower (measured band +1px), both from
+  the line-height fix, with no row-height or layout change; (c)
+  user-blue bbox top moved 4px up (measured y164 -> y160) from
+  message-block tightening; (d) no other visible difference:
+  three columns, traffic lights, capsules, centred project icon,
+  iOS tab, share capsule, phone tiles and feed, task card,
+  composer, toast all present and unchanged in form. Collapsed
+  windows show no visible change except the same text-block
+  tightening and the toast animation final state. Gallery full
+  page: all sections 1-7 present, no overflow, no missing element;
+  sections 3 / 5 standalone messages and agent rows are now tighter
+  (normal line-height, matching the window), section 6 separator is
+  now visibly fainter (hairline).
+- User-photo structure comparison (already done, unchanged): left
+  member column (Leto / Ampo / Camo / Colo / Pluso / Ato with
+  avatars and lowercase @roles), centre chat with a central card,
+  right service column (AirFeedback / AirPayment / AirRouter /
+  AirKnowledge / AirTraffic). Structural match only. Known variant
+  difference, not a fix item: the photo's right column is service
+  modules, while this set's window right column is the phone
+  preview per the web demo; the service column is shown separately
+  in gallery section 5 and via AppWindow showServiceColumn. The
+  "Save for Later" card belongs to a different demo conversation
+  and was deliberately not added (v1.2 decision).
+- Phone morphology comparison (web-demo template + App Store phone
+  shots, morphological not verbatim because states differ):
+  statusbar (time, island, signal, wifi, battery), appbar (gear,
+  mark, menu), project tiles (71x71, 44x44 icons), feed rows (48px,
+  26px avatar, 9px/600 name, 8px text, 6.5px time, divider inset
+  33px) all match the template forms; statusbar wifi is now
+  complete.
+
+### Full rescan residual count (v1.5)
+
+- 15 polish items closed this round (items 1-13 above, plus the
+  cross-context line-height consistency addition and the gallery
+  Button wording correction). The round is NOT clean: 21 residuals
+  remain (R1-R21), numbered below with numbers, none hidden behind
+  a clean label.
+- R1 SF Pro Rounded glyph form unverifiable on this platform (VM
+  fonts are Noto/DejaVu only, no SF Pro, no SF Pro Display, no
+  Helvetica Neue; macOS bundle contains no font files, system font
+  is platform-provided, not bundled). Token font stack matches base
+  CSS --font exactly ("SF Pro Rounded", "SF Pro Display",
+  -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif);
+  index.css --font-sans adds Arial after Helvetica Neue, which on
+  Apple devices is never reached (SF resolves first) and on this VM
+  is also absent, so it has zero visual effect. Fallback rendering
+  sizes are reported, never claimed as the original font.
+- R2 Avatar faces are redrawn geometry (disc colours measured
+  exact, faces not pixel-matched) - v1.4 U3 carried.
+- R3 Project tiles stay vector mini-icons on flat tints (originals
+  are photo/illustration covers) - v1.4 U1 carried.
+- R4 Service-column background stays rgba(249,249,247,0.92)
+  (user-photo right column unreadable) - v1.4 U2 carried.
+- R5 Gallery backdrop stays flat #ececea, not the marketing page's
+  colourful gradient - v1.4 U4 carried.
+- R6 Native iPad differences stay as platform gaps (native task
+  card white with "View task >" link and no track, native tiles
+  with name pills, native coloured status text) - v1.4 U5 carried.
+- R7 Send stays blue #1987f7 per high-resolution native evidence,
+  against the web demo's gradient/black variant (README residual
+  9, deliberate platform choice, not a web-demo match) - v1.4 U7.
+- R8 Dark mode unrendered (light only, table B reserve only) -
+  v1.4 U8 carried.
+- R9 Preview/sidebar collapse motion path differs: original preview
+  slides translateX(24px) + fades while the grid collapses; this set
+  collapses the grid and unmounts the column. End states identical
+  (DOM + screenshots), mid-state differs - v1.3 U12 carried, because
+  rebuilding the collapse state machine risks breaking DOM probes
+  and toggle behaviour for a mid-state-only gain. Titlebar/body
+  grid transitions now match the original (item 8); only the column
+  content slide/fade path is still missing.
+- R10 Device-tab switch animation (220ms cubic-bezier(.2,.8,.2,1))
+  and tablet phone form (.iphone.tablet, aspect 0.72, radius 28px)
+  not implemented: preview stays phone even when the iPadOS tab is
+  active. Evidenced in base CSS, unobservable in current gallery
+  (no tablet render path), recorded not invented.
+- R11 Project-icon swap animation (180ms ease-out) not implemented:
+  no project switcher UI in the gallery to observe it, project is
+  fixed by prop.
+- R12 Titlebar focus-visible ring (original header is tabindex=0
+  with an inset focus ring) not implemented: adding tab order to
+  the gallery titlebar would be a behaviour invention, keyboard-
+  only, invisible in screenshots.
+- R13 Phone battery fill: outer 16x8 exact, inner fill 6px wide x
+  6px tall via top/bottom 1px insets, versus base CSS 6x8 for the
+  fill SVG whose internal padding is unknown. Neither value is
+  provable from the SVG internals (figma SVGs not in the evidence
+  bundles), so the existing iOS-like inset fill stays.
+- R14 Phone status glyphs are hand redraws: signal bars exact
+  boxes, wifi custom 11x7 redraw (stroke 1.2 vs raster about 1px),
+  battery box exact. Pixel-exact glyph match is not resolvable at
+  8px from raster evidence alone.
+- R15 Clover mark + device-inbound + line-decrease custom morphs
+  (not Lucide exports, geometry per audit) - v1.3 U11 carried.
+- R16 Desktop body copy comes from the iPad thread, not verbatim
+  desktop (user photo unreadable) - v1.3 U13 carried.
+- R17 Gallery chrome (header, section notes, token swatches,
+  primitives, bottom bar adapted) is not original - v1.3 U9 carried;
+  bottom module bar stays labelled as adapted, never claimed as
+  original 1:1.
+- R18 Titlebar inset pixel 241 vs body inset pixel 242 (delta 1
+  level, border-edge antialiasing; DOM box-shadow identical).
+- R19 Post-backdrop 1-level compositing shifts (conversation B
+  243 -> 244, capsule corners +/-1, toast 46 -> 47, border columns
+  +1), explained by saturate(1.24) now actually applying; tokens
+  unchanged, DOM backgrounds identical.
+- R20 Online dot stays a text glyph (original template uses <b>
+  with the dot character at 8px, green; rendered box in fallback
+  font is 5x8, font-dependent, not a code deviation).
+- R21 Resizer drag physics + message playback timing are host
+  contracts (v1.3 U8 carried). Assets.car values remain unmeasured
+  (no Linux reader, recorded as unmeasured, never fabricated).
+  Original raster icon pixel forms at 8px, original SVG internals
+  for battery fill, desktop verbatim body text, and dark-mode
+  rendering remain unmeasured for the reasons above.
+
+### Unmeasured list
+
+- SF Pro Rounded glyph form (R1); Assets.car values; original
+  raster icon pixel forms at 8px; original SVG internals for
+  battery fill; desktop verbatim body text; dark-mode rendering;
+  tablet form rendering (no tablet render path in the set);
+  project-icon swap mid-state (no switcher UI); titlebar focus
+  ring rendering (keyboard-only, no tab order in gallery).
+
+### Build
+
+- /home/hatch/.npm-global/bin/pnpm build -> tsc -b && vite build,
+  1978 modules, pass. Final hashes: dist/assets/index-DWi3W9ds.css
+  (16.81 kB) and index-BQbiEKLB.js (304.20 kB). Built CSS confirms
+  .ab-window line-height normal, .ab-traffic-light cursor pointer,
+  ab-toast-in keyframes, and the reduced-motion rule. Final
+  screenshots were shot against this build; probe-v15b values are
+  identical before and after the cross-context line-height addition.
+
+### Files changed (working tree, uncommitted)
+
+- README.md (tokens paragraph divider 0.22 -> hairline 0.045 with
+  note "Shadow layer; base 0.22 out, v1.3 D1").
+- src/components/AppWindow.tsx (window inline backdropFilter +
+  WebkitBackdropFilter).
+- src/components/Titlebar.tsx (sidebar inset, grid transition,
+  conversation padding transitions, tab close transition, capsule
+  icon filter removal).
+- src/components/Sidebar.tsx (tile transition 140ms trio, agent
+  row transition removed, bright-toggle + footer icon filter
+  removal, agent row name/status line-height normal).
+- src/components/FollowUpComposer.tsx (attach + send icon filter
+  removal).
+- src/components/Preview.tsx (WifiMark, status group restructure,
+  feed line-heights 1.25 / 1.3 / 1.4, statusbar time line-height
+  normal, PreviewTabs close transition, phone-appbar icons keep
+  drop-shadow).
+- src/components/Message.tsx (author + task card line-height
+  normal).
+- src/components/Toast.tsx (ab-toast-in class).
+- src/components/icons.tsx (WifiMark export).
+- src/components/ui/separator.tsx (hairline background).
+- src/index.css (window line-height normal, traffic cursor,
+  toast keyframes, reduced-motion rule, window backdrop comment,
+  divider theme variable 0.045).
+- docs/verification/rounds/v1.5/ (new evidence directory, see
+  header of this entry).
+
 ## v1.4 — 2026-10-30 (round 7: same-type colour check + full active re-scan; v1.3 -> v1.4 patch bump)
 
 - Round: same-type colour check (work one) first, then a full active

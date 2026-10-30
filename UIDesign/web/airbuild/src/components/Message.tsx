@@ -18,7 +18,7 @@ function CheckDraw() {
 
 export function TaskCard({ task }: { task: TaskCardData }) {
   return (
-    <div style={{ background: '#fffaf2', border: '1px solid rgba(17,17,15,0.045)', borderRadius: 12, padding: 12, fontSize: 10, marginTop: 9 }}>
+    <div style={{ background: '#fffaf2', border: '1px solid rgba(17,17,15,0.045)', borderRadius: 12, padding: 12, fontSize: 10, lineHeight: 'normal', marginTop: 9 }}>
       <span style={{ display: 'block', color: '#53412e', fontSize: 11, fontWeight: 600 }}>{task.title}</span>
       <span style={{ display: 'block', marginTop: 3, color: '#88755e' }}>{task.status}</span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, margin: '12px 0' }}>
@@ -46,7 +46,7 @@ export function AgentMessage({ agent, text, task, index = 0 }: { agent: Agent; t
     <div className="ab-message-in" style={{ display: 'flex', gap: 8, alignItems: 'flex-end', animationDelay: `${index * 40}ms` }}>
       <AvatarBlob name={agent.name} color={agent.color} size={28} />
       <div style={{ minWidth: 0, flex: 1, maxWidth: 'min(84%, 330px)' }}>
-        <div style={{ fontSize: 10, fontWeight: 600, margin: '0 2px 5px' }}>{agent.name} <span style={{ fontWeight: 400, color: tokens.muted }}>{agent.role}</span></div>
+        <div style={{ fontSize: 10, fontWeight: 600, lineHeight: 'normal', margin: '0 2px 5px' }}>{agent.name} <span style={{ fontWeight: 400, color: tokens.muted }}>{agent.role}</span></div>
         <div className="ab-agent-bubble" style={{ display: 'inline-block' }}>{text}</div>
         {task ? <TaskCard task={task} /> : null}
       </div>

@@ -79,6 +79,20 @@ export function IconLineDecrease({ size = 15 }: { size?: number }) {
     </svg>
   )
 }
+/** Vector redraw of the iOS status-bar wifi glyph (11x7 phone-status-icons slot,
+ * v1.5). Redrawn geometry, not the official raster: three arcs + dot, stroke 1.2,
+ * round caps. NOT a Lucide export: Lucide Wifi is a square 24x24 glyph, while
+ * the original status icon is a wide 11x7 crop (figma-icon-10.svg, 11x7). */
+export function WifiMark() {
+  return (
+    <svg width={11} height={7} viewBox="0 0 11 7" fill="none" stroke="#11110f" strokeWidth={1.2} strokeLinecap="round" aria-hidden>
+      <path d="M0.8 4.5 Q5.5 -2.9 10.2 4.5" />
+      <path d="M2.6 5 Q5.5 -0.6 8.4 5" />
+      <path d="M4.2 5.4 Q5.5 2.2 6.8 5.4" />
+      <circle cx={5.5} cy={6.2} r={0.7} fill="#11110f" stroke="none" />
+    </svg>
+  )
+}
 /** Vector redraw of the AirBuild four-petal mark (16px phone-app-logo slot).
  * Redrawn geometry, not the official asset: four lobes around a centre hole. */
 export function CloverMark({ size = 16 }: { size?: number }) {

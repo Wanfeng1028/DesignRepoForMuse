@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { agents, projects, thread } from '../data/demo.ts'
 import { projectIconMap } from './icons.tsx'
+import { tokens } from '../tokens/tokens.ts'
 import { AgentMessage, TypingRow, UserMessage } from './Message.tsx'
 import { FollowUpComposer } from './FollowUpComposer.tsx'
 import { PhonePreview } from './Preview.tsx'
@@ -56,7 +57,7 @@ export function AppWindow({ title = 'Hourtown', sidebarCollapsed = false, previe
     if (activeDevice === t) setActiveDevice(next[0])
   }
   return (
-    <div className="ab-window" style={{ position: 'relative' }}>
+    <div className="ab-window" style={{ position: 'relative', backdropFilter: tokens.windowFilter, WebkitBackdropFilter: tokens.windowFilter }}>
       <Titlebar grid={grid} projectName={project.name} projectTint={project.tint}
         projectIcon={<ProjectIcon size={19} />}
         deviceTabs={deviceTabs} activeDevice={activeDevice} onSelectDevice={setActiveDevice}

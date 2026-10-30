@@ -15,7 +15,7 @@ export function ProjectTile({ name, icon, tint, active }: { name: string; icon: 
         border: active ? '1px solid rgba(17,17,15,0.045)' : '1px solid transparent',
         boxShadow: active ? '0 5px 14px rgba(0,0,0,0.06)' : 'none',
         transform: hovered && !active ? 'translateY(-1px)' : 'none',
-        transition: 'background 150ms, transform 150ms',
+        transition: 'background 140ms ease, border-color 140ms ease, transform 140ms ease',
         display: 'grid', placeItems: 'center', padding: 0, cursor: 'pointer', minWidth: 0 }}>
       <span style={{ width: 32, height: 32, borderRadius: '32%', background: tint, display: 'grid', placeItems: 'center',
         color: 'rgba(17,17,15,0.75)', filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.2))' }}>
@@ -32,14 +32,13 @@ export function AgentRow({ agent, active }: { agent: Agent; active?: boolean }) 
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ width: '100%', display: 'grid', gridTemplateColumns: '30px minmax(0,1fr) auto', gap: 7, minHeight: 42, padding: '4px 5px',
         borderRadius: 9, background: active || hovered ? 'rgba(255,255,255,0.5)' : 'transparent', border: 'none', alignItems: 'center',
-        transition: 'background 150ms',
         cursor: 'pointer', textAlign: 'left', color: tokens.ink }}>
       <AvatarBlob name={agent.name} color={agent.color} size={28} ring />
       <span style={{ minWidth: 0, display: 'grid', gap: 2 }}>
-        <strong style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 11, fontWeight: 600 }}>
+        <strong style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 11, fontWeight: 600, lineHeight: 'normal' }}>
           {agent.name} <em style={{ color: tokens.muted, fontStyle: 'normal', fontWeight: 400 }}>{agent.role}</em>
         </strong>
-        <small style={{ overflow: 'hidden', color: tokens.muted, fontSize: 8, textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.status}</small>
+        <small style={{ overflow: 'hidden', color: tokens.muted, fontSize: 8, lineHeight: 'normal', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.status}</small>
       </span>
       <span style={{ fontSize: 8, color: '#2ecb70', lineHeight: 1 }}>{agent.online ? '●' : ''}</span>
     </button>
@@ -84,12 +83,12 @@ export function Sidebar({ agents, projects, activeAgentKey, activeProject }: {
             background: tokens.controlBg, boxShadow: tokens.controlShadow, color: '#686868', cursor: 'pointer',
             backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)',
             filter: hoverAccount ? 'brightness(1.035)' : 'none' }}>
-          <span style={{ display: 'flex', opacity: 0.72, flex: 'none', filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconPerson size={17} /></span>
+          <span style={{ display: 'flex', opacity: 0.72, flex: 'none' }}><IconPerson size={17} /></span>
         </button>
         <div style={{ display: 'flex', gap: 3 }}>
-          <FootBtn label="Home" title="Home"><span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconHouse size={17} /></span></FootBtn>
-          <FootBtn label="Settings" title="Settings"><span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconGear size={17} /></span></FootBtn>
-          <FootBtn label="Activity" title="Activity"><span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconBookOpen size={17} /></span></FootBtn>
+          <FootBtn label="Home" title="Home"><span style={{ display: 'flex', opacity: 0.72 }}><IconHouse size={17} /></span></FootBtn>
+          <FootBtn label="Settings" title="Settings"><span style={{ display: 'flex', opacity: 0.72 }}><IconGear size={17} /></span></FootBtn>
+          <FootBtn label="Activity" title="Activity"><span style={{ display: 'flex', opacity: 0.72 }}><IconBookOpen size={17} /></span></FootBtn>
         </div>
       </div>
     </div>

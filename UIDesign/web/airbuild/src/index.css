@@ -5,7 +5,7 @@
   --color-ab-ink: #11110f;
   --color-ab-muted: rgba(17, 17, 15, 0.46);
   --color-ab-hairline: rgba(17, 17, 15, 0.045);
-  --color-ab-divider: rgba(17, 17, 15, 0.22);
+  --color-ab-divider: rgba(17, 17, 15, 0.045);
   --color-ab-blue: #1987f7;
   --color-ab-green: #2ecb70;
   --color-ab-window: rgba(244, 246, 244, 0.42);
@@ -26,6 +26,11 @@
 html, body { margin: 0; }
 body { font-family: var(--font-sans); color: var(--color-ab-ink); background: #ececea; -webkit-font-smoothing: antialiased; }
 
+/* NOTE (v1.5): the stylesheet backdrop-filter below is -webkit-only in the
+ * built CSS (Tailwind/Lightning drops the unprefixed twin when both are
+ * declared in one rule). The unprefixed value is carried by the inline style
+ * on .ab-window in AppWindow.tsx (tokens.windowFilter), so both declarations
+ * reach the DOM; the rule here is kept as the -webkit fallback. */
 .ab-window {
   width: 1200px; height: 668px; border-radius: 18px; overflow: hidden;
   background: var(--color-ab-window);
@@ -33,8 +38,18 @@ body { font-family: var(--font-sans); color: var(--color-ab-ink); background: #e
   -webkit-backdrop-filter: blur(34px) saturate(1.24);
   box-shadow: none;
   transform-origin: top left; flex: none;
+  line-height: normal;
 }
+.ab-traffic-light { cursor: pointer; }
 .ab-traffic-light:hover { filter: brightness(1.04) saturate(1.04); transform: scale(1.06); }
+@keyframes ab-toast-in {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.ab-toast-in { animation: ab-toast-in 180ms ease both; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
 .ab-agent-bubble {
   background: #fff; border: 1px solid rgba(0, 0, 0, 0.045);
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.025);

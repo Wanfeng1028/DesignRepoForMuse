@@ -29,7 +29,7 @@ function CapsuleButton({ label, onClick, icon, divider, dividerColor = 'rgba(0,0
       style={{ position: 'relative', width: 32, height: 32, flex: '0 0 32px', display: 'grid', placeItems: 'center',
         padding: 0, color: '#11110f', background: hovered ? 'rgba(255,255,255,0.22)' : 'transparent', border: 'none', borderRadius: 999, cursor: 'pointer' }}>
       {divider ? <span style={{ position: 'absolute', left: 0, top: 6, width: 1, height: 20, background: dividerColor }} /> : null}
-      <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}>{icon}</span>
+      <span style={{ display: 'flex', opacity: 0.72 }}>{icon}</span>
     </button>
   )
 }
@@ -56,7 +56,7 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
   const sidebarZone = (
     <div style={sidebarCollapsed
       ? { position: 'absolute', left: 0, top: 0, bottom: 0, width: 170, zIndex: 4, display: 'flex', gap: 14, alignItems: 'center', padding: '4px 12px 0', background: 'transparent' }
-      : { gridColumn: 1, display: 'flex', gap: 14, alignItems: 'center', padding: '4px 12px 0', background: 'rgba(226,228,226,0.56)', borderRight: '1px solid rgba(17,17,15,0.045)' }}>
+      : { gridColumn: 1, display: 'flex', gap: 14, alignItems: 'center', padding: '4px 12px 0', background: 'rgba(226,228,226,0.56)', borderRight: '1px solid rgba(17,17,15,0.045)', boxShadow: 'inset -1px 0 rgba(255,255,255,0.42)' }}>
       <TrafficLights />
       <ControlCapsule>
         <CapsuleButton label="Create a new project" icon={<IconPlus size={13} />} />
@@ -66,7 +66,8 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
   )
   const conversationZone = (
     <div style={{ gridColumn: 2, display: 'grid', placeItems: 'center', background: tokens.conversation.titleBg,
-      padding: `4px ${previewCollapsed ? 48 : 10}px 0 ${sidebarCollapsed ? 174 : 10}px` }}>
+      padding: `4px ${previewCollapsed ? 48 : 10}px 0 ${sidebarCollapsed ? 174 : 10}px`,
+      transition: 'padding-left 240ms cubic-bezier(0.32,0.72,0,1), padding-right 240ms cubic-bezier(0.32,0.72,0,1)' }}>
       <button type="button" aria-label={`Current project: ${projectName}`} title={projectName}
         style={{ width: 32, height: 32, display: 'grid', placeItems: 'center', padding: 0, overflow: 'visible',
           background: projectTint, border: 'none', borderRadius: '32%', cursor: 'pointer', color: 'rgba(17,17,15,0.75)',
@@ -85,7 +86,7 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
             background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: 999, cursor: 'pointer',
             backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)',
             filter: hoverStrip ? 'brightness(1.035)' : 'none' }}>
-          <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><PanelRightToggle open={!previewCollapsed} size={17} /></span>
+          <span style={{ display: 'flex', opacity: 0.72 }}><PanelRightToggle open={!previewCollapsed} size={17} /></span>
         </button>
       </div>
     )
@@ -107,7 +108,7 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
                 <span style={{ display: 'flex', opacity: 0.45 }}><IconIPhone size={12} /></span>
                 <strong style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>{t}</strong>
                 <span onClick={(e) => { e.stopPropagation(); onCloseDevice(t) }}
-                  style={{ display: 'flex', opacity: isActive || hovered ? 0.3 : 0 }}><IconX size={9} /></span>
+                  style={{ display: 'flex', opacity: isActive || hovered ? 0.3 : 0, transition: 'opacity 120ms ease' }}><IconX size={9} /></span>
               </button>
             )
           })}
@@ -129,14 +130,15 @@ export function Titlebar({ grid, projectName, projectTint, projectIcon, deviceTa
               background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: 999, cursor: 'pointer',
               backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)',
               filter: hoverBright ? 'brightness(1.035)' : 'none' }}>
-            <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><PanelRightToggle open={!previewCollapsed} size={17} /></span>
+            <span style={{ display: 'flex', opacity: 0.72 }}><PanelRightToggle open={!previewCollapsed} size={17} /></span>
           </button>
         </div>
       </div>
     )
   return (
     <div style={{ position: 'relative', zIndex: 50, display: 'grid', gridTemplateColumns: grid, alignItems: 'stretch',
-      height: 40, flex: 'none', background: 'transparent', boxShadow: 'inset 0 1px rgba(255,255,255,0.8)' }}>
+      height: 40, flex: 'none', background: 'transparent', boxShadow: 'inset 0 1px rgba(255,255,255,0.8)',
+      transition: 'grid-template-columns 240ms cubic-bezier(0.32,0.72,0,1)' }}>
       {sidebarZone}
       {conversationZone}
       {previewZone}
