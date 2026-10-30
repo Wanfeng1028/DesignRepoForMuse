@@ -47,13 +47,14 @@ traffic lights 17px gap 7px + 64×32 control capsule; conversation zone:
 centred 32px squircle project icon; preview zone: device tabs + 64×32
 action capsule; divider only at the preview boundary); sidebar bg
 `rgba(226,228,226,0.56)` + hairline right border; conversation bg
-`rgba(249,249,247,0.92)`; preview bg radial-gradient (50% 22% white →
-`#f7f7f5` → `#e4e4e2`); agent bubble `#fff`, `rgba(0,0,0,0.045)` border,
+`rgba(249,249,247,0.54)` (Shadow DOM override layer; v1.3); preview bg
+flat `rgba(246,247,245,0.36)` (Shadow layer; v1.3, radial base value out);
+agent bubble `#fff`, `rgba(0,0,0,0.045)` border,
 `0 5px 16px rgba(0,0,0,0.025)` shadow, `10px 12px` padding, 13px radius,
 12px/1.38, container max `min(84%, 330px)`; user bubble white on `#1987f7`, max-width `min(78%, 310px)`;
 agent-row grid `30px 1fr auto`, gap 7px, min-height 42px, padding `4px 5px`,
-radius 9px, name 11px/600, role em 400 `rgba(0,0,0,0.4)`, status 8px
-`rgba(0,0,0,0.34)`, online dot 8px `#2ecb70`; project-tile grid 3 columns
+radius 9px, name 11px/600, role em 400 muted `rgba(17,17,15,0.46)`, status 8px
+muted `rgba(17,17,15,0.46)` (Shadow layer; v1.3), online dot 8px `#2ecb70`; project-tile grid 3 columns
 gap 6px, aspect 1.25, radius 12px, bg `rgba(255,255,255,0.34)`, icon-only
 32px / 32% radius (no name label); preview-tab 36px high,
 76–180px wide, radius 9px, bg `#f7f7f5`, hover `#f2f2f0`, active
@@ -62,12 +63,13 @@ opacity 0.45, close 9px (opacity 0, 0.3 on hover/active); phone 270px wide,
 aspect 0.51, 7px `#d8d8d6` frame, radius 38px, shadow
 `0 24px 48px rgba(0,0,0,0.24)`, statusbar 8px/700, appbar 42px, feed divider
 inset from left 33px; follow-up composer 32px high,
-capsule 999px, margin `0 14px 10px`, bg `rgba(255,255,255,0.94)`,
-`0 10px 28px rgba(0,0,0,0.065)` shadow; task card bg `#fffaf2`, border
-`rgba(94,74,46,0.12)`, radius 12px, padding 12px, 10px, title `#53412e`
+capsule 999px, margin `0 14px 10px`, shared control gradient bg, no border,
+`inset 0 1px rgba(255,255,255,0.38), 0 3px 8px rgba(0,0,0,0.08)` shadow,
+`blur(4px) saturate(1.45)` backdrop (Shadow layer; v1.3); task card bg `#fffaf2`, border
+hairline `rgba(17,17,15,0.045)` (Shadow layer; v1.3), radius 12px, padding 12px, 10px, title `#53412e`
 11px/600, status `#88755e` on its own line under the title, steps then
 4px track (`#e9e0d4` / `#72a682`, radius 3px); status pill `3px 7px`, 999px, 9px, success `#167b3d` on `#e7f8ed`;
-toast bottom 30px centred, white on `rgba(18,18,18,0.88)`, 999px, 11px; drawer
+toast bottom 16px centred, white on `rgba(18,18,18,0.88)`, 999px, 11px, `blur(18px)` backdrop; drawer
 240ms `cubic-bezier(0.32,0.72,0,1)`; message entry 260ms
 `cubic-bezier(.22,1,.36,1)`; font SF Pro Rounded first + system fallback;
 resizer 8px wide. See `src/tokens/tokens.ts`.
@@ -78,13 +80,13 @@ resizer 8px wide. See `src/tokens/tokens.ts`.
 |---|---|---|
 | `AppWindow` + `ScaleCanvas` | `src/components/AppWindow.tsx` | Three-column grid + scale; device-tab state lives here; both collapsed states |
 | `Titlebar` / `TrafficLights` | `src/components/Titlebar.tsx` | 40px, same three grid zones as the body: sidebar zone (17px lights + 64×32 control capsule), conversation zone (centred 32px project icon), preview zone (device tabs + new-tab + 64×32 action capsule); divider only at the preview boundary |
-| `Sidebar` / `ProjectTile` / `AgentRow` | `src/components/Sidebar.tsx` | Icon-only project grid (3 cols, gap 6px) + agent list (illustrated avatar + name + @role + status line + green online dot) + Account pill + 3 round footer buttons; tile hover white 0.58 + up 1px, row hover white 0.5 |
+| `Sidebar` / `ProjectTile` / `AgentRow` | `src/components/Sidebar.tsx` | Icon-only project grid (3 cols, gap 6px) + agent list (illustrated avatar + name + @role + status line + green online dot) + 32px icon-only Account button + 3 32px round footer buttons (narrow-sidebar form, Shadow layer; v1.3); tile hover white 0.5 + up 1px, row hover white 0.5 |
 | `AgentMessage` / `UserMessage` / `TypingRow` / `TaskCard` | `src/components/Message.tsx` | Avatar bottom-aligned; typing = 3× 5px `#aaa` dots, 800ms, 0/160/320ms stagger; task card = title, status line, steps, track |
 | `FollowUpComposer` | `src/components/FollowUpComposer.tsx` | 32px capsule composer, `onSend` prop; attach `#ededeb`, send blue `#1987f7` (see Residuals 9) |
 | `PreviewTabs` / `PhonePreview` | `src/components/Preview.tsx` | Tabs live in the titlebar; phone-statusbar (8px/700) / phone-appbar (42px) / phone-projects / phone-feed (divider inset 33px) |
 | `ServiceModuleColumn` | `src/components/ServiceModuleColumn.tsx` | ORIGINAL right column: AirFeedback / AirPayment / AirRouter / AirKnowledge / AirTraffic |
 | `BottomModuleBar` | `src/components/BottomModuleBar.tsx` | ADAPTED variant, labelled 改编（非原版） — not the original |
-| `Toast` / `Resizer` | `src/components/Toast.tsx` | Toast bottom 30px, 11px; resizer 8px col-resize |
+| `Toast` / `Resizer` | `src/components/Toast.tsx` | Toast bottom 16px, 11px; resizer 8px col-resize |
 | `AvatarBlob` | `src/components/AvatarBlob.tsx` | Vector-redrawn illustrated member figures, one face per roster member (see Residuals) |
 | `icons` | `src/components/icons.tsx` | Lucide (lucide-react) for all 19 used icons, strokeWidth 2; panel toggles are Lucide-geometry morph SVGs (divider slides, never hard-cuts) |
 | `Button` / `Input` / `StatusPill` / `Separator` | `src/components/ui/` | shadcn-style; Button/Input via Radix Slot, Separator via Radix |
@@ -130,12 +132,12 @@ Comparison against the references (v1.1 state, measured from code + shots):
   vector mini-icons (Hands Time / Hourtown / Sleepy Coffee / Casehot —
   the iPad project set, not the web demo's 8-project set).
 - Agent rows: blob avatar + name + lowercase @role + status sentence +
-  green online dot; footer = Account pill + Home / Settings / Activity.
+  green online dot; footer = 32px icon-only Account button + Home / Settings / Activity (32px).
 - Agent white bubbles (container max `min(84%, 330px)`) / user blue bubbles
   (`min(78%, 310px)`) / task card (title, status line, steps, track at the
-  bottom) / typing dots `#aaa` / composer capsule with `#ededeb` attach
-  and blue ↑ send / toast bottom-30px centred (pill centre measured x=639
-  vs window centre 640).
+  bottom) / typing dots `#aaa` / composer capsule with gradient attach
+  and blue ↑ send / toast bottom-16px centred (pill centre measured x=639
+  vs window centre 640 in v1.2; bottom value corrected to the Shadow layer in v1.3).
 - Preview tabs in the titlebar + iPhone preview: 270px wide, aspect 0.51,
   7px `#d8d8d6` frame, 38px radius, centred stage; feed dividers inset
   from left 33px.

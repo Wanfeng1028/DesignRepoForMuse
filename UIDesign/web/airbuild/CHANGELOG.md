@@ -9,6 +9,263 @@ crop, App Store iPad/iPhone shots). A round is clean only when the judge
 reports zero substantive differences item by item; "looks alike" is not
 a pass.
 
+## v1.3 — 2026-10-30 (full re-measure round; v1.2 -> v1.3 patch bump)
+
+- Round: full re-scan of every screen and every visible element, NOT a
+  re-read of the v1.2 list. v1.2's accepted residuals were NOT carried
+  over: each was re-measured against the original evidence files
+  (mockup_window-component.css base layer + mockup_window-component.js
+  Shadow DOM override layer + window-template.js + App Store shots +
+  user-photo crop). No judge call this round (zero-judge rule): pass bar
+  is DOM computed style + screenshot measurement only, per the rule that
+  measured data, not a verdict, is the pass bar. No commit, no push.
+- Login-form check (work one, concluded first, before any fix): this set
+  has NO login/welcome/sign-in screen, and no original evidence shows
+  one. Screens checked in this set (src/App.tsx, all 7 sections): window
+  main + sidebar-collapsed + preview-collapsed, messages, preview phone,
+  service column + adapted bottom bar, primitives, tokens. The only
+  account-adjacent elements are the sidebar Account button (person-circle
+  icon, now the 32px narrow form, see below) and the titlebar "Create a
+  new project" capsule button; neither is a login form, and no login
+  screen was invented. Originals checked: all 10 App Store shots
+  (iphone-01 home projects, iphone-02 same home second angle, iphone-03
+  chat thread, iphone-04 website draft card, iphone-05 submit-for-review
+  panel, iphone-06 daily briefing, ipad-01 chat room, ipad-02 chat
+  thread, ipad-03 detail panel, ipad-05 chat + draft card), the
+  user-photo chatroom crop (logged-in three-column chat room), the REA
+  web-demo template (logged-in window only), and the macOS package
+  (Assets.xcassets holds only AppIcon + MadeWithAirBuild, no login
+  assets). iphone-01's "Your next big idea / Now an app" headline is
+  App Store marketing poster copy outside the device, not an in-app
+  welcome screen, so it was NOT turned into a welcome screen. REA itself
+  states login/post-login interfaces are unconfirmable from public
+  evidence. The Medley welcome full comparison (bottom colour full
+  sampling etc.) therefore has no AirBuild counterpart to run against;
+  the login question is closed as "no such screen in set or evidence",
+  not as a rebuilt screen.
+- Governing decision D1 (supersedes v1.2): where the base stylesheet and
+  the Shadow DOM override layer disagree, the SHADOW layer wins. Reason,
+  verified in code: the web component appends the stylesheet <link>
+  first and the override <style> second, and the overrides carry
+  !important on the contested rows, so the shadow values are what the
+  homepage demo actually computes. v1.2 chose base/table-A values for
+  these rows; v1.3 corrects every one of them (each with a DOM probe
+  value below). This also resolves v1.2 unclosed U7 (B10): the composer
+  backdrop is neither deleted nor blur(16px). Base .follow-up declares
+  blur(16px), but the later shared block in the same stylesheet
+  overrides it to blur(4px) saturate(145%), and the shadow layer does
+  not touch the composer backdrop, so the effective original value is
+  blur(4px) saturate(1.45). That value is now implemented.
+- Fixed, all verified by DOM probe (before -> after, code value ->
+  DOM computed after value):
+  - Sidebar padding 12px -> 9px inline (DOM padding "8px 9px 9px");
+    sidebar bg stays 0.56 (DOM rgba(226,228,226,0.56)).
+  - Conversation bg 0.92 -> 0.54, titlebar conversation zone 0.94 ->
+    0.54 (DOM both rgba(249,249,247,0.54)); conversation border-right
+    and titlebar divider 0.22 -> hairline 0.045 (DOM 0.043 after
+    rounding, i.e. the 0.045 token).
+  - Preview bg radial gradient -> flat rgba(246,247,245,0.36),
+    including the titlebar preview zone 0.94 -> 0.36 (DOM
+    rgba(246,247,245,0.36)); the radial class is deleted from
+    index.css and both usages now use the flat token.
+  - Titlebar conversation padding-right in preview-collapsed 58 ->
+    48 (DOM "4px 48px 0px 10px"). v1.2's 58 was a visible-area-centre
+    rationalisation; the original token is 48, and the icon centre
+    now measures 720px page-x in the preview-collapsed shot
+    (window-relative 680 = original-token geometry), main 487,
+    sidebar-collapsed 470 (window-relative 430 = 174px token
+    geometry). All three centres now follow original tokens exactly.
+  - Sidebar heading colour 0.38 -> muted 0.46 (DOM
+    rgba(17,17,15,0.46)); agent-row status 0.34 -> muted 0.46 (same
+    DOM value); agents block margin-top 10 -> 9px.
+  - Project-tile hover 0.58 -> 0.5 (DOM hover
+    rgba(255,255,255,0.5)); agent-row hover stays 0.5 (DOM hover
+    0.5); tile active border white 0.94 -> hairline 0.045.
+  - Composer: bg white 0.94 -> shared control gradient, border
+    1px 0.075 -> none, shadow 0 10px 28px 0.065 + inset white
+    0.78 -> inset 0 1px white 0.38 + 0 3px 8px black 0.08,
+    backdrop none -> blur(4px) saturate(1.45) (all four DOM-verified
+    in probe-dom.cjs). Attach button bg #ededeb -> same gradient
+    (DOM gradient); attach/send icon opacity stays 0.72.
+  - Shared control shadow inset corrected 1px 1px -> 0 1px (shadow
+    layer value) in tokens.controlShadow; capsules, account button,
+    composer, attach, footer and phone-appbar buttons all inherit it.
+  - Footer narrow form (v1.2 U2 was wrong: it claimed no narrow
+    container exists): the 198px sidebar IS the narrow container
+    (original @container sidebar max-width 236px), so the footer was
+    rebuilt to the narrow form. Account button: full-width labelled
+    36px pill -> 32x32 icon-only (DOM 32x32, gradient); footer
+    buttons 36x36 -> 32x32 (DOM 32x32, gradient, border none);
+    footer gap 7 -> 5, actions gap 5 -> 3; footer icon opacity
+    0.74 -> 0.72 (shared block value).
+  - Toast bottom 30 -> 16px (DOM "16px") + backdrop blur(18px)
+    added (DOM "blur(18px)"); position stays absolute per shadow.
+  - Task card border 0.12 brown -> hairline 0.045 (DOM hairline);
+    todo step colour #a2998c -> #88755e (DOM rgb(136,117,94));
+    working-dot pulse box-shadow ring 1.6s -> opacity pulse
+    700ms alternate (DOM "0.7s ease-in-out infinite alternate
+    ab-task-working", the base keyframe form).
+  - Typing dots keyframes: invented 0/60/100 hold shape -> base
+    from opacity 0.35 / translateY 0 to opacity 1 / translateY -3px,
+    800ms infinite alternate (DOM "0.8s infinite alternate
+    ab-typing").
+  - Traffic lights: spans were non-interactive; added the original
+    hover (brightness(1.04) saturate(1.04) scale(1.06)) via
+    .ab-traffic-light:hover. Colours/sizes unchanged (17px, gap 7).
+  - Titlebar preview actions rebuilt to the original structure
+    (was: one capsule holding Share + preview toggle). Now:
+    capsule [paperplane Share, device-inbound] + a separate 32px
+    bright toggle button, gap 7. Share glyph share-tray 16px ->
+    paperplane (Lucide Send) 11px (DOM svg 11x11, original
+    paperplane-icon 11px); device-inbound restored as a custom
+    Lucide-geometry morph SVG (audit geometry: rect 7,2,10,20 rx2
+    + top down-chevron + bottom dot, 16px, DOM-verified outer
+    HTML); it is documented as custom, NOT a Lucide export, because
+    Lucide has no single device-inbound glyph. Preview capsule
+    divider 0.1 -> 0.09 (header-action-group value); sidebar capsule
+    divider stays 0.1. Bright toggle: 32px gradient + control
+    shadow + PanelRightToggle 17px (DOM 17) + hover brightness
+    1.035. New-tab hover 0.52 -> 0.5 (DOM hover
+    rgba(255,255,255,0.5)); new-tab icon opacity stays 0.48.
+  - Phone appbar rebuilt (was: project name 12/700 + "Today",
+    which matches no original): now 30px gear button + 16px mark +
+    30px menu button (DOM both buttons 30x30), per
+    window-template.js. Gear is Lucide Settings 15px, menu is a
+    custom Lucide-geometry morph of the audit line-decrease
+    polyline M3 17l5-6 4 3 5-7 4 4 (no arrowhead; Lucide
+    trending-down adds one, so it is documented as custom). Centre
+    mark is a vector redraw of the four-petal mark (four lobes +
+    centre hole), NOT the official asset. Appbar buttons use the
+    control gradient + control shadow + 0.72 icon opacity.
+  - Phone projects padding 10 all -> 8px 14px 12px (original);
+    tiles icon-only again (labels Focus/Town/Stats removed: the
+    original tiles carry no labels), icon 19 -> 44px = 62% of the
+    71px tile (DOM tile 71x71, svg 44x44), matching the original
+    19% tile padding geometry, plus the original tile image shadow
+    as a drop-shadow(0 4px 8px rgba(0,0,0,0.16)).
+  - Phone feed 2 rows -> 6 rows (full set roster: Ato, Pluso,
+    Colo, Camo, Ampo, Leto; demo texts/times, not claimed as
+    original copy); feed name #242426 -> ink #11110f (DOM
+    rgb(17,17,15)), text #727279 -> muted 0.46 (DOM, 8px), time
+    #96969c -> muted 0.46 (DOM, 6.5px), role em added (7px, muted,
+    margin-left 2px, per template strong em); row layout flex ->
+    grid 26px 1fr auto gap 7, padding 5px 0, height/min-height
+    48px; feed container padding 6px 12px 16px; time top-aligned
+    with padding-top 2px; divider margin-left stays 33px.
+  - Phone device shadow added (was missing): absolute ellipse
+    min(58%,300px) x 45px, bottom 8%, black 0.18, blur(30px)
+    (DOM 292x45 in the main window, i.e. 58% of the stage).
+  - Phone home indicator removed (was invented): the web-demo
+    phone has no home-bar element; the 90x4 bar is deleted.
+    Phone now measures exactly 270x529 (DOM).
+  - Button default variant (gallery primitive) flat footer-row
+    material -> shared control gradient + control shadow, text
+    black/65 -> #686868, border removed, matching the corrected
+    footer material. Ghost/blue variants unchanged.
+  - README token paragraph + component table + comparison bullets
+    synced to the v1.3 values (conversation 0.54, preview flat,
+    muted role/status, composer gradient, task hairline, toast
+    16px, 32px footer form); App.tsx section-4 note synced
+    (feed name ink + role em, appbar structure).
+- Re-measured and confirmed unchanged (probe values, not carried
+  claims): window 1200x668; titlebar 40px; traffic lights 17px
+  gap 7; capsules 64x32; project icon 32px radius 32%; tabs 36px
+  high, 76-180px wide, 9px radius, 10px/500 label, device icon
+  12px opacity 0.45, close 9px opacity 0 / 0.3; sidebar 198px,
+  bg 0.56; agent-row grid 30px 1fr auto gap 7 min-height 42
+  padding 4px 5px radius 9 name 11/600; tile grid 3 cols gap 6
+  aspect 1.25 radius 12 bg 0.34; bubbles agent #fff 13px
+  12px/1.38 padding 10/12, user blue max min(78%,310px), agent
+  container max min(84%,330px); message stream padding
+  18/16/14 gap 14, author 10/600 margin 0 2px 5px; composer
+  32px capsule margin 0 14px 10px grid 24px 1fr 24px gap 4;
+  attach/send 24px; status pill 3/7 9px success #167b3d on
+  #e7f8ed; phone frame 7px #d8d8d6 radius 38 shadow 0 24px 48px
+  0.24 + inset #fefefe; statusbar 8px/700, dynamic island
+  48x15, battery 16x8 fill 6; appbar row 42px; feed divider
+  inset 33px; drawer 240ms drawer easing; message-in 260ms.
+- Build: pnpm build passes (tsc + vite, 303.03 kB JS).
+- Screenshots: docs/verification/rounds/v1.3/ (gallery-1280.png,
+  gallery-1280-top.png, gallery-1200x668.png, window-main.png,
+  window-sidebar-collapsed.png, window-preview-collapsed.png,
+  probes/phone-stage.png); probe scripts probe-dom.cjs,
+  probe-dom2.cjs and shoot-v13.cjs in the same directory.
+- Unclosed items (measured reason, not skipped; none of these is
+  claimed as fixed):
+  - U1 Window outer shadow: code keeps 0 24px 64px black 0.18 +
+    inset white 0.5 border. Shadow layer value is box-shadow
+    none + border 0, but over the gallery's flat #ececea backdrop
+    the window edge would be a ~3-unit grey step and nearly
+    invisible; the drop shadow is kept for gallery legibility
+    only. Host apps over a photo backdrop should drop it.
+    Measured, deliberate deviation, not a pass.
+  - U2 Composer send button colour: code keeps blue #1987f7.
+    The web demo's effective value is the shared gradient (with a
+    black base), but the native App Store shots (iphone-06,
+    ipad-02, ipad-05) show a blue round send button, and this set
+    already decided for native evidence (README residual 9). It
+    is 1:1 to the native evidence, NOT to the web-demo value;
+    recorded here so it is not mistaken for a web-demo match.
+  - U3 SF Pro Rounded form: no Apple device and no SF font on
+    this VM (fc-list empty, as in v1.2); screenshots remain
+    Helvetica Neue / Arial fallback. Font stack, sizes and
+    weights are code-exact; the rounded glyph form itself is
+    unverifiable here. Needs an Apple-device screenshot.
+  - U4 Phone status glyphs: signal/wifi/battery are hand-drawn
+    bars + battery box at 8px; the originals are raster icons
+    (11x8 / 11x7 / battery 16x8 fill 6). Shapes and boxes match
+    at this size; pixel-exact glyph match is not resolvable.
+  - U5 Avatar faces: vector redraws (one face per roster member)
+    are approximations; the originals are official bitmap
+    portraits with no vector source, and bitmaps are never copied
+    into this set. Face geometry, colours and expressions cannot
+    be pixel-matched; only size (28px rows / 26px feed), circular
+    crop and the 1px 0.06 inset ring are exact.
+  - U6 Project tile artwork: sidebar and phone tiles use Lucide
+    mini icons; the originals are detailed project artwork
+    images (32px, radius 32%, drop-shadow). Tile geometry,
+    padding and shadow are now exact; the artwork itself is not
+    reproducible without copying official bitmaps.
+  - U7 Glass backdrop dependence: window/composer/toast
+    translucency renders over whatever sits behind them. The
+    original demo sits over a colourful marketing photo; this
+    gallery sits over flat #ececea, so the glass reads flatter
+    even with exact tokens. Tokens are exact; the backdrop is a
+    host property, not a set property.
+  - U8 Resizer drag: no resizer hit areas are mounted in the
+    gallery (original template has transparent 8px resizers, and
+    the shadow layer hides only the window resizer). Drag
+    physics and the original message-playback timing remain
+    component contracts for the host app (README residual 8);
+    the visible collapsed end states are exact.
+  - U9 Gallery chrome: the gallery header, section titles/notes,
+    token swatches, primitives (Button/Input/Separator) and the
+    adapted BottomModuleBar are this set's own presentation, not
+    original screens; they have no original counterpart to
+    measure against, so they are documented, not claimed 1:1.
+    The bottom bar stays explicitly labelled as adapted.
+  - U10 Phone project/feed counts: phone tiles stay 3 (original
+    web demo shows 9) and feed rows are the set's 6 roster
+    members (original shows 6 different web-demo members). Tile
+    geometry and row geometry are exact; inventing 6 more project
+    identities or copying the web-demo member set would be
+    fabrication, so the counts are recorded, not forced.
+  - U11 Clover mark + device-inbound + line-decrease glyphs:
+    the mark is a redrawn approximation of a brand mark, and the
+    two icons are custom Lucide-geometry morphs (exact audit
+    geometry, strokeWidth 2). They are not Lucide exports and
+    not official assets; geometry is exact to the audit, stroke
+    rendering follows Lucide.
+  - U12 Preview collapsed motion: original preview column
+    slides/fades (translateX 24px + opacity) while the grid
+    collapses; this set collapses the grid (240ms drawer
+    easing) and unmounts the column. End states are identical;
+    the in-between motion path differs.
+  - U13 Desktop body copy: the user-photo message text is
+    unreadable, so thread copy follows the iPad Hourtown thread
+    structure (README residual 1). Layout, bubbles and cards are
+    exact; the desktop verbatim text is unrecoverable.
+
 ## v1.2 — 2026-10-30 (fix round, not a review round)
 
 - Round: fixed every confirmed audit-20261030 item plus a beyond-list

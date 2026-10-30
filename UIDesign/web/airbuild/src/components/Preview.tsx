@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { tokens } from '../tokens/tokens.ts'
 import { AvatarBlob } from './AvatarBlob.tsx'
-import { IconIPhone, IconX, projectIconMap } from './icons.tsx'
+import { CloverMark, IconGear, IconIPhone, IconLineDecrease, IconX, projectIconMap } from './icons.tsx'
 
 export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[]; active: string; onSelect: (t: string) => void; onClose?: (t: string) => void }) {
   const [hoverTab, setHoverTab] = useState<string | null>(null)
@@ -26,18 +27,23 @@ export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[
 }
 
 const phoneFeed = [
-  { key: 'ato', name: 'Ato', text: 'Session ready to review', time: '10:24', color: '#2f7d4f', bg: '#cdeed9' },
-  { key: 'pluso', name: 'Pluso', text: 'Build is ready to test', time: 'Now', color: '#0b6fa4', bg: '#cdeaff' },
+  { key: 'ato', name: 'Ato', role: '@product', text: 'Session ready to review', time: '10:24', color: '#2f7d4f', bg: '#cdeed9' },
+  { key: 'pluso', name: 'Pluso', role: '@developer', text: 'Build is ready to test', time: 'Now', color: '#0b6fa4', bg: '#cdeaff' },
+  { key: 'colo', name: 'Colo', role: '@design', text: 'The design is ready.', time: '09:41', color: '#b45309', bg: '#ffe4c2' },
+  { key: 'camo', name: 'Camo', role: '@gaming', text: 'New app released', time: '09:12', color: '#92400e', bg: '#fde68a' },
+  { key: 'ampo', name: 'Ampo', role: '@appstore', text: 'Latest build ready to test', time: '08:58', color: '#1d4ed8', bg: '#dbeafe' },
+  { key: 'leto', name: 'Leto', role: '@website', text: 'Sync issue is fixed.', time: '08:30', color: '#be185d', bg: '#fbcfe8' },
 ]
 
-export function PhonePreview({ projectName = 'Hourtown' }: { projectName?: string }) {
+export function PhonePreview() {
   const tiles: { label: string; icon: 'clock' | 'house' | 'grid' }[] = [
     { label: 'Focus', icon: 'clock' }, { label: 'Town', icon: 'house' }, { label: 'Stats', icon: 'grid' },
   ]
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '6px 24px 14px', overflow: 'hidden' }}>
-        <div style={{ width: 'min(270px, calc(100% - 28px))', minWidth: 180, aspectRatio: 0.51, borderRadius: 38,
+      <div style={{ position: 'relative', flex: 1, display: 'grid', placeItems: 'center', padding: '6px 24px 14px', overflow: 'hidden' }}>
+        <div aria-hidden style={{ position: 'absolute', width: 'min(58%, 300px)', height: 45, bottom: '8%', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.18)', filter: 'blur(30px)', borderRadius: '50%' }} />
+        <div style={{ position: 'relative', zIndex: 2, width: 'min(270px, calc(100% - 28px))', minWidth: 180, aspectRatio: 0.51, borderRadius: 38,
           background: 'rgba(255,255,255,0.98)', border: '7px solid #d8d8d6',
           boxShadow: '0 24px 48px rgba(0,0,0,0.24), inset 0 0 0 1px #fefefe', overflow: 'hidden',
           display: 'grid', gridTemplateRows: '34px 42px auto 1fr', flex: 'none' }}>
@@ -53,38 +59,39 @@ export function PhonePreview({ projectName = 'Hourtown' }: { projectName?: strin
               </span>
             </span>
           </div>
-          <div style={{ height: 42, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 13px', borderBottom: '1px solid rgba(60,60,67,0.08)' }}>
-            <span style={{ fontSize: 12, fontWeight: 700 }}>{projectName}</span>
-            <span style={{ fontSize: 9, color: '#727279' }}>Today</span>
+          <div style={{ height: 42, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 13px' }}>
+            <button type="button" aria-label="App settings" style={{ width: 30, height: 30, display: 'grid', placeItems: 'center', padding: 0, background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: '50%', cursor: 'pointer', color: '#686868' }}>
+              <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconGear size={15} /></span>
+            </button>
+            <span style={{ display: 'flex', color: '#11110f' }}><CloverMark size={16} /></span>
+            <button type="button" aria-label="App menu" style={{ width: 30, height: 30, display: 'grid', placeItems: 'center', padding: 0, background: tokens.controlBg, boxShadow: tokens.controlShadow, border: 'none', borderRadius: '50%', cursor: 'pointer', color: '#686868' }}>
+              <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconLineDecrease size={15} /></span>
+            </button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, padding: 10 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, padding: '8px 14px 12px' }}>
             {tiles.map((n) => {
               const Mini = projectIconMap[n.icon]
               return (
-                <div key={n.label} style={{ background: '#fff', border: '1px solid #e7e7e7', borderRadius: '32%', aspectRatio: 1, display: 'grid', placeItems: 'center', alignContent: 'center', gap: 2, color: 'rgba(17,17,15,0.75)' }}>
-                  <Mini size={19} />
-                  <span style={{ fontSize: 8, fontWeight: 600, color: '#11110f' }}>{n.label}</span>
+                <div key={n.label} style={{ background: '#fff', border: '1px solid #e7e7e7', borderRadius: '32%', aspectRatio: 1, display: 'grid', placeItems: 'center', color: 'rgba(17,17,15,0.75)' }}>
+                  <span style={{ display: 'flex', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.16))' }}><Mini size={44} /></span>
                 </div>
               )
             })}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', padding: '6px 12px 16px', overflowY: 'auto' }}>
             {phoneFeed.map((r, i) => (
               <div key={r.key}>
-                <div style={{ height: 48, display: 'flex', alignItems: 'center', gap: 7, padding: '0 12px' }}>
+                <div style={{ height: 48, minHeight: 48, display: 'grid', gridTemplateColumns: '26px minmax(0,1fr) auto', columnGap: 7, alignItems: 'center', padding: '5px 0' }}>
                   <AvatarBlob name={r.name} color={r.color} bg={r.bg} size={26} />
-                  <span style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ display: 'block', fontSize: 9, fontWeight: 600, color: '#242426' }}>{r.name}</span>
-                    <span style={{ display: 'block', fontSize: 8, color: '#727279', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.text}</span>
+                  <span style={{ minWidth: 0, display: 'grid', gap: 2 }}>
+                    <span style={{ display: 'block', fontSize: 9, fontWeight: 600, color: '#11110f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name} <em style={{ marginLeft: 2, fontSize: 7, fontStyle: 'normal', fontWeight: 400, color: tokens.muted }}>{r.role}</em></span>
+                    <span style={{ display: 'block', fontSize: 8, color: tokens.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.text}</span>
                   </span>
-                  <span style={{ fontSize: 6.5, color: '#96969c' }}>{r.time}</span>
+                  <span style={{ fontSize: 6.5, color: tokens.muted, alignSelf: 'start', paddingTop: 2 }}>{r.time}</span>
                 </div>
                 {i < phoneFeed.length - 1 ? <div style={{ marginLeft: 33, height: 1, background: 'rgba(60,60,67,0.08)' }} /> : null}
               </div>
             ))}
-          </div>
-          <div style={{ marginTop: 'auto', padding: 10, display: 'flex', justifyContent: 'center' }}>
-            <span style={{ width: 90, height: 4, borderRadius: 999, background: '#d8d8d6' }} />
           </div>
         </div>
       </div>

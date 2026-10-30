@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { tokens } from '../tokens/tokens.ts'
 import { IconArrowUp, IconPlus } from './icons.tsx'
 
 export function FollowUpComposer({ placeholder = 'Send follow-up', onSend }: { placeholder?: string; onSend?: (v: string) => void }) {
@@ -8,12 +9,12 @@ export function FollowUpComposer({ placeholder = 'Send follow-up', onSend }: { p
   return (
     <form
       onSubmit={(e) => { e.preventDefault(); if (value.trim()) { onSend?.(value.trim()); setValue('') } }}
-      style={{ height: 32, borderRadius: 999, margin: '0 14px 10px', background: 'rgba(255,255,255,0.94)',
-        border: '1px solid rgba(0,0,0,0.075)', boxShadow: '0 10px 28px rgba(0,0,0,0.065), inset 0 1px rgba(255,255,255,0.78)',
+      style={{ height: 32, borderRadius: 999, margin: '0 14px 10px', background: tokens.controlBg,
+        border: 'none', boxShadow: tokens.controlShadow, backdropFilter: 'blur(4px) saturate(1.45)', WebkitBackdropFilter: 'blur(4px) saturate(1.45)',
         display: 'grid', gridTemplateColumns: '24px minmax(0,1fr) 24px', gap: 4, alignItems: 'center', padding: 3, flex: 'none' }}
     >
       <button type="button" aria-label="Attach" onMouseEnter={() => setHoverAttach(true)} onMouseLeave={() => setHoverAttach(false)}
-        style={{ width: 24, height: 24, borderRadius: '50%', border: 'none', background: '#ededeb', color: 'rgba(0,0,0,0.55)', display: 'grid', placeItems: 'center', cursor: 'pointer', filter: hoverAttach ? 'brightness(1.035)' : 'none' }}>
+        style={{ width: 24, height: 24, borderRadius: '50%', border: 'none', background: tokens.controlBg, boxShadow: tokens.controlShadow, color: '#686868', display: 'grid', placeItems: 'center', cursor: 'pointer', filter: hoverAttach ? 'brightness(1.035)' : 'none' }}>
         <span style={{ display: 'flex', opacity: 0.72, filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.52))' }}><IconPlus size={14} /></span>
       </button>
       <input className="ab-followup-input" value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder}

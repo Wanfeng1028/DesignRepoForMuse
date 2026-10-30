@@ -68,7 +68,7 @@ export function AppWindow({ title = 'Hourtown', sidebarCollapsed = false, previe
         <div style={{ overflow: 'hidden' }}>
           <Sidebar agents={agents} projects={projects} activeAgentKey="ato" activeProject={project.name} />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', background: 'rgba(249,249,247,0.92)', minWidth: 320, overflow: 'hidden', borderRight: pvCollapsed ? 'none' : '1px solid rgba(17,17,15,0.22)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', background: 'rgba(249,249,247,0.54)', minWidth: 320, overflow: 'hidden', borderRight: pvCollapsed ? 'none' : '1px solid rgba(17,17,15,0.045)' }}>
           <div className="ab-scroll" style={{ flex: 1, overflowY: 'auto', padding: '18px 16px 14px', display: 'flex', flexDirection: 'column', gap: 14 }}>
             {thread.map((m, i) => m.kind === 'agent'
               ? <AgentMessage key={i} agent={agents.find((a) => a.key === m.agentKey) ?? agents[0]} text={m.text} task={m.task} index={i} />
@@ -77,8 +77,8 @@ export function AppWindow({ title = 'Hourtown', sidebarCollapsed = false, previe
           </div>
           <FollowUpComposer onSend={onSend} />
         </div>
-        <div className="ab-preview-bg" style={{ overflow: 'hidden', minWidth: pvCollapsed ? 0 : 310 }}>
-          {pvCollapsed ? null : showServiceColumn ? <ServiceModuleColumn /> : <PhonePreview projectName={project.name} />}
+        <div style={{ overflow: 'hidden', minWidth: pvCollapsed ? 0 : 310, background: 'rgba(246,247,245,0.36)' }}>
+          {pvCollapsed ? null : showServiceColumn ? <ServiceModuleColumn /> : <PhonePreview />}
         </div>
       </div>
       {showToast ? <Toast text={showToast} /> : null}

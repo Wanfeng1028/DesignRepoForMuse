@@ -13,6 +13,7 @@ import {
   MessageSquare as LucideMessageSquare,
   Plus as LucidePlus,
   Route as LucideRoute,
+  Send as LucideSend,
   Settings as LucideSettings,
   Share as LucideShare,
   Smartphone as LucideSmartphone,
@@ -52,6 +53,47 @@ export const IconRoute = wrap(LucideRoute)
 export const IconBookOpen = wrap(LucideBookOpen)
 export const IconChart = wrap(LucideChartColumn)
 export const IconShare = wrap(LucideShare)
+/** Original "Share build" glyph is a paperplane (figma-icon-11.svg, 11px),
+ * not a share-tray: Lucide Send is the paperplane form. */
+export const IconPaperplane = wrap(LucideSend)
+/**
+ * v1.3 custom Lucide-geometry morphs (NOT Lucide exports, documented as
+ * custom): the two REA raster icons with no single Lucide equivalent.
+ * DeviceInbound geometry from the audit: phone rect 7,2,10,20 rx2, bottom
+ * dot, top down-chevron. LineDecrease geometry from the audit: polyline
+ * M3 17l5-6 4 3 5-7 4 4, no arrowhead (Lucide trending-down adds one).
+ */
+export function IconDeviceInbound({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="7" y="2" width="10" height="20" rx="2" />
+      <path d="M9 5l3 3 3-3" />
+      <circle cx="12" cy="18" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+export function IconLineDecrease({ size = 15 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M3 17l5-6 4 3 5-7 4 4" />
+    </svg>
+  )
+}
+/** Vector redraw of the AirBuild four-petal mark (16px phone-app-logo slot).
+ * Redrawn geometry, not the official asset: four lobes around a centre hole. */
+export function CloverMark({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
+      <g fill="currentColor">
+        <circle cx="8" cy="8" r="5.2" />
+        <circle cx="16" cy="8" r="5.2" />
+        <circle cx="8" cy="16" r="5.2" />
+        <circle cx="16" cy="16" r="5.2" />
+      </g>
+      <circle cx="12" cy="12" r="2.6" fill="#fff" />
+    </svg>
+  )
+}
 /** Mini project artwork icons (Lucide, replacing the old self-drawn minis). */
 export const IconClockMini = wrap(LucideClock)
 export const IconCupMini = wrap(LucideCoffee)

@@ -18,7 +18,7 @@ function CheckDraw() {
 
 export function TaskCard({ task }: { task: TaskCardData }) {
   return (
-    <div style={{ background: '#fffaf2', border: '1px solid rgba(94,74,46,0.12)', borderRadius: 12, padding: 12, fontSize: 10, marginTop: 9 }}>
+    <div style={{ background: '#fffaf2', border: '1px solid rgba(17,17,15,0.045)', borderRadius: 12, padding: 12, fontSize: 10, marginTop: 9 }}>
       <span style={{ display: 'block', color: '#53412e', fontSize: 11, fontWeight: 600 }}>{task.title}</span>
       <span style={{ display: 'block', marginTop: 3, color: '#88755e' }}>{task.status}</span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, margin: '12px 0' }}>
@@ -30,7 +30,7 @@ export function TaskCard({ task }: { task: TaskCardData }) {
                 background: s.state === 'done' ? '#72a682' : s.state === 'active' ? '#c49b65' : 'transparent', color: '#fff' }}>
               {s.state === 'done' ? <CheckDraw /> : null}
             </span>
-            <span style={{ color: s.state === 'done' ? '#467458' : s.state === 'active' ? '#675039' : '#a2998c' }}>{s.label}</span>
+            <span style={{ color: s.state === 'done' ? '#467458' : s.state === 'active' ? '#675039' : '#88755e' }}>{s.label}</span>
           </div>
         ))}
       </div>
