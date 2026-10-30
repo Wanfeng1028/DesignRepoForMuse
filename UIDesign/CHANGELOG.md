@@ -242,3 +242,55 @@ shadcn 式源码进仓；禁 Ant Design / MUI / Next.js。
 - 本轮提交：web/airbuild v1.2、app/airbuild v1.6、web/medley v1.3、
   app/medley v1.5 各一 commit + 本总账一 commit；构建四套全部由协调方
   独立重跑通过（tsc + vite）。
+
+## Round 6 — 2026-10-30（登录页全量重比 + 四套完美 1:1 重扫重修）
+
+- 起因：round 5（61909ce）交付后用户当场指出“差太多”，质问“人家的
+  登录首页是纯黑背景吗？”“所有的细节你对比到了吗”；后追问“整体都是
+  一个颜色吗？”、再令四套全部完美 1:1。验收口径：11:27 全量实测标准 +
+  12:42“界面上有的都是细节”+ 13:41 完美 1:1；只认实测数据，本轮四套
+  零裁判调用。
+- 登录页底色定论（两套 Medley 独立证实，一致）：原图 welcome 面板通体
+  纯色 #111518（17,21,24），无渐变、无辉光、无分段。证据：web 侧空带
+  155,100 像素零方差；app 侧空带 y700–940 100% 精确 + 逐 5% 行/列中位数
+  全为 (17,21,24)。两处偏离均非底色变化：顶右角 (23,27,30) 为状态图标
+  抗锯齿/JPEG 光晕；0.45 处 (15,18,23) 为拼图阴影条/JPEG 分块 artifact。
+  改后：两套渲染底色均改为 #111518（原 #121316 是旧低分辨率样本共识，
+  现被 HD 证据取代）；app 侧新图协调方抽查复核：深色面板 297,184 像素
+  众数 (17,21,24)。
+- app/medley v1.6：welcome 全量（状态栏 44→32px、标志/标题/副文案位置与
+  颜色、Google 钮 G 角标 16→21px、Try 钮 h50 + 边框 #2d3134、脚注 #808487
+  等）；lisbon-cn 左盘/中 pill 左流布局/右 pill 纵向圆点/AiMeta chevron/
+  正文折行级联/margin-collapse 结构修正；credits 行距 48 精确；language
+  标题入 TopBar；pricing Pro 副 leading 1.15。截图 rounds/v1.6（18 张 bare
+  + measure/pre/post1–6）。
+- web/medley v1.4：welcome 同上（Try 透明描边 pill、G 圆盘 20px 纯白无圈、
+  圆点 #FF6521、词标 19px、副 #B0B4B6、模型行 14px #8E9295、脚注 12px/
+  1.31/#84878B）；气泡 #1D242E、停止钮 #DFA282、CN 首页 Pro 素灰字、CN
+  输入条双行 stacked、GLM 操作行补 "28 credits 1.1s 71 tok/s"、语言面板
+  返回箭头。截图 rounds/v1.4。
+- app/airbuild v1.7：登录形态核查结论——本套无登录形态屏（App Store 图
+  全为已登录态屏，Localizable.strings 中 Sign/Log in/Welcome/password
+  均为 0 次），不造屏；L1–L28（气泡行高、文件卡/任务卡、顶栏钮径、中央标
+  自绘四叶、作曲器字号、简报重排 + 折角 84×56px、销售卡统计纠错、第二
+  消息完整可见、详情全部字号 + 第 4 进度行、Home tile 重绘）。截图
+  rounds/v1.7（7 framed + 6 bare）。
+- web/airbuild v1.3：登录形态核查同上（无登录屏，不造屏；iphone-01 标题
+  为 App Store 营销文案，非应用内 welcome）；D1 裁决——Shadow 层优先于
+  base 层（解决 round 5 U7 B10：作曲器 backdrop 实为 blur(4px)
+  saturate(1.45)）；DOM 实测全批（会话底 0.54、预览平色、标题栏 padding、
+  32px 窄 footer、toast 16px + blur 18px、电话 appbar 重建、tiles 去标
+  44px、feed 6 行、设备阴影、home 指示条删除）。截图 rounds/v1.3。
+- 未闭合（均带实测原因，详见各套 CHANGELOG，不编数）：app/medley
+  pricing 整体漂移（顶 −39 等，顶 padding 与中段 excess 交互，单点修正
+  会破坏已合底部）、picker-a 全部（顶 −70→底 −32 非均匀位移，sheet 顶/
+  圆角/底色未采样）、language 行距矛盾、总览 9 屏无单屏 HD 原图（仅
+  >10% 大差可行动）、AiMeta 全屏影响面未逐验、G36/T3/T6–T9/T14/T15/G40
+  旧残差；web/medley U1（HD5 与 CN 暗底冲突取 CN）、U3（无 HD 源处沿用
+  v1.3 值）、U11（定价等只视觉重扫未逐元素重证，不谎称 1:1）；app/airbuild
+  U1–U14（详情顶圆角 32px 无弧线拟合、商店卡高 87 vs 约 90、简报封面/
+  图表取舍、Assets.car 无 Linux 工具等）；web/airbuild U1–U13（窗口外阴影
+  为画廊可读性保留、发送钮蓝为原生证据、SF 字形无 Apple 设备不可验、
+  头像/贴图 artwork 不可复制等）。
+- 本轮提交：四套各一 commit + 本总账一 commit；构建四套由工人各自通过
+  后，协调方独立重跑全部通过（tsc + vite）。
