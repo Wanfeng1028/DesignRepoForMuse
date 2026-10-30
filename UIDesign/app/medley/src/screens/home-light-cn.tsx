@@ -34,7 +34,7 @@ export default function HomeLightCn() {
           <MedleyMark size={30} color="#17181c" />
           <div className="mt-[14px] text-greeting font-bold leading-[1.25] text-light-text">晚上好，Alex</div>
         </div>
-        <div className="mt-[18px] border-t border-light-divider px-5 pt-[18px]">
+        <div className="mt-[18px] border-t border-light-divider px-5 pt-0.5">
           <SuggestionRow dark={false} icon={Icon.news('#6b6c72')} text="今天有什么新闻" />
           <SuggestionRow dark={false} icon={Icon.pdf('#6b6c72')} text="总结一份 PDF" />
           <SuggestionRow dark={false} icon={Icon.searchOrbit('#6b6c72')} text="深度研究一个话题" badge="Pro" />

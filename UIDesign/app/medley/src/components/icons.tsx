@@ -8,14 +8,16 @@ import {
   ChevronDown as LucideChevronDown,
   ChevronRight as LucideChevronRight,
   Ellipsis as LucideEllipsis,
+  EllipsisVertical as LucideEllipsisVertical,
   LogOut as LucideLogOut,
 } from 'lucide-react'
 
 /**
  * Icon set, v1.5 migration policy (lucide-react 1.63.0, verified path by path
  * against node_modules/lucide-react/dist/esm/icons):
- * - Package-sourced (9): menu, back (chevron-left), close (x), plus, check,
- *   chevronDown, chevronRight, more (ellipsis), logout (log-out). Eight are
+ * - Package-sourced (10): menu, back (chevron-left), close (x), plus, check,
+ *   chevronDown, chevronRight, more (ellipsis), moreVertical (ellipsis-vertical),
+ *   logout (log-out). Nine are
  *   path-verbatim vs the old hand-drawn SVGs (only sub-path order/case
  *   differs); menu differs by 1 grid px (old lines y 6/12/18, Lucide 5/12/19),
  *   i.e. ~0.8px at 20px render, below icon measurement noise — Lucide
@@ -69,6 +71,7 @@ export const Icon: Record<string, IconFn> = {
   like: (c, s = 18) => (<svg {...svgProps(c, s)}><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /></svg>),
   dislike: (c, s = 18) => (<svg {...svgProps(c, s)}><path d="M17 14V2M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z" /></svg>),
   more: lucide(LucideEllipsis, 18),
+  moreVertical: lucide(LucideEllipsisVertical, 20),
   info: (c) => (<svg {...svgProps(c)}><circle cx="12" cy="12" r="9" /><path d="M12 16v-4M12 8h.01" /></svg>),
   gear: (c) => (<svg {...svgProps(c)}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>),
   send: (c) => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>),
@@ -78,7 +81,7 @@ export const Icon: Record<string, IconFn> = {
   cards: (c) => (<svg {...svgProps(c)}><rect x="3" y="7" width="13" height="12" rx="2" /><path d="M7 7V5a2 2 0 0 1 2-2h11v12" /></svg>),
   mapPin: (c, s = 20) => (<svg {...svgProps(c, s)}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>),
   calendar: (c, s = 20) => (<svg {...svgProps(c, s)}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18" /></svg>),
-  folder: (c) => (<svg {...svgProps(c)}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>),
+  folder: (c, s = 20) => (<svg {...svgProps(c, s)}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>),
   searchOrbit: (c) => (<svg {...svgProps(c)}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /><path d="M4 4a8 8 0 0 1 3-1.5" /></svg>),
   download: (c) => (<svg {...svgProps(c)}><path d="M12 3v10" /><path d="M7 10l5 5 5-5" /><path d="M4 19h16" /></svg>),
   trash: (c) => (<svg {...svgProps(c)}><path d="M4 7h16" /><path d="M9 7V5h6v2" /><path d="M6 7l1 13h10l1-13" /><path d="M10 11v5M14 11v5" /></svg>),

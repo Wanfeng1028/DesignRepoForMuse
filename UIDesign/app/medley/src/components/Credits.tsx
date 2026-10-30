@@ -4,7 +4,7 @@ export function CreditsChart({ bars }: { bars: number[] }) {
   return (
     <div className="relative">
       <div className="absolute bottom-0 left-[60%] top-0 z-[1] border-l border-dashed border-light-dim" />
-      <div className="mt-1 flex h-[110px] items-end gap-[3px]">
+      <div className="mt-1 flex h-[100px] items-end gap-[3px]">
         {bars.map((h, i) => (
           <div key={i} className="flex flex-1 flex-col-reverse" style={{ height: h }}>
             <div className="bg-chart-amber" style={{ height: Math.round(h * 0.55) }} />
@@ -31,7 +31,7 @@ export function CreditsRow({
   last?: boolean
 }) {
   return (
-    <div className={`flex items-center justify-between py-3 ${last ? '' : 'border-b border-light-divider'}`}>
+    <div className={`flex items-center justify-between py-0.5 ${last ? '' : 'border-b border-light-divider'}`}>
       <div>
         <div className="text-[15px] font-medium text-light-text">{name}</div>
         <div className="mt-0.5 text-secondary text-light-sub">{sub}</div>

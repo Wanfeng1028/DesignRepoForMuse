@@ -34,11 +34,16 @@ export function AiMeta({
 }) {
   return (
     <div className="my-4 mb-2">
-      <div className={cn('flex items-center gap-1.5 text-[14px] font-semibold', dark ? 'text-dark-text' : 'text-light-text')}>
+      <div className={cn('flex items-center gap-1.5 text-[12px] font-semibold', dark ? 'text-dark-text' : 'text-light-text')}>
         {dot && <ModelDot model={model} />}
         {model}
       </div>
-      {sub && <div className={cn('mt-1 text-[13px]', dark ? 'text-dark-sub' : 'text-light-sub')}>{sub}</div>}
+      {sub && (
+        <div className={cn('mt-1 flex items-center gap-1.5 text-[12px]', dark ? 'text-dark-sub' : 'text-light-sub')}>
+          <span>{sub}</span>
+          {Icon.chevronRight(dark ? '#9a9ba2' : '#6b6c72', 14)}
+        </div>
+      )}
     </div>
   )
 }
@@ -75,7 +80,7 @@ export function SuggestionRow({
   return (
     <div
       className={cn(
-        'flex items-center gap-3 border-b py-[14px] text-item font-medium',
+        'flex items-center gap-3 border-b py-3 text-item font-medium',
         dark ? 'border-dark-divider text-dark-text' : 'border-light-divider text-light-text',
       )}
     >

@@ -36,7 +36,7 @@ function BatteryIcon({ dark }: { dark: boolean }) {
 
 export function StatusBar({ dark, time = '10:24' }: { dark: boolean; time?: string }) {
   return (
-    <div className={cn('flex h-11 shrink-0 items-center justify-between px-6 pl-7 text-status font-semibold', dark ? 'text-dark-text' : 'text-light-text')}>
+    <div className={cn('flex h-8 shrink-0 items-center justify-between pl-7 pr-8 text-status font-semibold', dark ? 'text-dark-text' : 'text-light-text')}>
       <span>{time}</span>
       <span className="flex items-center gap-1.5">
         <SignalIcon dark={dark} />
@@ -50,7 +50,7 @@ export function StatusBar({ dark, time = '10:24' }: { dark: boolean; time?: stri
 export function HomeIndicator({ dark }: { dark: boolean }) {
   return (
     <div className="flex h-5 shrink-0 items-center justify-center">
-      <div className={cn('h-[5px] w-[134px] rounded-full', dark ? 'bg-[#3a3b40]' : 'bg-[#c9cacc]')} />
+      <div className={cn('h-[3.5px] w-[104px] rounded-full', dark ? 'bg-[#515558]' : 'bg-[#bababa]')} />
     </div>
   )
 }

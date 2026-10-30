@@ -16,7 +16,7 @@ export function TopBar({
   right?: ReactNode
 }) {
   return (
-    <div className={cn('flex h-14 shrink-0 items-center justify-between px-4', dark ? 'text-dark-text' : 'text-light-text')}>
+    <div className={cn('flex h-12 shrink-0 items-center justify-between px-6', dark ? 'text-dark-text' : 'text-light-text')}>
       <div className="flex w-[72px] items-center">{left}</div>
       <div className="flex flex-1 items-center justify-center">{center}</div>
       <div className="flex w-[72px] items-center justify-end gap-4">{right}</div>

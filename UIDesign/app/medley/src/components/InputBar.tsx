@@ -10,7 +10,9 @@ export type MicVariant = 'circle' | 'plain' | 'stop' | 'stop-accent'
  *   the orig home-cn / lisbon-cn two-line bars (87-91px @390). Only those two
  *   screens use double; every other screen keeps single.
  * Stop sizes are per-screen measured values, not one shared size:
- * - stop (lisbon-cn, white): 29px circle + 9px square (orig 28.9 / 9.4px @390).
+ * - stop (lisbon-cn, white): 34px circle + 9px square (v1.6 re-measure:
+ *   orig white extent 52 crop rows x 45 crop wide = 36.2 x 31.3 phone px,
+ *   midpoint 34; v1.5 29px read the JPEG white core only).
  * - stop-accent (lisbon-en, peach): 41px circle + 9px square (orig 41.0 / 9.2px).
  * Mic containers carry transition classes (M5 container transition): on a
  * runtime variant switch the circle keeps its shape and the inner glyph
@@ -43,7 +45,12 @@ export function InputBar({
     }
     if (mic === 'stop') {
       return (
-        <span className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-full bg-white transition-all duration-200">
+        <span
+          className={cn(
+            'flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-white transition-all duration-200',
+            variant === 'double' && 'self-start',
+          )}
+        >
           <span className="h-[9px] w-[9px] rounded-[2px] bg-[#111214] transition-all duration-200" />
         </span>
       )
@@ -60,6 +67,7 @@ export function InputBar({
         className={cn(
           'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-all duration-200',
           sendDark ? 'bg-black-btn' : dark ? 'bg-accent' : 'bg-black-btn',
+          variant === 'double' && 'self-start',
         )}
       >
         {Icon.mic('#ffffff')}
@@ -84,7 +92,11 @@ export function InputBar({
 
   if (variant === 'double') {
     // One rounded container, two rows inside: placeholder row on top,
-    // control row below. Total 32 + 56 = 88px @390 (orig 87-91px).
+    // control row below. Total 40 + 48 = 88px @390 (orig 87-91px).
+    // v1.6 re-measure: orig split is ~40/47-48, not 32/56 — the 32px
+    // placeholder row put its centred text ~6px too high on both double
+    // screens, while the mic button sits top-aligned in its row (orig
+    // stop/circle top = control-row top), so MicButton self-starts here.
     return (
       <div className="shrink-0 px-4 pt-3">
         <div
@@ -93,12 +105,12 @@ export function InputBar({
             dark ? 'bg-dark-input' : 'border border-light-divider bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]',
           )}
         >
-          <div className="flex h-[32px] items-center pl-[14px] pr-2">
+          <div className="flex h-[40px] items-center pl-[14px] pr-2">
             <span className="flex-1 text-[15px]" style={{ color: dim }}>
               {placeholder}
             </span>
           </div>
-          <div className="flex h-[56px] items-center gap-2.5 pl-[14px] pr-2">
+          <div className="flex h-[48px] items-center gap-2.5 pl-[14px] pr-2">
             <span className="flex text-dark-sub">{Icon.plus(sub)}</span>
             <ModelPill />
             <span className="flex-1" />

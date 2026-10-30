@@ -3,7 +3,7 @@
 @theme {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Noto Sans SC", sans-serif;
   /* Dark theme: measured values from muse/DESIGN-TOKENS.md section 2 */
-  --color-dark-bg: #121316;
+  --color-dark-bg: #111518;
   --color-dark-card: #1e1f23;
   --color-dark-input: #1f2024;
   --color-dark-bubble: #191a1e;

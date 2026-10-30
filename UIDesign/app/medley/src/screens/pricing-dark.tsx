@@ -19,7 +19,7 @@ export default function PricingDark() {
         <BillingToggle monthlyLabel="Monthly" yearlyLabel="Yearly" saveLabel="Save 20%" />
         <PlanCard name="Lite" monthly="$4.00/mo" yearly="$47.99 a year" />
         <PlanCard name="Pro" monthly="$16.00/mo" yearly="$191.99 a year" selected badge="7 days free">
-          <p className="ml-[30px] mt-3 text-[13px] leading-[1.5] text-dark-sub">
+          <p className="ml-[30px] mt-3 text-[13px] leading-[1.15] text-dark-sub">
             80,000 credits a month, about 1,000 Claude Sonnet messages.
           </p>
           <PlanFeature text="Claude Sonnet and Opus, GPT-6.1 Sol, Kimi K3" />

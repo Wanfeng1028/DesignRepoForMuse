@@ -9,7 +9,7 @@
  */
 export const tokens = {
   colors: {
-    darkBg: '#121316',
+    darkBg: '#111518', // v1.6: HD welcome empty-band 100% (17,21,24); lisbon-cn HD mode same; supersedes old #121316 bracket consensus from contaminated low-res samples
     darkCard: '#1e1f23',
     darkInput: '#1f2024',
     userBubbleDark: '#191a1e', // measured

@@ -41,15 +41,15 @@ export default function CreditsLight() {
             <span className="text-huge font-bold leading-[1] text-light-text">12,480</span>
             <span className="text-body text-light-sub">credits</span>
           </div>
-          <div className="mt-2 text-secondary leading-[18px] text-light-sub">About 270 messages at your usual mix</div>
-          <div className="mt-0.5 text-secondary leading-[18px] text-light-sub">Pro plan, 80,000 credits a month. Renews Nov 15.</div>
+          <div className="mt-[11px] text-secondary leading-[20px] text-light-sub">About 270 messages at your usual mix</div>
+          <div className="mt-0.5 text-secondary leading-[20px] text-light-sub">Pro plan, 80,000 credits a month. Renews Nov 15.</div>
           <div className="mt-4 flex gap-3">
             <Button className="h-12 px-5 text-[15px]">Buy credits</Button>
             <Button variant="outline" className="h-12 border-light-divider px-5 text-[15px] text-light-text">
               Change plan
             </Button>
           </div>
-          <div className="mt-6 flex items-center justify-between">
+          <div className="mt-8 flex items-center justify-between">
             <span className="text-[15px] font-bold text-light-text">Last 30 days</span>
             <span className="text-[15px] font-bold text-light-text">71,720 credits</span>
           </div>
@@ -60,11 +60,11 @@ export default function CreditsLight() {
             </div>
           </div>
           <CreditsChart bars={bars} />
-          <div className="mt-1.5 flex justify-between">
+          <div className="mt-[10px] flex justify-between">
             <span className="text-caption text-light-sub">Sep 28</span>
             <span className="text-caption text-light-sub">Oct 25</span>
           </div>
-          <div className="mt-2.5 flex gap-4">
+          <div className="mt-[7px] flex gap-4">
             {legend.map((l) => (
               <div key={l.label} className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full" style={{ background: l.color }} />
@@ -79,7 +79,7 @@ export default function CreditsLight() {
             ))}
           </div>
           <div className="mt-5 text-section font-bold text-light-text">Activity</div>
-          <div className="flex items-center justify-between py-3">
+          <div className="flex items-center justify-between py-1">
             <div>
               <div className="text-[15px] font-medium text-light-text">Lisbon on a budget</div>
               <div className="mt-0.5 text-secondary text-light-sub">Today, 10:21, Claude Sonnet 5.5</div>

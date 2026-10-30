@@ -30,13 +30,15 @@ export default function ChatDarkLisbonEn() {
           right={Icon.edit('#f5f5f7')}
         />
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-4 pt-1">
-          <UserBubble dark>Plan 3 days in Lisbon on a budget. I love food and good views.</UserBubble>
+          <div className="pt-[7px] pb-px">
+            <UserBubble dark>Plan 3 days in Lisbon on a budget. I love food and good views.</UserBubble>
+          </div>
           <AiMeta dark model="GLM-5 · Auto" />
           <div className="text-body leading-[1.55] text-dark-text">
             Here&apos;s a relaxed plan that keeps costs low and saves the best views for sunset.
           </div>
           <div className="mt-[14px] text-body font-bold leading-[1.55] text-dark-text">Day 1: Alfama and the castle</div>
-          <div className="mt-2 flex flex-col gap-1.5">
+          <div className="mt-[3px] flex flex-col gap-2">
             {bullets.map((b) => (
               <div key={b.text} className="flex gap-2 text-item leading-[1.45] text-dark-text">
                 <span className="shrink-0 text-dark-sub">•</span>
@@ -53,13 +55,13 @@ export default function ChatDarkLisbonEn() {
           </div>
           <SourcesChip dark badges={['T', 'L', 'V']} countLabel="3 sources" />
           <ActionRow dark credits="28 credits" />
-          <div className="my-1 flex justify-end">
+          <div className="mt-[33px] mb-[26px] flex justify-end">
             <div className="rounded-chip border border-dark-divider px-[18px] py-2.5 text-item text-dark-text">
               Make day 2 all about food.
             </div>
           </div>
           <AiMeta dark model="Claude Sonnet 5.5" />
-          <div className="text-body leading-[1.55] text-dark-text">
+          <div className="text-[15px] leading-[1.67] text-dark-text">
             Day 2 works best as a slow eating day. Start at Time Out Market around 11am, before the lunch rush, and share a
             few small plates instead of one big meal. In the afternoon, walk up to Bairro Alto for a pastel de nata.
             <span className="ml-1.5 inline-block h-[9px] w-[9px] rounded-full bg-brand-dot align-middle" />

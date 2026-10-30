@@ -21,18 +21,17 @@ export default function LanguageLight() {
   return (
     <Phone theme="light" className="bg-[#fdfdfd]">
       <div className="flex min-h-0 flex-1 flex-col">
-        <TopBar dark={false} left={Icon.back('#17181c')} center={<span />} right={<span />} />
-        <div className="px-5 pb-2 pt-1 text-[18px] font-bold leading-[1.3] text-light-text">App language</div>
+        <TopBar dark={false} left={<span className="ml-[-8px] flex items-center gap-2">{Icon.back('#17181c')}<span className="whitespace-nowrap text-[16px] font-bold text-light-text">App language</span></span>} center={<span />} right={<span />} />
         <div className="px-5">
           {rows.map((row) => (
-            <div key={row.name} className="flex items-center border-b border-light-divider py-2.5">
+            <div key={row.name} className="flex items-start border-b border-light-divider py-2.5">
               <div className="min-w-0 flex-1 pr-3">
                 <div className="text-item font-medium leading-[1.35] text-light-text">{row.name}</div>
                 {row.sub ? (
                   <div className="mt-[3px] text-secondary leading-[1.35] text-light-sub">{row.sub}</div>
                 ) : null}
               </div>
-              {row.check ? <span className="shrink-0">{Icon.check('#17181c')}</span> : null}
+              {row.check ? <span className="mt-[1px] shrink-0">{Icon.check('#17181c')}</span> : null}
             </div>
           ))}
         </div>
