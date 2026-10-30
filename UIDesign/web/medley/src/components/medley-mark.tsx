@@ -22,13 +22,42 @@ export function MedleyMark({ size = 24, color = "#F5F5F7" }: { size?: number; co
   );
 }
 
-/** Single 8px model dot (AiMeta rule: one dot per model, never a 5-dot cluster). */
+/** Single 8px model dot (AiMeta rule: one dot per model, never a 5-dot cluster).
+ * v1.5: dots are glossy balls in photo-9 (bright highlight over a saturated
+ * base: Kimi gold, GPT green), so the disc renders a white highlight
+ * gradient over the existing measured base hue instead of a flat disc. */
 export function ModelDot({ model, size = 8 }: { model: string; size?: number }) {
+  const base = modelDotColor(model);
   return (
     <span
       aria-hidden="true"
-      style={{ width: size, height: size, borderRadius: "50%", background: modelDotColor(model), display: "inline-block", flexShrink: 0 }}
+      style={{ width: size, height: size, borderRadius: "50%", background: `radial-gradient(circle at 35% 30%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 55%), ${base}`, display: "inline-block", flexShrink: 0 }}
     />
+  );
+}
+
+/**
+ * v1.5 brand dot cluster (photo-9): three glossy balls on a rising diagonal
+ * beside the Medley wordmark (welcome header) and beside "Auto" (home pill).
+ * Centres in photo-9 TL: green (132,200), blue (143,193), pink (156,188):
+ * ~11-13 photo px apart horizontally, rising ~12 photo px overall, discs
+ * ~14 photo px. At web scale that is 9px discs, 0/4/8px rises, touching.
+ * Vector redraw only; no brand bitmap is copied. This is NOT ModelDots
+ * (the 5-dot horizontal row used by chat-info / picker / pricing rows,
+ * which rest on older evidence and are untouched here).
+ */
+export function BrandDots({ size = 9 }: { size?: number }) {
+  const dots = [tokens.colors.brandDotGreen, tokens.colors.brandDotBlue, tokens.colors.brandDotPink];
+  const rises = [0, 4, 8];
+  return (
+    <span style={{ display: "inline-flex", alignItems: "flex-end", gap: 1, flexShrink: 0 }} aria-hidden="true">
+      {dots.map((d, i) => (
+        <span
+          key={i}
+          style={{ width: size, height: size, marginBottom: rises[i], borderRadius: "50%", background: `radial-gradient(circle at 35% 30%, ${d.highlight} 0%, ${d.base} 72%)`, display: "inline-block" }}
+        />
+      ))}
+    </span>
   );
 }
 

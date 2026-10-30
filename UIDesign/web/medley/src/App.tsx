@@ -246,7 +246,7 @@ export default function App() {
 
       <Section id="desktop-home" title="Desktop example — Home (light) + Credits" note="Main: English home panel. Right: credits panel.">
         <DesktopLayout sidebar={<SidebarDemo />} rightPanel={<CreditsPanel balance="12,480" balanceUnit="credits" aboutLine="About 270 messages at your usual mix" planLine="Pro plan, 80,000 credits a month. Renews Nov 15." last30Label="Last 30 days" last30Total="71,720 credits" upgradeLabel="Oct 15, upgraded to Pro" bars={d.creditsBars} legend={d.creditsLegend} models={d.creditsModels} activity={{ title: "Lisbon on a budget", meta: "Today, 10:21, Claude Sonnet 5.5", amount: "84" }} dateRange={["Sep 26", "Oct 25"]} />}>
-          <div className="flex min-h-[560px] flex-col">
+          <div className="flex min-h-[560px] flex-col [&>div]:flex-1">
             <HomePanel variant="en" greeting="Good evening, Alex" suggestions={d.homeEnSuggestions} composerPlaceholder="Ask anything" />
           </div>
         </DesktopLayout>
@@ -260,10 +260,10 @@ export default function App() {
 
       <Section id="home" title="Home panels — EN + CN">
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="min-h-[560px] overflow-hidden rounded-card border border-light-divider bg-light-bg">
+          <div className="min-h-[560px] overflow-hidden rounded-card border border-light-divider bg-light-bg flex flex-col [&>div]:flex-1">
             <HomePanel variant="en" greeting="Good evening, Alex" suggestions={d.homeEnSuggestions} composerPlaceholder="Ask anything" />
           </div>
-          <div className="min-h-[560px] overflow-hidden rounded-card border border-light-divider bg-light-bg">
+          <div className="min-h-[560px] overflow-hidden rounded-card border border-light-divider bg-light-bg flex flex-col [&>div]:flex-1">
             <HomePanel variant="cn" segmentLabels={["聊天", "智能体"]} greeting="晚上好，Alex" suggestions={d.homeCnSuggestions} composerPlaceholder="有问题，尽管问" composerModelLabel="自动" />
           </div>
         </div>

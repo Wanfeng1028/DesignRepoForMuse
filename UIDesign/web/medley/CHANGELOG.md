@@ -3,6 +3,159 @@
 > Scope: UIDesign/web/medley only. Desktop layout itself has no original
 > image; 1:1 covers tokens and component forms (see README residual 1).
 
+## v1.5 — 2026-10-30 (fix round; round 7: photo-9 colour layer first + full-set active rescan)
+
+- Fix round, not a review round. No judge call was made in this round:
+  every verdict below rests on pixel samples / render samples read out of
+  screenshots, not on any judge verdict. Build passes: pnpm build
+  (tsc -b && vite build). No commit, no push, no git add; changes left in
+  the worktree for the coordinator. Scope: UIDesign/web/medley only.
+- Screenshots: docs/verification/rounds/v1.5/ — gallery-fullpage.png,
+  sec-*.png per section, measure/render-welcome.png + render-home-en.png
+  (tight panel shots used for the sample tables), measure/*.py + *.cjs
+  (sampling / screenshot scripts), crops/ (photo-9 crops + render crops
+  used as measurement evidence only; no official bitmap is copied into
+  the design system — all marks and dots are vector redraws).
+- BASELINE TRUTH, and how conflicts were settled (no averaging, no mush):
+  photo-9 (~/workspace/user/media_library/image/photo-9.jpg, 1170x2532,
+  2x2: TL welcome-dark, TR home-light-en, BL chat-dark Kimi Kyoto, BR
+  chat-light GPT-6.1 Sol) wins on the COLOUR layer only; layout / sizes /
+  spacing still follow the old HD images + round 6. Screen boxes measured,
+  not assumed halved: collage canvas #191A1E; TL x~70..690, y~95..1325;
+  TR left edge x~772 (3px anti-alias ramp to #F5F6F8); bottom screens
+  top edge y~1425-1430; right screens are clipped by the image edge.
+  The photo-9 footnote reads (truncated, pixel sampling rules): welcome
+  headline rotates, cursor is sapphire blue, each sentence carries a
+  colour. The static render therefore shows the captured state
+  ("Let's discover" + sapphire cursor) and documents rotation instead of
+  faking it as a static orange dot.
+- COLOUR SAMPLING TABLE (photo-9 value -> v1.4 value -> v1.5 render value,
+  all sampled, not impression):
+  * Welcome clean base (top-centre, away from glows): (13,14,16) #0D0E10
+    -> v1.4 #111518 -> render #0D0E10 exact. The v1.4 value is the OLD
+    capture's flat bg (round-6 zero-variance proof); photo-9's dark
+    surfaces (BL chat median also (12,13,17)) agree on the darker base,
+    so the welcome panel takes #0D0E10 as a welcome-local base. The
+    global darkBg token is NOT changed: other dark sections still rest
+    on old-HD evidence (see U1).
+  * Blue halo (upper-right, photo (600,600) in panel fractions
+    (0.855,0.411)): (35,53,75) #23354B -> v1.4 none (flat bg) -> render
+    (35,52,74) #23344A, delta (0,1,1). Second point (0.90,0.50):
+    photo (28,45,63) -> render (33,49,69), delta (5,4,6).
+  * Warm glow (lower-left, photo peak (170,1025) fraction (0.161,0.756)):
+    (74,43,30) #4A2B1E -> v1.4 none -> render (77,47,35) #4D2F23,
+    delta (3,4,5). Row y=1050 decays to base by x~480 (radius ~310
+    photo px); column x=180 peaks y~1020.
+  * Green glow (lower-right, photo (600,1320) fraction (0.855,0.996)):
+    (44,77,68) #2C4D44 -> v1.4 none -> render (40,78,72) #284E48,
+    delta (4,1,4). Second point (0.73,0.97): photo (24,55,49) ->
+    render (31,57,53), delta (7,2,4). The glow is still rising at the
+    panel bottom edge, so its centre sits below the panel.
+  * Title cursor dot (photo bright blob x~520-540, y~605-618; core
+    (180,211,239) #B4D3EF at (526,612)): v1.4 #FF6521 orange -> v1.5
+    glossy sapphire ball, render centre (310,139) (197,222,244)
+    #C5DEF4, highlight (225,240,254) #E1F0FE, edge (100,158,232)
+    #649EE8. Edge #2E7CE6 is the hue-matched blur-corrected sapphire
+    estimate; the core value itself is measured.
+  * Brand dot cluster (photo-9 TL centres green (132,200), blue
+    (143,193), pink (156,188); discs ~14 photo px, rising ~12 photo px):
+    v1.4 M letterform + no dots -> v1.5 BrandDots 9px discs, 0/4/8px
+    rises. Render disc centres: green highlight (150,202,190) #96CABE
+    vs photo peak (157,205,193); blue (137,167,192) #89A7C0 vs photo
+    (175,196,213) (render reads darker: the blue disc is small and its
+    measured centre sits on the gradient slope, not the highlight);
+    pink (215,171,195) #D7ABC3 vs photo (217,183,207). Bases are
+    blur-corrected estimates (green #2FA08C, blue #5B84A6, pink
+    #C65D7B = the set's existing pink token); highlights are the
+    measured peaks (#9DCDC1 / #AFC4D5 / #D9B7CF).
+  * Home Auto pill dots: photo-9 TR shows the SAME 3-dot diagonal
+    cluster (green low-left, blue mid, pink high-right) -> v1.4
+    5-dot horizontal row -> v1.5 BrandDots in the home pill.
+  * Kimi header dot (photo-9 BL centre (301,1682), peak (232,222,163)
+    #E8DEA3, glossy gold ball) and GPT header dot (photo-9 BR centre
+    ~(965,1682), glossy green ball, mint highlight): v1.4 flat discs
+    (#9A9A3E / #3FA34D) -> v1.5 glossy discs (white highlight gradient
+    over the unchanged measured base hues). Bases deliberately NOT
+    re-hexed: the balls' hue identity is unchanged, only the gloss
+    finish is new, so no invented hex enters the token set here.
+  * Home light wash (photo-9 TR column x=950: #F5F6F8 top ->
+    #EFF3F4 y600 -> #E1EBEC y780 -> #D2E5E3 y1020): v1.4 flat
+    #F5F6F8 -> v1.5 linear gradient (#F5F6F8 0%, #EFF3F4 40%,
+    #E1EBEC 60%, #D2E5E3 80%, #D9E7E7 100%). Render vertical medians:
+    fy 0.05 (244,245,247) vs (245,246,248); fy 0.25 (240,243,244) vs
+    (239,243,244); fy 0.45 strip (221,233,234) vs photo-equivalent
+    ~(230,238,240) at that height (delta <= 9, gradient runs slightly
+    cooler mid-panel). Light CHAT stays flat: photo-9 BR reads flat
+    ~#F5F4F9 with a white #FDFEFF notice card, so the wash is
+    home-only, not a global light-surface change.
+  * Checked and deliberately UNCHANGED (sampled, no colour found):
+    home suggestion icons are grey outlines (photo-9 home-suggest
+    crop); Kyoto weather icons are grey outlines (sun window
+    x105..175, y2010..2075 has zero saturated pixels); BR notice card
+    median (245,246,248) matches the existing bubble-light card.
+- AMBIENT GRADIENT PARAMETERS (welcome panel, final values in code):
+  blue radial 300px circle at 88% 42%, rgba(64,102,150,0.46) ->
+  transparent 100%; warm radial 280px circle at 16% 76%,
+  rgba(116,66,46,0.62) -> transparent 100%; green radial 320px circle
+  at 92% 108%, rgba(52,110,95,0.90) -> transparent 70%; base #0D0E10.
+  Two tuning passes were needed: the first pass read green (32,60,54)
+  vs target (44,77,68) and warm (63,40,31) vs (74,43,30); alphas and
+  centres were corrected from the render samples, not from the eye.
+- PER-SECTION CHANGES:
+  * welcome: header M mark -> BrandDots + "Medley" (photo-9 form; the
+    M letterform is RETAINED on CN home and desktop chrome, which rest
+    on the old capture — a state difference, recorded here, not
+    averaged); ambient gradients + #0D0E10 base; title dot orange ->
+    glossy sapphire (16px kept); Google / Try / footnote / sizes /
+    gaps untouched (round-6 values stand).
+  * home (EN + CN): Auto pill 5-dot row -> BrandDots; light surface
+    flat -> wash gradient; card wrappers made flex-col with the panel
+    flex-1, so the panel fills the card (previously the panel content
+    was ~356px tall inside a 561px card, which would have cut the wash
+    off mid-card) — this also restores the phone structure (greeting
+    low, composer pinned at the bottom) inside the desktop card.
+  * chat: AiMeta dots glossy (Kimi / GPT / all models, bases
+    unchanged); Kyoto weather cards, Lisbon / Train / Savings /
+    Router threads verified against photo-9 structure (Router notice
+    card + "GPT-6.1 Sol . Switched" + "Thought for 4s" match the BR
+    screen; Kyoto "Searched 4 times, checked the weather, found 12
+    places" + Sat-white / Sun-dark cards match the BL screen).
+  * desktop-home: main home panel stretched + washed; desktop chrome
+    top bar (M mark + 5-dot Auto pill) deliberately untouched — it is
+    desktop chrome, not a mobile screen, and photo-9 evidences only
+    the mobile home pill.
+  * picker / pricing / credits / agent-team / drawer / chat-info /
+    suspended / language / composer: rescan = render-integrity pass on
+    the new section screenshots (no breakage from the ModelDot gloss
+    change; dots still render in picker rows, chat-info model line,
+    pricing 6-dot rows, drawer pinned dots). No token changes there:
+    their colours still rest on v1.3 / old-HD evidence, and photo-9
+    contains no new evidence for them. The 5-dot ModelDots row is
+    unchanged for chat-info / picker / pricing (old evidence); only
+    the home pill moves to the 3-dot cluster.
+- UNCLOSED (not silently carried, not claimed as 1:1):
+  U1 (carried, sharpened): dark-base state conflict. Photo-9 dark
+  surfaces read (13,14,16)/(12,13,17), exactly the HD5 export darkness
+  from v1.4 U1, vs CN HD (17,21,24). Welcome follows photo-9 locally;
+  global darkBg stays #111518. If a future capture proves the app
+  itself (not the export) went darker, darkBg should move in one step.
+  U2 (carried): welcome headline rotation sentences beyond "Let's
+  discover" and their per-sentence colours are unknown (only the
+  sapphire state is captured); rotation is documented, not animated.
+  U3 (carried from v1.4): no HD source for drawer recent colours,
+  drawer pinned dots, legend/by-model direct-centre samples, savings
+  big-number size, credits bar exact height sequence, activity dot
+  colour, agent-team / suspended / chat-info / picker row-level
+  colours — all still rest on the v1.3 audit / OV15 small collage.
+  U4 (new): brand-dot blue base #5B84A6 and green base #2FA08C are
+  blur-corrected estimates (small discs, heavy JPEG blur); the
+  highlight peaks are measured, the bases are not. U5 (new): the home
+  wash mid-panel reads up to ~9 levels cooler than the photo column
+  at the same fraction (gradient-stop interpolation vs the phone's
+  longer wash); accepted, since the wash shape and endpoints match.
+  U6 (new): CN home takes the EN-evidenced wash (same light surface
+  assumed); no CN home capture in photo-9 confirms it independently.
+
 ## v1.4 — 2026-10-30 (fix round; welcome full re-measure + full-set leak sweep)
 
 - Fix round, not a review round. No judge call was made in this round:

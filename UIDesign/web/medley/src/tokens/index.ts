@@ -26,7 +26,27 @@ export const tokens = {
     /** v1.3 accent split (Q12): one shared token painted four different
      * original colors, so each site now owns its token. Values are
      * measured, not copied from the shared token. */
-    welcomeDot: "#FF6521",
+    /** v1.5: welcome title cursor is SAPPHIRE in the photo-9 state
+     * (glowing dot core #B4D3EF measured at (526,612); edge #2E7CE6 is
+     * the hue-matched blur-corrected sapphire estimate). The v1.4
+     * #FF6521 orange dot is the OLD capture's state, demoted, not averaged. */
+    welcomeDot: "#2E7CE6",
+    welcomeCursorCore: "#B4D3EF",
+    /** v1.5: welcome panel base in the photo-9 state. Clean top-centre
+     * median (13,14,16); the v1.4 #111518 is the old capture's flat bg. */
+    welcomeBase: "#0D0E10",
+    /** v1.5: brand dot cluster (photo-9 welcome header + home Auto pill):
+     * three glossy balls on a rising diagonal, green low-left, steel-blue
+     * mid, magenta high-right. Highlights are measured disc-centre peaks
+     * (green (157,205,193), blue (175,196,213), pink (217,183,207));
+     * bases are blur-corrected estimates, flagged as such. */
+    brandDotGreen: { highlight: "#9DCDC1", base: "#2FA08C" },
+    brandDotBlue: { highlight: "#AFC4D5", base: "#5B84A6" },
+    brandDotPink: { highlight: "#D9B7CF", base: "#C65D7B" },
+    /** v1.5: home light surface wash (photo-9 TR: #F5F6F8 at top cooling
+     * to ~#D2E5E3 low on the screen). Light chat stays flat (photo-9 BR
+     * reads flat ~#F5F4F9), so this gradient is home-only. */
+    homeLightWash: ["#F5F6F8", "#EFF3F4", "#E1EBEC", "#D2E5E3", "#D9E7E7"],
     composerMicDark: "#D95E27",
     composerStop: "#DFA282",
     drawerRunningDot: "#FFFFFF",

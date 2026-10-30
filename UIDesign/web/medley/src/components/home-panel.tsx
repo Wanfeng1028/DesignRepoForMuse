@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { cn } from "../lib/utils";
 import { Icon } from "./icons";
-import { MedleyMark, ModelDots } from "./medley-mark";
+import { MedleyMark, BrandDots } from "./medley-mark";
 import { Composer } from "./composer";
 
 export type Suggestion = { icon: "news" | "pdf" | "image" | "cards" | "searchOrbit"; text: string; badge?: string };
@@ -56,13 +56,19 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
   const sub = dark ? "#9A9BA2" : "#6B6C72";
   const [autoOpen, setAutoOpen] = useState(false);
   return (
-    <div className={cn("flex flex-col", dark ? "bg-dark-bg text-dark-text" : "bg-light-bg text-light-text")}>
+    <div
+      className={cn("flex flex-col", dark ? "bg-dark-bg text-dark-text" : "text-light-text")}
+      style={dark ? undefined : { background: "linear-gradient(180deg, #F5F6F8 0%, #EFF3F4 40%, #E1EBEC 60%, #D2E5E3 80%, #D9E7E7 100%)" }}
+    >
       <div className="flex h-14 items-center justify-between px-4">
         <span className="inline-flex w-[72px]" style={{ color: text }}>{Icon.menu(text)}</span>
         <span className="flex flex-1 items-center justify-center">
           {variant === "en" ? (
             <span onClick={() => setAutoOpen((v) => !v)} className="inline-flex cursor-pointer items-center gap-1.5 rounded-chip bg-user-bubble-light px-3 py-[7px] text-[14px] font-semibold">
-              <ModelDots />
+              {/* v1.5: photo-9 Auto pill carries the 3-dot diagonal cluster,
+                  not the 5-dot horizontal row (ModelDots stays for
+                  chat-info / picker / pricing, which rest on older evidence). */}
+              <BrandDots />
               Auto
               <span className="morph-rotate inline-flex" data-open={autoOpen}>
                 {Icon.chevronDown(sub)}

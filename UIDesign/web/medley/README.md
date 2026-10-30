@@ -97,12 +97,17 @@ scripts/shot-fullpage.cjs              # full-page screenshot helper
 | language-panel | 20px title, 10px rows with check on the selected row, trailing footnote |
 | home-panel | EN (Auto pill, greeting, suggestions, plain-mic composer) and CN (segmented Chat/Agents pill, M mark, "Pro" badge, model label + black send) |
 | composer | 52px pill, plus / placeholder / model pill, circle / plain / stop / sendDark mic states |
-| welcome-panel | M mark + wordmark, 38px "Let's discover" + accent dot, Google CTA, "Try without an account" |
+| welcome-panel | Dot-cluster mark + wordmark, 41px "Let's discover" + sapphire glowing cursor dot, ambient glows (blue upper-right, warm lower-left, green lower-right) over #0D0E10, Google CTA, "Try without an account" |
 | savings-card | Sliders 16%/44%, years stepper, $58,164 / $36,000 / $22,164, computed compound curve vs $36,000 linear dashed line |
 
 The Medley M mark is a vector reconstruction of the marching-squares trace
 rule in DESIGN-TOKENS.md sec. 8 (two loops + diagonal swoosh cut + orange
 block at (30,47,2,5), viewBox "19 43 17 19"). No brand bitmap is copied.
+The welcome header in the photo-9 state instead carries the 3-dot diagonal
+cluster (green / steel-blue / magenta glossy balls, vector redrawn in
+BrandDots); the M mark remains on the CN home panel and desktop chrome,
+which rest on the older capture. Both states are recorded in CHANGELOG v1.5;
+they are not averaged.
 
 ## Dark / light note
 

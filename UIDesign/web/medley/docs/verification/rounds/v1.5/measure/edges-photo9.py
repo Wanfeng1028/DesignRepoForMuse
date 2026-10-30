@@ -1,0 +1,20 @@
+from PIL import Image
+im = Image.open('/home/hatch/workspace/user/media_library/image/photo-9.jpg').convert('RGB')
+px = im.load()
+def hx(c): return '#%02X%02X%02X' % c
+for p in [(10,10),(300,10),(585,50),(1000,10),(1160,50),(585,1400),(585,1360),(585,1420),(30,600),(700,600),(760,600),(770,600),(780,600)]:
+    print(p, hx(px[p[0],p[1]]))
+print('-- row y=400 x 640..800 step 5 --')
+print(' '.join(f'{x}:{hx(px[x,400])}' for x in range(640,805,5)))
+print('-- row y=1700 x 640..800 step 5 --')
+print(' '.join(f'{x}:{hx(px[x,1700])}' for x in range(640,805,5)))
+print('-- col x=300 y 1300..1480 step 10 --')
+print(' '.join(f'{y}:{hx(px[300,y])}' for y in range(1300,1490,10)))
+print('-- col x=900 y 1300..1480 step 10 --')
+print(' '.join(f'{y}:{hx(px[900,y])}' for y in range(1300,1490,10)))
+print('-- col x=200 y 60..140 step 5 --')
+print(' '.join(f'{y}:{hx(px[200,y])}' for y in range(60,145,5)))
+print('-- col x=1000 y 60..140 step 5 --')
+print(' '.join(f'{y}:{hx(px[1000,y])}' for y in range(60,145,5)))
+print('-- row y=200 x 60..140 step 5 --')
+print(' '.join(f'{x}:{hx(px[x,200])}' for x in range(60,145,5)))

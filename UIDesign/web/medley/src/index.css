@@ -18,7 +18,10 @@
   --color-light-dim: #9a9ba2;
   --color-accent: #e2a181;
   /* v1.3 accent split (Q12) — see src/tokens/index.ts. */
-  --color-welcome-dot: #ff6521;
+  /* v1.5: welcome cursor is sapphire in the photo-9 state (was #ff6521 orange in the old capture). */
+  --color-welcome-dot: #2e7ce6;
+  --color-welcome-cursor-core: #b4d3ef;
+  --color-welcome-base: #0d0e10;
   --color-composer-mic-dark: #d95e27;
   --color-composer-stop: #dfa282;
   --color-drawer-running-dot: #ffffff;
