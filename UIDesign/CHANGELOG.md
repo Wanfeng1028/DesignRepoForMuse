@@ -200,3 +200,45 @@ shadcn 式源码进仓；禁 Ant Design / MUI / Next.js。
 - app/medley：docs/verification/rounds/round4/、docs/verification/rounds/v1.4/（并排图 + 终判）
 - 版本状态：web/airbuild v1.1（2 PASS + 1 争议 FAIL）、app/airbuild v1.5 pending、web/medley v1.2（非 clean）、app/medley v1.4（残留 2 contested）；无一套 clean。
 - 下一轮开工前需拍板（选择题，见最终报告）：web/airbuild preview FAIL 是否按误判处理/是否重跑；app/airbuild v1.6 五项复核口径与 chat/draft/briefing 落地项；web/medley 重切重验与 composer/header/圆点/价格符号/信任规则/修复优先级；app/medley contested 交付与双行输入条/积分前缀/顶栏对齐/圆点色；下轮主裁选型（nemotron 校准口径 vs claude 为主裁 vs 等免费层恢复）。
+
+## Round 5 — 2026-10-30（修复轮，审查清单落地）
+
+- 依据：docs/verification/comprehensive-audit-20261030.md（总表 164 项）+ 四套分表。
+  上一轮“只审不改”已被用户 2026-10-30 12:30 亲令否决；本轮交付必须是修好的
+  版本 + 新截图 + 验收数。P0 由执行方按原图实测证据自行定夺（见各套
+  CHANGELOG），不再列问题等用户批、不中途汇报。
+- 验收口径（用户 2026-10-30 11:27 + 12:42 亲定，取代旧“裁判干净”标准）：
+  字体大小/粗细、按钮纹理、色系、元素大小比例/位置，及其他界面上可见的一切，
+  逐项实测对比；一项不达标不算 clean。验收只认实测数据（原图值 vs 改后值），
+  裁判 verdict 只当第二意见。本轮四套零裁判调用，全部为 PIL/DOM 实测。
+- web/airbuild v1.2：B10 作曲器 blur 删、B11 hover 落地、S16 手机框阴影
+  0.14→0.24、P04 预览折叠图标中心 680→675；P2 17 项闭合 15 项；Lucide 1.63.0
+  接包（19 在用图标全换真件、线宽 2.0、10 未用导出全删）；morphing 两档落地；
+  清单外按 REA 表 A 全条扫查又落一批（tab/胶囊 hover、controlShadow 表 A 值、
+  灵动岛居中 941→948 等）。截图 rounds/v1.2（25 文件）。
+- app/airbuild v1.6：S1 封面比 1.65→1.00、F1 正文 +31%→+4.6%、F2 作者名
+  +18%→+4.6%、S2 发送钮 50px→35px、S3 首卡圆角 24px→15px、P2 裁切全文可见、
+  玻璃 .ab-glass 落地、头像按成员分形重绘、封面/卡片矢量替代（字母块清零）、
+  lucide-react 1.63.0 接包 12 图标全走 Lucide、morphing 三档落地。截图
+  rounds/v1.6（13 文件，含 Q8 去边框 bare 版）。
+- web/medley v1.3：58 项差距 + 全屏扫全部处理。Q12 中文源橙红 #D95E27、
+  accent 拆 5 个独立 token；Q13/Q19 前缀 ~ 与 Thinking 档位补齐；T1–T15 文案
+  数值全改；C 系颜色全批；S1 六处 composer、S2/S3/S4 导航 chrome、S8 S/R/K、
+  B1/I1–I3/M-stop、F 系字号（22/37/19/41/11px）落地并复量；清单外全屏扫又修
+  一批；Lucide 1.63.0 接包逐字复核、morphing 两档接线。截图 rounds/v1.3
+  （36 文件，全页 + 6 分区 + 测量证据）。
+- app/medley v1.5：全部 G 项 + T1–T16 + 图标迁移。pricing 弧起点 77px→+4.5px、
+  点距 19.8→25.0px、抬升偏差 ≤0.4px；停止钮 en 35→41px/方块 11→9px、
+  cn 白圆 35→29px/方块 11→9px；lisbon-cn 左钮 36→46px、双 pill（100×27 /
+  56px）新增、AiMeta 去圆点（en 保留）；双行输入条 88px（原图 87–91）；
+  圆点淡 pastel 化 + token 拆分；前缀全改 ~；Fable 角标同行同基线；18 屏
+  bare 验证图全量重截，未改动屏逐像素确认（suspended 字节一致）。
+- 未闭合（带实测原因，详见各套 CHANGELOG；均未编数）：JPEG 无法分离定界类
+  （web/airbuild U1–U6、app/airbuild T01–T17 部分、app/medley T1/T3/T6/T8–T12/
+  T14/T15、web/medley P2 部分）；VM 无 SF 字体/无 Apple 设备（F05）；
+  VM 字体偏宽类残差（折行、首屏外）；U7 B10 冲突：任务令按 REA 表 A 删了
+  作曲器 blur，但基础 CSS .follow-up 原文确有 blur(16px)——维持删除，
+  冲突原样记档，待更硬证据再定（平底上视觉不可分辨）。
+- 本轮提交：web/airbuild v1.2、app/airbuild v1.6、web/medley v1.3、
+  app/medley v1.5 各一 commit + 本总账一 commit；构建四套全部由协调方
+  独立重跑通过（tsc + vite）。
