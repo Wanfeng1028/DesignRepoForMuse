@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The top-left header control differs: LEFT displays a hamburger menu icon (three horizontal lines) at about (27,72), while RIGHT displays a circular back-arrow button at about (431,64).

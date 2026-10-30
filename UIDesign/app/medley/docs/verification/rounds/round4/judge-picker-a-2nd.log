@@ -1,0 +1,3 @@
+ATTEMPT model=nvidia/nemotron-3.5-super-vl:free http=429 detail=empty-content
+MODEL=claude-sonnet-4-6
+USAGE prompt=37759 completion=34

@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The center project mark is a plain letter block instead of a small town illustration.

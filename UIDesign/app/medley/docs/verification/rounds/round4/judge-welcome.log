@@ -1,0 +1,4 @@
+ATTEMPT model=nvidia/nemotron-3.5-super-vl:free http=200 detail=empty-content
+MODEL=claude-sonnet-4-6
+USAGE prompt=24016 completion=68
+NOTE attempt1: nemotron http200 empty-content; claude http200 but returned preamble-only text with no VERDICT line (discarded, not a verdict). Runner acceptance was too loose (any non-empty content); fixing to require a VERDICT line.

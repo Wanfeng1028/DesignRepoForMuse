@@ -300,7 +300,7 @@ export default function App() {
 
       <Section id="suspended" title="Suspended panel (light)">
         <div className="max-w-[560px] overflow-hidden rounded-card border border-light-divider">
-          <SuspendedPanel title="Your account is suspended" body="We suspended this account for breaking the usage policy: repeated requests for prohibited content." suspendedUntil="Suspended until Nov 2, 2026." subscriptionNote="Your Pro subscription is still active in Google Play. You can cancel it there." manageLabel="Manage subscription" stillLabel="You can still:" stillRows={d.suspendedRows} primaryLabel="Contact support" secondaryLabel="Sign out" />
+          <SuspendedPanel title="Your account is suspended" body="We suspended this account for breaking the usage policy: repeated requests for prohibited content." suspendedUntil="Suspended until Nov 2, 2026." subscriptionNote="Your Pro subscription is still active in Google Play. You can cancel it there." manageLabel="Manage subscription" stillLabel="You can still:" stillRows={d.suspendedRows} primaryLabel="Appeal" secondaryLabel="Contact support" />
         </div>
       </Section>
 

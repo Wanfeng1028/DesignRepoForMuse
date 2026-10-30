@@ -1,0 +1,2 @@
+MODEL=nvidia/nemotron-3.5-super-vl:free
+USAGE prompt=963 completion=3048

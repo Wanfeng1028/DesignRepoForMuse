@@ -1,0 +1,1 @@
+VERDICT: PASS - All checklist items match exactly, including the bottom buttons where both the original and render show the primary black filled button labeled "Appeal" and the secondary outlined button labeled "Contact support".

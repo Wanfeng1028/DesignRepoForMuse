@@ -1,0 +1,1 @@
+VERDICT: FAIL - State 1 right-side button icon is a mic in the render but a stop button in the original.

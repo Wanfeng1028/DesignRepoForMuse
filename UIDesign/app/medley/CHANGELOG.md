@@ -55,3 +55,23 @@
 - 像素复验：新渲染白 pill 行 643-693，高 51px（原图约 51-53px 当量）；脚注左缘 22px（原图约 27px 当量，旧 42px）。其余 17 屏重截图与 v1.2 字节一致（仅 welcome 变了），证实改动无扩散。
 - 构建：pnpm build 通过（126 modules）；18 张重截图存 docs/verification/rounds/v1.3/（judge 工作文件在同目录 judge/ 子目录）。
 - 本轮 verdict：未干净（裁判口径）——welcome 修复待额度恢复后复验拿零差异 verdict；pricing 从未在本轮送裁判；home-cn / kyoto / lisbon / Fable 抽查待办不变。残差沿用 v1.2。
+
+## v1.4 — 2026-10-30 — 第 4 轮裁判验收（6 项 verdict 驱动修复，2 屏 contested）
+
+- 裁判链（本轮改造自 rounds/round3/judge-runner.py，见 rounds/round4/judge-runner-round4.py）：主裁判 nvidia/nemotron-3.5-super-vl:free（openrouter 渠道 12，免费、cost 0）；备选 claude-sonnet-4-6（vyceai 渠道 17）；第三备选 mimo-v2.6-flash（vectide，仅 lisbon-cn 一次成功兜底）。禁用 deepseek-v4-flash-vision / qiniu / kimi-k3 / 一切 Oxion 模型（均未用）。传输 curl -K - stdin 传密钥（密钥只放内存、不进 argv、不落文件）；提示词 verdict-only（首行 VERDICT: PASS/FAIL + 一句话理由）。
+- 裁判链教训（本轮实测）：① max_tokens 500 会被 nemotron/mimo 的 reasoning 吃光致 content 为空（nemotron 首轮 2 次空 content、mimo 1 次 500 reasoning token 耗尽），改 4000 后才出 verdict；runner 验收标准亦补丁为“无 VERDICT 行即算失败调用”（首轮 claude 曾回一段无 verdict 的分析前言，已废弃）。② nemotron 后段连续 9 次调用回 429（免费层限流，本轮后段每次均靠备选兜底）；另有 claude 1 次 524（mimo 兜底成功）。停手口径说明：控制块“连续 429 三次”按“连续 3 次调用拿不到 verdict”执行——本轮每次主裁 429 后备选均拿到 verdict，故未触发停手；若按主裁单链计则已超 3 次，协调人可覆议此口径。③ claude 备选幻觉率高：本轮 11 次 FAIL 理由经核对无据或错位（见下），均未驱动改动；nemotron 出 verdict 时理由基本可验（welcome 按钮底色、pricing 弧线、lisbon 顶栏箭头/角标/停止钮、lisbon-cn 圆钮均属实）。
+- 修复（全部 verdict 驱动、像素复核；只改本套）：
+  - W3 按钮底色：welcome Google 按钮与 pricing CTA 原图底色均为 #EDEEF2（采样 (237,238,242)），渲染原为纯白；index.css 新增 token --color-btn-light: #edeef2，Button white variant 改用它（white-btn token 未动，tabs 仍用它）；两屏像素复验均为 (237,238,242)，与原图一致。
+  - P1 定价顶部圆点：原图为 6 点 pastel 弧线（#dcb1c2/#abceee/#dfdda7/#afddc9/#cdb9e8/#eab6a3，间距 20px、逐点抬升 8/7/7/6/5px），渲染原为 5 点横排；Model.tsx 新增 ModelDotsArc，仅定价顶行用（ml-[72px] 对齐原图 24.9% 起始位置），Pro 卡内圆点行原图确为横排、未动；复验弧线 6 点落位 ±0.5px。
+  - L1 lisbon-en 顶栏：原图模型名后有下拉箭头，渲染缺失；补 Icon.chevronDown('#9a9ba2')。
+  - L2 lisbon-en Day 1 引用角标：原图第 1 条末尾角标 1、第 3 条末尾角标 2，渲染缺失；bullets 改为带可选 cite 的结构，第 2 条无角标不变。
+  - L3 lisbon-en 输入按钮：原图为桃色圆底 + 黑色方块（停止态），渲染为桃色圆底 + 麦克风；InputBar 新增 mic="stop-accent"（accent 圆底 + 黑方块），仅 lisbon-en 用。注意：原图 lisbon-cn 输入按钮为白圆底 + 黑方块（即既有 stop 变体），故未动 stop 变体。
+  - L4 lisbon-cn 顶栏左钮：原图汉堡在深色圆钮内，渲染为裸汉堡；左钮包 h-9 w-9 rounded-full bg-dark-input。
+- 构建：pnpm build 通过；18 屏重截图与 v1.3 比对，仅上述 4 屏变化（welcome/pricing/lisbon-en/lisbon-cn），其余 14 屏字节一致（含 kyoto、picker-a、home-cn 均未动代码）。
+- Verdict（本轮，verdict-only 提示词）：
+  - PASS：welcome（nemotron 主裁，按钮底色修复后复验）、pricing（定价弧线修复后复验）、home-cn（第 2 判；第 1 判幻觉已废弃）、lisbon-cn（左钮圆圈修复后复验）、kyoto（第 2 判；第 1 判幻觉已废弃）。
+  - CONTESTED（无干净 PASS、不落地、不改代码）：lisbon-en（chevron/角标/停止钮三项实改均被后续判决越过，证实已修；但随后连续 3 判无据：个人资料页幻觉、AiMeta 圆点“缺失”误读、空白图误判）、picker-a（连续 3 判无据：占位图/个人资料头幻觉、白底误判、headline 字母 i 上圆点无从对应；Fable Pro+ 角标目视确认在位，与原图一致）。
+- 废弃的无据 FAIL（均有据驳回，不驱动改动）：pricing 首判 Continue 按钮（两图均无此按钮）、pricing 第 2 判 Loading 插画与登录表单（两图均无）、home-cn 首判英文句 solutions/platform（中文屏两图均无此句）、lisbon-en 第 4 判个人资料页（Alex Johnson / Save Changes，两图均无）、lisbon-en 第 6 判空白图（左图为完整渲染）、lisbon-cn 首判 Continue to Payment 绿钮（两图均无）、picker-a 第 1/2 判（占位图/白底，两图均为深色模型选择屏）、kyoto 首判 Start/Get Started 按钮（两图均无）。
+- 残差（无 verdict 引用，未改代码，列为问题）：① home-cn 原图底部输入条为双行高条（占位行+控制行），渲染为单行 52px InputBar；② home-cn 分段控件宽度与顶部图标圆圈与原图有目视差异；③ picker-a 原图积分数字前缀为 ~（~5/~11/~31/~80/~120/~400），渲染为 -（-5/-11/…）；④ lisbon-cn 原图顶栏中/右区亦为 pill 容器、底部输入条亦为双行（本轮只修了 verdict 引用的左钮圆圈）；⑤ AiMeta 圆点色：原图呈淡色辉光感，渲染为饱和模型色（v1.0 备案“实测近似”延续，lisbon-en 第 5 判“缺失”误读即源于此）；⑥ 旧残差沿用 v1.2/v1.3（VM 字体度量致折叠/折行类）。
+- 费用：claude 备选 18 次调用、约 72.5 万 prompt tokens（含 1 次无 verdict 畸形回复）；nemotron 6 次出 verdict（cost 0）+ 多次空 content/429；mimo 2 次（1 次 reasoning 耗尽无 verdict、1 次成功兜底）。密钥全程只放内存，未打印、未落文件。
+- 证据：rounds/round4/（全量：并排图、历次 verdict、日志、裁切、runner 与一次性探针脚本）与 rounds/v1.4/（18 张终版截图 + judge/ 终版并排图与终判）。未 commit、未 push、未 git add，工作区留待协调人统一提交。

@@ -1,0 +1,1 @@
+VERDICT: FAIL - Model chip dot colors differ (GLM-5: pink/red original vs blue render; DeepSeek V4 Pro: blue original vs teal render), Claude Sonnet 5.5 reply timestamp differs (10:31 original vs 10:21 render), DeepSeek V4 Pro reply row differs (10:19, 41 credits, 0.9s original vs 10:17, 41 credits, 3.5s render)

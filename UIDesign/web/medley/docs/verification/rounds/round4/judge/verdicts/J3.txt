@@ -1,0 +1,1 @@
+VERDICT: FAIL - Train AI meta searched line differs (original "read 4 pages" vs render "read 6 pages") and Train source badges differ (original "S R K" letter badges vs render blank badges).

@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The render is missing the page-curl effect on the bottom-right corner of the first briefing card.

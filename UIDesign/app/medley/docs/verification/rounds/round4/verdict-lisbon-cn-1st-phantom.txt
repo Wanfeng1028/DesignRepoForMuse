@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The "Continue to Payment" button on the right has a solid green background (#0DD566), while the left button is transparent/outline with no fill.

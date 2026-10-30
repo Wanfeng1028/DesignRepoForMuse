@@ -1,0 +1,1 @@
+VERDICT: FAIL - The render panels omit the top bar (hamburger, model selection pill, clock icon) found in the originals, and the greeting is placed at the top edge in the render versus lower down in the originals.

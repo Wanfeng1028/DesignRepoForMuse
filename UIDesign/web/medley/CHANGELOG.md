@@ -85,3 +85,55 @@
   Pending on resume: rerun the queue above from J1 with the materials
   already in `docs/verification/rounds/v1.1/judge/` (no re-preparation
   needed); candidate D-01 is still UNVERIFIED and still not fixed.
+
+## v1.2 — 2026-10-30 (round4 judge queue complete; D-01 fixed + re-verified)
+
+- Round4 judge queue ran to completion (14 calls: J1–J12 with J10/J11
+  split a/b) on the v1.1 code, all via primary judge
+  `nvidia/nemotron-3.5-super-vl:free` (verdict-only prompt, max-tokens
+  8000 — the judge needs ~3–6k tokens of reasoning before emitting
+  content; 400/2000 caps return empty content). No 429/401/403 occurred;
+  no fallback judge was needed for the queue. Pipeline: new
+  `scripts/judge-round4.py` (curl transport, Authorization header only
+  via a pipe-fed `curl -K /dev/fd/N`, token never in argv or on disk)
+  + `scripts/run-judge-round4.sh` + `scripts/run-round4-queue.sh`.
+  Queue evidence: `docs/verification/rounds/round4/` (fresh fullpage
+  pixel-identical, max diff 0, to the v1.1 fullpage, so the v1.1
+  per-section render crops depict the pre-fix code exactly; verdicts in
+  `judge/verdicts/J*.txt`, queue log in `judge/queue-round4.log`).
+- Queue verdicts: 14/14 FAIL (none PASS). Full table + triage in
+  `docs/verification/rounds/round4/SUMMARY.md`. Caution: several FAIL
+  reasons are REFUTED by code/pixel evidence (J2 top bar, J11b header
+  + first row + check mark are all rendered — the v1.1 home/language
+  crops start too low and cut the panel tops; J1 claude "sharp corners"
+  is false, render buttons are pills; J4/J6 "missing" header/items
+  exist in code) and several are crop/methodology questions (chat
+  threads have no composer by gallery design; credits/agent panels
+  lack phone-chrome headers). Candidate real diffs (render side
+  code-confirmed, original side judge-read) are listed as residuals in
+  SUMMARY.md for the coordinator; nothing beyond D-01 was changed on
+  the basis of these verdicts.
+- **D-01 FIXED (the only code change this round):** J11a verdict
+  confirmed the v1.1 candidate — original suspended phone bottom
+  buttons are "Appeal" (black filled) / "Contact support" (outlined),
+  render was "Contact support" / "Sign out" (agent also verified this
+  by eye on `ov-suspended.jpg`). Fix = demo props only in
+  `src/App.tsx` (component is props-driven): primaryLabel
+  "Contact support" -> "Appeal", secondaryLabel "Sign out" ->
+  "Contact support". "Sign out" stays as a "You can still:" row, as in
+  the original. Build passes (`pnpm build`: tsc -b && vite build);
+  fresh fullpage differs from pre-fix only in the button-label pixels
+  (2310 px, rows 11258–11272, inside the suspended section).
+  Re-judge J11a on the fresh suspended crop: **PASS** (explicitly
+  confirms both button labels match). Evidence in
+  `docs/verification/rounds/v1.2/` (fixed fullpage, fixed suspended
+  crop, J11a verdicts).
+- J1 conflict note: nemotron gave PASS in calibration, then FAIL
+  (button placement + Google fill) in the queue run on identical
+  inputs, while claude gave FAIL (corners/dot/footnote). Pixel
+  measurement supports a real dot difference (original ~23px vivid
+  orange ~(244,104,41) vs token accent #E2A181 peach, 12px). J1 is
+  reported as CONFLICT, not clean; the dot/token question is a
+  coordinator decision (accent token is shared) and was NOT changed.
+- Version bump v1.1 -> v1.2 is for the D-01 fix only. All other round4
+  FAIL items remain open residuals; v1.2 is NOT "verified clean".

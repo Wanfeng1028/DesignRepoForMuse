@@ -1,0 +1,19 @@
+2026-10-30 02:03:56 ROUND4 QUEUE START
+2026-10-30 02:04:18 J1 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:04:18 ROUND4 QUEUE DONE
+2026-10-30 02:04:40 ROUND4 QUEUE START (rerun, stdin-steal fix)
+2026-10-30 02:05:15 J1 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:05:35 J2 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:06:00 J3 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:06:39 J4 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:07:12 J5 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:07:51 J6 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:08:28 J7 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:09:05 J8 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:09:27 J9 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:09:52 J10a VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:10:13 J10b VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:10:28 J11a VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:10:49 J11b VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:11:04 J12 VERDICT via nvidia/nemotron-3.5-super-vl:free
+2026-10-30 02:11:04 ROUND4 QUEUE DONE

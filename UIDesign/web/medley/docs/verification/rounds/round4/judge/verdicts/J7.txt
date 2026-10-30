@@ -1,0 +1,1 @@
+VERDICT: FAIL - Pro plan first feature line differs (original "Claude Sonnet and Opus, GPT-6.1 Sol, Kimi K3" vs render "Claude Sonnet and Opus, GPT-5.1, GLM-5, Kimi K3") and footnote differs (original "No ads on any plan. No weekly plans." vs render "No ads on any plan, no weekly plans.")

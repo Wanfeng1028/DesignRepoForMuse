@@ -183,3 +183,20 @@ shadcn 式源码进仓；禁 Ant Design / MUI / Next.js。
   （何时恢复）。
 - 版本状态：web/airbuild v1.1 pending、app/airbuild v1.5 pending、web/medley
   v1.1 pending、app/medley v1.3 pending；无一套 clean。
+
+## 第 4 轮（2026-10-30，裁判：nvidia/nemotron-3.5-super-vl:free，经新裁判密钥；备选 claude-sonnet-4-6、mimo-v2.6-flash）
+- 裁判链：主裁 nemotron（openrouter 渠道 12，免费上游）。校准发现：低 max_tokens 下 reasoning 耗尽、content 为空算失败调用——400/500/2000 均失败过；web/medley 8000 上限才出 verdict，app/medley 4000 上限出 verdict，web/airbuild 2000 仍全 reasoning；主裁对提示词/图片形态敏感，表现不稳定，详单提示词在主裁上不可用，只能用两行 verdict-only 提示词，拿不到精确像素目标值。
+- 备选实测：claude-sonnet-4-6（vyceai 渠道 17）verdict 干净、reasoning 0，但贵（web/airbuild 3 图 prompt 合计 300,059；app/medley 18 次约 72.5 万 prompt tokens）且幻觉率高（app/medley 11 次 FAIL 理由经核对无据或错位，已废弃留证，未驱动改动）；mimo-v2.6-flash 兜底 1 次成功、1 次 reasoning 耗尽。
+- 禁用与路由：Novai 路由未动、只是不用；deepseek-v4-flash-vision、conatus-free、kimi-k3、Oxion 模型本轮全部禁用；旧 conatus/deepseek 管线一律未用。
+- 停手口径裁决：app/medley 主裁后段 9 连 429，工人按“连续 3 次调用拿不到 verdict”执行未停手（备选链持续交付）；协调人裁决：简报允许 429 时切备选，停手条件按“整条裁判链连续 3 次拿不到 verdict”执行，本轮未触发；若上级不同意此口径，备选链交付的 verdict 可重跑。
+- web/airbuild：v1.1 保持，2 PASS（main、sidebar-collapsed，claude 出具）+ 1 争议 FAIL（preview-collapsed：裁判称 bottom module bar avatar blob 实色块、布局不符；工人亲眼核对截图中无此元素，且理由命中提示词明文排除项，判误判嫌疑，未改代码、未重跑刷 verdict）。无代码改动。
+- app/airbuild：v1.5 保持，2 PASS（home、detail-v2 修正版，bezel-ignore 提示词）+ 3 FAIL（chat 项目标识字母块非小镇图——上轮 8 项中唯一复核确认项；draft 封面宽高比；briefing 首卡缺页角折边）。v1.6 候选一项未落地（其余 5 项无新 verdict）。无代码改动。
+- web/medley：v1.1 → v1.2（仅 D-01：suspended 按钮文案 Contact support→Appeal、Sign out→Contact support，重验 PASS；修后全页图与修前仅差 2310 像素，布局零变化）。其余 13 项 FAIL：多项已证伪（J2/J11b 裁切错位漏顶栏/首行；J4/J6 missing 项代码里全有）；J1 CONFLICT（同输入 nemotron 校准 PASS、claude FAIL、nemotron 队列 FAIL；像素实测支持一处真差异：welcome 圆点原图约 23px 鲜艳橙 ~(244,104,41) vs render token #E2A181 蜜桃色 12px，未动）。v1.2 非 clean。
+- app/medley：v1.3 → v1.4（6 项像素复核证实的修复：按钮底色 token #edeef2、定价弧线 ModelDotsArc、lisbon-en 顶栏箭头/角标/输入钮 stop-accent、lisbon-cn 左钮圆圈；18 屏重截图仅 4 屏变化，其余 14 屏字节一致）。5 PASS（welcome、pricing、home-cn、lisbon-cn、kyoto）+ 2 contested（lisbon-en、picker-a：末判皆无据，修复已被后续判决越过证实）。
+- 本轮提交文件（仅新增验证产物 + 两套 CHANGELOG + 本总账条目；代码改动仅 web/medley App.tsx、app/medley 7 源码文件）：
+- web/airbuild：docs/verification/judge-round4.py、docs/verification/rounds/round4/（3 截图 + 3 裁判 JSON + NOTES.md）
+- app/airbuild：docs/verification/judge/judge-vision-round4.py、judge/round4-work/、docs/verification/rounds/round4/（合成图、渲染图、verdict、提示词、ROUND4-NOTES.md）
+- web/medley：scripts/judge-round4.py、run-judge-round4.sh、run-round4-queue.sh、docs/verification/rounds/round4/（SUMMARY.md + 全页图、裁切、verdicts、队列日志）、docs/verification/rounds/v1.2/
+- app/medley：docs/verification/rounds/round4/、docs/verification/rounds/v1.4/（并排图 + 终判）
+- 版本状态：web/airbuild v1.1（2 PASS + 1 争议 FAIL）、app/airbuild v1.5 pending、web/medley v1.2（非 clean）、app/medley v1.4（残留 2 contested）；无一套 clean。
+- 下一轮开工前需拍板（选择题，见最终报告）：web/airbuild preview FAIL 是否按误判处理/是否重跑；app/airbuild v1.6 五项复核口径与 chat/draft/briefing 落地项；web/medley 重切重验与 composer/header/圆点/价格符号/信任规则/修复优先级；app/medley contested 交付与双行输入条/积分前缀/顶栏对齐/圆点色；下轮主裁选型（nemotron 校准口径 vs claude 为主裁 vs 等免费层恢复）。

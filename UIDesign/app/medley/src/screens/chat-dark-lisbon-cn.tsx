@@ -37,7 +37,11 @@ export default function ChatDarkLisbonCn() {
       <div className="flex min-h-0 flex-1 flex-col">
         <TopBar
           dark
-          left={Icon.menu('#f5f5f7')}
+          left={
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-dark-input">
+              {Icon.menu('#f5f5f7')}
+            </span>
+          }
           center={
             <div className="flex flex-col items-center leading-[1.3]">
               <span className="text-[16px] font-bold text-dark-text">里斯本穷游三天</span>

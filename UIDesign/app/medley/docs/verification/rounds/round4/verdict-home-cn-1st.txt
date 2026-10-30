@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The body copy text differs: the right image reads "Experience the future of work with our innovative solutions" while the left shows "Experience the future of work with our innovative platform".

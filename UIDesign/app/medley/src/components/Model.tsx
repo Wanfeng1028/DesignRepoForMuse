@@ -11,6 +11,28 @@ export function ModelDots({ size = 6 }: { size?: number }) {
   )
 }
 
+/**
+ * Pricing top dots arc, measured from the HD pricing crop (side-image coords):
+ * 6 pastel dots, 10px, pitch 20px, rising to the right with drops
+ * 8/7/7/6/5px (gentle arc, flattening right). Used ONLY by the pricing
+ * top row; the Pro-card dots row stays a flat ModelDots (orig shows it flat).
+ */
+export function ModelDotsArc({ size = 10 }: { size?: number }) {
+  const dots = ['#dcb1c2', '#abceee', '#dfdda7', '#afddc9', '#cdb9e8', '#eab6a3']
+  const rise = [5, 13, 20, 27, 33, 38]
+  return (
+    <span className="inline-flex items-start gap-[10px]">
+      {dots.map((d, i) => (
+        <span
+          key={i}
+          className="inline-block shrink-0 rounded-full"
+          style={{ width: size, height: size, background: d, transform: `translateY(${-rise[i]}px)` }}
+        />
+      ))}
+    </span>
+  )
+}
+
 export function ModelDot({ model, size = 8 }: { model: string; size?: number }) {
   return (
     <span

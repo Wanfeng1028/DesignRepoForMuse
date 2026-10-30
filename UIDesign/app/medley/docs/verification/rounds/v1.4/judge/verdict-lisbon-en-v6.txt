@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The left screenshot shows a blank or broken image (likely a failed load), while the right screenshot shows a recognizable design reference with visible content.

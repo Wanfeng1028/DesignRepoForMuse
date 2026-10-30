@@ -1,0 +1,1 @@
+VERDICT: FAIL - Meta line reads "Auto review" vs original "Auto-review"; step line reads "Step 3 of 8" vs original "Step 3 of 6"; third agent card reads "Done: 2 plans found" vs original "Boar: 2 plans found" with a dot status icon vs original checkmark; render lacks the bottom "Add an instruction" composer with send button present in the original.

@@ -1,0 +1,6 @@
+2026-10-30 02:00:25 J1 model=nvidia/nemotron-3.5-super-vl:free exit=4; [model=nvidia/nemotron-3.5-super-vl:free usage prompt=2321 completion=400] EMPTY_CONTENT: content empty (reasoning field ignored) 
+2026-10-30 02:01:27 J1 model=claude-sonnet-4-6 exit=0 verdict recorded; [model=claude-sonnet-4-6 usage prompt=39302 completion=63]
+2026-10-30 02:03 calibration nemotron max-tokens 2000: EMPTY_CONTENT (completion=2000, cap hit)
+2026-10-30 02:05 calibration nemotron max-tokens 8000: VERDICT PASS (completion=6254) -- see J1.calib2 content in J1.conflict-note.txt
+2026-10-30 02:04:18 J1 model=nvidia/nemotron-3.5-super-vl:free exit=0 verdict recorded; [model=nvidia/nemotron-3.5-super-vl:free usage prompt=2321 completion=2990]
+2026-10-30 02:05:15 J1 model=nvidia/nemotron-3.5-super-vl:free exit=0 verdict recorded; [model=nvidia/nemotron-3.5-super-vl:free usage prompt=2321 completion=3458]

@@ -1,0 +1,1 @@
+VERDICT: FAIL - Vertical placement differs (original buttons bottom-anchored with large empty space above vs render buttons flowing immediately after subtitle) and "Continue with Google" button fill differs (original light gray vs render white)

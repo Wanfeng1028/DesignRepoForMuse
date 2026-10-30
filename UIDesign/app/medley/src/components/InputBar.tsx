@@ -1,7 +1,7 @@
 import { cn } from '../lib/utils'
 import { Icon } from './icons'
 
-export type MicVariant = 'circle' | 'plain' | 'stop'
+export type MicVariant = 'circle' | 'plain' | 'stop' | 'stop-accent'
 
 export function InputBar({
   dark,
@@ -45,6 +45,10 @@ export function InputBar({
           <span className="flex shrink-0 pr-1.5">{Icon.mic(sub)}</span>
         ) : mic === 'stop' ? (
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white">
+            <span className="h-3 w-3 rounded-[2px] bg-[#111214]" />
+          </span>
+        ) : mic === 'stop-accent' ? (
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent">
             <span className="h-3 w-3 rounded-[2px] bg-[#111214]" />
           </span>
         ) : (

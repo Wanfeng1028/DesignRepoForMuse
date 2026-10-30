@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The cover block placeholder in the render is significantly taller and narrower than the original image, altering the height-to-width ratio.

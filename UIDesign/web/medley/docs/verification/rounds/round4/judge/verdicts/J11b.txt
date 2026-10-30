@@ -1,0 +1,1 @@
+VERDICT: FAIL - Header missing (original: back arrow + "App language", render: not shown), first row missing (original: "System default" / "English (United States)" with check mark, render: not shown), check mark missing (original: on "System default", render: none).

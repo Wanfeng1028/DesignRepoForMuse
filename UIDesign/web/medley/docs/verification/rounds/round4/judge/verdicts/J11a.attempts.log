@@ -1,0 +1,2 @@
+2026-10-30 02:10:28 J11a model=nvidia/nemotron-3.5-super-vl:free exit=0 verdict recorded; [model=nvidia/nemotron-3.5-super-vl:free usage prompt=2923 completion=1407]
+2026-10-30 02:14:54 J11a REJUDGE (post D-01 fix) exit=0 via nemotron

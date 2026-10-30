@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The accent dot above the "i" in the headline is positioned higher in the right image (design reference) compared to the left (rendered implementation), where it sits lower on the letter stem.

@@ -1,0 +1,2 @@
+VERDICT: FAIL
+The "Start" button label appears as "Start" on the left but "Get Started" on the right.

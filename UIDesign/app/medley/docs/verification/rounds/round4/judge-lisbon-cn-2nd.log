@@ -1,0 +1,4 @@
+ATTEMPT model=nvidia/nemotron-3.5-super-vl:free http=429 detail=empty-content
+ATTEMPT model=claude-sonnet-4-6 http=524 detail=empty-content
+MODEL=mimo-v2.6-flash
+USAGE prompt=860 completion=609

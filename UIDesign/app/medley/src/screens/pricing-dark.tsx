@@ -1,6 +1,6 @@
 import { Phone } from '../components/Phone'
 import { Icon } from '../components/icons'
-import { ModelDots } from '../components/Model'
+import { ModelDots, ModelDotsArc } from '../components/Model'
 import { BillingToggle, PlanCard, PlanFeature } from '../components/Pricing'
 import { Button } from '../components/ui/button'
 
@@ -11,7 +11,9 @@ export default function PricingDark() {
     <Phone theme="dark">
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-0 pt-1">
         <div className="my-1 mb-[14px]">{Icon.close('#f5f5f7')}</div>
-        <ModelDots size={10} />
+        <div className="ml-[72px]">
+          <ModelDotsArc size={10} />
+        </div>
         <h1 className="my-2 mt-2 text-greeting font-bold leading-[1.25]">Every top AI in one app</h1>
         <p className="mb-3 text-[14px] leading-[1.5] text-dark-sub">
           Credits are based on each provider&apos;s official API price, and every answer shows what it used.

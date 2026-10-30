@@ -1,0 +1,1 @@
+VERDICT: FAIL - bottom button labels differ: the primary black-filled button reads "Appeal" in the original but "Contact support" in the render, and the secondary outlined button reads "Contact support" in the original but "Sign out" in the render

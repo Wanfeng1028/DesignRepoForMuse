@@ -1,0 +1,24 @@
+J1 CONFLICT NOTE (round4, recorded by agent, not a judge verdict):
+- Primary nemotron (max-tokens 8000): VERDICT: PASS - all checklist items match.
+- Backup claude-sonnet-4-6 (max-tokens 400): VERDICT: FAIL - Google pill
+  sharp corners in render; Try button border differs; headline dot color/size
+  differ; footnote color/size differ.
+- Agent spot-check (pixel measurement, not a verdict):
+  * "Sharp corners in render" is FALSE: render buttons are full pills
+    (see render/welcome.png; Button component is pill-shaped).
+  * Dot difference is REAL and quantified: original dot ~23px diameter at
+    600px phone width, color mean ~(244,104,41) vivid orange; render dot
+    12px (h-3 w-3) with token accent #E2A181 (peach, ~(226,161,129)).
+    So claude's dot claim is supported, nemotron's PASS glosses over it.
+  * Google button fill (original light gray vs render white) and footnote
+    size/color were not quantified here.
+- Disposition: J1 reported as CONFLICT; no code changed on this basis.
+  Dot/token change would touch the shared accent token and is a design
+  decision for the coordinator, not a unilateral fix.
+- Queue driver rerun (same inputs, nemotron 8000): VERDICT: FAIL -
+  vertical placement of buttons differs + Google button fill differs
+  (original light gray vs render white). So J1 has three judge
+  readings: nemotron-calib PASS, claude FAIL, nemotron-queue FAIL.
+  Nemotron is NOT run-to-run stable on identical inputs (temperature 0).
+  Single-run nemotron verdicts elsewhere in this queue carry the same
+  caveat; see round4/SUMMARY.md Q6.
