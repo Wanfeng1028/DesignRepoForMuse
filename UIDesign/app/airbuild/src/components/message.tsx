@@ -9,15 +9,19 @@ export type MessageProps = {
   /** 'agent' = white bubble left, 'user' = blue bubble right */
   kind?: 'agent' | 'user'
   avatarColor?: string
+  /** user-bubble width: default caps at the chat-thread width (orig chat
+   *  user bubble 240pt); 'wide' keeps the draft-screen width so draft user
+   *  messages stay on two lines as in iphone-04 */
+  wide?: boolean
 }
 
 /** Chat message row: avatar + author line + bubble. User bubbles carry no avatar/author line.
  *  `bare` = briefing/draft style (iphone-06/iphone-04): no avatar, no author line,
  *  bubble only — the top bar already identifies the speaker there. */
-export function Message({ author, role, children, kind = 'agent', avatarColor, bare }: MessageProps & { bare?: boolean }) {
+export function Message({ author, role, children, kind = 'agent', avatarColor, bare, wide }: MessageProps & { bare?: boolean }) {
   if (kind === 'user') {
     return (
-      <div className="flex justify-end pl-16">
+      <div className={`flex justify-end ${wide ? 'pl-16' : 'pl-24'}`}>
         <div className="rounded-[20px] bg-[#0088fe] px-4 py-3 text-[11.5px] leading-[1.52] text-white shadow-[0_5px_16px_rgba(0,0,0,0.05)]">
           {children}
         </div>

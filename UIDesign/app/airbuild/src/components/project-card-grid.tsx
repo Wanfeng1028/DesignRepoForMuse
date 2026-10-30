@@ -13,7 +13,7 @@ export type ProjectCardGridProps = { projects: ProjectCardItem[] }
 function ProjectPreview({ name }: { name: string }) {
   if (name === 'Hourtown') {
     return (
-      <svg width="96" height="72" viewBox="0 0 96 72" aria-hidden>
+      <svg width="140" height="105" viewBox="0 0 96 72" aria-hidden>
         <rect x="4" y="4" width="88" height="64" rx="10" fill="#dbe7d2" />
         <path d="M4 36h88M48 4v64" stroke="#ffffff" strokeWidth="3" />
         <rect x="14" y="12" width="14" height="10" fill="#fdf8ec" /><path d="M13 12l8-6 8 6Z" fill="#b85c38" />
@@ -25,9 +25,12 @@ function ProjectPreview({ name }: { name: string }) {
   }
   if (name === 'Sleepy Coffee') {
     return (
-      <svg width="96" height="72" viewBox="0 0 96 72" aria-hidden>
+      <svg width="140" height="105" viewBox="0 0 96 72" aria-hidden>
         <rect x="4" y="4" width="88" height="64" rx="10" fill="#e6e0d2" />
-        <path d="M14 16h48M14 26h48M14 36h34" stroke="#8a7a66" strokeWidth="3" strokeLinecap="round" />
+        <rect x="12" y="12" width="68" height="12" rx="4" fill="#d2f1df" />
+        <rect x="12" y="28" width="68" height="12" rx="4" fill="#fce7c8" />
+        <rect x="12" y="44" width="46" height="12" rx="4" fill="#dff0ff" />
+        <path d="M18 18h40M18 34h40M18 50h26" stroke="#8a7a66" strokeWidth="2.5" strokeLinecap="round" />
         <circle cx="66" cy="16" r="3" fill="#b85c38" /><circle cx="66" cy="26" r="3" fill="#b85c38" />
         <path d="M14 50h58" stroke="#d8cfbc" strokeWidth="2" strokeLinecap="round" />
         <path d="M20 58h46" stroke="#d8cfbc" strokeWidth="2" strokeLinecap="round" />
@@ -36,8 +39,15 @@ function ProjectPreview({ name }: { name: string }) {
   }
   if (name === 'Casehot') {
     return (
-      <svg width="96" height="72" viewBox="0 0 96 72" aria-hidden>
-        <rect x="4" y="4" width="88" height="64" rx="10" fill="#f0d9c8" />
+      <svg width="140" height="105" viewBox="0 0 96 72" aria-hidden>
+        <defs>
+          <linearGradient id="casehot-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#7b3929" />
+            <stop offset="0.5" stopColor="#d1a080" />
+            <stop offset="1" stopColor="#fbd9a9" />
+          </linearGradient>
+        </defs>
+        <rect x="4" y="4" width="88" height="64" rx="10" fill="url(#casehot-sky)" />
         <rect x="14" y="14" width="42" height="26" rx="8" fill="#ffffff" />
         <path d="M14 40h50M14 48h36" stroke="#ffffff" strokeWidth="2" opacity="0.7" />
         <circle cx="48" cy="52" r="10" fill="#f59e0b" opacity="0.85" />
@@ -46,12 +56,12 @@ function ProjectPreview({ name }: { name: string }) {
   }
   // Hands Time (default): Dot Counter widget + Angle clock widget.
   return (
-    <svg width="96" height="72" viewBox="0 0 96 72" aria-hidden>
+    <svg width="140" height="105" viewBox="0 0 96 72" aria-hidden>
       <rect x="4" y="4" width="88" height="64" rx="10" fill="#e8e8e6" />
-      <rect x="12" y="14" width="32" height="44" rx="9" fill="#ffffff" stroke="#d4d4d0" />
+      <rect x="12" y="14" width="32" height="44" rx="9" fill="#969696" stroke="#8a8a8a" />
       <circle cx="20" cy="26" r="3" fill="#11110f" /><circle cx="28" cy="26" r="3" fill="#11110f" /><circle cx="36" cy="26" r="3" fill="#d4d4d0" />
       <text x="28" y="48" fontSize="13" fontWeight="700" fill="#11110f" textAnchor="middle">29</text>
-      <rect x="52" y="14" width="32" height="44" rx="9" fill="#ffffff" stroke="#d4d4d0" />
+      <rect x="52" y="14" width="32" height="44" rx="9" fill="#969696" stroke="#8a8a8a" />
       <circle cx="68" cy="36" r="13" fill="none" stroke="#11110f" strokeWidth="1.6" />
       <path d="M68 36V27M68 36l7 4" stroke="#11110f" strokeWidth="1.8" strokeLinecap="round" />
       <circle cx="68" cy="36" r="1.6" fill="#11110f" />
@@ -63,7 +73,7 @@ function ProjectPreview({ name }: { name: string }) {
 function TileBadge({ name }: { name: string }) {
   if (name === 'Hands Time') {
     return (
-      <span className="absolute bottom-2 left-1/2 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full bg-[#11110f] text-white shadow" aria-hidden>
+      <span className="absolute bottom-4 left-1/2 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full bg-[#11110f] text-white shadow" aria-hidden>
         <HandSolidIcon className="h-4 w-4" />
       </span>
     )
@@ -85,7 +95,7 @@ function TileBadge({ name }: { name: string }) {
   if (name === 'Casehot') {
     return (
       <>
-        <span className="absolute bottom-2 left-2 h-4 w-4 rounded-full bg-[#0088fe] ring-2 ring-white" aria-hidden />
+        <span className="absolute bottom-2 left-2 h-4 w-4 rounded-full bg-[#53e3ee] ring-2 ring-white" aria-hidden />
         <span className="absolute bottom-2 right-2 flex h-9 w-6 items-center justify-center rounded-md bg-white shadow ring-1 ring-black/10" aria-hidden>
           <svg width="12" height="16" viewBox="0 0 12 16"><rect x="1" y="1" width="10" height="14" rx="2" fill="#f0d9c8" /><path d="M3 5h6M3 8h6" stroke="#b85c38" strokeWidth="1.2" /></svg>
         </span>
@@ -101,7 +111,7 @@ export function ProjectCardGrid({ projects }: ProjectCardGridProps) {
     <div className="grid grid-cols-2 gap-3">
       {projects.map((p) => (
         <div key={p.name} className="relative">
-          <div className="flex h-[132px] items-center justify-center rounded-[20px] border border-black/[0.05] shadow-[0_4px_14px_rgba(0,0,0,0.04)]" style={{ background: `linear-gradient(160deg, ${p.swatch}, #ffffff 130%)` }}>
+          <div className="flex h-[132px] items-center justify-center rounded-[20px] border border-black/[0.05] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.04)]">
             <ProjectPreview name={p.name} />
           </div>
           <TileBadge name={p.name} />
@@ -109,7 +119,7 @@ export function ProjectCardGrid({ projects }: ProjectCardGridProps) {
             <span className="absolute right-2 top-2 max-w-[120px] rounded-[10px] bg-white px-2 py-1 text-[10px] leading-tight text-[#11110f] shadow">{p.note}</span>
           ) : null}
           <div className="flex justify-center">
-            <Pill className="-mt-3 relative px-2.5 py-1 text-[13px]">{p.name}</Pill>
+            <Pill className="-mt-3 relative px-2 py-1 text-[10px]">{p.name}</Pill>
           </div>
         </div>
       ))}

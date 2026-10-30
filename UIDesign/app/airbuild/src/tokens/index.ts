@@ -16,7 +16,7 @@ export const tokens = {
   tile: '#f4f4f2',
   hairline: 'rgba(0, 0, 0, 0.06)',
   userBlue: '#0088fe',
-  onlineGreen: '#2ecb70',
+  onlineGreen: '#34c759',
   taskBg: '#ffffff',
   taskLine: 'rgba(0, 0, 0, 0.06)',
   taskInk: '#11110f',

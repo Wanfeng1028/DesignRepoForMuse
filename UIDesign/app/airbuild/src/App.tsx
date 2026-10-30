@@ -21,12 +21,12 @@ const PROJECTS = [
 ]
 
 const MEMBERS = [
-  { name: 'Pluso', role: 'Developer', status: 'Action needed', actionNeeded: true, time: 'Now', avatarColor: '#45c8d8' },
-  { name: 'Camo', role: 'Copywriter', status: 'The launch copy is ready to review.', avatarColor: '#f5c518' },
-  { name: 'Qesto', role: 'Support', status: "I've replied to the latest support requests.", avatarColor: '#f27ba7' },
-  { name: 'Ato', role: 'Product Manager', status: 'The new screens are ready to review.', time: '10:24', avatarColor: '#8fd14f' },
-  { name: 'Ampo', role: 'APP Publisher', status: 'The release plan is ready to review.', avatarColor: '#9b7bf3' },
-  { name: 'Leto', role: 'Code Reviewer', status: 'The sync issue is fixed.', avatarColor: '#f59e0b' },
+  { name: 'Pluso', role: 'Developer', status: 'Action needed', actionNeeded: true, time: 'Now', avatarColor: '#50e2f1', badge: 'dot' as const },
+  { name: 'Camo', role: 'Copywriter', status: 'The launch copy is ready to review.', avatarColor: '#ffb11b', badge: 'cup' as const },
+  { name: 'Qesto', role: 'Support', status: "I've replied to the latest support requests.", avatarColor: '#ff5ec0' },
+  { name: 'Ato', role: 'Product Manager', status: 'The new screens are ready to review.', time: '10:24', avatarColor: '#9bc24d' },
+  { name: 'Ampo', role: 'APP Publisher', status: 'The release plan is ready to review.', avatarColor: '#1fb0df' },
+  { name: 'Leto', role: 'Code Reviewer', status: 'The sync issue is fixed.', avatarColor: '#ff8b60' },
 ]
 
 function HomeScreen() {
@@ -53,14 +53,14 @@ function ChatScreen() {
     <PhoneFrame label="Chat thread — iphone-03">
       <ChatTopBar project="Hourtown" swatch="#dbe7d2" />
       <MessageList>
-        <Message author="Pluso" role="Developer" avatarColor="#45c8d8">
+        <Message author="Pluso" role="Developer" avatarColor="#50e2f1">
           I&rsquo;ve put together a direction for the first-session experience. The town stays at the center, with just enough guidance to help someone get started.
         </Message>
         <div className="flex items-center justify-end">
           <div className="w-[74%]"><FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" /></div>
-          <Avatar name="Ampo" color="#9b7bf3" size={36} className="-ml-2 shrink-0" />
+          <Avatar name="Sender" color="#865eff" size={36} className="-ml-2 shrink-0" />
         </div>
-        <Message author="Ampo" role="Product manager" avatarColor="#9b7bf3">
+        <Message author="Ampo" role="Product manager" avatarColor="#1fb0df">
           I&rsquo;ll keep the same visual language across both sizes. On iPad, the wider canvas gives the town more space while keeping the session controls easy to reach.
         </Message>
         <div className="flex items-end gap-2 pr-8">
@@ -85,9 +85,9 @@ function ChatScreen() {
 function BriefingScreen() {
   return (
     <PhoneFrame label="Daily briefing — iphone-06">
-      <ChatTopBar project="Ato" swatch="#cfe8a8" mark="person" avatarColor="#8fd14f" compact />
+      <ChatTopBar project="Ato" swatch="#cfe8a8" mark="person" avatarColor="#9bc24d" compact />
       <MessageList className="gap-1.5">
-        <Message bare author="Ato" role="Product Manager" avatarColor="#8fd14f">
+        <Message bare author="Ato" role="Product Manager" avatarColor="#9bc24d">
           Your daily report is ready. Hands Time led growth, while two new Mood reviews raised questions.
         </Message>
         <div className="flex gap-3 overflow-hidden -mr-4 pr-4">
@@ -112,7 +112,7 @@ function BriefingScreen() {
             />
           </div>
         </div>
-        <Message bare author="Ato" role="Product Manager" avatarColor="#8fd14f">
+        <Message bare author="Ato" role="Product Manager" avatarColor="#9bc24d">
           Check Mood&rsquo;s first-entry flow. Both reviews mention difficulty starting. Try the latest version before deciding changes.
         </Message>
       </MessageList>
@@ -126,18 +126,18 @@ function BriefingScreen() {
 function DraftScreen() {
   return (
     <PhoneFrame label="Website draft — iphone-04">
-      <ChatTopBar project="Colo" swatch="#c9b8f5" mark="person" avatarColor="#a78bfa" />
+      <ChatTopBar project="Colo" swatch="#c9b8f5" mark="person" avatarColor="#8a5fe0" />
       <MessageList className="gap-3 py-2">
-        <Message kind="user">Design a website for Hands Time. Keep it simple and let the app speak for itself.</Message>
-        <Message bare author="Colo" role="Designer" avatarColor="#a78bfa">I kept the layout simple. Here&rsquo;s the first draft.</Message>
+        <Message kind="user" wide>Design a website for Hands Time. Keep it simple and let the app speak for itself.</Message>
+        <Message bare author="Colo" role="Designer" avatarColor="#8a5fe0">I kept the layout simple. Here&rsquo;s the first draft.</Message>
         <WebsiteDraftCard
           url="handstime.app"
-          headline="Shape time with your hands"
+          headline={<>Shape time<br />with your hands</>}
           subline="A minimal time widget for iPhone"
           footnoteTitle="Time Flies, Memories Stay."
           footnoteBody="Personalise backgrounds with your favourite images and colours."
         />
-        <Message kind="user">Keep it simple and focus on the app.</Message>
+        <Message kind="user" wide>Keep it simple and focus on the app.</Message>
       </MessageList>
     </PhoneFrame>
   )
@@ -175,7 +175,7 @@ function ComponentsScreen() {
   return (
     <PhoneFrame label="Component inventory">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-4 py-3">
-        <Typing author="Pluso" avatarColor="#45c8d8" />
+        <Typing author="Pluso" avatarColor="#50e2f1" />
         <FileCard filename="First Focus Experience.md" meta="Markdown · 2.4kb" />
         <TaskListCard title="Make the first session rewarding" items={[{ label: 'Define the first-session flow' }, { label: 'Build the completion reveal', active: true }, { label: 'Check the layout on iPhone and iPad' }]} />
         {/* Morphing demo (M1/M2/M5): one toggle animates all three pairs; no icon ever hard-cuts. */}

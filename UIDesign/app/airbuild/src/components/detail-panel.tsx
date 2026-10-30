@@ -16,10 +16,24 @@ export type DetailPanelProps = {
 
 /** Generic store glyphs (own redraws, not Apple assets): App Store "A" of three strokes, TestFlight three-blade propeller. */
 function StoreGlyph({ kind }: { kind: string }) {
+  // Sampled vertical gradient (iphone-05 App Store glyph: #8cd3f1 top,
+  // #3e97db mid, #1b79f3 bottom); TestFlight uses the same blue family
+  // (its top-left #8ad5ff was sampled, full ramp not separately resolved).
+  const gid = kind === 'TestFlight' ? 'ab-store-tf' : 'ab-store-as'
+  const grad = (
+    <defs>
+      <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#8cd3f1" />
+        <stop offset="0.5" stopColor="#3e97db" />
+        <stop offset="1" stopColor="#1b79f3" />
+      </linearGradient>
+    </defs>
+  )
   if (kind === 'TestFlight') {
     return (
       <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden>
-        <rect width="24" height="24" rx="6" fill="#0088fe" />
+        {grad}
+        <rect width="24" height="24" rx="6" fill={`url(#${gid})`} />
         <g fill="#fff">
           <ellipse cx="12" cy="6.5" rx="1.7" ry="3.4" />
           <ellipse cx="12" cy="6.5" rx="1.7" ry="3.4" transform="rotate(120 12 12)" />
@@ -32,7 +46,8 @@ function StoreGlyph({ kind }: { kind: string }) {
   }
   return (
     <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden>
-      <rect width="24" height="24" rx="6" fill="#0088fe" />
+      {grad}
+      <rect width="24" height="24" rx="6" fill={`url(#${gid})`} />
       <path d="M8 19 12 5l4 14M9.8 14.5h4.4" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
   )
@@ -56,7 +71,7 @@ export function DetailPanel({ title, status, updated, iconLabel, stores, version
         <span className="w-11" aria-hidden />
         <h2 className="flex items-center gap-1.5 text-[12px] font-bold text-[#11110f]">
           {title}
-          <button type="button" aria-label="Toggle details" aria-expanded={open} onClick={() => setOpen((v) => !v)} className="flex h-[24px] w-[24px] items-center justify-center rounded-full bg-[#cfcfcf] text-white">
+          <button type="button" aria-label="Toggle details" aria-expanded={open} onClick={() => setOpen((v) => !v)} className="flex h-[24px] w-[24px] items-center justify-center rounded-full bg-[#cfcfcf] text-black/60">
             <ChevronMorphIcon open={open} className="h-[14px] w-[14px]" />
           </button>
         </h2>
@@ -65,13 +80,13 @@ export function DetailPanel({ title, status, updated, iconLabel, stores, version
         </button>
       </div>
       <Card className="mt-4 flex items-center gap-3 rounded-[20px] p-3.5">
-        <span className="relative flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[14px] bg-[#eef0ea] text-[#11110f]" aria-hidden>
+        <span className="relative flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[14px] bg-[#f6f6f6] text-[#11110f]" aria-hidden>
           <HandSolidIcon className="h-7 w-7" />
           <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#0088fe] text-white shadow"><BrushIcon className="h-3.5 w-3.5" /></span>
         </span>
         <span>
           <span className="flex items-center gap-1.5 text-[12px] font-bold text-[#11110f]">
-            <span className="h-[10px] w-[10px] rounded-full bg-[#2ecb70]" aria-hidden /> {status}
+            <span className="h-[10px] w-[10px] rounded-full bg-[#34c759]" aria-hidden /> {status}
           </span>
           <span className="mt-0.5 block text-[9px] text-black/45">{updated}</span>
         </span>
@@ -103,7 +118,7 @@ export function DetailPanel({ title, status, updated, iconLabel, stores, version
         {progress.map((step) => (
           <div key={step.title} className="flex items-start gap-3.5 py-3">
             {step.done ? (
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#2ecb70] text-white" aria-hidden>
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#34c759] text-white" aria-hidden>
                 <CheckIcon className="h-4 w-4" />
               </span>
             ) : (

@@ -5,7 +5,7 @@ export function Pill({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
   return (
     <span
       className={cn(
-        'ab-glass inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] font-semibold text-[#11110f]',
+        'ab-glass inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold text-[#11110f]',
         className,
       )}
       {...props}

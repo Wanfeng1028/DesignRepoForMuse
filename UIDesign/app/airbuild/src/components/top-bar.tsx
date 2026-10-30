@@ -56,13 +56,13 @@ export function ChatTopBar({ project, swatch, mark = 'project', avatarColor, com
       </button>
       <div className="absolute left-1/2 top-1 flex -translate-x-1/2 flex-col items-center gap-1">
         {mark === 'person' ? (
-          <span className="flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-[12px] shadow-sm" aria-label={project}>
+          <span className="flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-[12px] shadow-sm" style={{ background: avatarColor }} aria-label={project}>
             <Avatar name={project} color={avatarColor} size={38} />
           </span>
         ) : (
           <ProjectMark label={project} swatch={swatch} />
         )}
-        <Pill className="px-2.5 py-0.5 text-[13px]">{project}</Pill>
+        <Pill className="px-2 py-0.5 text-[10px]">{project}</Pill>
       </div>
       <button type="button" aria-label="More" onClick={onMenu} className="ab-glass flex h-[46px] w-[46px] items-center justify-center rounded-full">
         <EllipsisIcon className="h-5 w-5" />

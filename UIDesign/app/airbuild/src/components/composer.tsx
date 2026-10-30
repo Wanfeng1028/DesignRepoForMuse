@@ -36,7 +36,7 @@ export function Composer({ placeholder = 'Message', initialValue = '', onSend }:
           type="button"
           aria-label="Send"
           onClick={() => onSend?.(value)}
-          className="flex h-[35px] w-[35px] shrink-0 items-center justify-center rounded-full bg-[#0088fe] text-white shadow-[0_4px_12px_rgba(0,136,254,0.4)]"
+          className="flex h-[35px] w-[35px] shrink-0 items-center justify-center rounded-full bg-[#268eff] text-white shadow-[0_4px_12px_rgba(38,142,255,0.4)]"
         >
           <ArrowUpIcon className="h-4 w-4" />
         </button>

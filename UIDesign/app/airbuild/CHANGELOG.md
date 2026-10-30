@@ -249,3 +249,72 @@
 
 - 已删除 docs/verification/work-v17/crops/（全部官方原图裁图）；保留 work-v17/before/（v1.6 渲染基线）、量测/探针脚本与 shoot.cjs、measure17*.cjs 作为工作证据。
 - 本轮只改 UIDesign/app/airbuild/ 内文件；未动其他三套、未动 UIDesign/CHANGELOG.md 总账、未动服务器/令牌/BotsRouter/X/其他项目；未 git add、未 commit、未 push。
+
+## v1.8 — 2026-10-30 — round 7：同类颜色检查 + 全量主动重扫重修（未 commit、未 push，留待协调方提交）
+
+决策总则：本轮零裁判调用，只认 PIL/DOM 实测数。颜色只做同类检查：有像素证据表明某处颜色被压平/失真才修，无证据不发明、不移植别家配色（Medley 新截图 photo-9.jpg 与本套无关，未套用）。证据等级分三档：像素级（原图采样值 vs 改前值 vs 改后值均有数）、比值/目视级（营销图裁切或浮动窗缩放使绝对 pt 不可比，只用量测比值或目视结论）、视觉级（截图目视确认，未逐像素锚定）。跨平台口径不变：本套是风格 token/组件 1:1、布局平台适配，绝不谎称截图 1:1。
+
+### 颜色检查表（像素级，有原图采样）
+
+- 头像底色与面色（iphone-03 聊天网格 + ipad-01 成员列 + iphone-04/06 tile；原图值 vs 改前值 vs 改后值）：
+  - Pluso：底 #45c8d8 -> #50e2f1（原图 cyan 中值 #50e2f1）；头盘深青 #0e7490 -> 与底同色 #50e2f1（原图为单色 cyan + 笑脸，无深色头盘）；发 #164e63 -> #2aa8c0（深青顶）。
+  - Ampo：底 #9b7bf3 -> #1fb0df（原图网格上部蓝 #1fb0df）；面 #fb923c -> #fdccc8（原图下部粉白面部 #fdccc8）；发 #c2410c -> #1fb0df（蓝顶）。结论：Ampo 是蓝底粉面，不是紫底橙面。
+  - Camo：#f5c518 -> #ffb11b（ipad-01 #ffb119/#ffb019）。Qesto：#f27ba7 -> #ff5ec0（ipad-01 #fe5ec0）。Ato：#8fd14f -> #9bc24d，面 #f9a8d4 -> #fccccc（iphone-06 tile 面部粉 #fccccc、tile 绿 #9ec351 同族）。Leto：#f59e0b -> #ff8b60（ipad-01 #ff8b60/#fb8c61）。Colo：#a78bfa -> #8a5fe0，面 #fde68a -> #ff96cf（iphone-04 tile 紫 #8f5fe6/#8460ce、面部粉 #ff96cf）。
+  - 新增 Sender 变体（文件卡发送者）：调用方传底 #865eff（iphone-03 右缘紫色 sliver #865eff/#8760fb），面 #fb923c，发 #1f2937；与 Ampo 脱钩。
+- 简报 pills 簇（iphone-06 pills 行 y=820 原图坐标；像素级）：手形 tile 20px -> 22px、图标 12px -> 14px；蓝点 #45c8d8 -> #64a2f7（原图蓝点中心 #64a2f7）、红点 #f59e0b -> #cb2c19（原图红点中心 #cb2c19，边缘 #d63e17/#ec5624）；圆点 20px -> 6px（原图直径约 20-21 图像像素，约 6pt）；簇 -space-x-1.5 + 白圈 ring -> gap-1 无重叠无 ring（原图点 pitch 约 8pt、点与 tile 间隙约 5pt）。改后实测：蓝点 55-60、红点 65-70、行高 353-358，即 6x6、pitch 10（尺寸确证，间隙比原图多约 2pt，接受）。
+- 简报封面（iphone-06；像素级）：渐变 #2e7d7b -> #1f4f4a（绿青）改为 #3f707e -> #386b79（近乎平 teal，原图底色带 #3b6c7a-#3f6b78、中值 #3d6e7c）；蒲公英头与种点白 -> 淡黄 #f7efb5（原图花头 #f8efb6/#f5f6b4），茎保持白色。封面高 70px -> 77px（原图纵向 260 图像像素，约 76.8pt；U12 取舍部分回调）。改后实测：封面 teal bbox x29-228、y381-457（恰 77 高），花头淡黄 #e3e2af（opacity-90 与 teal 混合值）63 像素，x166-195、y400-424；第二消息三行仍完整可见（白气泡自 y584 起，截图目视确认）。
+- 草稿封面（iphone-04 行 y=2000；像素级）：渐变绿灰 #3a4a44 -> #1c2422 改为中性深灰 #333333 -> #171717（原图水面深灰带 #1f1f1f-#3a3a3a、天鹅灰白 #b6b6b6-#c8c8c8，无绿色调）。改后实测：封面采样 #2c2c2c-#313131，R=G=B 中性。
+- 商店 glyph（iphone-05 App Store glyph 列 x=300；像素级）：平色 #0088fe 改为竖渐变 #8cd3f1（顶）-> #3e97db（中）-> #1b79f3（底）；TestFlight 复用同渐变（其左上采到 #8ad5ff 同蓝渐变家族，完整渐变未单独解析，属近似，注明）。两 glyph 用 kind 区分 gradient id，避免 DOM id 重复。改后为视觉级确认（截图见 light top 到 deep bottom；探针坐标未命中 glyph，像素点未锚定）。
+- 详情绿色（iphone-05 进度圈列 x=300；像素级）：状态圆点与进度完成圈 #2ecb70 -> #34c759（原图 #34ca5c/#39c558/#38ca5d）；tokens/index.ts 的 onlineGreen 同步 #2ecb70 -> #34c759（该 token 在组件中实际未被引用，同步仅防漂移）。
+- 作曲器发送钮（iphone-06 列 x=1090；像素级）：#0088fe 改为平色 #268eff（原图 y1920 #288bf3、y1930-1990 平坦 #268eff，无渐变），阴影 rgba(0,136,254,0.4) -> rgba(38,142,255,0.4)；直径原图约 90 图像像素，约 34pt，本套 35px 保留。用户气泡保持 #0088fe（iphone-03 行 y=2820 全段确证，不动）。
+- 详情手形 tile 底（iphone-05；像素级）：#eef0ea -> #f6f6f6（原图 #f6f6f6）。
+- Home 徽标（ipad-01 采样；像素级）：Avatar 新增 badge prop（dot | cup），仅 home 列表使用，聊天头像无徽标（iphone-03 Pluso 聊天头像网格附近无橙点，已确认）。Pluso 橙点：白圈底 + #ea943f 点（ipad-01 行 y=1695 处 #ea943f），SVG 坐标 (33,7) r5/r4；改后实测：紧贴 #ea943f 41 像素，x47-53、y460-466（7x7），位于 Pluso 头像右上。Camo 咖啡杯徽标：白底圆 r8 + #6b4a2f 杯形（ipad-01 行 y=1795 处杯 glyph #a49b92，白底圆徽标内深色杯形），SVG 坐标 (33,7)，截图目视确认。
+- 草稿交通灯（iphone-04 y 约 1728-1736；像素级）：红 #ff5f57 -> #ff736a（原图红中心 #ff736a/#fe7469），黄 #febc2e -> #ffbc2d（原图 #ffbc2d/#ffbb2b），绿 #28c840 -> #1ac332（原图 #1ac332/#17be33）；灯尺寸 14px 不动（灯径与 URL pill 高之比原图约 0.45，本套 14px/30px = 0.47，已对上）。
+
+### 颜色检查表（比值/目视级，有把握的相对修正）
+
+- 详情 chevron：圈内图标白 -> text-black/60（目视级：原图灰圈内 chevron 笔画呈深灰；未取得干净像素值，圈底 #cfcfcf 不动）。
+- 简报眉标：两卡眉标行与 AirMark 图标 text-black/45 -> text-black/70（iphone-06 列 x=400 y=675 眉标文字笔画 #454545，比本套旧值深）。
+- 销售条：三条 bar 的渐变 linear-gradient(90deg,#0088fe,#5cb8ff) -> 平色 #0088fe（目视原图条形均匀亮蓝、无右侧浅化，浅端缺失；条形精确坐标三轮探针均未定位，属目视 + 浅端缺失证据，非逐像素条形采样）。
+- 草稿 URL pill：font-semibold -> font-medium（15px 不动；目视级，原图文字观感为 regular/medium，非 semibold 粗细）。
+- Home tile 预览（ipad-01 结构 + 颜色采样）：外层 swatch -> 白渐变改为白 #ffffff（原图 tile 是白卡、预览自带颜色；本套外层渐变边缘被染色）；预览 SVG 96x72 -> 140x105（四屏预览统一，viewBox 不变；原图预览约占 tile 宽 85% 以上，本套旧预览仅占约 59%）。
+- Hands Time widget（ipad-01 行 y=1150；像素级底色）：白底 rect -> 灰 #969696，描边 #d4d4d0 -> #8a8a8a；圆点与 29 文字颜色不动。
+- Sleepy Coffee 预览（ipad-01 行 y=1400；像素级色块）：补 pastel 色块薄荷 #d2f1df、蜜桃 #fce7c8、浅蓝 #dff0ff 于棕线之下。
+- Casehot 预览（ipad-01 列 x=650；像素级渐变）：平色 #f0d9c8 改为竖渐变 #7b3929（顶深红棕）-> #d1a080（中间陶土）-> #fbd9a9（底淡橙）+ 青色圆点 #53e3ee（原图青色圆点 #53e3ee；TileBadge 蓝点 #0088fe -> #53e3ee）。
+- 人形顶栏 tile 四角：ChatTopBar 的 person 变体 span 增加 style background avatarColor，使 Ato/Colo 方 tile 四角填满成员色（原图 tile 为满方色；本套 Avatar 为圆形致四角漏画布色）。改后截图目视：Ato/Colo 顶栏 tile 已为满方色。
+
+### 颜色检查表（无证据，未动）
+
+- 用户气泡蓝 #0088fe、画布 #f4f4f4、顶栏玻璃钮底色（原图聊天 pill 内区 y=54 行呈 #e7e9e8 一带、与画布差约 13，属玻璃/浅灰范畴，本套 ab-glass 渲染值接近，底色不动）、详情抓手 bg-black/15（在 #f4f4f4 上约 #d3d3d3，与原图观感接近，未取得干净采样，不编数）、详情状态卡角标底色旧蓝 #0088fe（U9 延续，未独立取样；本轮 C6 只改了状态圆点与进度圈的绿色，角标底色未动）、顶栏 pill 玻璃高光参数（U10 延续；本轮只改字号与内边距）。
+
+### 几何与结构（全量重扫，改动项）
+
+- 药丸字号与内边距（同坐标复核，像素级）：Pill 基类 px-2.5 py-1 text-[13px] -> px-2 py-1 text-[10px]；ChatTopBar 覆盖 px-2.5 py-0.5 text-[13px] -> px-2 py-0.5 text-[10px]；ProjectCardGrid 覆盖 px-2.5 py-1 text-[13px] -> px-2 py-1 text-[10px]。依据：原图聊天药丸文字跨度 x161-206 = 46 宽，本套旧值 x156-214 = 59 宽，13 x 46/59 约 10.1。改后实测：聊天药丸文字 x162-207 = 46 宽（与原图完全一致）；home 药丸文字 x70-124 = 55 宽（10 字，5.5/字，与聊天药丸 5.75/字一致）。简报日期 pill（独立 span，text-[10px]）不动；StatusPill 不动。
+- 用户气泡宽（同坐标复核，像素级）：Message 用户行 pl-16 -> pl-24；新增 wide prop（wide 时保持 pl-16）。改后实测：聊天用户气泡蓝区 112-353 = 242 宽（旧 270，原图 240）。DraftScreen 的两条用户消息传 wide，保住草稿 2 行断行（原图草稿气泡更宽；若统一收窄，草稿第二条会由 2 行变 3 行）；改后实测：草稿宽气泡 80-353 = 274 宽，2 行保持。ChatScreen 用户消息不传 wide。
+- Hands Time tile 徽标：TileBadge 的 Hands 徽标 bottom-2 -> bottom-4，避开 pill -mt-3 的 12px 上叠区。改后实测：徽标黑像素 y209-215、x85-110，药丸顶 227，徽标完整可见于药丸上方（间隙 4px）。
+- 草稿标题断行（目视级）：WebsiteDraftCard 的 headline 类型 string -> ReactNode；App.tsx 的 DraftScreen 标题改为 Shape time 换行 with your hands（原图断行位置）；旧断行为 Shape time with / your hands。
+- 草稿封面注脚（目视级）：text-[10px] -> text-[9px]（原图 1 行；本套 10px 下 26. 单独成行折为 2 行；封面内文宽约 156px，9px 下可容 1 行）。改后截图目视：3.0 available, built on iOS 26. 已为 1 行。
+- 草稿 Download 钮（比值法，浮动窗非手机屏缩放，绝对 pt 不可比）：px-4 py-2.5 text-[14px] rounded-lg -> px-3 py-1.5 text-[11px] rounded-[10px]（钮高/卡高比 11% -> 约 7.5%，对标原图约 8%；钮宽/卡宽 12.6% 在本套窄卡上受可读性限制，不硬凑）。
+
+### 经复核确认不动（同坐标复核 + 目视复核，2026-10-30 当日）
+
+- 顶栏 town mark 38-39 宽（原图 37，差 2，不动）；聊天头像 32 宽（原图 29，行可能偏离中心直径，低估 1-2，不动）；文件卡宽 246（原图约 238-247，不动）；任务卡宽 263（原图白区右缘约 247、另有碎片至 287 的不确定带，在带内，不动）；简报首卡宽 224（原图换算带 198-221，顶沿 +3，不确定度内，不动）；详情标题 12px（原图暗笔画跨度 69 宽、10 字、em 约 13.3pt，差 1.3，不动）；商店 glyph 30（原图约 29，不动，只改渐变色）；发送钮 35px（原图约 34pt，保留）；交通灯尺寸 14px（已对上）；任务 glyph、文件图标不动。
+- 文件卡右缘贴屏边、任务卡左下 Ato 头像屏外裁切均属营销裁切 artifact，画廊内保持头像完整可见，不复刻屏外裁切。
+- 本套无登录形态屏，不造屏（v1.7 结论沿用：iphone-01~06、ipad-01/02/03/05 均为已登录态应用内屏；AirBuild.app 的 en.lproj/Localizable.strings 中 Sign / Log in / Welcome / password / Password 均为 0 次；Assets.car Linux 无官方读取工具，U13 延续）。
+
+### 验证
+
+- 构建：pnpm build（tsc -b && vite build）一次通过（中间修过一次 TS 类型错误：MEMBERS 数组的 badge 字面量需 as const，否则 string 不可赋给 dot | cup；已修，不改其他套）。
+- 截图：docs/verification/rounds/v1.8/（framed 六屏 + chat-430）与 bare/（六张 370x824 内屏裁切，裁 (10,10,380,834)；v1.8 专用裁切逻辑，未复用硬编码 v1.6 路径的旧脚本）。
+- 改后实测脚本与报告：docs/verification/rounds/v1.8/measure/verify-v18.py、verify-v18b.py、verify-v18.txt（原图值 vs 改前值 vs 改后值，见上文各条）。
+- 目视复核：六屏 v1.8 bare 图已逐屏目视——home 白卡 + 大预览 + 灰 widget + pastel 块 + 日落渐变 + 橙点/杯徽标；chat 小药丸 + 单色 cyan Pluso + 蓝底粉面 Ampo + 紫色 Sender 头像 + 窄用户气泡；briefing 满方绿 tile + 6px 圆点 + teal 封面 + 淡黄花头 + 平蓝销售条 + 第二消息完整；draft 满方紫 tile + 正确断行标题 + 中性深灰封面 + 1 行注脚 + 小 Download 钮 + 宽气泡 2 行；detail 渐变 glyph + 深灰 chevron + 亮绿 + 近白手形 tile；components 单色 cyan 打字头像 + 浅蓝发送钮。
+
+### 未闭合（带实测原因，不编数）
+
+- U1 详情面板顶圆角 32px（无可靠弧线拟合，维持）；U2 详情商店卡高度（原图约 90px@1024 vs 渲染 87px，维持）；U3 成员行字号绝对值（仅比值量测）；U4 草稿封面注脚折行（本轮已由 10px -> 9px 修为 1 行，残差项关闭，改为字体回退适配说明：Linux 回退字体宽于 SF Rounded，若用户设备字体更宽仍可能折行）；U5 简报卡内文字行数（回退字体残差，延续）；U6 项目 tile 预览细节（结构级矢量重绘，非逐像素复刻，延续）；U7 home 中央标瓣形（四圆角方瓣 + 方孔，瓣弧曲率未拟合，延续）；U8 作曲器手形掌心点位置（偏上 2px，未逐像素标定，延续）；U9 详情状态卡角标底色（维持旧蓝 #0088fe，未独立取样；本轮只改了状态圆点与进度圈的绿色，角标底色仍未取样）；U10 顶栏 pill 与玻璃材质（pill 内边距与玻璃高光参数无独立量测值；本轮字号/内边距已按同坐标复核修正，玻璃高光参数仍维持 v1.6）；U11 iPad 双栏 / ipad-04 / 深色 / 设置账号屏（沿用）；U12 简报封面与图表高度取舍（本轮封面 70 -> 77px 部分回调，第二消息仍完整可见，已验证；图表 22px 取舍维持）；U13 Assets.car（Linux 无官方读取工具，延续）；U14 v1.6 残留清理（头像非逐像素复刻、SF 回退继续有效，延续）。
+- 本轮新增未闭合：TestFlight glyph 完整渐变未单独解析（复用 App Store 渐变，属近似）；销售条条形精确坐标未定位（平色修正属目视 + 浅端缺失证据）；简报 pills 簇 pitch 改后 10pt vs 原图约 8pt（圆点尺寸确证，间隙多约 2pt，接受）；详情商店 glyph 渐变为视觉级确认（探针坐标未命中 glyph，未逐像素锚定）；草稿 Download 钮宽比未硬凑原图 12.6%（窄卡可读性限制）。
+
+### 清理与范围确认
+
+- 本轮只改 UIDesign/app/airbuild/ 内文件；未动其他三套、未动 UIDesign/CHANGELOG.md 总账、未动服务器/令牌/BotsRouter/X/其他项目；未 git add、未 commit、未 push。
+- 测量脚本仅读取 ~/workspace/airbuild-refs/ 的原图、只输出数值文本，未把任何官方位图或裁图写入仓库；rounds/v1.8/ 内只有 framed 图 + chat-430 + bare/ + measure/ 文本与脚本，无官方位图/裁图。
