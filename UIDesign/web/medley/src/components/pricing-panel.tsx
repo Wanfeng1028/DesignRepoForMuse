@@ -46,7 +46,7 @@ export function PricingPanel({
     <div className="bg-dark-bg text-dark-text">
       <div className="mb-1">{Icon.close("#F5F5F7")}</div>
       <DiagonalDots />
-      <h1 className="text-[22px] font-bold leading-[1.25] my-2">{title}</h1>
+      <h1 className="text-[22px] font-semibold leading-[1.25] my-2">{title}</h1>
       <p className="text-[14px] leading-[1.5] text-dark-sub my-0 mb-3">{intro}</p>
 
       <div style={glassSmallStyle} className="flex rounded-button glass-tint-dark p-1">

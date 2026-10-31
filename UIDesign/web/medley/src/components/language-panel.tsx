@@ -4,14 +4,14 @@ import { Separator } from "./ui/separator";
 export type LanguageRow = { name: string; sub?: string; selected?: boolean };
 
 /**
- * Light language panel: page title (20px bold), rows at 10px vertical padding
+ * Light language panel: page title (20px semibold, v1.8 weight audit), rows at 10px vertical padding
  * with a check on the selected row, and the trailing footnote. Row content is
  * fully prop-driven (names + English subtitles).
  */
 export function LanguagePanel({ title, rows, footnote }: { title: string; rows: LanguageRow[]; footnote: string }) {
   return (
     <div className="bg-light-bg text-light-text">
-      <div className="flex items-center gap-2 px-5 pt-1 pb-2 text-page-title font-bold leading-[1.3]">
+      <div className="flex items-center gap-2 px-5 pt-1 pb-2 text-page-title font-semibold leading-[1.3]">
         <span className="inline-flex shrink-0">{Icon.back("#17181C")}</span>
         {title}
       </div>

@@ -15,6 +15,7 @@ import { ChatInfoSheet, ChatInfoBackdrop } from "./components/chat-info-sheet";
 import { SuspendedPanel } from "./components/suspended-panel";
 import { LanguagePanel } from "./components/language-panel";
 import { SavingsCard, CompareTable } from "./components/savings-card";
+import { PhoneDemo } from "./components/phone-demo";
 import { Icon } from "./components/icons";
 import { ModelDot } from "./components/medley-mark";
 import { LiquidGlassDefs } from "./components/liquid-glass";
@@ -229,7 +230,7 @@ export default function App() {
           All screen copy on this page is demo content only — components take every string as a prop.
         </p>
         <nav className="mx-auto mt-3 flex w-full max-w-[1240px] flex-wrap gap-x-4 gap-y-1 text-[13px] font-medium">
-          {["desktop-lisbon", "desktop-home", "welcome", "home", "chat", "picker", "pricing", "credits", "agent-team", "drawer", "chat-info", "suspended", "language", "composer", "phone-chrome", "primitives"].map((id) => (
+          {["desktop-lisbon", "desktop-home", "welcome", "home", "chat", "picker", "pricing", "credits", "agent-team", "drawer", "chat-info", "suspended", "language", "composer", "phone-chrome", "interactive", "primitives"].map((id) => (
             <a key={id} href={`#${id}`} className="text-[#17181C] underline underline-offset-2">{id}</a>
           ))}
         </nav>
@@ -367,6 +368,10 @@ export default function App() {
         <p className="mt-3 max-w-[720px] text-[13px] leading-[1.55] text-light-sub">
           Geometry: bar flex gap 154, padding 21/24/19, time 17pt weight 590 line-height 22, right-cluster gap 7, signal 19×12, wifi 17×12, battery 27×13, home indicator 139×5, island 126×37 — all at the 402pt spec, scaled by 390/402 in code. Photo-9 confirms the forms and colorways; its absolute pixels do not reduce to one scale, so the spec is the geometry authority (see CHANGELOG v1.7).
         </p>
+      </Section>
+
+      <Section id="interactive" title="Interactive phone demo — iOS behaviours, live" note="This frame really runs the behaviours: welcome title rotation (only 'Let's discover' + sapphire is observed — the other two rotating sentences are demo placeholders that prove the mechanism, not original copy), model-picker bottom sheet (model pill), search drawer (menu button), chat-info sheet (control row below — no trigger is measured in the originals), push/pop navigation, Chat/Agents segmented switching, composer send, thinking indicator, streaming reply and stop control. All durations and curves are iOS platform conventions, unmeasured from the static originals; see CHANGELOG v1.8 for the per-item table. The desktop top bar above is deliberately untouched (no mobile evidence covers desktop chrome).">
+        <PhoneDemo />
       </Section>
 
       <Section id="composer" title="Composer states">

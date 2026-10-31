@@ -1,0 +1,72 @@
+[
+  {
+    "name": "welcome-initial",
+    "ok": true,
+    "detail": "title=Ask anything, anywhere"
+  },
+  {
+    "name": "welcome-rotation",
+    "ok": true,
+    "detail": "after=Let's discover"
+  },
+  {
+    "name": "push-welcome-home",
+    "ok": true,
+    "detail": "home visible=true"
+  },
+  {
+    "name": "tab-agents",
+    "ok": true,
+    "detail": "agents panel present=true"
+  },
+  {
+    "name": "send-push-thinking",
+    "ok": true,
+    "detail": "chat=true thinking=1"
+  },
+  {
+    "name": "streaming-stop-visible",
+    "ok": true,
+    "detail": "streamed=true stop=1"
+  },
+  {
+    "name": "stop-halts",
+    "ok": true,
+    "detail": "stopped-meta=true"
+  },
+  {
+    "name": "sheet-picker",
+    "ok": true,
+    "detail": "data-state=shown"
+  },
+  {
+    "name": "sheet-info",
+    "ok": true,
+    "detail": "data-state=shown"
+  },
+  {
+    "name": "drawer",
+    "ok": true,
+    "detail": "data-state=shown"
+  },
+  {
+    "name": "scroll-container",
+    "ok": true,
+    "detail": "scrollHeight=663 clientHeight=537 scrollTop-set=50 before=126"
+  },
+  {
+    "name": "pop-chat-home",
+    "ok": true,
+    "detail": "home visible=true"
+  },
+  {
+    "name": "press-shot",
+    "ok": true,
+    "detail": "held Try button, frame shot taken"
+  },
+  {
+    "name": "focus-primitives",
+    "ok": true,
+    "detail": "focused-section=primitives"
+  }
+]

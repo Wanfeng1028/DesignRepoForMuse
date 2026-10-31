@@ -1,0 +1,34 @@
+== panels v1.8 vs v1.7 ==
+panel-welcome.png {'size': (560, 481), 'mean_abs': 4.454, 'pct_gt10': 2.949, 'ndiff': 7943, 'box': (0, 0, 559, 480)}
+panel-home-en.png {'size': (588, 561), 'mean_abs': 3.056, 'pct_gt10': 4.339, 'ndiff': 14314, 'box': (2, 0, 585, 559)}
+panel-home-cn.png {'size': (588, 561), 'mean_abs': 2.455, 'pct_gt10': 3.674, 'ndiff': 12118, 'box': (2, 0, 585, 559)}
+panel-chat-lisbon.png {'size': (588, 733), 'mean_abs': 3.422, 'pct_gt10': 4.264, 'ndiff': 18376, 'box': (0, 0, 587, 732)}
+panel-pricing.png {'size': (560, 716), 'mean_abs': 4.429, 'pct_gt10': 4.279, 'ndiff': 17156, 'box': (0, 0, 559, 715)}
+panel-credits.png {'size_a': (720, 896), 'size_b': (720, 897), 'shape_diff': True}
+panel-picker-a.png {'size': (588, 807), 'mean_abs': 2.432, 'pct_gt10': 2.84, 'ndiff': 13477, 'box': (0, 0, 587, 806)}
+panel-chat-info.png {'size_a': (588, 788), 'size_b': (588, 787), 'shape_diff': True}
+panel-drawer.png {'size_a': (340, 849), 'size_b': (340, 850), 'shape_diff': True}
+panel-suspended.png {'size': (560, 635), 'mean_abs': 3.074, 'pct_gt10': 3.683, 'ndiff': 13095, 'box': (4, 0, 557, 634)}
+panel-language.png {'size_a': (560, 733), 'size_b': (560, 734), 'shape_diff': True}
+panel-agent-team.png {'size': (560, 850), 'mean_abs': 3.259, 'pct_gt10': 5.422, 'ndiff': 25808, 'box': (0, 0, 559, 849)}
+panel-phone-chrome.png {'size': (384, 221), 'mean_abs': 2.218, 'pct_gt10': 2.077, 'ndiff': 1763, 'box': (0, 0, 383, 220)}
+== sections v1.8 vs v1.7 ==
+sec-welcome.png {'size': (1240, 591), 'mean_abs': 1.745, 'pct_gt10': 1.203, 'ndiff': 8814, 'box': (20, 39, 579, 558)}
+sec-home.png {'size': (1240, 671), 'mean_abs': 2.317, 'pct_gt10': 3.44, 'ndiff': 28621, 'box': (21, 39, 1217, 638)}
+sec-chat.png {'size_a': (1240, 2285), 'size_b': (1240, 2284), 'shape_diff': True}
+sec-picker.png {'size': (1240, 959), 'mean_abs': 2.12, 'pct_gt10': 2.612, 'ndiff': 31062, 'box': (20, 38, 1219, 926)}
+sec-pricing.png {'size': (1240, 826), 'mean_abs': 1.829, 'pct_gt10': 1.775, 'ndiff': 18182, 'box': (20, 38, 579, 793)}
+sec-credits.png {'size_a': (1240, 1006), 'size_b': (1240, 1007), 'shape_diff': True}
+sec-agent-team.png {'size_a': (1240, 983), 'size_b': (1240, 982), 'shape_diff': True}
+sec-drawer.png {'size_a': (1240, 959), 'size_b': (1240, 960), 'shape_diff': True}
+sec-chat-info.png {'size_a': (1240, 898), 'size_b': (1240, 897), 'shape_diff': True}
+sec-suspended.png {'size': (1240, 745), 'mean_abs': 1.32, 'pct_gt10': 1.563, 'ndiff': 14437, 'box': (20, 38, 577, 712)}
+sec-language.png {'size_a': (1240, 843), 'size_b': (1240, 844), 'shape_diff': True}
+sec-composer.png {'size': (1240, 489), 'mean_abs': 2.377, 'pct_gt10': 3.097, 'ndiff': 18780, 'box': (20, 39, 1219, 456)}
+sec-desktop-lisbon.png {'size': (1240, 854), 'mean_abs': 3.065, 'pct_gt10': 3.818, 'ndiff': 40433, 'box': (0, 0, 1239, 821)}
+sec-desktop-home.png {'size_a': (1240, 853), 'size_b': (1240, 854), 'shape_diff': True}
+sec-phone-chrome.png {'size_a': (1240, 466), 'size_b': (1240, 465), 'shape_diff': True}
+== new in v1.8 (no v1.7 baseline) ==
+panel-interactive.png (390, 721)
+sec-interactive.png (1240, 1005)
+gallery-fullpage.png (1280, 15083)

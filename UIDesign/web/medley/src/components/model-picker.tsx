@@ -85,7 +85,7 @@ export function AutoCard({ recommended = true }: { recommended?: boolean }) {
 export function ModelPickerHeader({ howCreditsText }: { howCreditsText?: string }) {
   return (
     <div className="flex items-center justify-between pt-3">
-      <span className="text-page-title font-bold text-dark-text">Choose a model</span>
+      <span className="text-page-title font-semibold text-dark-text">Choose a model</span>
       {howCreditsText ? (
         <Dialog>
           <DialogTrigger asChild>

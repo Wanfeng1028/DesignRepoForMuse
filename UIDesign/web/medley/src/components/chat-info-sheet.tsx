@@ -22,6 +22,7 @@ export function ChatInfoSheet({
   replies,
   footnote,
   title = "Chat info",
+  onClose,
 }: {
   stats: ChatInfoStat[];
   modelChips: { name: string; dot: string }[];
@@ -31,6 +32,9 @@ export function ChatInfoSheet({
   replies: ChatInfoReply[];
   footnote: string;
   title?: string;
+  /** v1.8: when supplied, the header X becomes a real close button
+   * (sheet dismiss); absent = the static span, as in v1.7. */
+  onClose?: () => void;
 }) {
   return (
     <div style={glassPanelStyle} className="glass-tint-sheet glass-rim-shadow-sheet text-light-text rounded-sheet p-5 pt-3">
@@ -38,9 +42,15 @@ export function ChatInfoSheet({
         <div className="h-1 w-9 rounded-full bg-[#D8D9DD]" />
       </div>
       <div className="mt-2.5 flex items-center justify-between">
-        <span className="text-page-title font-bold">{title}</span>
+        <span className="text-page-title font-semibold">{title}</span>
         {/* v1.3 sweep: sheet header carries a close X (ov-chatinfo). */}
-        {Icon.close("#17181C")}
+        {onClose ? (
+          <button type="button" aria-label="Close" onClick={onClose} className="ios-press cursor-pointer border-0 bg-transparent p-0">
+            {Icon.close("#17181C")}
+          </button>
+        ) : (
+          Icon.close("#17181C")
+        )}
       </div>
       <div className="mt-3 flex gap-2">
         {stats.map((s) => (

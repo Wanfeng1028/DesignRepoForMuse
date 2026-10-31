@@ -31,6 +31,23 @@ export function Composer({
   stacked = false,
   tall = false,
   className,
+  /** Interactive mode (v1.8, opt-in; absent = the static render path
+   * below, byte-identical to v1.7). When `value` is supplied the input
+   * is controlled, the end control becomes a real button, and it
+   * morphs mic -> send-arrow when text is present, or shows the stop
+   * control while `sending` (the Lisbon generating state). Enter sends.
+   * iOS shows a send affordance once text exists and a stop control
+   * while generating; the originals capture the mic and stop states,
+   * the arrow state is the composer `arrow` variant already in this
+   * set (agent instruction composer). */
+  value,
+  onValueChange,
+  onSend,
+  sending = false,
+  onStop,
+  inputTestId,
+  sendTestId,
+  stopTestId,
 }: {
   dark: boolean;
   placeholder: string;
@@ -46,9 +63,47 @@ export function Composer({
   /** Home-EN only: 54px single-row bar (see header comment). */
   tall?: boolean;
   className?: string;
+  value?: string;
+  onValueChange?: (v: string) => void;
+  onSend?: () => void;
+  sending?: boolean;
+  onStop?: () => void;
+  inputTestId?: string;
+  sendTestId?: string;
+  stopTestId?: string;
 }) {
   const sub = dark ? "#9A9BA2" : "#6B6C72";
   const [labelOpen, setLabelOpen] = useState(false);
+  const interactive = value !== undefined;
+  const endNode = interactive ? (
+    sending ? (
+      <button
+        type="button"
+        data-testid={stopTestId}
+        aria-label="Stop generating"
+        onClick={onStop}
+        className="morph-in ios-press flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-composer-stop"
+      >
+        <span className="h-3 w-3 rounded-[2px] bg-black-btn" />
+      </button>
+    ) : value.trim() ? (
+      <button
+        type="button"
+        data-testid={sendTestId}
+        aria-label="Send"
+        onClick={onSend}
+        className="morph-in ios-press flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-white"
+      >
+        {Icon.send("#111214")}
+      </button>
+    ) : mic === "plain" ? (
+      <span key="plain-static" className="morph-in inline-flex shrink-0 pr-1.5" style={{ color: sub }}>{Icon.mic(sub)}</span>
+    ) : (
+      <span key="circle-static" className={cn("morph-in flex shrink-0 items-center justify-center rounded-full text-white", dark && !sendDark ? "h-9 w-9" : "h-10 w-10")} style={{ background: sendDark ? "#111214" : dark ? "#D95E27" : "#111214" }}>
+        {Icon.mic("#FFFFFF")}
+      </span>
+    )
+  ) : null;
   const pillNode = modelLabel ? (
     <span
       onClick={() => setLabelOpen((v) => !v)}
@@ -122,14 +177,32 @@ export function Composer({
         )}
       >
         {!hidePlus && <span className="inline-flex" style={{ color: sub }}>{Icon.plus(sub)}</span>}
-        <Input
-          dark={dark}
-          aria-label={placeholder}
-          placeholder={placeholder}
-          className="min-w-0 flex-1 border-0 bg-transparent px-0"
-        />
+        {interactive ? (
+          <input
+            data-testid={inputTestId}
+            aria-label={placeholder}
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => onValueChange?.(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSend?.();
+              }
+            }}
+            className={cn("h-[52px] min-w-0 flex-1 border-0 bg-transparent px-0 text-list-item outline-none", dark ? "placeholder:text-dark-dim" : "placeholder:text-light-dim")}
+            style={{ color: dark ? "#F5F5F7" : "#17181C", caretColor: "#2E7CE6" }}
+          />
+        ) : (
+          <Input
+            dark={dark}
+            aria-label={placeholder}
+            placeholder={placeholder}
+            className="min-w-0 flex-1 border-0 bg-transparent px-0 focus-visible:outline-none"
+          />
+        )}
         {pillNode}
-        {micNode}
+        {interactive ? endNode : micNode}
       </div>
     </div>
   );

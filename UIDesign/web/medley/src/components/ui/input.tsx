@@ -7,7 +7,7 @@ export function Input({ className, dark = false, ...props }: React.ComponentProp
     <input
       data-slot="input"
       className={cn(
-        "h-[52px] w-full rounded-input px-4 text-list-item outline-none",
+        "h-[52px] w-full rounded-input px-4 text-list-item outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2E7CE6]",
         dark
           ? "border-0 bg-transparent text-dark-text placeholder:text-dark-dim"
           : "border border-light-divider bg-light-card text-light-text placeholder:text-light-dim",

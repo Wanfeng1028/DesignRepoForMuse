@@ -211,3 +211,20 @@ so the selected plan renders without a React controlled-input warning):
 8. **Picker-B row dots use family colors** (ModelDot by name) where the
    original's per-row dot colors at 8px are only approximately sampled;
    the Auto 5-dot cluster order follows the mobile implementation.
+9. **v1.8: big display titles are Semibold, not Bold** (stem-width /
+   cap-height audit, 2026-11-01; see CHANGELOG v1.8 for the per-title
+   numbers). Chat-info stats values and the agent-team 19 px title
+   stay Bold — their weights are unmeasured in the originals.
+10. **v1.8: interaction demo sentences 2–3 are placeholders**, not
+    original copy. Only "Let's discover" + the sapphire cursor is
+    observed; the other rotation sentences exist only to prove the
+    mechanism. All motion timings are iOS platform conventions,
+    unmeasured from the static originals.
+11. **v1.8: no switch and no bottom tab bar are demoed.** No UISwitch
+    and no bottom tab bar exist in any original screen; the segmented
+    Chat/Agents control is the set's tab mechanism, and chat-info
+    opens only from the gallery demo control row (its original
+    trigger is unmeasured).
+12. **v1.8: edge bounce is not reproduced.** It is OS-level on iOS and
+    not reproducible in headless Linux Chromium; it was not faked.
+    Scrollability itself is verified by API.

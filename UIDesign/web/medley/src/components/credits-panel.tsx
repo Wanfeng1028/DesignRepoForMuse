@@ -68,12 +68,12 @@ export function CreditsPanel({
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2.5">
           {Icon.back("#17181C")}
-          <span className="text-page-title font-bold">Credits</span>
+          <span className="text-page-title font-semibold">Credits</span>
         </span>
         {Icon.info("#17181C")}
       </div>
       <div className="flex items-baseline gap-2 mt-1">
-        <span className="text-huge-number font-bold leading-[1]">{balance}</span>
+        <span className="text-huge-number font-semibold leading-[1]">{balance}</span>
         <span className="text-body text-light-sub">{balanceUnit}</span>
       </div>
       <div className="mt-2 text-secondary text-light-sub leading-[18px]">{aboutLine}</div>

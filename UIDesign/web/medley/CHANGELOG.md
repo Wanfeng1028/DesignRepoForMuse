@@ -3,6 +3,232 @@
 > Scope: UIDesign/web/medley only. Desktop layout itself has no original
 > image; 1:1 covers tokens and component forms (see README residual 1).
 
+## v1.8 — 2026-11-01 (round 9 interaction line: iOS behaviour + title-weight audit)
+
+- Interaction line, not a review round. No judge call was made in this
+  round: acceptance rests on PIL/DOM measured numbers + recorded video
+  only. Build passes: pnpm build (tsc -b && vite build), final
+  dist/assets/index-DN9c5q3g.js, 423.00 kB. Scope:
+  UIDesign/web/medley only (src files below + this entry + README
+  residual notes + docs/verification/rounds/v1.8/ evidence; nothing else
+  in the repo touched, verified by git status before commit; the
+  app/medley working tree was dirty with another worker's changes all
+  session and was never touched). Desktop top bar deliberately
+  untouched (no mobile-screen evidence covers desktop chrome).
+  Screenshots: docs/verification/rounds/v1.8/ — gallery-fullpage.png
+  (1280x15083), sec-*.png per section (incl. new sec-interactive.png,
+  1240x1005), panel-*.png per panel (incl. new panel-interactive.png,
+  390x721), state-*.png phone states, sidebyside/pair-*.png flagship
+  original-vs-render pairs at equal width, behaviour.json +
+  shot-v18-final.log (14/14 behaviour assertions pass). Videos:
+  docs/verification/rounds/v1.8/video/ — rotation.webm (11.52 s),
+  send.webm (6.88 s), sheet.webm (5.52 s), tabs.webm (6.16 s), all
+  re-recorded on the final build; mid-frames eye-checked (sheet frame
+  shows the picker open with handle bar; rotation frame shows the
+  second demo sentence).
+
+- What was built (src/lib/ios-motion.ts new; src/index.css appended
+  classes only, no backdrop-filter anywhere — Tailwind v4 strips the
+  standard property, so glass stays in React inline styles as before;
+  src/components/phone-demo.tsx new live demo; src/App.tsx new
+  "interactive" section before the composer section, no existing
+  section modified; button/controls/input gained press + focus rings;
+  welcome-panel/composer/chat-info-sheet gained opt-in interactive
+  props whose absent-prop render path is identical to v1.7):
+  - Welcome title rotation: opt-in rotate prop. While rotating, the
+    title crossfades/slides (450 ms iOS ease) and the cursor dot
+    re-tints per sentence while staying in place. Dwell 3200 ms.
+  - Picker bottom sheet / search drawer / chat-info sheet: iOS
+    presentation motion, 500 ms in / 400 ms out on
+    cubic-bezier(0.32,0.72,0,1), handle bar on the sheet, real scrim
+    button; open/close state machine (30 ms mount-then-show, 400 ms
+    close) so the CSS transition animates. Drawer slides from the
+    left; sheets slide from the bottom.
+  - Chat: controlled composer (Enter sends), end control morphs
+    mic -> send-arrow when text is present, vivid-orange stop control
+    (Lisbon generating state) while sending; thinking phase 900 ms
+    (three-dot bounce, 1.2 s cycle, staggered 0.15 s / 0.3 s);
+    word-by-word streaming 40 ms/word; stop halts streaming and keeps
+    partial text with meta "Stopped". Message list scrolls (native
+    momentum, -webkit-overflow-scrolling: touch) and auto-scrolls to
+    bottom; initial thread has 3 turns so the list genuinely overflows
+    (scrollHeight 663 > clientHeight 537, scrollTop set to 50 sticks).
+  - Navigation: push/pop 350 ms iOS ease, outgoing screen parallaxes
+    to -30% (iOS navigation convention, unmeasured), guarded during
+    transition; welcome -> home -> chat stack; status bar 10:24 +
+    home indicator on every demo screen (measured from originals).
+  - Press/feedback: buttons scale 0.97 + opacity 0.90 in 100 ms;
+    segmented control sliding indicator 300 ms; slider thumb press
+    1.15; focus ring #2E7CE6 on buttons/segments/slider/input (the
+    composer inner input is exempt by design: iOS text fields show a
+    caret, not a ring; caret colour #2E7CE6). All new motion disabled
+    under prefers-reduced-motion.
+
+- Interaction comparison (original behaviour vs implementation vs
+  parameters; every duration/curve is an iOS platform convention
+  marked UNMEASURED because the originals are static — the only
+  measured motion facts are the behaviours themselves and the
+  sapphire cursor frame):
+  | item | original | implementation | parameter |
+  | welcome rotation | sentences rotate, one colour each; sapphire frame observed (photo-9 caption) | rotate prop, crossfade + per-sentence cursor tint | dwell 3200 ms, fade 450 ms, UNMEASURED |
+  | picker sheet | bottom sheet with handle + scrim | sheet + handle + scrim button | 500/400 ms iOS ease, UNMEASURED |
+  | search drawer | drawer presentation | left slide + scrim | 500/400 ms iOS ease, UNMEASURED |
+  | chat-info sheet | sheet presentation | bottom sheet + working close X + scrim | 500/400 ms iOS ease, UNMEASURED |
+  | composer/send | composer + send | controlled input, Enter sends, mic->send morph | press 0.97/100 ms |
+  | thinking/streaming | thinking + streaming states | 3-dot indicator, word streaming | think 900 ms, stream 40 ms/word, UNMEASURED |
+  | stop | generating state with stop affordance | orange stop control, halts, keeps partial + "Stopped" | demo behaviour, flagged |
+  | press states | iOS press feedback | scale 0.97 + opacity 0.90 | 100 ms |
+  | segmented control | Chat/Agents segment | sliding indicator | 300 ms iOS ease |
+  | slider | iOS slider feedback | thumb press 1.15 + focus ring | — |
+  | push/pop | iOS slide + spring | 350 ms slide, outgoing parallax -30% | 350 ms, parallax UNMEASURED |
+  | tab-bar switching | N/A — no bottom tab bar in any original | segmented Chat/Agents is the set's tab mechanism (video tabs.webm) | — |
+  | switch | N/A — no UISwitch in any original | none demoed | — |
+  | scroll momentum | iOS momentum scroll | native momentum scrolling | — |
+  | edge bounce | iOS edge bounce | N/A in headless Linux Chromium (OS-level, not faked); scrollability verified by API | — |
+  | status bar / home indicator | 10:24 on all originals | 10:24 + home indicator on every demo screen | MEASURED |
+  | focus rings | iOS focus affordance | #2E7CE6 outline (composer input: caret) | — |
+
+- Rotation copy determination: only "Let's discover" + sapphire
+  (#B4D3EF core / #2E7CE6 edge) is observed. The demo rotation list
+  is (1) "Let's discover", sapphire, OBSERVED; (2) "Every idea, one
+  app", green (#C8E8D8/#2FA08C, existing brand-green token), DEMO
+  placeholder; (3) "Ask anything, anywhere", pink
+  (#F2D4DE/#C65D7B, existing brand-pink token), DEMO placeholder.
+  Placeholders exist only to prove the mechanism and to make the
+  rotation video possible; they are not original copy. The shipped
+  WelcomePanel default stays static with the observed frame only.
+  The gallery header already disclaims that all screen copy is demo
+  content. (Observed: placeholder 2 wraps to two lines at 41 px in
+  the 390 px frame — acceptable for a demo placeholder, not a
+  product defect.)
+- Chat-info trigger determination: no trigger is measured in the
+  originals, so chat-info opens only from the demo control row — no
+  invented in-phone affordance was added. Picker opens from the
+  model pill; drawer from the menu button (both original-plausible).
+- Home greeting position: demo home greeting sits low via the same
+  flex-1 spacer HomePanel uses (an earlier demo build placed it near
+  the top with pt-16 and was corrected).
+
+- Title-weight audit (method: stem-width / cap-height ratio, scale
+  free; adaptive midpoint threshold, 8-connectivity components,
+  height >= 0.35 x max, cap from modal bottom minus min top, stem
+  columns spanning >= 85% of cap height, median run width; the v1.7
+  ink-coverage method is void and was not reused). Reference ladder
+  (PIL, SF Pro Display, same strings): "Let's discover" Regular
+  0.105 / Medium 0.136 / Semibold 0.157 / Bold 0.187 / Heavy 0.227;
+  "Your account is suspended" Regular 0.075 / Medium 0.117 /
+  Semibold 0.145 / Bold 0.168 / Heavy 0.210. Original measurements
+  (tight boxes found from ink bands, verified by viewing crops;
+  per-phone scales differ, which is why ratios, not pixels, are
+  compared — HD5 phones are a stitched collage, not uniformly
+  scaled):
+  | title | ratio | conclusion | token |
+  | welcome 41 px (photo-9) | 0.104, cap 48, runs [7,4,6,3]; main stems L 7 px (SB-exp 7.5), d 6 px; median dragged down by JPEG blur-thinned thin stems | Medium-Semibold, clearly below Bold | Bold -> Semibold |
+  | greeting 27 px (HD5) | 0.150, cap 20, runs [3,3,3]; SB-exp 3.3 px, Bold 3.7 px | Semibold-leaning (1 px = 0.05 at cap 20) | Bold -> Semibold |
+  | pricing 22 px (HD5) | 0.125, cap 20, runs [3,2,4,2]; SB-exp 0.164 | lighter than Semibold, below Bold; weak at this resolution | Bold -> Semibold |
+  | credits 37 px (HD5) | per-glyph: '1' stem 4 px / cap 37 = 0.108, '4' stem 3 px / cap 38 = 0.079 (digit-median invalid: side strokes mix with main stems) | Regular-leaning, below Semibold, well below Bold | Bold -> Semibold |
+  | suspended 26 px (v1.7 crop) | 0.133, cap 60, runs [6,5,10,10]; SB-exp 8.7 px, Bold 10.1 px | Semibold (1 px = 0.017 at cap 60) | Bold -> Semibold |
+  | picker 20 px (HD5) | 0.077, cap 13, runs [1,1,2] | inconclusive by resolution (1 px = 0.077) | Bold -> Semibold by pattern |
+  | chat-info title 20 px, language title 20 px, credits header 20 px | not independently measurable (overview images only) | pattern | Bold -> Semibold by pattern |
+  Decision rule: one single title weight for the set. Semibold is
+  the best single weight for every title: no title measures near
+  Bold (0.17-0.19); greeting/suspended sit at Semibold; pricing
+  leans lighter; welcome/credits lean Regular but Semibold is still
+  closer than Bold for both (|0.104-0.157| = 0.053 vs 0.083;
+  credits '1' |0.108-0.166| = 0.058 vs 0.086). Per-title weights
+  (e.g. welcome Regular) were rejected as overfitting single
+  compressed frames and breaking the set's single-title-weight
+  design. Deliberately UNCHANGED: chat-info stats values (27 px,
+  weight unmeasured in the originals); agent-team 19 px title
+  (unmeasured, not a page title); gallery section headings (gallery
+  chrome, not product titles); brand wordmarks (17/19 px); all
+  body/list/section-title bold text; plan names; button labels.
+  Files changed: welcome-panel.tsx (title span, both branches),
+  home-panel.tsx (greeting), phone-demo.tsx (demo greeting),
+  pricing-panel.tsx (22 px h1), suspended-panel.tsx (26 px title),
+  credits-panel.tsx (37 px number + 20 px header),
+  model-picker.tsx ("Choose a model"), chat-info-sheet.tsx
+  ("Chat info"), language-panel.tsx (title).
+  Rasterizer caveat (mandatory reading): browser renders on this VM
+  read systematically +0.03-0.05 heavier than PIL design ratios
+  (FreeType + Chromium hinting/subpixel AA adds roughly 1 CSS px to
+  stems). Evidence: old browser-Bold ratios welcome 0.220, greeting
+  0.231, pricing 0.242, suspended 0.243, picker 0.233 vs PIL-Bold
+  0.187/0.186/0.199/0.168/0.197; new browser-Semibold ratios welcome
+  0.186 (was 0.220), greeting 0.205 (was 0.231), pricing 0.194 (was
+  0.242), suspended 0.189 (was 0.243), picker 0.200 (was 0.233) vs
+  PIL-Semibold 0.157/0.167/0.164/0.145/0.165 — a constant +0.03-0.04
+  offset, the same offset as under Bold, and the before/after drop
+  (0.03-0.05) matches the PIL Bold->Semibold step. This proves the
+  weight mapping is correct (600 does not map to 700) and the change
+  genuinely lightened the design weight. The VM's post-change ratios
+  (~0.19) must NOT be read as "still Bold": on Apple devices (Core
+  Text, without this offset) the render sits at design-Semibold,
+  near the original readings.
+
+- Full-set resweep (v1.8 panels/sections vs v1.7, same harness):
+  raw pixel diffs are large everywhere (panels mean abs 2.2-4.5,
+  pct pixels with max-channel diff > 10 = 2.1-5.4%, diff boxes
+  spanning whole panels) INCLUDING panels with no code changes
+  (phone-chrome 2.218 / 2.077% / 1763 px; agent-team 5.422%).
+  Diagnosis, proven by a clean-worktree control (HEAD v1.7 code,
+  built and shot in the current environment, ~/workspace/wt-v17,
+  deleted after use): worktree-v1.7 renders are PIXEL-IDENTICAL to
+  the committed v1.7 panels (mean 0.000, 0 differing pixels on all
+  six control panels) — the environment is stable, so the diffs are
+  real effects of this round's code, and their pattern (diff map =
+  text-row edges only, flat areas matching) identifies them as
+  (a) intended Semibold title-glyph changes, (b) fractional-Y
+  rasterization phase: Semibold reflow changes fractional page
+  heights above each panel, shifting each element's fractional Y
+  offset and hence its text antialiasing phase, and (c) +-1 px
+  screenshot-height rounding from those fractional offsets (proof:
+  drawer box height is IDENTICAL 848.71875 CSS px in v1.8 and
+  wt17, while screenshot heights are 849 vs 850 because
+  ceil(y+h)-floor(y) flips with the fractional Y: v1.8
+  y=9288.203 -> 849, wt17 y=9264.703 -> 850). Material/colour
+  layers are intact: flat-zone medians are identical between v1.8
+  and wt17 on every zone checked — welcome base-top (17,20,26),
+  warm glow (237,238,242), green glow (36,67,67), home-en composer
+  interior (238,244,244), chat-info sheet interior (234,235,238),
+  agent-team panel bg (17,21,24), drawer bg (17,21,24),
+  phone-chrome bg (17,21,24), pricing bg (17,21,24), suspended bg
+  (245,246,248), language bg (245,246,248), picker bg (30,31,35);
+  only the welcome blue-halo zone differs by 1 green level
+  ((32,46,66) vs (32,47,66)). Panel/section +-1 px height deltas
+  (credits 896/897, chat-info 788/787, drawer 849/850, language
+  733/734; sections chat 2285/2284, credits 1006/1007, agent-team
+  983/982, drawer 959/960, chat-info 898/897, language 843/844,
+  desktop-home 853/854, phone-chrome 466/465) are Semibold reflow +
+  fractional rounding, not regressions. New in v1.8 (no baseline):
+  panel-interactive.png (390x721), sec-interactive.png (1240x1005),
+  gallery-fullpage.png (1280x15083).
+  Residuals carried forward: (1) blue-halo 1-level median difference
+  (gradient dithering + fractional phase, negligible); (2) picker
+  title weight by pattern only (resolution limit); (3) chat-info /
+  language / credits-header titles by pattern only (overview images
+  only); (4) chat-info stats + agent-team 19 px weights still
+  unmeasured and unchanged; (5) rotation sentences 2-3 are demo
+  placeholders, not original copy; (6) all motion timings are iOS
+  conventions, unmeasured from static originals; (7) edge bounce
+  not reproducible in headless Linux Chromium.
+
+- Verification scripts (all in docs/verification/rounds/v1.8/):
+  shot-v18.cjs (fullpage + sections + panels + 9 phone states + 14
+  behaviour assertions), video-v18.cjs (single-clip argument
+  supported), render-titles.cjs (DSF=2 title element shots),
+  stem-audit.py (runs the audit on import — not importable as a
+  module), resweep-v18.py + resweep-v18.log, shot-wt17.cjs (worktree
+  control panels), drawer-height.cjs (fractional-height probe),
+  behaviour.json, shot-v18-final.log (14/14), stem/ (tight original
+  crops, render crops, zone images, welcome-mask-3x.png).
+  Test bugs fixed during the round (not product bugs): the
+  welcome-initial assertion expected exactly "Let's discover" while
+  the demo had already rotated (fixed to accept any rotation-list
+  sentence); scrim clicks must tap the visible scrim strip
+  (sheet: frame-relative x 195, y 20; drawer: x 360, y 360) because
+  Playwright clicks the scrim centre, which the panel covers.
+
 ## v1.7 — 2026-11-01 (fix round; round 9: iOS texture close-out — font / material / glyph lines)
 
 - Fix round, not a review round. No judge call was made in this round:

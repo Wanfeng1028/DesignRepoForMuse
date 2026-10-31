@@ -19,7 +19,7 @@ export function Button({
     <Comp
       data-slot="button"
       className={cn(
-        "inline-flex cursor-pointer items-center justify-center gap-2 rounded-button font-bold whitespace-nowrap transition-colors disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex cursor-pointer items-center justify-center gap-2 rounded-button font-bold whitespace-nowrap transition-colors transition-transform duration-100 active:scale-[0.97] active:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2E7CE6] disabled:pointer-events-none disabled:opacity-50",
         size === "md" ? "h-[52px] px-5 text-body" : "h-12 px-5 text-list-item",
         variant === "primary" && "bg-white-btn text-black-btn",
         variant === "dark" && "bg-black-btn text-white",

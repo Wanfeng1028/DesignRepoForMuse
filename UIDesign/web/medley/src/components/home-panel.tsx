@@ -93,7 +93,7 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
             <MedleyMark size={27} color={text} />
           </div>
         )}
-        <div className="text-greeting font-bold leading-[1.25] mb-[18px]">{greeting}</div>
+        <div className="text-greeting font-semibold leading-[1.25] mb-[18px]">{greeting}</div>
         <div className="border-t-[0.5px] border-light-divider">
           {suggestions.map((s) => (
             <SuggestionRow key={s.text} {...s} dark={dark} />

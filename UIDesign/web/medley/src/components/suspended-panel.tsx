@@ -40,7 +40,7 @@ export function SuspendedPanel({
           <line x1="17" y1="9" x2="17" y2="19" stroke={sub} strokeWidth="2" strokeLinecap="round" />
         </svg>
       </div>
-      <div className="text-[26px] font-bold leading-[1.25]">{title}</div>
+      <div className="text-[26px] font-semibold leading-[1.25]">{title}</div>
       <div className="mt-4 text-[14px] leading-[1.55]">{body}</div>
       <div className="mt-3 text-[14px] leading-[1.55] font-bold">{suspendedUntil}</div>
       <div className="mt-6 flex items-start gap-2.5">

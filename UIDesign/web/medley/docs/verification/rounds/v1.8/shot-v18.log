@@ -1,0 +1,57 @@
+wrote gallery-fullpage
+wrote sec-welcome
+wrote sec-home
+wrote sec-chat
+wrote sec-picker
+wrote sec-pricing
+wrote sec-credits
+wrote sec-agent-team
+wrote sec-drawer
+wrote sec-chat-info
+wrote sec-suspended
+wrote sec-language
+wrote sec-composer
+wrote sec-desktop-lisbon
+wrote sec-desktop-home
+wrote sec-phone-chrome
+wrote sec-interactive
+wrote panel-welcome
+wrote panel-home-en
+wrote panel-home-cn
+wrote panel-chat-lisbon
+wrote panel-pricing
+wrote panel-credits
+wrote panel-picker-a
+wrote panel-chat-info
+wrote panel-drawer
+wrote panel-suspended
+wrote panel-language
+wrote panel-agent-team
+wrote panel-phone-chrome
+wrote panel-interactive
+PASS welcome-initial :: title=Let's discover
+wrote state-welcome.png
+PASS welcome-rotation :: after=Every idea, one app
+PASS push-welcome-home :: home visible=true
+wrote state-home.png
+PASS tab-agents :: agents panel present=true
+wrote state-tabs-agents.png
+PASS send-push-thinking :: chat=true thinking=1
+wrote state-chat-thinking.png
+PASS streaming-stop-visible :: streamed=true stop=1
+wrote state-streaming.png
+PASS stop-halts :: stopped-meta=true
+wrote state-stopped.png
+PASS sheet-picker :: data-state=shown
+wrote state-sheet-picker.png
+PASS sheet-info :: data-state=shown
+wrote state-sheet-info.png
+PASS drawer :: data-state=shown
+wrote state-drawer.png
+PASS scroll-container :: scrollHeight=537 clientHeight=537 scrollTop-set=0 before=0
+PASS pop-chat-home :: home visible=true
+wrote state-press.png
+PASS press-shot :: held Try button, frame shot taken
+PASS focus-primitives :: focused-section=primitives
+wrote state-focus
+behaviour: 14/14 pass

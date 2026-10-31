@@ -20,7 +20,7 @@ export function TabsTrigger({ className, ...props }: React.ComponentProps<typeof
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "cursor-pointer rounded-[12px] px-4 py-2 text-secondary font-medium text-light-sub data-[state=active]:bg-white data-[state=active]:font-bold data-[state=active]:text-light-text data-[state=active]:shadow-sm",
+        "cursor-pointer rounded-[12px] px-4 py-2 text-secondary font-medium text-light-sub transition-colors transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2E7CE6] data-[state=active]:bg-white data-[state=active]:font-bold data-[state=active]:text-light-text data-[state=active]:shadow-sm",
         className,
       )}
       {...props}
@@ -59,7 +59,7 @@ export function Slider({ className, ...props }: React.ComponentProps<typeof Slid
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb
         aria-label="Value"
-        className="block h-[18px] w-[18px] rounded-full border border-[#D8D9DC] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.15)] focus:outline-none"
+        className="block h-[18px] w-[18px] rounded-full border border-[#D8D9DC] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.15)] transition-transform duration-100 active:scale-[1.15] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2E7CE6]"
       />
     </SliderPrimitive.Root>
   );

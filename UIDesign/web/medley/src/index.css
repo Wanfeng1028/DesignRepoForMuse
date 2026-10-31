@@ -172,3 +172,183 @@ body {
 .glass-rim-dark-shadow-sheet {
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.06), 0 -12px 32px rgba(23, 24, 28, 0.1);
 }
+
+/* v1.8 iOS interaction line (new classes only; no existing rule moved).
+ * All curves are the iOS ease cubic-bezier(0.32,0.72,0,1); durations
+ * are platform conventions, NOT original measurements (the originals
+ * are static — see src/lib/ios-motion.ts). Backdrop-filter is still
+ * never declared here (see the v1.7 delivery warning above): sheets
+ * that need blur take it as React inline style, scrims here are plain
+ * rgba fills. */
+
+/* Title rotation: incoming sentence slides up + fades in. */
+@keyframes ios-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ios-title-in {
+  animation: ios-title-in 450ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform, opacity;
+}
+
+/* Bottom sheet: spring-style present/dismiss via the iOS ease. The
+ * sheet rests at translateY(0); [data-state] drives the travel. */
+.ios-sheet {
+  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+.ios-sheet[data-state="hidden"] {
+  transform: translateY(102%);
+  transition-duration: 400ms;
+  pointer-events: none;
+}
+.ios-sheet[data-state="shown"] {
+  transform: translateY(0);
+}
+/* Side drawer: same curve on the X axis, 84% mobile width. */
+.ios-drawer {
+  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+.ios-drawer[data-state="hidden"] {
+  transform: translateX(-102%);
+  transition-duration: 400ms;
+  pointer-events: none;
+}
+.ios-drawer[data-state="shown"] {
+  transform: translateX(0);
+}
+/* Scrim: plain rgba fade (no blur claim — the sheet itself carries
+ * the glass inline style where the component already has one). */
+.ios-scrim {
+  transition: opacity 400ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.ios-scrim[data-state="hidden"] {
+  opacity: 0;
+  pointer-events: none;
+}
+.ios-scrim[data-state="shown"] {
+  opacity: 1;
+}
+
+/* Push / pop: incoming slides in from the right, outgoing parallaxes
+ * to -30% (iOS navigation convention, unmeasured from the originals). */
+@keyframes ios-push-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes ios-push-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-30%);
+  }
+}
+@keyframes ios-pop-in {
+  from {
+    transform: translateX(-30%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes ios-pop-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.ios-push-in {
+  animation: ios-push-in 350ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.ios-push-out {
+  animation: ios-push-out 350ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.ios-pop-in {
+  animation: ios-pop-in 350ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.ios-pop-out {
+  animation: ios-pop-out 350ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Thinking indicator: three dots, iOS-style bounce (timing unmeasured;
+ * the originals only show the "thought for Ns" meta line). */
+@keyframes ios-think-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+.ios-think-dot {
+  animation: ios-think-dot 1.2s ease-in-out infinite;
+}
+.ios-think-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.ios-think-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Segmented indicator slide (phone demo tabs). */
+.ios-segment-indicator {
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Native-feel scrolling inside the phone frame: momentum scrolling
+ * on iOS; on desktop Chromium this is a plain scroll container and
+ * edge bounce is OS-level (not reproducible in headless Linux, not
+ * faked — see CHANGELOG v1.8). */
+.ios-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: auto;
+  scrollbar-width: none;
+}
+.ios-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Generic pressable (demo chrome + sheet handles): scale + dim. */
+.ios-press {
+  transition: transform 100ms cubic-bezier(0.32, 0.72, 0, 1), opacity 100ms;
+}
+.ios-press:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ios-title-in,
+  .ios-push-in,
+  .ios-push-out,
+  .ios-pop-in,
+  .ios-pop-out,
+  .ios-think-dot {
+    animation: none;
+  }
+  .ios-sheet,
+  .ios-drawer,
+  .ios-scrim,
+  .ios-segment-indicator,
+  .ios-press {
+    transition: none;
+  }
+}
