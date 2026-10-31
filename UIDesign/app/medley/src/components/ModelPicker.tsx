@@ -94,7 +94,7 @@ export function ThinkingControl({
   return (
     <div className="px-5 pt-5">
       <div className="text-item font-bold text-dark-text">Thinking</div>
-      <Tabs value={value} className="mt-2.5">
+      <Tabs defaultValue={value} className="mt-2.5">
         <TabsList className="flex w-full rounded-card bg-dark-card p-1">
           {segments.map((s) => (
             <TabsTrigger key={s} value={s}>

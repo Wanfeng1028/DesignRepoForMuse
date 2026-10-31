@@ -149,13 +149,18 @@ export default function App() {
   // window; .shot-bare CSS (index.css) strips the Phone frame and fits its
   // 852px height to 844px, so element sizes read exactly as coded.
   const bare = params.get('bare') === '1'
+  // v1.9: framed single shots scale the phone to the 844px container
+  // height. The Phone frame is now content-box (content 390x852, outer
+  // 394x856 with the 2px bezel), so the scale is 844/856 = 0.9860 (was
+  // 0.9906 = 844/852 for the old border-box frame). Bare mode is
+  // unchanged (border-width 0, scale 1.0).
   if (single) {
     const found = screens.find((s) => s.meta.id === single)
     if (found) {
       const C = found.default
       return (
         <div className={bare ? 'shot-bare' : undefined} style={{ width: 390, height: 844, overflow: 'hidden', background: '#0b0b0e' }}>
-          <div style={bare ? undefined : { transform: 'scale(0.9906)', transformOrigin: 'top left' }}>
+          <div style={bare ? undefined : { transform: 'scale(0.9860)', transformOrigin: 'top left' }}>
             <C />
           </div>
         </div>

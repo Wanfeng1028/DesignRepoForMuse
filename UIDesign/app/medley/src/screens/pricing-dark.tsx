@@ -11,8 +11,17 @@ export default function PricingDark() {
     <Phone theme="dark">
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-0 pt-1">
         <div className="my-1 mb-[14px]">{Icon.close('#f5f5f7')}</div>
-        <ModelDotsArc size={10} />
-        <h1 className="my-2 mt-2 text-greeting font-bold leading-[1.25]">Every top AI in one app</h1>
+        {/* v1.9: the arc sits a full 48px below the close row in the
+            original (detail strip: arc span top phone 134.1; render was
+            86.0, i.e. -48). Padding, not margin: a mt-12 here would
+            collapse with the close row's mb-[14px] and net only +34
+            (measured). The +48 shift also lands the h1 box on the
+            original (159.0 vs orig 158.9) since the arc-to-h1 gap
+            already matches (15.0 vs orig 14.9). */}
+        <div className="pt-12">
+          <ModelDotsArc size={10} />
+        </div>
+        <h1 className="my-2 mt-2 text-[25px] font-bold leading-[1.25]">Every top AI in one app</h1>
         <p className="mb-3 text-[14px] leading-[1.5] text-dark-sub">
           Credits are based on each provider&apos;s official API price, and every answer shows what it used.
         </p>

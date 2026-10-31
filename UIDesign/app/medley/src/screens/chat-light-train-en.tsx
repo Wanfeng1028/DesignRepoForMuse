@@ -24,7 +24,7 @@ export default function ChatLightTrainEn() {
         center={<ModelPill dark={false} label="Auto" />}
         right={<>{Icon.clock('#17181c')}{Icon.edit('#17181c')}</>}
       />
-      <div className="min-h-0 flex-1 overflow-y-auto px-5">
+      <div className="min-h-0 flex-1 overflow-y-auto scroll-momentum px-5">
         <UserBubble dark={false}>Paris to Barcelona: train or plane?</UserBubble>
         <AiMeta dark={false} model="DeepSeek V4 Pro · Auto" sub="Searched 9 sites, read 6 pages, thought for 6s" />
         <p className="mb-2 text-[16px] font-bold leading-[1.55]">Take the train unless the flight is much cheaper.</p>

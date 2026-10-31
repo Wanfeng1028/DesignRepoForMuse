@@ -31,7 +31,7 @@ export default function ChatLightSavingsEn() {
         center={<ModelPill dark={false} label="Auto" />}
         right={<>{Icon.clock('#17181c')}{Icon.edit('#17181c')}</>}
       />
-      <div className="min-h-0 flex-1 overflow-y-auto px-5">
+      <div className="min-h-0 flex-1 overflow-y-auto scroll-momentum px-5">
         <UserBubble dark={false}>$200 a month at 6% for 15 years?</UserBubble>
         <AiMeta dark={false} model="GPT-6.1 Sol · Auto" sub="Thought for 3s" />
         <p className="mb-[14px] text-[16px] font-bold leading-[1.55]">

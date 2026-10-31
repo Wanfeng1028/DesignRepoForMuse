@@ -37,17 +37,25 @@ export function InputBar({
   const dim = dark ? '#6b6c72' : '#9a9ba2'
   const bar =
     'flex items-center gap-2.5 rounded-input py-0 pl-[14px] pr-2 ' +
-    (dark ? 'bg-dark-input' : 'border border-light-divider bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]')
+    // v1.9 glass (iOS 27 Liquid Glass chrome + glassy-liquid refs): large
+    // chrome blur 50px + saturate 1.8; shadow 0 10px 26px rgba(0,0,0,0.16);
+    // dark adds the 0.5px inner hairline as edge light. Fills stay the
+    // measured solids — under an opaque fill backdrop blur is a no-op in
+    // a static shot and only acts when content scrolls beneath in live
+    // use, so the static colours do not move off their measured values.
+    (dark
+      ? 'bg-dark-input backdrop-blur-[50px] backdrop-saturate-[1.8] shadow-[0_10px_26px_rgba(0,0,0,0.16),inset_0_0_0_0.5px_rgba(255,255,255,0.06)]'
+      : 'border border-light-divider bg-white backdrop-blur-[50px] backdrop-saturate-[1.8] shadow-[0_10px_26px_rgba(0,0,0,0.16)]')
 
   function MicButton() {
     if (mic === 'plain') {
-      return <span className="flex shrink-0 pr-1.5 transition-all duration-200">{Icon.mic(sub)}</span>
+      return <span className="flex shrink-0 pr-1.5 transition-all duration-200 active:scale-95">{Icon.mic(sub)}</span>
     }
     if (mic === 'stop') {
       return (
         <span
           className={cn(
-            'flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-white transition-all duration-200',
+            'flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-white transition-all duration-200 active:scale-95',
             variant === 'double' && 'self-start',
           )}
         >
@@ -57,7 +65,7 @@ export function InputBar({
     }
     if (mic === 'stop-accent') {
       return (
-        <span className="flex h-[41px] w-[41px] shrink-0 items-center justify-center rounded-full bg-accent transition-all duration-200">
+        <span className="flex h-[41px] w-[41px] shrink-0 items-center justify-center rounded-full bg-accent transition-all duration-200 active:scale-95">
           <span className="h-[9px] w-[9px] rounded-[2px] bg-[#111214] transition-all duration-200" />
         </span>
       )
@@ -65,7 +73,7 @@ export function InputBar({
     return (
       <span
         className={cn(
-          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-all duration-200',
+          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-all duration-200 active:scale-95',
           sendDark ? 'bg-black-btn' : dark ? 'bg-accent' : 'bg-black-btn',
           variant === 'double' && 'self-start',
         )}
@@ -102,7 +110,10 @@ export function InputBar({
         <div
           className={cn(
             'rounded-input',
-            dark ? 'bg-dark-input' : 'border border-light-divider bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]',
+            // v1.9 glass: same stack as the single bar (see `bar` above).
+            dark
+              ? 'bg-dark-input backdrop-blur-[50px] backdrop-saturate-[1.8] shadow-[0_10px_26px_rgba(0,0,0,0.16),inset_0_0_0_0.5px_rgba(255,255,255,0.06)]'
+              : 'border border-light-divider bg-white backdrop-blur-[50px] backdrop-saturate-[1.8] shadow-[0_10px_26px_rgba(0,0,0,0.16)]',
           )}
         >
           <div className="flex h-[40px] items-center pl-[14px] pr-2">

@@ -16,7 +16,7 @@ export default function HomeLightCn() {
           dark={false}
           left={Icon.menu('#17181c')}
           center={
-            <Tabs value="chat" className="rounded-chip bg-light-card p-[3px]">
+            <Tabs defaultValue="chat" className="rounded-chip bg-light-card p-[3px]">
               <TabsList className="gap-0">
                 <TabsTrigger value="chat" className="rounded-[16px] px-[14px] py-[6px] text-[14px] text-light-sub data-[state=active]:bg-light-bubble data-[state=active]:text-light-text">
                   聊天
@@ -32,7 +32,7 @@ export default function HomeLightCn() {
         <div className="min-h-0 flex-1" />
         <div className="px-5">
           <MedleyMark size={30} color="#17181c" />
-          <div className="mt-[14px] text-greeting font-bold leading-[1.25] text-light-text">晚上好，Alex</div>
+          <div className="mt-[14px] text-greeting font-semibold leading-[1.25] text-light-text">晚上好，Alex</div>
         </div>
         <div className="mt-[18px] border-t border-light-divider px-5 pt-0.5">
           <SuggestionRow dark={false} icon={Icon.news('#6b6c72')} text="今天有什么新闻" />

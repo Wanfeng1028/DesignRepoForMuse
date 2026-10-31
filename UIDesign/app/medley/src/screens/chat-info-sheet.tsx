@@ -3,6 +3,7 @@ import { TopBar } from '../components/TopBar'
 import { UserBubble } from '../components/Chat'
 import { Icon } from '../components/icons'
 import { ModelDots } from '../components/Model'
+import { ReopenButton, usePresentation } from '../components/Presentation'
 
 export const meta = { id: 'chat-info-sheet', title: 'Chat info sheet (light)', source: 'ov_r1_c2' }
 
@@ -11,9 +12,10 @@ function Dot({ color }: { color: string }) {
 }
 
 export default function ChatInfoSheet() {
+  const { dismissed, onEnterEnd, dismiss, reopen, cycle, sheetClass, scrim45Class, sheetExitClass, scrimExitClass } = usePresentation()
   const stat = (value: string, label: string) => (
     <div className="flex-1">
-      <div className="text-greeting font-bold leading-[1.1] text-light-text">{value}</div>
+      <div className="text-greeting font-semibold leading-[1.1] text-light-text">{value}</div>
       <div className="mt-[3px] text-secondary text-light-sub">{label}</div>
     </div>
   )
@@ -41,8 +43,13 @@ export default function ChatInfoSheet() {
 
   return (
     <Phone theme="light">
-      <div className="flex min-h-0 flex-1 flex-col bg-light-bg">
-        <div className="flex h-[150px] shrink-0 flex-col bg-light-bg px-5 opacity-45">
+      <div className="relative flex min-h-0 flex-1 flex-col bg-light-bg">
+        <div
+          data-testid="sheet-scrim"
+          onClick={dismiss}
+          onAnimationEnd={onEnterEnd}
+          className={`flex h-[150px] shrink-0 cursor-pointer flex-col bg-light-bg px-5 opacity-45 ${scrim45Class} ${scrimExitClass}`}
+        >
           <TopBar
             dark={false}
             left={Icon.menu('#6b6c72')}
@@ -63,10 +70,20 @@ export default function ChatInfoSheet() {
             <span className="text-[14px] font-bold text-light-text">Claude Sonnet 5.5 · Auto</span>
           </div>
         </div>
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto rounded-t-sheet bg-white px-5 pb-2 pt-5 shadow-[0_-12px_32px_rgba(23,24,28,0.10)]">
-          <div className="flex justify-center">
+        {/* v1.9 glass: sheet shadow is the glassy-liquid reference, upward
+            for a bottom sheet (was 0 -12px 32px rgba(23,24,28,0.10)); the
+            top dim stays a plain opacity-45 veil with NO backdrop blur,
+            because the dimmed chat text above it is sharp in the original
+            and blur would smear the strokes (v1.8 evidence, kept). */}
+        <div
+          key={cycle}
+          data-testid="sheet"
+          onAnimationEnd={onEnterEnd}
+          className={`flex min-h-0 flex-1 flex-col overflow-y-auto scroll-momentum rounded-t-sheet bg-white px-5 pb-2 pt-5 shadow-[0_-10px_26px_rgba(0,0,0,0.16)] backdrop-blur-[50px] backdrop-saturate-[1.8] ${sheetClass} ${sheetExitClass}`}
+        >
+          <button data-testid="sheet-handle" onClick={dismiss} aria-label="Dismiss sheet" className="flex w-full cursor-pointer justify-center">
             <div className="h-1 w-9 rounded-full bg-[#d8d9dd]" />
-          </div>
+          </button>
           <div className="mt-2.5 flex items-center justify-between">
             <span className="text-page font-bold text-light-text">Chat info</span>
             {Icon.close('#17181c')}
@@ -113,6 +130,7 @@ export default function ChatInfoSheet() {
             First token is the time from sending to the first word. Speed counts the visible answer only.
           </div>
         </div>
+        {dismissed && <ReopenButton label="Show sheet" onClick={reopen} />}
       </div>
     </Phone>
   )

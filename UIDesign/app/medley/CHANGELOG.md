@@ -504,3 +504,141 @@
 - src/components/ModelPicker.tsx：ModelRow py-[11px] → py-[6px]；ModelSection pt-5 → pt-3（影响 picker-a/b 与画廊展示，见 S-1）。
 - tokens 未动（darkCard/darkBg/各模型点/cursorDot/logoDot 色值均已验证在位，无需新 token；顶区 #08090b 为 picker-a 局部值，沿用 search-drawer bg-[#16171a] 的局部色先例）。
 - 费用：零裁判调用、零令牌取用。未 git add、未 commit、未 push，工作区留待协调方统一提交。
+
+## v1.9 — 2026-11-01 — round 9 iOS 质感闭合：字体/材质/字形三条线 + 交互线（v1.8 → v1.9）
+
+- 性质与纪律：只动本套（git status 全部路径均属 UIDesign/app/medley/，无他套、无服务器、无令牌文件）；零裁判调用（验收只认 PIL/DOM 实测数，未取任何密钥）；构建 /home/hatch/.npm-global/bin/pnpm build 通过（tsc + vite；末次 1.87s，交互后 css 38.82 kB、js 约 447 kB）；截图 harness 固定：Playwright headless shell 显式 executablePath 指 chromium_headless_shell-1243（playwright-core 1.64 默认 1248 未装，绝不依赖默认），file:// 打开 dist/index.html，单屏 ?screen=<id>，viewport 430x920，DSF 1，等待 3000ms 后 fullPage 截图；光学尺寸覆盖只在 harness JS 里做（>=20px 叶元素改 SF Pro Display，产品代码与 token 不动）；SF 文件绝不进仓库（~/.local/share/fonts/sf-pro/ 仅本机渲染验证）；一切文件写本套正式目录，未用 /tmp；dist 不进版本。
+- 换算口径（本轮统一，后续沿用）：内容坐标 = shot/0.9860 - 2（App 单屏 scale 0.9860，见几何节）；原图中文 HD 换算：手机顶 strip y25、pill 锚定 scale 0.691（pill strip 宽 495 → 342/495）；细节 HD 换算：Y0 126、scale 1.0156（home-en 实测光柱 384 宽定标）；v1.8 的 welcome 数用另一换算（宽比 0.6724 + 隐含顶 33），故 v1.8↔v1.9 数值有数 px 方法差，本轮只报 v1.9 换算下的新数，不与 v1.8 数直接相减。844/852 高度歧义：细节条手机高 844（1220 行 x0.691），Phone token 852（iPhone Pro 高配 390 宽混搭）；故顶部锚定从顶比、底部锚定从底比、居中元素 +4 调整；Phone 高 852 本轮不动（改动会废全部 v1.8 bare 验），<=4px 歧义记残留。
+
+### A. 字体线（SF 为准，Inter 图作废）
+
+- 渲染字体：SF Pro（上层装机 45 OTF，fontconfig 指 SF Pro Text、Inter 后备；本轮绝不碰 fontconfig）。此前 Inter 图一律作废重拍；最终截图与字体结论全部以 SF 为准。旧口径“VM 只能验 Noto”（v1.8 字体节）作废。
+- twMerge 丢 token bug（本轮关键发现）：默认 tailwind-merge 把未知 text-* 名归为文字颜色，凡 cn() 里尺寸 token 与颜色类同现，尺寸 token 被静默丢弃、元素回落继承 16px。DOM 实证：welcome 状态栏 class 串里 text-status 消失、computed 16px/24px（非 token 13px）。Node 复现：text-status/text-welcome/text-greeting/text-caption 与颜色类同现时均丢，text-[15px] 等任意值不受影响。受害：StatusBar（16 非 13）、SuggestionRow（16 非 15）、SourcesChip 标签（16 非 12）；UserBubble 外观无差只因 token 恰为 16px；纯 className 字符串不受影响（故标题 43px 仍正常）。修复：src/lib/utils.ts 改 extendTailwindMerge，注册 10 个自定义 token 为 font-size 组（welcome/greeting/page/section/body/item/secondary/caption/huge/status），四组尺寸+颜色组合复验全保留，任意尺寸与纯颜色合并无影响。
+- 大标题字重核查（用户问“是不是有点粗”；方法：Chromium canvas measureText 为准，PIL/FreeType  advance 低估约 4% 不可用；上轮 ink 覆盖率测法作废）：
+  - welcome 标题：原图 ink 宽 237.7（中条）/ photo-9 独立复核 237-238（左 29.7-29.9、r 右 267、点左 275.7-276.5、间隙 8-9.5）；Chromium Display Bold 43 advance 283.4（+45）、Semibold 43 271.3、Semibold 38 239.7（点左 277.7，+1.2/+2.0）、Semibold 41 258.7（+20）；L 字干原图 4.84（核）~5.2-5.8（含 AA），干/高比 0.163-0.195，低于 Semibold 0.233/0.222、远低于 Bold 0.267。结论：非 Bold，Semibold-or-Medium。宽+点（双参照、20px 量级）压倒高单项（高推 41，Semibold 38 预测高 27 vs 原图 29.7，-2.7 记残留）；备选“Semibold 41 + -0.04em 紧缩”亦合宽+点，但 iOS 标题极少如此紧缩，不取。定夺：welcome 标题 → Semibold 38（token --text-welcome 43→38，span font-bold→font-semibold；居中块联动：标题顶 +2.9，实测 308.3→311.4，与高调整后原图 310.8 差 +0.6）。
+  - greeting（home-en/cn）：原图 ink 宽 232.4、cap 约 19.7（28px 量级）；Bold 28 ink 约 245（差 -12.6）、Semibold 28 约 236（差 -3.6）。定夺：en+cn 一律 font-semibold，28px 不动（27px 之说在 1px 内不可分，记未分）。渲染复核：ink 内容宽 235.3 vs 原图 232.4（+2.9）。
+  - pricing 标题：原图 ink 宽 262.9、cap 顶 161.5（重测见定价节，旧 161.5 换算不自洽已纠）；Bold 28 ink 约 292、Semibold 28 约 281、Bold 25 约 261（+2 最优）、Bold 26 约 271、Semibold 25 约 250。定夺：h1 → 25px Bold（text-[25px]，text-greeting token 不动，问候仍 28）。用户提的“22px”被宽否决（Bold 22 ink 约 230，差 +33，疑为他元素，记未复现）。
+  - credits 巨号：原图字高 35.4（'1' 连续竖干 strip 230-266 行）vs Chromium '1' 高 36@51、26@37 → 尺寸 51 确认（“37px”之说被高否决）；原图 ink 宽约 142.8 vs Bold 51 约 164-168、Semibold 51 约 157-161（窄 9-13%）；原图 '1' 字干核 3.9（含 AA 约 5-5.9）vs Bold 51 干 9、Semibold 8。定夺：digits → Semibold 51（尺寸不动；字干仍比 Semibold 细约 2px、宽窄约 7% 两项记残留，窄体数字字体假说未证）。
+  - suspended 标题：总览 cell 尺度无法可靠量字干，按系统一致性改 Semibold，26px 不动（标“系统一致性改动、未直验”）；chat-info 数值（210/9/6，28px）同理改 Semibold（无 HD 参照，标一致性改动）。其余非大标题（TopBar 20 Bold、section Bold、item 15 Bold、Medley 头 17 Bold、Choose a model 20 Bold 等）一律不动。
+  - 宽/高比失配谜（记录、非定夺）：welcome（宽→38、高→41，比 0.927）与 credits（宽→41、高→51，比 0.804）宽均小于高预测且比值不同，故非统一横向挤压（pill 对照证实条 scale：中条 pill 494x73 → 341.4x50.4 vs 期望 342x52，双维吻合；纵横比 560/1220=0.459 vs 390/844=0.462/390/852=0.458，1% 内）。属逐元素字体/尺寸差异，非全局 scale 错。
+- 折行审计（全部 >=20px 叶元素，Range 行盒计数；另扫混合内容元素，18 屏零命中，故全部大标题皆叶、覆盖无遗漏）：Display 覆盖下全部 1 行，与原图一致；无覆盖（纯 SF Text）下仅 suspended "Your account is suspended" 26px 折 2 行，证实 Display 覆盖之必需（iOS >=20pt 本就用 Display 光学尺寸，Text 折行是 Linux/FreeType  artifact，非产品 bug）。其余：welcome 38 Semibold 1/1 行、问候 28 Semibold 1/1、Chat info 20 Bold 1/1、数值 28 Semibold 1/1、Choose a model 20 Bold 1/1、pricing 25 Bold 1/1、Credits 20 Bold 1/1、12,480 51 Semibold 1/1、savings $58,164 40 Bold 1/1；lisbon/train/kyoto/router/drawer/agent-team/language 无 >=20px 叶。
+- 副行交叉验：sub1 原图 ink 宽 163.1-163.8 vs 渲染 161（+2.1），Text Regular 15 正常，不动。
+
+### B. 材质线（iOS 27 Liquid Glass 成套量；1:1 为底线）
+
+- 配方源：ios27-design-system（chrome 50px、thick/regular/thin/ultrathin 100px、小玻璃 blur 6px + saturate 1.8、浅大 rgba(250,250,250,0.70)/深大 rgba(0,0,0,0.80)、阴影 blur 40px）+ glassy-liquid（specular 1.1、阴影 0 10px 26px rgba(0,0,0,0.16)、内 hairline inset 0 0 0.5px rgba(0,0,0,0.04)、focus 环 inset 0 0 0 3px accent）。总规则：填充一律保持实测固体色；不透明填充下的 backdrop-filter 在静态截图里是 no-op（只在内容从下方滚过时起作用），故只给 blur/saturate 指派、不动静态色；玻璃只上浮动铬（iOS 27 自身规则：玻璃用于浮动铬、不用内容底）。
+- 对照表（原图值 vs 改前值 vs 改后值）：
+  - home/chat 作曲器（大铬）：改前浅 shadow 0 2px 12px rgba(0,0,0,0.06) / 深无阴影、无 blur → 改后双双 backdrop-blur-[50px] backdrop-saturate-[1.8] + shadow 0 10px 26px rgba(0,0,0,0.16)，深色另加内 hairline inset 0 0 0 0.5px rgba(255,255,255,0.06)；填充不动（深 #1f2024、浅白）；浅作曲器晕复验：晕行 (219,221,223) vs 底 (233,234,236)，-13 级可见（改前 0.06 阴影低于 JPEG 噪声记未量）。
+  - ModelPill（小 pill）：改前无 blur → 改后 backdrop-blur-[6px] backdrop-saturate-[1.8] + hairline（深白 0.06 / 浅黑 0.04）；填充不动。
+  - picker 抽屉 / chat-info 抽屉：改前 info-sheet shadow 0 -12px 32px rgba(23,24,28,0.10) → 改后双双 shadow 0 -10px 26px rgba(0,0,0,0.16)（向上，底抽屉向）+ blur 50 / saturate 1.8；填充不动。
+  - search-drawer 右条：改前 w-[62px] bg-black/45 无 blur → 改后同填充 + blur 50 / saturate 1.8（条本就半透明，blur 为真生效非 no-op）；实测条色 (7,12,14)，与 black/45 罩 #111518 计算 (9,11,13) 吻合。
+  - 聊天气泡（内容，非铬）：只加 blur 50 / saturate 1.8，不动填充、不加阴影；UserBubble 填充复验 #191a1e 计 16234px 在位。
+  - welcome 药丸：保持固体 #edeef2（实测值），不加半透明（半透明罩在辉光渐变上会吸辉光色、偏离实测填充）；辉光层见折射节。
+  - chat-info 顶 dim：保持 opacity-45 纯罩、不加 blur（原图 dim 上方聊天文字锐利，blur 会抹笔画，v1.8 证据沿用）。
+  - 定价/credits/savings 数据卡：不动（数据卡非玻璃面）。
+- 折射补充（nikdelvin-liquid-glass MIT 构造自研实现，src/lib/liquidGlass.ts）：位移图 = 圆角矩形（#808080，blur(depth)）罩 X/Y 渐变 ramp（screen 混合）；feDisplacementMap 三通道色散 R=strength+2CA、G=strength+CA、B=strength，三路 screen 混合。只用于 welcome 辉光层（唯一自带可位移内容的层；CSS filter 只位移自身层、不位移 backdrop，实色 pill/不透明气泡上 filter 要么无效要么扭曲文字，故不加）。
+  - 强度：源默认 100/0 会 visibly warp 破坏 1:1 几何；初值 10/CA2 → 蓝核 B 移 -22 破 1:1 → 降 5/CA1。终测核心移位表（同坐标、强度 5 vs 无滤镜 identity 页，7x7 patch 中值）初版曾全军覆没：蓝 (-5,-6,-22)、暖 (-5,-5,+8)、绿 (-4,-5,+3)，且 10→5 毫无改善——证实移位与强度无关。
+  - 根因两则（均实测定位、已修）：①三通道 split + screen 混合会把半透明层 alpha 三倍化（1-(1-a)^3），故半透明辉光层过 filter 必偏色；修法：辉光层加不透明底 #0D0E10（与容器同色），且 backgroundColor 必须写在 background 简写之后（简写会重置底色，顺序错则修法落空，实测复现过一次）。②B 通道 feColorMatrix 行误写 [0 1 0 0 0]（取 G 非 B），致滤后 B==G 处处（蓝核滤后 (30,46,46) vs identity (30,46,62) 的剖面实锤）；修为 [0 0 1 0 0]。终测：蓝 (0,0,0)、暖 (0,0,0)、绿 (1,1,1)——折射只剩位移、无偏色。
+  - 全屏跨度修正：辉光层原只盖 795px 容器（状态栏 37 与 Home 区 20 之间），致绿尾在 y832 以下消失（改前 (13,14,16) 平色，原图绿尾直达底边）；梯度位置本就是手机百分比（v1.7  provenance），故层改为 inset-x-0 -top-[37px] -bottom-[20px] 盖满 852px，位移图同步改 390x852；StatusBar/HomeIndicator 加 relative z-10 使其压住扩展层（状态栏行复验改前改后均值 (34.4,35.3,37.3) 逐值同，辉光未 tint 状态栏；指示条核 #515558 (81,85,88) 精确）。
+  - 辉光 vs 中条并排：渲染辉光强于中条（中条 JPEG 压暗辉光），但核值与 photo-9 provenance 吻合在 8 内（蓝 (30,46,62) vs #1f2f46 (31,47,70) B-8；暖 (68,42,29) vs #482b1d (72,43,29) -4/-1/0；绿 (26,57,49) vs #193d33 (25,61,51) +1/-4/-2），颜色以 photo-9 为准，中条洗色不算差。
+  - 药丸顶 AA 行残留：辉光扩展后药丸顶边 AA 行（shot 644）覆盖率变化（改前约 34% → 改后约 15%，等效位移约 0.28px），药丸实边行 645-695、Try、脚注、指示条行全部不动，属亚像素光栅差、非布局移，记残留（见残留表）。
+
+### C. 字形线（baoyu-design iOS 26 UI Kit + Figma spec，402pt 框 x0.9701 缩放后实拍核对）
+
+- 重绘（Phone.tsx，spec 逐字落）：信号 19x12（4 条宽 3.2 圆角 0.7：(0,7.5,4.5)/(4.8,5,7)/(9.6,2.5,9.5)/(14.4,0,12)）→ 渲染 18.4x11.6；wifi 17x12（外弧/内弧 path 逐字 + 圆点 cx8.5 cy10.5 r1.5）→ 16.5x11.6；电池 27x13（外框 (0.5,0.5,23x12,rx3.5，描边 0.35）+ 内芯 (2,2,20x9,rx2）+ 正极 path（0.4））→ 26.2x12.6；右簇 gap 6.8px（spec 7 x0.9701）；Home 条 139x5 → 135x5（HIG 390pt 机 134px 亦佐证）；Dynamic Island 不适用（photo-9 四屏均无岛，中央空）。
+- spec 与实拍不一致处以实拍为准（两项否决）：
+  - 时间字号：spec 17px 否决。SF Pro Text 600 探针 "10:24"：12px→34.34、13px→37.22、14px→40.08、16px→45.8、17px→48.66；原图宽约 34.6（条 50 行 x0.691）、cap 约 9.0（条 13 行 x0.691；photo-9 14 行 x0.6357=8.9）。13px token 给 37.2 宽 / 9.3 cap（差 2.6/0.3），17px 给 48.7/12.1（差 14/3）。定夺：13px token + font-semibold（spec 590 在本机解为 600 Semibold 静态字，同渲染重）。
+  - 条高：spec 框 padding（21/24/19，合计约 61px）否决（非本应用截图形态）。37px 为五项最小最大误差约 1.7px 之选：图标 (37-12)/2=12.5 vs 原图 13.8-14.2；时间 (37-9.3)/2=13.85 vs 原图约 14.2-15.3；lisbon TopBar 墨 37+(48-17)/2=52.5 vs 原图 51.8（+0.7）；home TopBar 墨 52.5 vs 原图 53.8（-1.3）；welcome 顶对齐点：点 37+20=57 vs 原图 57.1（-0.1）、文 cap 57+6.75=63.75 vs 原图 64.1（-0.35）。36 得 2.3、38 得 2.7，故 37。左右内边距保持 pl-7/pr-8（原图时间左 29.7 vs 渲染内容 29.3 差 0.4；图标右 inset 原图约 32.5 vs pr-8=32）。
+- 复验（内容坐标）：welcome 状态墨 14.2-23.4（原图约 14.2-24.4，顶精确、底 -1.0）；图标左 283.0（spec 390-32-74.7=283.3，-0.3）；低阈图标盒右 inset 33.0（原图 32.5，+0.5；亮盒右缘 352.0 为电池内芯边，nub/外框低于 thr150）；时间盒 28.4-63.9（原图约 29.7-64.3，-1.3/-0.4）；信号/wifi/电池列位均在 spec 1-2px 内；Home 条内容 y 839.8-843.8（4 行 + AA = 5 盒）、宽 134.9、深 #515558 / 浅 #bababa（浅核行采样 (186,186,186) 附近、行 830-834）；原图 phone-top Y0 容差约 ±2 行（±2 phone px），全部原图顶位均带此容差。方形 Lucide 状态栏字形已清零。
+
+### 几何线（Phone 内容盒 + App scale；cascade 层教训）
+
+- 旧 border-box Phone（w-390 + border-2）帧内内容仅 386px，bare（border 0）为 390px；welcome 副行 2 在 SF Pro Text 15px 下量 331.9px（Display 15 为 291.8、副 1 为 167.3），帧内可用 330px 差 1.9px 折行、bare 可用 334px 不折。渲染副行 2 元素 rect [30,371,327,45] shot（45 高 = 两行，"GLM" 独占第二行）vs 原图单行（条 591-606 → 391.1-401.5）。折行使居中块高约 23px，标题顶下移约 11.5px，与实测标题差约 12px（渲染墨顶内容 294.8 vs 原图 306.8）吻合，证实为同一根因。
+- 定夺（非 tracking hack）：Phone 改 content-box（内容恰 390px、2px 边框外置，外 394x856）；App 单屏 scale 0.9906 → 0.9860（844/856），帧 phone 仍恰塞 844px 容器；bare 不变（仍 390 宽、高 844 覆盖）。否决：中心 px-7→px-6（破标题左缘实测 28.3）、副行 2 缩字号（破 token）、负 tracking（违 iOS 默认）。
+- cascade 层根因：初版 [box-sizing:content-box] 任意类未生效（探针 phoneOuter 仍 390x852 旧尺寸、CSS 里规则明明在）：Tailwind v4 工具在 cascade 层内，无层 *{box-sizing:border-box} 压过它。修法：Phone div 内联 style={{boxSizing:'content-box'}}（附注释）；复验 boxSizing content-box、clientW 390、offsetW 394、缩放 rect 388x844。勿再用任意类形式。
+- welcome 头顶对齐：原图点顶 57.1、文 cap 顶 64.1（点高文约 7px），居中对齐无法复现；头行改 items-start（原 items-center）。头带复验内容 57.8-77.1（顶 +0.7，底含 descender 在围内）。
+- 头标裁决：并排初看中条头标似白 M、渲染为三色点，疑冲突；photo-9 头裁切（3x）实锤三色点弧（绿/蓝/品红）+ Medley，中条头点 strip 107-117 亦为点（JPEG 小尺寸糊成 M 形假象）。BrandDots 8px 不变（photo-9 点 phone 约 6.4-8.3px，吻合）。
+- 光标色：宝石蓝 #6ea9dd 为标准帧（photo-9），中条橙点为同句异 capture 变体（已记录、不编造多句）。
+
+### D. 交互线（原屏行为即 1:1 目标，不发明功能；动效参数能量就量、不能量记未量）
+
+- 机制总汇（src/lib/motion.ts：IOS_EASE cubic-bezier(0.32,0.72,0,1)、IOS_SPRING cubic-bezier(0.34,1.3,0.64,1)、SHEET_ENTER_MS 600、ROTATION_INTERVAL_MS 5000；src/components/Presentation.tsx：usePresentation + ReopenButton；index.css：ios-cursor-blink/ios-sheet-up/ios-drawer-in/ios-scrim-in/ios-scrim-45/ios-thinking-bounce/ios-title-enter/ios-caret-blink + 各 anim 类 + .scroll-momentum + reduced-motion（phone-frame 内动画压 0.01ms））：
+  - welcome 标题轮换：ROTATION_SENTENCES 仅含已观测一句 "Let's discover" + 宝石蓝 #6ea9dd（中条 + photo-9 皆只此一句；余句未量、绝不编句子）；cycle 状态 + 5000ms interval（首 replay 在 3000ms 截图窗之后）+ key={cycle} 重挂 anim-ios-title-enter（淡入+上浮+去模糊）；光标 anim-ios-cursor（1s 周期、80% 亮 duty，0-79% 亮、80-100% 灭；截图有约 20% 概率撞灭相，本轮终图已验光标亮，见证据节）。
+  - picker bottom sheet / chat-info sheet / search drawer：挂载进入动画（sheet 上滑 0.6s IOS_EASE、drawer 左入 0.6s、scrim 淡入 0.3s；chat-info dim 用 scrim-45 终值 0.45，与静态 opacity-45 一致）；进入类在 onAnimationEnd 摘除，故 settled 态无 transform、无位移，截图与静态屏像素同（picker 0、drawer 0、info-sheet 仅数值 792px）；退出为退出动画类（见下“退出类修复”），fill both 保持离场态；重开按钮仅 dismissed 时渲染（截图永不出现）；picker-a 参照里无 scrim（实色 #08090b 顶区），故只做 sheet 滑动、无遮罩（已记录）。
+  - 聊天（lisbon-en 交互作曲器，替静态 InputBar；InputBar 导入已删）：msgs/draft/phase（idle/thinking/streaming）/streamed + scrollRef + 计时器；发送 → UserBubble → 900ms 思考（圆点 + "Thinking" 标签，data-testid="thinking"）→ 回显流式（Demo echo — ${text}，2 字/14ms，caret anim-ios-caret）+ AiMeta "Claude Sonnet 5.5"；停止钮（composer-stop）截断流式、半截文本落为 AI 消息；空态显示停止 accent 钮（41px accent 圆 + 9px 方块 bg #111214）与静态一致；作曲器条逐像素复刻 InputBar 单深（shrink-0 px-4 pt-3、h-56px、gap-2.5、rounded-input、pl-[14px] pr-2、bg-dark-input、blur 50/saturate 1.8、shadow 0 10px 26px rgba(0,0,0,0.16) + 内 hairline、focus-within ring #6ea9dd/50）；流式文本为用户原话的 demo 回显（已标注），非伪造模型回答；新消息在滚动容器内（初版放错容器外已修，块前移 +2 缩进）。
+  - 按压/分段/滑杆：Button transition-colors → transition-all duration-200 active:scale-[0.98]（focus-visible 环沿用）；MicButton 四型（plain/stop 白 34/stop-accent 41/圆 mic）全加 active:scale-95；ui/tabs 基 trigger 加 transition-all duration-300 IOS_EASE active:scale-[0.97]（home-cn + ThinkingControl 共用）；Slider 拇指 transition-transform duration-150 active:scale-125 + cursor-grab/grabbing；BillingToggle 改 stateful（默认 yearly，与原图裁切选中态一致）：滑块绝对 pill bottom-1 top-1 w-[calc(50%-4px)] rounded-chip bg-dark-pill transition-transform duration-300 IOS_EASE，yearly translateX(100%) / monthly 0（静态左 4 + 宽 50%-4 → yearly 恰覆 50% 至 100%-4，与旧静态 yearly 跨度逐像素同）；按钮 data-testid billing-monthly/yearly，激活 font-bold 白字、未激活 font-semibold 暗字、active:scale-[0.98]。
+  - 标签栏：home-cn Tabs value="chat" 受控 → defaultValue="chat"（受控下点击不切换，修后可切；chat 触发 rounded-[16px]、agents 触发基 12px，两半径均未量、不动）。
+  - picker-b：非 sheet（全屏列表、overflow-y-auto、无顶区/sheet），不做 sheet 动画；其 ThinkingControl 段（Auto/Off/Low/Med/High/Max）改 defaultValue 可切。
+  - 滚动动量 + 边缘：.scroll-momentum（-webkit-overflow-scrolling:touch + overscroll-behavior-y:contain）只加已证溢出容器（train、savings、lisbon-en、info-sheet sheet、drawer panel、credits、agent-team）；真回弹为 iOS 系统提供，web demo 得动量 + contained overscroll（无静态视觉变）。
+  - 导航 push/pop：本套无多级导航，记 N/A（sheet/drawer presentation 即本套实际导航）；不录 push/pop 片段、不伪造。
+  - 开关：18 屏无一开关，记 N/A；键盘：无一屏含键盘 UI（系统键盘为 iOS 自有、非应用 UI），记 N/A；空状态：无空列表屏（search drawer 按原图显示 populated recents），空变体记 N/A；状态栏时间：保持静态 "10:24"（与全部参照一致，实时钟反偏离 1:1）；分段器除 BillingToggle/ThinkingControl/home-cn Tabs 外无其他。
+- 截图安全规则（已验）：sheet 挂载动画 600ms 在 3000ms 截图前 settle；关闭/重开只点按触发（harness 永不点击），截图恒为 presented 态；重开钮仅 dismissed 时渲染，截图不出现；chat demo 初始态与静态 InputBar 像素同（lisbon diff 0）；tabs/分段/滑杆默认值与原图同（yearly 选中、chat 默认、ThinkingControl Auto 默认）；按压态仅 :active、焦点环仅 focus-within/focus-visible，截图不受影响；welcome 首 replay 在 5000ms，截图窗外。
+- 退出类修复（picker-a 13104px 之谜，根因已定位）：交互初版用内联 transition 风格做关闭，picker-a settled 态 vs 静态基线差 13104px（行 110-786，确定性复现）；二分排除：把手 button→div 不变、去进入动画类不变、去 transition 风格仍不变；最终锁定：全局 .overflow-y-auto 动量规则（-webkit-overflow-scrolling:touch 使恰好塞满的容器亦进合成层）改变了 picker sheet 文本光栅（字干变粗，如 DeepSeek 行）；drawer/info-sheet 不差因其内容溢出、本就层内光栅；去规则后 picker 差归 0。定夺：动量规则改 .scroll-momentum 作用域类（见上），恰好塞满容器（picker-a sheet 730=730、picker-b 795=795、pricing 795=795、lisbon-cn 647=647、kyoto/router 679=679）一律不加；另退出机制由 transition 内联风格改退出动画类（anim-ios-sheet-exit/drawer-exit/scrim-exit，fill both 持离场态；scrim-exit 只定 to（从当前值起 interpolat，info-sheet 0.45 遮罩关闭不闪）；重开以 cycle key 重挂、进入动画重播；进入类在 dismissed 时不渲染，防双动画叠加）。lisbon 1px 陷阱附记：初版挂载 scrollTo(scrollHeight) 在内容只超 1px（680 vs 679）时致 scrollTop=1、全滚动内容上移 1px（diff 21907px），修为 msgs 为空且 idle 且 streamed 为空时跳过（只 demo 消息态才自动滚），复验 diff 0。教训：内容约满时永不在挂载自动滚。
+- 交互录屏（rounds/v1.9/video/，Playwright recordVideo，430x920；ffmpeg 缺省已用 /usr/bin/ffmpeg 软链补齐 ~/.cache/ms-playwright/ffmpeg-1013/ffmpeg-linux；旧测试片已删，仅留 4 段必需）：
+  - title-rotation.webm（265117 字节，9.08s）：7.5s 覆盖 5000ms replay + 光标闪烁。
+  - sheet-open-close.webm（482502 字节，4.48s）：挂载进入 → 点 sheet-handle 关闭（2.5s 抽帧：sheet 已离场 + "Show sheet" 重开钮在位）→ 点 reopen-sheet 重进。
+  - send-message.webm（397600 字节，5.72s）：点 chat-composer → 键入 "Hello Medley" → 点 composer-send → 思考 900ms → 流式回显（5.5s 抽帧：用户泡 "Hello Medley" + AI "Demo echo — Hello Medley" 在位）。
+  - tab-switch.webm（75851 字节，4.36s）：点 智能体 → 点 聊天 回切（2.5s 抽帧：智能体激活白 pill 在位）。
+  - 抽帧存 measure/（sheet-mid/send-end/tab-mid.png）。N/A 片段：push/pop、开关、键盘、空状态（理由见上），不伪造。
+
+### E. 定价顶修正（v1.8 残留 R-6 关闭）
+
+- 重测纠错：v1.8 残留 R-6 的定价漂移数（X -39 等）换算不自洽；本轮细节条重测：定价状态墨 strip 140-150（与 home-en 同 Y0 126/scale 1.0156，定价 Y0 假设成立）；h1 主带 strip 295-308（phone 171.6-184.8）+ cap 顶稀疏行 289-294 → cap 顶 phone 165.5（旧 161.5 系换算误，作废）；弧点：粉 (20.7,134.1)、蓝 (44.3,125.9)、黄 (68.9,115.8)、绿 (92.6,107.7)（左区扫描，右点在 1703-1738 列另见 phone 111-146/91-103，弧总升约 42）；渲染旧值：弧 span 顶内容 86.0、h1 盒 111.0、h1 cap 117.7，弧/h1 双双 -48（close 仅 -3，缺口在 close→arc 间，与弧内相对落点无关——弧内落差实测粉→桃 35.0 vs 原图约 42，相对形已合，绝对位错 48）。
+- 定夺：弧外包 div 加 pt-12（48px）。教训：初版 mt-12 只净 +34（与 close 行 mb-[14px] 外边距塌陷 max(48,14)=48，净 48-14=34，实测证实），改 padding 后不塌陷、净 +48 精确。终验：弧 span 顶内容 134.0（原图 134.1，-0.1）、h1 盒 159.0（原图 158.9，+0.1）、h1 cap 165.3（原图 165.5，-0.2）。弧→h1 间隙 15.0 vs 原图 14.9（本就合）。v1.8 R-6（定价整体漂移）关闭；定价全屏 diff 仍大（118426px vs pre）主因即此 +48 位移 + h1 收缩 + 切换 stateful + 几何，皆为预期内。
+- 切换条复验（位移补偿 -3 后）：切换带差 433px 仅限 Monthly/Yearly/Save 标签字形 AA 边（并排裁切目视同，toggle-prev/new/diff.png 存 measure/）；下方内容 -3（顶）至 -5（底）均匀上收（h1 盒 -3.75 的分数累积，行 664 最佳位移 -5 得 0、行 412 -4 余 10px、行 755 -4 余 43px），属 h1 收缩回流、非新增改动。
+
+### F. 终验（内容坐标；截图 rounds/v1.9/ 根目录 18 张 + pre/ + measure/ + video/）
+
+- welcome 带（内容坐标；括号为 844/852 调整后比较）：状态墨 14.2-23.4（原图 14.2-24.4）；头带 57.8-77.1（点顶原图 57.1 +0.7）；标题 311.4-336.7（原图 306.8-335.8；高调整后 310.8，+0.6）；副 1 364.1-376.3（原图 364.2-377.3，未调整 -0.1；居中块模型：38px 标题使块缩 5.75，副 1/副 2 较 43px 位 -2.9，实测 367.2→364.1、393.5→390.5 精确吻合模型，块心较 +4 预测低 1.8px，落在歧义带内）；副 2 单行 390.5-400.6（原图 391.1-401.5，-0.6）；药丸 652.2-702.9（50.7 高，原图 50.4；从底 149.1 vs 原图 146.8，+2.3）；Try 文 733.3-743.4（从底 118.7 vs 原图 116.4，+2.3）；脚注两行 784.0-792.1 / 800.2-807.3（从底 68.0/51.8 vs 原图 68.2/52.2，-0.2/-0.4）；光标亮（终图 dot-like 132px）+ 色 #6ea9dd；辉光核见 B 节。
+- picker-a：sheet 顶 101.4-102.5（原图 102-104）；把手 110.6-113.6（原图 110-113）；标题带 138.0-151.1（原图带 138.8-150.6、核 139.8-149.7）；行带 GLM 约 334、DeepSeek 约 388、Sonnet 约 604（v1.8 Noto 值 335.6/390.2/608.6，差 -1.6/-2.2/-4.6，归字体度量/阈值差，v1.9 内 diff 0 为准）；v1.8 P-8 AutoCard 对比度残留沿用（+9-10，共享组件证据不足，仍不动）。
+- greeting 宽：内容 235.3 vs 原图 232.4（+2.9）；credits 宽：内容约 153 vs 原图约 143（+10，见 A 节残留）；定价 h1：见 E 节（-0.2）。
+- 玻璃边：浅作曲器晕 (219,221,223) vs 底 (233,234,236)；深作曲器填充 #1f2024、浅白、气泡 #191a1e、条 black/45 均在位；抽屉 sheet 阴影与 pill hairline 为代码值（静态截图阴影低于可分辨度处记代码一路，不虚构像素证据）。
+- 同尺寸并排目视（measure/side-welcome.png、side-home-en.png，原图与渲染同 390x844）：welcome 头点经 photo-9 裁切裁决无差（见 C 节）、标题/副/按钮/脚注/指示条一致、辉光以 photo-9 为准；home-en 顶栏/问候/4 建议行/作曲器一致（建议行图标为 Lucide 等效形，原图灰绿倾向在拼贴分辨率下未定色，沿用 #6b6c72）。
+- 18 屏 pre/（v1.8 代码、旧几何）→终图全量 diff（>12 阈值；pre 早于内容盒/scale 修复，故全局几何位移为预期内，数字只作总量记录）：welcome 26369、home-en 24582、home-cn 26367、lisbon-en 48661、lisbon-cn 40696、train 41340、savings 43573、kyoto 37877、router 47308、info-sheet 40370、drawer 21309、picker-a 36849、picker-b 39857、pricing 118426、credits 48643、suspended 34264、agent-team 49982、language 30161（bbox 全屏，皆为几何 + 条 + 字形 + 玻璃 + 字重 + 交互 settled 态之和）。
+- 6 屏 post-content-box 基线 confined 复验（measure/prev-*）：picker-a 0、drawer 0、lisbon-en 0、info-sheet 792（仅行 262-282 数值 Semibold 预期内）、welcome 8744→10045（标题 38 Semibold 带 + 副回流 + 辉光扩展 + 药丸/指示条 AA 行，见 B/F 节）、pricing 52021（h1 收缩 + 切换 + 回流，见 E 节；终图另含弧 +48，prev 基线早于弧修，故终图 vs prev 含 +48 位移，属预期）。
+- 测量 caveat：Linux harness 文本带亚像素 AA 彩边（headless 下 SF 亦出蓝/橙字边，prev 图同有；iOS 为灰度 AA），故文本边 diff 计数含彩边噪声，1-2px 边差不单独列残留。
+
+### 全套重扫残留计数与带数残留表
+
+- 已闭合（本轮，带数）：welcome 标题/副 1/副 2/药丸/Try/脚注（6 带，方法内 1-2.5px）；picker-a sheet 顶/把手/标题核（3 带，1px 内）；定价弧/h1 盒/h1 cap（3 带，0.1-0.2px）；辉光三核（3 核，0-1 级）；状态栏墨/图标簇/时间盒（3 项，0.3-1.3px）；Home 条（135x5、色精确）；折行（全部大标题 Display 下 1 行）；交互 settled 态（picker/drawer/lisbon 0 像素）；v1.8 R-6 定价漂移关闭。
+- 残留计数：共 12 项。
+  - R-1 welcome 标题 cap 残差 -2.7（38 宽最优 vs 41 高最优之争，宽+点已裁决 38，cap 单项记残留）。
+  - R-2 credits 巨号宽 +10（约 7%）与字干细约 2px（窄体数字字体假说未证；高 51 与 Semibold 已定）。
+  - R-3 welcome 药丸顶 AA 行覆盖率变化（等效约 0.28px，实边行不动；亚像素光栅差，未定位到布局改动，不追）。
+  - R-4 844/852 高度歧义（<=4px；居中元素比较依赖 +4 假设，块心实测较预测低 1.8px，落在带内；Phone 高 852 不动）。
+  - R-5 picker-a 行带较 v1.8 Noto 值 -1.6/-2.2/-4.6（GLM/DeepSeek/Sonnet；字体度量/阈值差，v1.9 内 diff 0；Sonnet -4.6 较深，仍在 JPEG/度量不确定度边缘，记残留不另调）。
+  - R-6 picker-a AutoCard 对比度 +9-10（v1.8 P-8 沿用，共享组件证据不足）。
+  - R-7 picker-a sheet 圆角 24px（目视一致，未精量；v1.8 R-5 沿用）与 picker-b 位置（v1.8 S-1/R-8 沿用：共享推断，非 HD 直验）。
+  - R-8 总览 9 屏（train/savings/kyoto/router/info-sheet/search-drawer/picker-b/suspended/agent-team）逐元素位置/字号/间距/底色未闭合（无单屏 HD 原图，总览 cell 约 256x566，仅大于 10% 的大差可行动；文案/数值/底色模式已核验，不宣称 1:1；v1.8 R-9 沿用）。
+  - R-9 Thinking 倍率小字仍不渲染（v1.8 R-10 沿用）、全部圆角弧半径精确值（v1.8 R-11 沿用）、credits 图例圆点 T8 部分验证与 kyoto 天气图标色、home 建议行图标精确色（v1.8 R-13 沿用）。
+  - R-10 标题轮换余句与配色、真实动效时长/弹簧曲线（原图侧无视频源，参数为 iOS 标准值非原屏实测；v1.8 R-12 部分沿用，但本轮已落机制 + 曲线 + reduced-motion）。
+  - R-11 定价切换条标签字形 AA 边 433px（位移补偿后；并排目视同，属亚像素光栅差）与下方回流 ±1px 取整残留（行 664 -5、412/755 -4 余 10-43px）。
+  - R-12 未观测交互的 N/A 项（push/pop、开关、键盘、空状态；理由见 D 节）与演示回显诚实性（lisbon 流式为用户原话回显，非模型回答；画廊 demo 语境下已标注）。
+- 未改动说明：agent-team 52px 自定义条本轮未动（v1.5 沿用；其滚动容器仅加 scroll-momentum 类，内容溢出故光栅无变）；ui/sheet.tsx / ui/dialog.tsx 仅画廊展示用，无屏面改动。
+
+### 改动文件（只本套）
+
+- src/lib/utils.ts：extendTailwindMerge 注册 10 token 为 font-size 组（twMerge 丢 token 修复）。
+- src/components/Phone.tsx：spec 字形重绘（信号/wifi/电池/右簇 gap 6.8）、StatusBar h-[37px]、HomeIndicator 135x5、Phone content-box 内联 style（外 394x856）、StatusBar/HomeIndicator relative z-10（压辉光扩展层）。
+- src/lib/liquidGlass.ts（新）：nikdelvin 构造自研实现（位移图 + 三通道色散 + screen 混合；B 矩阵修正 + 不透明层要求注释）。
+- src/lib/motion.ts（新）：IOS_EASE / IOS_SPRING / SHEET_ENTER_MS / ROTATION_INTERVAL_MS。
+- src/components/Presentation.tsx（新）：usePresentation（进入类 + 退出类 + cycle 重挂）+ ReopenButton。
+- src/index.css：--text-welcome 43→38；keyframes 与 anim 类（光标/进入/退出/思考/标题/插入符）；.scroll-momentum 作用域类（非全局覆盖）；reduced-motion。
+- src/App.tsx：单屏 scale 0.9906 → 0.9860（844/856）。
+- src/screens/welcome-dark.tsx：辉光独立层（全屏跨度 + 不透明底 + 强度 5/CA1 + 地图 390x852）、头行 items-start、标题 font-semibold、轮换机制（单句 + 5000ms + 光标）、旧容器背景注释修正。
+- src/screens/model-picker-a.tsx：顶区 70→65（条 +5 补偿，sheet 顶仍 102）、sheet 玻璃阴影、presentation 接线（把手按钮 + 退出类 + 重开）。
+- src/components/InputBar.tsx：双 variant 玻璃（blur 50/saturate 1.8 + 阴影 + 内 hairline）+ MicButton 四型 active:scale-95。
+- src/components/TopBar.tsx：ModelPill 玻璃（blur 6/saturate 1.8 + hairline）。
+- src/components/Chat.tsx：UserBubble 只加 blur 50/saturate 1.8。
+- src/screens/chat-info-sheet.tsx：sheet 玻璃阴影 + blur、数值 font-semibold、presentation 接线（scrim 45 + 退出类）。
+- src/screens/search-drawer-dark.tsx：右条玻璃 blur、presentation 接线（drawer + strip 退出类）。
+- src/screens/home-light-en.tsx、home-light-cn.tsx：问候 font-bold → font-semibold；home-cn Tabs defaultValue。
+- src/components/ModelPicker.tsx：ThinkingControl defaultValue。
+- src/components/Pricing.tsx：BillingToggle stateful（默认 yearly、滑块 pill、testid）。
+- src/components/ui/tabs.tsx：基 trigger transition + active:scale；ui/slider.tsx：拇指 transition + active:scale-125；ui/button.tsx：transition-all + active:scale-[0.98]。
+- src/screens/chat-dark-lisbon-en.tsx：交互作曲器（发送/思考/流式/停止/滚动守卫）。
+- src/screens/chat-light-train-en.tsx、chat-light-savings-en.tsx、credits-light.tsx、agent-team-dark.tsx：滚动容器加 scroll-momentum（已证溢出者）。
+- src/screens/credits-light.tsx：巨号 font-bold → font-semibold；suspended-light.tsx：标题 font-bold → font-semibold；pricing-dark.tsx：弧外包 pt-12（+48 定价顶修正）。
+- src/screens/chat-dark-lisbon-cn.tsx、chat-dark-kyoto-en.tsx、chat-light-router-en.tsx、model-picker-b.tsx：本轮无内容改动（量测覆盖；picker-b ThinkingControl 在 ModelPicker.tsx 内）。
+- docs/verification/shot-v19.cjs（新，SF + Display 覆盖 harness）；docs/verification/rounds/v1.9/（根目录 18 张终图、pre/ 18 张 SF 基线、measure/ 探针/裁切/对照、video/ 4 段交互录屏）。
+- 费用：零裁判调用、零令牌取用。CHANGELOG 本条即 v1.9 交付记录；commit/push 见提交信息（只加本套文件，origin 核实）。

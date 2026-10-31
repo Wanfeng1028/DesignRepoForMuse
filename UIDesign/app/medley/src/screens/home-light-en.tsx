@@ -18,7 +18,7 @@ export default function HomeLightEn() {
         />
         <div className="min-h-0 flex-1" />
         <div className="px-5">
-          <div className="mb-[18px] text-greeting font-bold leading-[1.25] text-light-text">Good evening, Alex</div>
+          <div className="mb-[18px] text-greeting font-semibold leading-[1.25] text-light-text">Good evening, Alex</div>
           <div className="flex flex-col gap-0.5 border-t border-light-divider">
             <SuggestionRow dark={false} icon={Icon.news('#6b6c72')} text="What's in the news today" />
             <SuggestionRow dark={false} icon={Icon.pdf('#6b6c72')} text="Summarize a PDF" />

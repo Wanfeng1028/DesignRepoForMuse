@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useState } from 'react'
 import { cn } from '../lib/utils'
 import { Icon } from './icons'
 
@@ -62,14 +63,37 @@ export function PlanFeature({ text }: { text: string }) {
   )
 }
 
+/**
+ * v1.9 interaction line: the billing period is a segmented control, not a
+ * static label. Default is yearly (matches the reference, where Yearly is
+ * selected). The indicator is an absolutely-positioned pill that slides
+ * on the iOS curve; in the default yearly state its geometry equals the
+ * old static yearly span exactly, so verification shots are unchanged.
+ */
 export function BillingToggle({ monthlyLabel, yearlyLabel, saveLabel }: { monthlyLabel: string; yearlyLabel: string; saveLabel: string }) {
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('yearly')
   return (
-    <div className="flex rounded-button bg-dark-input p-1">
-      <span className="flex-1 py-[9px] text-center text-[14px] font-semibold text-dark-sub">{monthlyLabel}</span>
-      <span className="flex flex-1 items-center justify-center gap-1.5 rounded-chip bg-dark-pill py-[9px] text-[14px] font-bold text-white">
+    <div className="relative flex rounded-button bg-dark-input p-1">
+      <span
+        aria-hidden
+        className="absolute bottom-1 top-1 w-[calc(50%-4px)] rounded-chip bg-dark-pill transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        style={{ transform: billing === 'yearly' ? 'translateX(100%)' : 'translateX(0)' }}
+      />
+      <button
+        data-testid="billing-monthly"
+        onClick={() => setBilling('monthly')}
+        className={`relative flex-1 py-[9px] text-center text-[14px] transition-all duration-200 active:scale-[0.98] ${billing === 'monthly' ? 'font-bold text-white' : 'font-semibold text-dark-sub'}`}
+      >
+        {monthlyLabel}
+      </button>
+      <button
+        data-testid="billing-yearly"
+        onClick={() => setBilling('yearly')}
+        className={`relative flex flex-1 items-center justify-center gap-1.5 py-[9px] text-[14px] transition-all duration-200 active:scale-[0.98] ${billing === 'yearly' ? 'font-bold text-white' : 'font-semibold text-dark-sub'}`}
+      >
         {yearlyLabel}
         <span className="text-[11px] font-semibold text-dark-sub">{saveLabel}</span>
-      </span>
+      </button>
     </div>
   )
 }

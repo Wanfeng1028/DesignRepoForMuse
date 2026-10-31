@@ -14,7 +14,7 @@ export default function SuspendedLight() {
             <line x1="8" y1="20" x2="20" y2="8" stroke="#6b6c72" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </div>
-        <div className="text-[26px] font-bold leading-[1.25] text-light-text">Your account is suspended</div>
+        <div className="text-[26px] font-semibold leading-[1.25] text-light-text">Your account is suspended</div>
         <div className="mt-4 text-[14px] leading-[1.55] text-light-text">
           We suspended this account for breaking the usage policy: repeated requests for prohibited content.
         </div>

@@ -9,7 +9,7 @@ export default function AgentTeamDark() {
   return (
     <Phone theme="dark">
       <TopBar dark left={Icon.back('#f5f5f7')} right={Icon.more('#f5f5f7')} />
-      <div className="min-h-0 flex-1 overflow-y-auto px-5">
+      <div className="min-h-0 flex-1 overflow-y-auto scroll-momentum px-5">
         <h1 className="my-0.5 mb-2.5 text-[17px] font-bold leading-[1.3]">
           Compare the pricing of 12 note-taking<br />apps
         </h1>

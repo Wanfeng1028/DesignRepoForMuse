@@ -1,5 +1,6 @@
 import { Phone } from '../components/Phone'
 import { Icon } from '../components/icons'
+import { ReopenButton, usePresentation } from '../components/Presentation'
 
 export const meta = { id: 'search-drawer-dark', title: 'Search drawer (dark)', source: 'ov_r1_c3' }
 
@@ -20,10 +21,16 @@ const recent = [
 ]
 
 export default function SearchDrawerDark() {
+  const { dismissed, onEnterEnd, dismiss, reopen, cycle, drawerClass, scrimClass, drawerExitClass, scrimExitClass } = usePresentation()
   return (
     <Phone theme="dark">
-      <div className="flex min-h-0 flex-1 flex-row">
-        <div className="min-w-0 flex-1 overflow-y-auto bg-[#16171a] px-5 py-3 pb-4">
+      <div className="relative flex min-h-0 flex-1 flex-row">
+        <div
+          key={cycle}
+          data-testid="drawer-panel"
+          onAnimationEnd={onEnterEnd}
+          className={`min-w-0 flex-1 overflow-y-auto scroll-momentum bg-[#16171a] px-5 py-3 pb-4 ${drawerClass} ${drawerExitClass}`}
+        >
           <div className="flex items-center gap-3">
             <div className="flex h-12 flex-1 items-center gap-2.5 rounded-input bg-dark-input px-[14px]">
               {Icon.search('#9a9ba2')}
@@ -83,7 +90,16 @@ export default function SearchDrawerDark() {
             <span className="ml-auto flex">{Icon.gear('#9a9ba2')}</span>
           </div>
         </div>
-        <div className="w-[62px] shrink-0 bg-black/45" />
+        {/* v1.9 glass: the strip is already translucent (black/45, measured),
+            so it is the one drawer surface where backdrop blur is real
+            rather than a no-op: blur 50px + saturate 1.8 over the content
+            beneath. Fill unchanged. */}
+        <div
+          data-testid="drawer-scrim"
+          onClick={dismiss}
+          className={`w-[62px] shrink-0 cursor-pointer bg-black/45 backdrop-blur-[50px] backdrop-saturate-[1.8] ${scrimClass} ${scrimExitClass}`}
+        />
+        {dismissed && <ReopenButton label="Show drawer" onClick={reopen} />}
       </div>
     </Phone>
   )

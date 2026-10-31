@@ -42,8 +42,15 @@ export function ModelPill({
         <button
           type="button"
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-chip px-3 py-[7px] text-[14px] font-semibold',
-            dark ? 'bg-dark-input text-dark-text' : 'bg-light-bubble text-light-text',
+            // v1.9 glass, small-pill grade: blur 6px + saturate 1.8, plus
+            // the glassy-liquid 0.5px inner hairline as edge light
+            // (dark: white 0.06, light: black 0.04). Fill stays the
+            // measured solid; blur is a no-op over the solid page bg in
+            // a static shot and acts only over scrolled content live.
+            'inline-flex items-center gap-1.5 rounded-chip px-3 py-[7px] text-[14px] font-semibold backdrop-blur-[6px] backdrop-saturate-[1.8]',
+            dark
+              ? 'bg-dark-input text-dark-text shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.06)]'
+              : 'bg-light-bubble text-light-text shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.04)]',
           )}
         >
           {label === 'Auto' || label === '自动' ? <BrandDots size={6} /> : <ModelDot model={label} size={8} />}

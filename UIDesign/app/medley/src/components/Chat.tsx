@@ -8,7 +8,14 @@ export function UserBubble({ dark, children, className }: { dark: boolean; child
     <div className="my-2 flex justify-end">
       <div
         className={cn(
-          'max-w-[85%] rounded-bubble rounded-tr-[6px] px-4 py-3 text-body leading-[1.35]',
+          // v1.9 glass: backdrop blur 50px + saturate 1.8 assigned to the
+          // bubble material. Under the measured opaque fills this is a
+          // no-op in a static shot (fills stay exactly #191a1e / #edeef0);
+          // it is recorded here so the material is glass in live use
+          // rather than a second solid. No translucency, no extra shadow:
+          // bubbles are message content, and iOS 27's own placement rule
+          // keeps glass off content backgrounds.
+          'max-w-[85%] rounded-bubble rounded-tr-[6px] px-4 py-3 text-body leading-[1.35] backdrop-blur-[50px] backdrop-saturate-[1.8]',
           dark ? 'bg-dark-bubble text-dark-text' : 'bg-light-bubble text-light-text',
           className,
         )}

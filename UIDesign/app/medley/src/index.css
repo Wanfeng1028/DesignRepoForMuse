@@ -51,7 +51,10 @@
   --radius-chip: 20px;
   --radius-phone: 44px;
   /* Font sizes (visual estimates unless noted; see tokens/index.ts) */
-  --text-welcome: 43px;
+  /* v1.9: welcome title 43 -> 38 (see CHANGELOG: orig advance ~238px +
+     dot-left anchor match Display Semibold 38, not Bold 43; cap height
+     alone suggests 41, width + dot position overrule it). */
+  --text-welcome: 38px;
   --text-welcome--line-height: 1.15;
   --text-greeting: 28px;
   --text-greeting--line-height: 1.25;
@@ -88,7 +91,7 @@ body {
   box-sizing: border-box;
 }
 
-/* v1.5 morphing: state-change transitions only, no static visual change. */
+/* v1.9 morphing: state-change transitions only, no static visual change. */
 .morph-chevron svg {
   transition: transform 200ms ease;
 }
@@ -100,6 +103,109 @@ body {
 }
 .morph-poll-ring {
   transition: border-color 200ms ease;
+}
+
+/* v1.9 interaction line (iOS motion; static shots unaffected because every
+ * animation below is either mount-settled (<600ms, screenshots at 3000ms),
+ * hover/active/focus-only, or timer-gated to first run after 5000ms):
+ * - iOS ease for presentations: cubic-bezier(0.32,0.72,0,1).
+ * - Cursor blink: 1s period, 80% on-duty, so a screenshot still catches
+ *   the cursor most of the time (verify + reshoot if caught off).
+ * - Sheet/drawer enter: spring curve, 600ms; scrim fade 300ms.
+ * - Thinking dots: iOS-style bounce, staggered.
+ * - Streaming caret: soft blink while text streams. */
+@keyframes ios-cursor-blink {
+  0%, 79% { opacity: 1; }
+  80%, 100% { opacity: 0; }
+}
+@keyframes ios-sheet-up {
+  from { transform: translateY(102%); }
+  to { transform: translateY(0); }
+}
+@keyframes ios-drawer-in {
+  from { transform: translateX(-102%); }
+  to { transform: translateX(0); }
+}
+@keyframes ios-scrim-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* Scrim fade ending at the measured 0.45 veil (chat-info top dim): the
+ * element keeps its opacity-45 class, so the settled value is identical
+ * to the static screen once the enter class is removed on animation end. */
+@keyframes ios-scrim-45 {
+  from { opacity: 0; }
+  to { opacity: 0.45; }
+}
+@keyframes ios-thinking-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes ios-title-enter {
+  from { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes ios-sheet-out {
+  from { transform: translateY(0); }
+  to { transform: translateY(102%); }
+}
+@keyframes ios-drawer-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(-102%); }
+}
+@keyframes ios-scrim-out {
+  /* No `from`: interpolate from the element's current opacity (0.45 for
+   * the chat-info veil, 1 for the drawer strip) so dismiss never flashes. */
+  to { opacity: 0; }
+}
+@keyframes ios-caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.anim-ios-cursor { animation: ios-cursor-blink 1s steps(1, end) infinite; }
+.anim-ios-sheet-enter { animation: ios-sheet-up 0.6s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.anim-ios-drawer-enter { animation: ios-drawer-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.anim-ios-scrim-enter { animation: ios-scrim-in 0.3s ease-out both; }
+.anim-ios-scrim-45 { animation: ios-scrim-45 0.3s ease-out both; }
+/* Exit classes: fill both holds the dismissed state off-screen (or
+ * transparent for scrims) after the animation ends; they exist only
+ * while dismissed, so settled screenshots stay layer-free. Reopen
+ * remounts the sheet (cycle key) and the enter animation replays. */
+.anim-ios-sheet-exit { animation: ios-sheet-out 0.5s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.anim-ios-drawer-exit { animation: ios-drawer-out 0.5s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.anim-ios-scrim-exit { animation: ios-scrim-out 0.3s ease-out both; }
+.anim-ios-title-enter { animation: ios-title-enter 0.6s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.anim-ios-caret { animation: ios-caret-blink 0.9s steps(1, end) infinite; }
+.anim-ios-thinking-dot { animation: ios-thinking-bounce 1.2s ease-in-out infinite; }
+
+/* v1.9 scroll: iOS momentum + edge containment on scroll containers.
+ * True bounce is OS-provided on iOS; the web demo gets momentum scroll
+ * with contained overscroll (no static visual change). */
+/* v1.9 scroll: iOS momentum + edge containment. SCOPED class, not a
+ * global .overflow-y-auto override: the global form forced a composited
+ * layer onto the picker sheet, whose content exactly fits its container
+ * (scrollHeight == clientHeight, no scrolling layer in the static
+ * render), and changed its text rasterization deterministically
+ * (13104px diff vs the static render, thicker stems). Containers that
+ * genuinely overflow already rasterize inside a scrolling layer, so the
+ * class is raster-neutral there (drawer, info-sheet, train, savings,
+ * credits, agent-team, lisbon-en all verified 0-diff). Exact-fit
+ * containers (picker-a sheet, picker-b list, pricing, lisbon-cn, kyoto,
+ * router) must NOT get this class. True bounce is OS-provided on iOS;
+ * the web demo gets momentum scroll with contained overscroll. */
+.scroll-momentum {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* v1.9 reduced motion: honour the OS setting inside phone frames. */
+@media (prefers-reduced-motion: reduce) {
+  .phone-frame *,
+  .phone-frame {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* v1.5 bare verification shots (?screen=<id>&bare=1): screen content only,

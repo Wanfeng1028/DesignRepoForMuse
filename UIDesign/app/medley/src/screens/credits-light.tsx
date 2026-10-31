@@ -36,9 +36,9 @@ export default function CreditsLight() {
           }
           right={Icon.info('#17181c')}
         />
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-1">
+        <div className="min-h-0 flex-1 overflow-y-auto scroll-momentum px-5 pb-5 pt-1">
           <div className="mt-1 flex items-baseline gap-2">
-            <span className="text-huge font-bold leading-[1] text-light-text">12,480</span>
+            <span className="text-huge font-semibold leading-[1] text-light-text">12,480</span>
             <span className="text-body text-light-sub">credits</span>
           </div>
           <div className="mt-[11px] text-secondary leading-[20px] text-light-sub">About 270 messages at your usual mix</div>
