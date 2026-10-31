@@ -1,0 +1,4 @@
+briefing send press: down transform=matrix(0.97, 0, 0, 0.97, 0, 0) opacity=0.85 | up transform=none opacity=0.5
+chat back press: down transform=matrix(0.97, 0, 0, 0.97, 0, 0) opacity=0.85 | up transform=none opacity=1
+draft Download press: down transform=matrix(0.97, 0, 0, 0.97, 0, 0) opacity=0.85 | up transform=none opacity=1
+reduced-motion: btnTransition=none | send+300ms userMsg=true typing=false agentReply=true (expect: userMsg true, agentReply true with 0 delay)

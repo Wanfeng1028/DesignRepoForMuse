@@ -393,6 +393,58 @@
 - 本轮只改 UIDesign/app/airbuild/ 内 10 个源码文件（briefing-cards、composer、message、phone-frame、project-card-grid、task-list-card、ui/card、website-draft-card、index.css、tokens/index.ts）+ CHANGELOG 本条 + rounds/v1.9/ 验证物；未动其他三套、未动 UIDesign/CHANGELOG.md 总账、未动服务器/令牌/BotsRouter/X/其他项目；未 git add、未 commit、未 push。
 - 测量脚本仅读取 ~/workspace/airbuild-refs/ 的原图、只输出数值文本，未把任何官方位图或裁图写入仓库；一眼合成图已删除。
 
+## v1.11 — 2026-11-01 — round 9 交互线：iOS 行为 + 大标题字重核查
+
+- 决策总则（与 v1.10 同）：只看结果、直接做、不许问；差距自己找出来、量出来、修掉。本轮零裁判调用（只认 PIL/DOM 实测数 + 录屏实测，不碰任何密钥文件）；commit 只加本套文件（绝不 -A），push 后以 git branch -r --contains 核实进了 origin 再报；不碰其他三套（尤其 app/medley 仍有工人在跑）、总账、服务器数据库、任何令牌、BotsRouter、X、其他项目。画廊 demo 真的能跑下列交互，只交截图不算数。
+- 理解口径（用户 2026-11-01 01:00 新令“在 1:1 复原基础上加入 iOS 的风格和交互以及各种细节”）：静态截图永远带不出“感觉”，缺的是活的 iOS 行为——原屏本身就是 iOS 应用，它的交互就是 1:1 目标的一部分，不是额外设计。只做原屏有的行为，不许发明新功能；动效参数能量就量，不能量的记未量（弹簧 mass/stiffness/damping 全程未量，一律只报定时 cubic-bezier 曲线，不谎称弹簧求解值）。
+- 交互对照表（原屏行为 | 实现 | 参数/未量）：
+  - 作曲器发送（简报屏；iphone-03 聊天线原图无作曲器，故不接发送流）：回车发送；非空发送后清空；空发送 no-op，且发送钮保持原蓝（不发明原图从未出现过的 dimmed 空态）；打字期间作曲器锁定（disabled，防排队）。发送流：用户气泡（message-in 入场）→ Typing（Ato）→ 1200ms 后整条 agent 回复（demo 文案，非原文）→ 列表滚动到底（smooth；reduced-motion 下 auto）。实测见下。
+  - 消息入场：REA 逐字值 .message { animation: message-in 260ms both cubic-bezier(.22,1,.36,1) }，from opacity 0 / translateY(8px) scale(.985)——原样落地为 .ab-message-in；仅动态追加消息用入场动画，初始消息永不动画（静止截图与 v1.10 一致）。
+  - 思考中/打字指示：REA 逐字值——28px 头像 + 白底气泡 padding 9px 11px、圆角 13px、3 个 5px 圆点；typing 800ms infinite alternate，延迟 0/160/320ms。原样落地。
+  - 逐字流式输出：不做。REA presentMessage 为整条加入（先 showTyping 再 addMessage 整条），无逐字流式；伪造逐字即造假。
+  - 停止钮：N/A。10 张官方截图中无停止 glyph；REA stopConversation 只停网页演示播放（mockup_mockup.js 第 421、481、829、914 行），不是手机端停止生成钮。
+  - 按钮按压态（全局）：-webkit-tap-highlight-color: transparent、touch-action: manipulation；:active 时 100ms 内 scale(0.97) + opacity 0.85，松手以 350ms cubic-bezier(0.32,0.72,0,1) 回弹。实测：简报发送钮 / 聊天返回 chevron / 草稿 Download 钮，下压均为 matrix(0.97,0,0,0.97,0,0) + opacity 0.85，松手 transform 归 none（发送钮松手读数 0.5 是发送成功后进入空输入 disabled 态，正好证明发送已触发）。
+  - 开关/分段器/滑杆：N/A。手机截图中无 UISwitch / UISegmentedControl / UISlider；本套仅有的 toggle 是详情 chevron（已 morph）与组件屏 morph 演示钮（已 morph + 按压态）。
+  - 导航 push/pop：400ms cubic-bezier(0.32,0.72,0,1)（REA 抽屉曲线同值，更长时值）；push 入场 translateX(100%→0)、push 出场 translateX(0→-30%) + brightness 1→0.94、pop 反向；仅 ?screen= 单屏模式生效（画廊仍静态）；过渡期间防重复点击；切屏后组件 remount（画廊 demo 不做跨屏状态持久化，简报发送流离屏后重置，属已知取舍）。home 项目 tile 点按一律落到 Hourtown 聊天线（本套唯一聊天屏；各项目独立线程不在截图集中，不发明）。
+  - 标签栏切换：N/A。10 张官方截图中无 tab 栏；REA preview-tabs（高 36px）是网页端预览 tab，不是手机 tab 栏。替代演示：简报卡片行横向 snap pager（第二卡露出即滚动 affordance），录屏以 pager 演示“切换”，但报告中标明这是 pager、不是 tab 栏。
+  - 滚动动量 + 边缘回弹：消息列表 .ab-scroll（overflow-y: auto、overscroll-behavior-y: contain、-webkit-overflow-scrolling: touch、隐藏桌面滚动条；iOS 指示条本就是 overlay，隐藏后静止截图不变）；简报卡片行 .ab-pager（scroll-snap-type: x mandatory、子项 snap-align: start、隐藏滚动条）。原生动量/回弹由平台滚动实现，不在 CSS 里伪造参数。
+  - 面板/sheet（详情面板）：挂载时 500ms iOS 曲线弹簧入场（从下方滑入）；把手拖拽跟手（下拖 1:1，上拉阻尼 x0.3）；松手判定：拖过 120px 或下甩速度 > 0.65px/ms 则 350ms 同曲线 dismiss，否则弹簧回位；Done（勾选）钮同样 dismiss；reduced-motion 下入场/dismiss 均为瞬时。把手块总高 16px（h-4，无 mb-3，4px 横条位于块顶），与 v1.10 几何完全一致。不加 dim 遮罩（原图面板底与画布同为 #f4f4f4，加 dim 会改静止像素）；拖拽只限把手（面板体内有 chevron/Done/商店卡等可点控件，全 panel 拖拽会劫持点击）。
+  - 标题轮换：N/A。本套无轮换标题（核查确认无），不造假。
+  - 键盘出现/收起动画：N/A（无键盘可见的原图处）。10 张截图中无键盘；作曲器获得焦点是真实 input 行为，focus-visible 描边仅为网页 demo 无障碍补充（2px rgba(0,136,254,0.6) + 2px 偏移），iOS 触摸界面本身无焦点环，原图亦无。
+  - 状态栏时间：保持静态“13:00”，不改实时时钟。理由：原图顶带无可读时间量测值；实时时钟会破坏截图可复现性；且本轮核查的是时间元素存在与字形（17px / 590 / 22px），已在 v1.10 闭合。
+  - 成员行点按、home +（新建项目）、顶栏 …：按压态而已，不接线。理由：成员私聊线、新建项目屏、菜单面板内容均不在截图集中，接线即发明。
+  - 空状态：原图无空态屏；唯一“空后”界面是 sheet dismiss 后的 demo-only 重开控件（按钮“Show detail panel”+ 小字“Demo control — not part of the original panel”；非原图 UI，静止时永不出现），不冒充原图空状态。
+  - reduced-motion：.ab-morph、.ab-typing-dot、.ab-message-in、四组导航动画一律 animation: none; transition: none；按钮按压亦取消；简报发送延迟归零（与 REA reducedMotion 时一次性渲染全部消息的口径一致）。实测：reducedMotion 下发送后 300ms，用户消息与 agent 回复均已出现，打字圆点 0 个，按钮 transition 为 none。
+  - 动效 token（src/tokens/index.ts 新增 motion 对象，文档性，与 index.css 取值一致）：pushPop 400ms cubic-bezier(0.32,0.72,0,1)；sheetEnter 500ms 同曲线；sheetDismiss 350ms 同曲线；dismiss 阈值 120px or flick > 0.65px/ms；messageIn 260ms cubic-bezier(0.22,1,0.36,1)；typing 800ms alternate, delays 0/160/320ms；press 100ms down / 350ms 同曲线 release, scale 0.97 + opacity 0.85；springParams: 'unmeasured — timed cubic-bezier curves only, no solver values claimed'。
+- 本轮修掉的真 bug（交互实测挖出，非像素回归）：
+  - 详情 sheet 把手全程不可拖：状态栏容器（framed y10–71）与岛（framed y20.7–56.5）把把手块（framed y48–64）整片盖住，鼠标落点永远是 chrome 而非把手。修复：状态栏容器与岛 span 加 pointer-events-none（纯装饰元素，本无交互；Home 条早已是 pointer-events-none，同文件内有先例）。零像素变化：修复后重拍六屏与 v1.10 对照与修复前完全一致（见下）。教训：z-10 保住静止像素的同时吃掉了手势——视觉层级修完必须走一遍手势实测。
+  - Tailwind 任意值类丢阴影（构建事故，v1.11 初版）：Composer 发送钮 className 曾写成带插值的模板字符串，Tailwind v4 构建未生成其中 shadow-[0_4px_12px_rgba(38,142,255,0.4)] 类（消息气泡阴影未丢是因为 Typing 气泡处有同一类的静态字符串兜底）。修复：全部改回静态字符串 + cn() 条件拼接；重建后 CSS 恢复 4px 12px 规则，发送钮 computed 阴影恢复。铁律：凡 Tailwind 任意值类一律用静态字符串，禁止包进带插值的模板字符串。
+  - 详情状态栏被盖（构建事故，v1.11 初版）：面板 transform 把面板提入定位绘制层且 DOM 在后，盖住时间与状态图标（详情差 4284px，内容行 69–187 逐行一致、只差状态栏带 18–46 行）。修复：把手块恢复 16px 总高（去 mb-3、顶对齐）+ 状态栏容器加 z-10；修复后 sheet 矩形回到 y=40, h=794，详情差异降至 26px。
+- 大标题字重核查（用户问“是不是有点粗”；方法：字干宽度 / 字高比，禁用 ink 覆盖率——上轮 ink 测法取带错了，已作废；全部字形均附 ASCII 验真；完整数见 measure/stem-weight-v111.txt）：
+  - 渲染侧（bare 图）：简报标题 H 13px/700 Rounded = 2/9 = 0.222；草稿标题 h 20px/700 Rounded = 4/14 = 0.286；详情标题 H 12px/700 = 2/8 = 0.250；任务标题 M 13px/700 = 2/9 = 0.222；注脚标题 T 14px/700 = 3/11 = 0.273；画廊 h1 B 30px/700 Display（harness 光学尺寸）= 5/21 = 0.238（非手机屏，无原图对照，仅记录）。
+  - 对照探针（同文案同字号，FreeType 默认 AA）：Rounded 600 与 700 在 12/13/14/20px 下字干全等（13px H 3=3、20px h 4=4、12px H 3=3、14px T 3=3）；Text 600 才比 700 细 1px（13px H 2<3、20px h 3<4）。结论：改 Semibold 在 Rounded 下是视觉零操作——没有可改的余地。
+  - 原图侧：iphone-06 简报标题 H（全字带）= 5/20 = 0.250（JPEG 模糊约 +1px 膨胀，去模糊估计约 4/20 = 0.200）；同卡 M 约 4/19 = 0.211。渲染 0.222 与原图 0.200–0.250 持平（±0.03 内），不粗。
+  - 草稿标题比值差（渲染 0.286 vs 原图 iphone-04 h 7/35 = 0.200）：原图 H1 是网站内容（handstime.app 网页字体，非 App SF，字体未知），单张 JPEG 比值不足以定族；且 Rounded 改 600 无效，故不改族、不改重，记观察项。
+  - FreeType 与 Core Text 渲染差（单独说明，不许把渲染差说成字重差）：产品页设 -webkit-font-smoothing: antialiased，使字干比 FreeType 默认渲染细 1px（13px H：渲染 2 vs 探针默认 3）；Linux 截图显“粗/细”首先是 AA 差异，不是 token 字重；iOS 真机 Core Text 的 700 与原图同源，不会比截图更粗。
+  - 结论：不改任何标题字重 token。附带尺寸观察（非字重，本轮不动，见残留 R9）：原图简报标题行占卡宽约 63%，渲染占约 73%，渲染标题相对大 16–20%（原图约 11–12pt 等效 vs 渲染 13px）；改字号会动简报纵向几何、打破已验 +4.1px 贴合，须另起布局轮，不在本轮字重问题里顺手改。
+- 验证（构建 + 截图 + 交互，全部带数）：
+  - 构建：/home/hatch/.npm-global/bin/pnpm build（tsc -b && vite build）通过；终态产物 dist/assets/index-DgVnxi6O.css（31.46 kB）与 index-BTEeuQRd.js（306.86 kB）。
+  - 截图：docs/verification/rounds/v1.11/（framed 六屏 + chat-430）与 bare/（370x824，裁 (10,10,380,834)，与 v1.6–v1.9 同法）；拍摄脚本 shoot.cjs、裁切脚本 bare-crop.py（Playwright headless shell 1243 + file:// dist + SF 光学尺寸 harness，与 v1.10 同法）。
+  - 全套重扫（v1.11 bare vs v1.10 bare）：home/chat/briefing/draft/detail 各差 26px，maxdelta 6，全部位于状态栏图标区（x268–337、y26–37 一带），为 z-10 层提升带来的图标边缘 AA 微差；components 差 463px，maxdelta 108，构成三部分：状态栏图标 AA 微差（同上）+ 时间字子像素 AA→灰度 AA 归一化（v1.10 的 components 图时间字带子像素 AA 彩色边，六屏中的孤例，其余五屏 v1.10 已是灰度 AA；v1.11 起六屏统一为灰度 AA；字形本体未动，ASCII 放大核对 1 字形位置/形状一致；iOS 本就不做子像素 AA，灰度 AA 反而更贴近真机，不谎称为回归）+ 打字圆点动画相位差（动画循环中截图时刻不同，属预期噪声）。
+  - 简报贴合（最终 dist 复测）：第二消息底 671.9、作曲器顶 676、间隙 +4.1px，与 v1.10 完全一致，未破。
+  - DOM（最终 dist）：简报列表 scrollH 551 / clientH 547 / overflowY auto；简报 pager scrollW 481 / clientW 354 / scrollLeft 0 / snap x mandatory；chat/draft 列表 scrollH == clientH == 693，无溢出；详情 sheet 静止 transform matrix(1,0,0,1,0,0)、矩形 x=10, y=40, w=370, h=794；单屏按钮数 home 6（含 4 块 tile 按钮）、chat 3、briefing 7、draft 4、components 5、detail 2。
+  - 按压态实测（measure/press-v111.cjs → press-v111.txt）：三钮下压均为 scale 0.97 + opacity 0.85，松手归位（见上）。
+  - reduced-motion 实测（同脚本）：按钮 transition 为 none；发送后 300ms 用户消息与 agent 回复均已出现，打字圆点 0 个。
+  - 交互录屏（Playwright video .webm，390x844，同样做 SF Display harness 覆盖；放 rounds/v1.11/video/）：sheet-open-close.webm（9.88s：入场弹簧 → 把手下拖过阈值 dismiss → 点 demo 重开钮弹簧回场 → Done 关闭；拖动实测：拖后 section 消失、重开钮出现）；send-message.webm（5.08s：点发送 → 用户气泡入场 → 打字指示 → agent 整条回复 → 列表滚动到底）；push-pop.webm（4.60s：home 点项目 tile → chat 从右滑入 → 点返回 chevron 滑出回 home）；pager-swipe.webm（5.40s：卡片行横向滚动 + 回弹，实测 scrollLeft 0 → 127 → 0；报告中标明这是 pager，不是 tab 栏）。标签栏切换视频记 N/A（无 tab 栏），不伪造。
+  - 交互后状态截图（rounds/v1.11/states/）：briefing-sent.png（用户气泡 + 整条 agent 回复 + 列表到底 + 作曲器清空）、detail-reopened.png（dismiss 后重开，sheet 回场）、home-after-push-pop.png（push/pop 往返后回 home）。
+  - 旗舰屏重拍（简报 + 详情 + chat）即上述六屏重扫：材质/字形无回退（差异仅状态栏 AA 微差与 components 动画相位，见上）。
+- 残留表（状态有变才改状态，未闭合不许写成已闭合）：
+  - v1.10 延续：R1 头像直径两轴分歧（29.9 vs 24.3pt，渲染 32px 维持）；R3 详情勾选钮 44px / chevron 徽 24px（旧换算不可复现，维持）；R4 简报日期 pill 折 2 行（未动）；R5 气泡纵向内边距 12px vs 区间 16–20pt（简报间隙 4.1px 会转负，仍不抬）；R6 简报封面宽 +6.2；R7 动效弹簧参数未量（本轮全部动效仍为定时 cubic-bezier 曲线）；R8 bundle（含 U1 面板顶圆角 32px、U2 商店卡高、U5 卡内行数、U6 tile 预览细节、U7 中央标瓣弧、U8 手形掌心点偏上约 2px、U9 状态角标底色、U10 pill 内边距字号、U11 iPad 双栏 / ipad-04 / 深色 / 设置账号屏、U12 图表 22px 取舍、U13 Assets.car、头像非逐像素复刻、TestFlight 渐变复用、销售条坐标、简报 pills 簇 pitch、详情 glyph 渐变视觉级、Download 钮宽比、作曲器瓦 68px 未量）；N1 玻璃平背光极限（不谎称肉眼可见）；N5 无 SF 机器上 Inter 后备使简报贴合破裂。
+  - 本轮新增 R9（尺寸观察，非字重）：简报标题相对尺寸渲染比原图大约 16–20%（行占卡宽 73% vs 63%；原图约 11–12pt 等效 vs 渲染 13px），须另起布局轮定夺，本轮未改。
+  - 本轮闭合：详情 sheet 把手不可拖（chrome 盖住）已修（pointer-events-none，零像素变化）；Tailwind 模板字符串丢阴影已修（静态字符串铁律）；详情状态栏被盖已修（z-10 + 把手块 16px）。
+  - 本轮 N/A 定夺汇总（均有证据，不许事后改成“已做”）：标签栏切换、开关/分段器/滑杆、停止钮、逐字流式、键盘动画、标题轮换（理由见上交互对照表）。
+- 范围确认：只改本套。源码：src/index.css、src/components/{message,composer,detail-panel,project-card-grid,phone-frame,top-bar}.tsx、src/tokens/index.ts、src/App.tsx；其余文件未动。工作树内其他工人对 app/medley、web/* 的未提交改动未碰、未提交。仓库内无官方位图或裁图（本轮原图裁切探针已删除，只留脚本与文本证据）。
+
 ## v1.10 — 2026-11-01 — round 9：iOS 质感闭合（字体 / 材质 / 字形三条线，SF 渲染）
 
 - 决策总则（用户 2026-10-30 22:09 verdict + 协调方 2026-11-01 追加指令，原简报其余内容不变）：只看结果、直接做、不许问；歧义按原图/实测证据自行定夺并记入本条；本轮零裁判调用（只认 PIL/DOM 实测）；不许等 SF（SF 到货后按 SF 交付，Inter 图一律作废）；SF 文件绝不进仓库、不提交、不分发；fontconfig 由上层统一改、本人严禁动；commit 只加本套文件（绝不 -A），push 后以 git branch -r --contains 核实进了 origin 再报；不碰其他三套、总账、服务器数据库、任何令牌、BotsRouter、X、其他项目。

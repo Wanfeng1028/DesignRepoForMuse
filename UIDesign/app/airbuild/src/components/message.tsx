@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 import { cn } from '../lib/utils.ts'
 import { Avatar } from './avatar.tsx'
 
@@ -13,16 +13,25 @@ export type MessageProps = {
    *  user bubble 240pt); 'wide' keeps the draft-screen width so draft user
    *  messages stay on two lines as in iphone-04 */
   wide?: boolean
+  /** v1.11: entrance animation for dynamically added messages only (REA
+   *  message-in 260ms). Initial messages never animate, so rest screenshots
+   *  stay identical to v1.10. */
+  animate?: boolean
 }
 
 /** Chat message row: avatar + author line + bubble. User bubbles carry no avatar/author line.
  *  `bare` = briefing/draft style (iphone-06/iphone-04): no avatar, no author line,
  *  bubble only — the top bar already identifies the speaker there. */
-export function Message({ author, role, children, kind = 'agent', avatarColor, bare, wide }: MessageProps & { bare?: boolean }) {
+export function Message({ author, role, children, kind = 'agent', avatarColor, bare, wide, animate }: MessageProps & { bare?: boolean }) {
+  // NOTE: base classes are kept as static strings and only the custom
+  // .ab-message-in class is conditional (via cn). A template literal around
+  // the whole class list silently dropped the shadow arbitrary-value class
+  // from the v1.11 Tailwind build (computed boxShadow "none" on the
+  // composer send button) — static strings are scanner-safe.
   if (kind === 'user') {
     return (
       <div className={`flex justify-end ${wide ? 'pl-16' : 'pl-24'}`}>
-        <div className="rounded-[13px] bg-[#0088fe] px-3 py-3 text-[11.5px] leading-[1.52] text-white shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
+        <div className={cn('rounded-[13px] bg-[#0088fe] px-3 py-3 text-[11.5px] leading-[1.52] text-white shadow-[0_5px_16px_rgba(0,0,0,0.025)]', animate && 'ab-message-in')}>
           {children}
         </div>
       </div>
@@ -31,7 +40,7 @@ export function Message({ author, role, children, kind = 'agent', avatarColor, b
   if (bare) {
     return (
       <div className="flex pr-[72px]">
-        <div className="rounded-[13px] border border-black/[0.045] bg-white px-3 py-3 text-[11.5px] leading-[1.52] text-[#11110f] shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
+        <div className={cn('rounded-[13px] border border-black/[0.045] bg-white px-3 py-3 text-[11.5px] leading-[1.52] text-[#11110f] shadow-[0_5px_16px_rgba(0,0,0,0.025)]', animate && 'ab-message-in')}>
           {children}
         </div>
       </div>
@@ -44,7 +53,7 @@ export function Message({ author, role, children, kind = 'agent', avatarColor, b
         <p className="mb-[7px] ml-1 text-[10px] font-semibold text-[#11110f]">
           {author} {role ? <span className="font-normal text-black/45">@{role}</span> : null}
         </p>
-        <div className="rounded-[13px] border border-black/[0.045] bg-white px-3 py-3 text-[11.5px] leading-[1.52] text-[#11110f] shadow-[0_5px_16px_rgba(0,0,0,0.025)]">
+        <div className={cn('rounded-[13px] border border-black/[0.045] bg-white px-3 py-3 text-[11.5px] leading-[1.52] text-[#11110f] shadow-[0_5px_16px_rgba(0,0,0,0.025)]', animate && 'ab-message-in')}>
           {children}
         </div>
       </div>
@@ -66,6 +75,9 @@ export function Typing({ author, avatarColor }: { author: string; avatarColor?: 
   )
 }
 
-export function MessageList({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn('flex flex-1 flex-col gap-4 overflow-hidden px-4 py-3 [&>*]:shrink-0', className)}>{children}</div>
+export function MessageList({ children, className, innerRef }: { children: ReactNode; className?: string; innerRef?: Ref<HTMLDivElement> }) {
+  // v1.11: scrollable (was overflow-hidden). At rest scrollTop is 0 and the
+  // scrollbar is hidden, so rest screenshots are unchanged; on send the
+  // list scrolls to the bottom. iOS momentum via .ab-scroll.
+  return <div ref={innerRef} className={cn('ab-scroll flex flex-1 flex-col gap-4 px-4 py-3 [&>*]:shrink-0', className)}>{children}</div>
 }

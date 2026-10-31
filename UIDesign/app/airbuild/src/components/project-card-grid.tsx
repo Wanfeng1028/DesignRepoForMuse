@@ -2,7 +2,13 @@ import { HandSolidIcon } from './icons.tsx'
 import { Pill } from './ui/pill.tsx'
 
 export type ProjectCardItem = { name: string; swatch: string; note?: string }
-export type ProjectCardGridProps = { projects: ProjectCardItem[] }
+export type ProjectCardGridProps = {
+  projects: ProjectCardItem[]
+  /** v1.11: when given, each tile becomes a button that pushes its chat
+   *  thread (the app's own navigation: home lists projects, chat shows the
+   *  project thread). Without it the grid stays static divs, as in v1.10. */
+  onSelect?: (name: string) => void
+}
 
 /**
  * C3: own vector app-preview per project, replacing the letter blocks.
@@ -106,23 +112,32 @@ function TileBadge({ name }: { name: string }) {
 }
 
 /** 2x2 project card grid: vector preview tile + centred pill label overlapping the bottom edge. */
-export function ProjectCardGrid({ projects }: ProjectCardGridProps) {
+export function ProjectCardGrid({ projects, onSelect }: ProjectCardGridProps) {
   return (
     <div className="grid grid-cols-2 gap-3">
-      {projects.map((p) => (
-        <div key={p.name} className="relative">
-          <div className="flex h-[132px] items-center justify-center rounded-[20px] border border-black/[0.045] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.04)]">
-            <ProjectPreview name={p.name} />
-          </div>
-          <TileBadge name={p.name} />
-          {p.note ? (
-            <span className="absolute right-2 top-2 max-w-[120px] rounded-[10px] bg-white px-2 py-1 text-[10px] leading-tight text-[#11110f] shadow">{p.note}</span>
-          ) : null}
-          <div className="flex justify-center">
-            <Pill className="-mt-3 relative px-2 py-1 text-[10px]">{p.name}</Pill>
-          </div>
-        </div>
-      ))}
+      {projects.map((p) => {
+        const inner = (
+          <>
+            <div className="flex h-[132px] items-center justify-center rounded-[20px] border border-black/[0.045] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.04)]">
+              <ProjectPreview name={p.name} />
+            </div>
+            <TileBadge name={p.name} />
+            {p.note ? (
+              <span className="absolute right-2 top-2 max-w-[120px] rounded-[10px] bg-white px-2 py-1 text-[10px] leading-tight text-[#11110f] shadow">{p.note}</span>
+            ) : null}
+            <div className="flex justify-center">
+              <Pill className="-mt-3 relative px-2 py-1 text-[10px]">{p.name}</Pill>
+            </div>
+          </>
+        )
+        return onSelect ? (
+          <button key={p.name} type="button" onClick={() => onSelect(p.name)} aria-label={`Open ${p.name} chat`} className="relative block w-full text-left">
+            {inner}
+          </button>
+        ) : (
+          <div key={p.name} className="relative">{inner}</div>
+        )
+      })}
     </div>
   )
 }

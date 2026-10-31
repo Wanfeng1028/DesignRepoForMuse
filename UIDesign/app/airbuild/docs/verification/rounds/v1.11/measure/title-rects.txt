@@ -1,0 +1,4 @@
+briefing [{"text":"Hands Time led the growth. Mood deserves","rect":{"x":39,"y":241.7,"w":200.5,"h":32.5,"size":"13px","weight":"700"}},{"text":"Hands Time Sales Report","rect":{"x":277.5,"y":241.7,"w":200.5,"h":34.5,"size":"13px","weight":"700"}}]
+draft {"headline":{"text":"Shape timewith your hands","x":31,"y":356.2,"w":170,"h":50,"size":"20px","weight":"700"},"footnote":{"text":"Time Flies, Memories Stay.","x":47,"y":530.2,"w":296,"h":21,"size":"14px","weight":"700"}}
+detail {"title":{"text":"Hands Time","x":146.5,"y":74,"w":97,"h":24,"size":"12px","weight":"700"}}
+chat {"taskTitle":{"text":"Make the first session rewarding","x":83,"y":522,"w":232,"h":20,"size":"13px","weight":"700"}}

@@ -1,6 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BrushIcon, CheckIcon, ChevronMorphIcon, HandSolidIcon } from './icons.tsx'
 import { Card } from './ui/card.tsx'
+
+const SHEET_CURVE = 'cubic-bezier(0.32,0.72,0,1)'
+/** Dismiss when dragged past this many px, or flicked faster than this. */
+const DISMISS_DY = 120
+const DISMISS_VELOCITY = 0.65
+
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
 export type VersionRow = { label: string; value: string; sub?: string; action?: string }
 export type ProgressStep = { title: string; sub?: string; done: boolean }
@@ -12,6 +21,9 @@ export type DetailPanelProps = {
   stores: string[]
   versions: VersionRow[]
   progress: ProgressStep[]
+  /** v1.11: fired after the dismiss animation (or immediately under
+   *  reduced motion). The parent shows a demo-only reopen control. */
+  onDismiss?: () => void
 }
 
 /** Generic store glyphs (own redraws, not Apple assets): App Store "A" of three strokes, TestFlight three-blade propeller. */
@@ -59,14 +71,92 @@ function StoreGlyph({ kind }: { kind: string }) {
  * check button, status card (paintbrush badge, not a check), store cards,
  * Versions card, Progress card (done=false is a hollow blue ring).
  */
-export function DetailPanel({ title, status, updated, iconLabel, stores, versions, progress }: DetailPanelProps) {
+export function DetailPanel({ title, status, updated, iconLabel, stores, versions, progress, onDismiss }: DetailPanelProps) {
   // M1: the title chevron is a real toggle (panel sections collapse); its
   // rotation morphs with a CSS transition instead of cutting. Default open,
   // so the gallery screenshot is unchanged.
   const [open, setOpen] = useState(true)
+  // v1.11 sheet presentation: the panel is a bottom sheet (grabber in the
+  // original iphone-05). It springs up on mount (500ms iOS curve), follows
+  // the grabber drag 1:1 downward (upward pull damped x0.3), and on release
+  // springs back or dismisses past the threshold / on flick. No dim
+  // backdrop is added: the original panel sits on the same #f4f4f4 canvas,
+  // so a dim would change the rest pixels. Drag is grabber-only — the
+  // panel body carries tappable controls (chevron, Done, store cards) that
+  // a full-panel drag would hijack. At rest (animation settled) the panel
+  // is at translateY(0): screenshots identical to v1.10.
+  const sectionRef = useRef<HTMLElement>(null)
+  const [dragY, setDragY] = useState(900)
+  const [dragging, setDragging] = useState(false)
+  const [leaving, setLeaving] = useState(false)
+  const dragRef = useRef<{ startY: number; lastY: number; lastT: number; height: number } | null>(null)
+  const dismissTimer = useRef<number | null>(null)
+  useEffect(() => {
+    const h = sectionRef.current?.offsetHeight ?? 844
+    if (prefersReducedMotion()) { setDragY(0); return }
+    setDragY(h)
+    const raf = requestAnimationFrame(() => requestAnimationFrame(() => setDragY(0)))
+    return () => { cancelAnimationFrame(raf); if (dismissTimer.current !== null) window.clearTimeout(dismissTimer.current) }
+  }, [])
+  const dismiss = () => {
+    if (leaving) return
+    if (prefersReducedMotion()) { onDismiss?.(); return }
+    const h = sectionRef.current?.offsetHeight ?? 844
+    setLeaving(true)
+    setDragY(h)
+    dismissTimer.current = window.setTimeout(() => onDismiss?.(), 360)
+  }
+  const onGrabberDown = (e: React.PointerEvent) => {
+    if (leaving) return
+    (e.target as HTMLElement).setPointerCapture(e.pointerId)
+    dragRef.current = { startY: e.clientY, lastY: e.clientY, lastT: performance.now(), height: sectionRef.current?.offsetHeight ?? 844 }
+    setDragging(true)
+  }
+  const onGrabberMove = (e: React.PointerEvent) => {
+    const d = dragRef.current
+    if (!d || !dragging) return
+    const dy = e.clientY - d.startY
+    d.lastY = e.clientY
+    d.lastT = performance.now()
+    setDragY(dy < 0 ? dy * 0.3 : dy)
+  }
+  const onGrabberUp = (e: React.PointerEvent) => {
+    const d = dragRef.current
+    if (!d || !dragging) return
+    dragRef.current = null
+    setDragging(false)
+    const dy = e.clientY - d.startY
+    const dt = Math.max(1, performance.now() - d.lastT)
+    const velocity = Math.abs(e.clientY - d.lastY) / dt
+    if (dy > DISMISS_DY || (dy > 40 && velocity > DISMISS_VELOCITY)) dismiss()
+    else setDragY(0)
+  }
+  const sheetTransition = prefersReducedMotion()
+    ? 'none'
+    : dragging
+      ? 'none'
+      : leaving
+        ? `transform 350ms ${SHEET_CURVE}`
+        : `transform 500ms ${SHEET_CURVE}`
   return (
-    <section className="flex flex-col rounded-t-[32px] bg-[#f4f4f4] px-4 pt-2 pb-4">
-      <span className="mx-auto mb-3 h-1 w-10 rounded-full bg-black/15" aria-hidden />
+    <section
+      ref={sectionRef}
+      className="flex flex-col rounded-t-[32px] bg-[#f4f4f4] px-4 pt-2 pb-4"
+      style={{ transform: `translateY(${dragY}px)`, transition: sheetTransition }}
+    >
+      {/* Grabber block totals 16px (h-4, no margin) exactly as v1.10's
+          4px bar + 12px margin, so the panel geometry is unchanged; the
+          bar sits at the top of the block (items-start), as before. */}
+      <div
+        className="mx-auto flex h-4 w-16 cursor-grab touch-none items-start justify-center active:cursor-grabbing"
+        aria-label="Detail sheet handle — drag down to dismiss"
+        onPointerDown={onGrabberDown}
+        onPointerMove={onGrabberMove}
+        onPointerUp={onGrabberUp}
+        onPointerCancel={() => { dragRef.current = null; setDragging(false); setDragY(0) }}
+      >
+        <span className="h-1 w-10 rounded-full bg-black/15" aria-hidden />
+      </div>
       <div className="flex items-center justify-between">
         <span className="w-11" aria-hidden />
         <h2 className="flex items-center gap-1.5 text-[12px] font-bold text-[#11110f]">
@@ -75,7 +165,7 @@ export function DetailPanel({ title, status, updated, iconLabel, stores, version
             <ChevronMorphIcon open={open} className="h-[14px] w-[14px]" />
           </button>
         </h2>
-        <button type="button" aria-label="Done" className="ab-glass flex h-11 w-11 items-center justify-center rounded-full">
+        <button type="button" aria-label="Done" onClick={dismiss} className="ab-glass flex h-11 w-11 items-center justify-center rounded-full">
           <CheckIcon className="h-6 w-6" />
         </button>
       </div>

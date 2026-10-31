@@ -50,6 +50,52 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 /* Morphing transitions (M1/M2/M5): every state switch animates, never cuts. */
 .ab-morph { transition: transform 0.35s ease, opacity 0.25s ease, stroke-dashoffset 0.35s ease; }
 
+/* iOS interaction (v1.11): press, message entrance, navigation, scroll.
+   Curves are the iOS values: push/pop + sheet use the drawer curve
+   cubic-bezier(0.32,0.72,0,1) (REA: drawer 240ms with this curve; phone
+   push/sheet use longer durations of the same curve, see tokens.motion);
+   message entrance is the REA value verbatim: 260ms
+   cubic-bezier(0.22,1,0.36,1) from opacity 0 / translateY(8px) scale(0.985).
+   Press is fast down (100ms) and springy up (350ms of the iOS curve):
+   scale 0.97 + opacity 0.85. Nothing here changes rest state — screenshots
+   taken without interaction are pixel-identical to v1.10. */
+button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: transform 0.35s cubic-bezier(0.32,0.72,0,1), opacity 0.35s cubic-bezier(0.32,0.72,0,1); }
+button:active { transition-duration: 0.1s; transform: scale(0.97); opacity: 0.85; }
+button:focus-visible, input:focus-visible { outline: 2px solid rgba(0,136,254,0.6); outline-offset: 2px; }
+
+@keyframes ab-message-in { from { opacity: 0; transform: translateY(8px) scale(0.985); } to { opacity: 1; transform: none; } }
+.ab-message-in { animation: ab-message-in 260ms cubic-bezier(0.22,1,0.36,1) both; }
+
+@keyframes ab-push-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes ab-push-out { from { transform: translateX(0); filter: brightness(1); } to { transform: translateX(-30%); filter: brightness(0.94); } }
+@keyframes ab-pop-in { from { transform: translateX(-30%); filter: brightness(0.94); } to { transform: translateX(0); filter: brightness(1); } }
+@keyframes ab-pop-out { from { transform: translateX(0); } to { transform: translateX(100%); } }
+.ab-nav-push-in { animation: ab-push-in 400ms cubic-bezier(0.32,0.72,0,1) both; }
+.ab-nav-push-out { animation: ab-push-out 400ms cubic-bezier(0.32,0.72,0,1) both; }
+.ab-nav-pop-in { animation: ab-pop-in 400ms cubic-bezier(0.32,0.72,0,1) both; }
+.ab-nav-pop-out { animation: ab-pop-out 400ms cubic-bezier(0.32,0.72,0,1) both; }
+
+/* Scrollable message list + briefing card pager: iOS momentum scrolling
+   (-webkit-overflow-scrolling is a no-op in Chromium but correct on device;
+   on iOS scroll indicators are overlays, so hiding the desktop scrollbar
+   keeps the gallery pixels identical). Pager snaps per card. */
+.ab-scroll { overflow-y: auto; overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.ab-scroll::-webkit-scrollbar { display: none; }
+.ab-pager { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.ab-pager::-webkit-scrollbar { display: none; }
+.ab-pager > * { scroll-snap-align: start; }
+
+/* Reduced motion: kill every animation/transition in this set, including
+   press scaling (REA precedent: the web mockup renders all messages at
+   once when reducedMotion is set). Sheet + send delays are also skipped
+   in JS via matchMedia, so behaviour matches the CSS. */
+@media (prefers-reduced-motion: reduce) {
+  .ab-morph, .ab-typing-dot, .ab-message-in,
+  .ab-nav-push-in, .ab-nav-push-out, .ab-nav-pop-in, .ab-nav-pop-out { animation: none !important; transition: none !important; }
+  button { transition: none !important; }
+  button:active { transform: none; opacity: 1; }
+}
+
 @keyframes ab-typing {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
   30% { transform: translateY(-3px); opacity: 1; }

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { cn } from './lib/utils.ts'
 import { AirDailyCard, SalesReportCard } from './components/briefing-cards.tsx'
 import { ChevronMorphIcon, HandSolidIcon, PlusCheckMorphIcon, TaskCheckMorphIcon } from './components/icons.tsx'
 import { Avatar } from './components/avatar.tsx'
@@ -30,12 +31,12 @@ const MEMBERS = [
   { name: 'Leto', role: 'Code Reviewer', status: 'The sync issue is fixed.', avatarColor: '#ff8b60' },
 ]
 
-function HomeScreen() {
+function HomeScreen({ onProjectTap }: { onProjectTap?: (name: string) => void }) {
   return (
     <PhoneFrame label="Home — iphone-01">
       <HomeTopBar />
       <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden px-4 pt-2">
-        <ProjectCardGrid projects={PROJECTS} />
+        <ProjectCardGrid projects={PROJECTS} onSelect={onProjectTap} />
         <div className="flex justify-center gap-1.5" aria-hidden>
           <span className="h-1.5 w-1.5 rounded-full bg-black" />
           <span className="h-1.5 w-1.5 rounded-full bg-black/20" />
@@ -49,10 +50,10 @@ function HomeScreen() {
   )
 }
 
-function ChatScreen() {
+function ChatScreen({ onBack }: { onBack?: () => void }) {
   return (
     <PhoneFrame label="Chat thread — iphone-03">
-      <ChatTopBar project="Hourtown" swatch="#dbe7d2" />
+      <ChatTopBar project="Hourtown" swatch="#dbe7d2" onBack={onBack} />
       <MessageList>
         <Message author="Pluso" role="Developer" avatarColor="#50e2f1">
           I&rsquo;ve put together a direction for the first-session experience. The town stays at the center, with just enough guidance to help someone get started.
@@ -83,15 +84,57 @@ function ChatScreen() {
   )
 }
 
-function BriefingScreen() {
+type DynMsg = { id: number; kind: 'user' | 'agent'; text: string }
+
+function BriefingScreen({ onBack }: { onBack?: () => void }) {
+  // v1.11 send flow (briefing only — iphone-03's chat thread has no
+  // composer in the original, so no send flow is wired there): send appends
+  // a user bubble with the REA message-in entrance, shows the typing
+  // indicator (REA showTyping: 3 x 5px dots, 800ms, 0/160/320ms delays),
+  // then appends the agent reply whole — REA presentMessage adds the whole
+  // message at once, so no per-character streaming is faked. The reply is
+  // demo copy, labelled as such in code. There is no stop button: no stop
+  // glyph exists in any phone screenshot, and REA's stopConversation only
+  // halts the web demo playback. While typing, the composer locks.
+  // The cards row is a horizontal snap pager (the peeking second card is
+  // the scroll affordance); at rest scrollLeft is 0, pixels unchanged.
+  const [dyn, setDyn] = useState<DynMsg[]>([])
+  const [typing, setTyping] = useState(false)
+  const [locked, setLocked] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
+  const idRef = useRef(1)
+  const timers = useRef<number[]>([])
+  useEffect(() => () => { timers.current.forEach((t) => window.clearTimeout(t)) }, [])
+  const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const scrollBottom = () => {
+    const el = listRef.current
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: reduced() ? 'auto' : 'smooth' })
+  }
+  const handleSend = (text: string) => {
+    if (locked) return
+    const t = text.trim()
+    if (!t) return
+    setDyn((d) => [...d, { id: idRef.current++, kind: 'user', text: t }])
+    setLocked(true)
+    setTyping(true)
+    requestAnimationFrame(scrollBottom)
+    timers.current.push(window.setTimeout(() => {
+      setTyping(false)
+      // Demo reply copy (not original text): the original second message is
+      // already rendered above as the initial bare2 message.
+      setDyn((d) => [...d, { id: idRef.current++, kind: 'agent', text: 'Hands Time is still leading — I’ll pull the latest numbers and flag anything that needs a closer look.' }])
+      requestAnimationFrame(scrollBottom)
+      setLocked(false)
+    }, reduced() ? 0 : 1200))
+  }
   return (
     <PhoneFrame label="Daily briefing — iphone-06">
-      <ChatTopBar project="Ato" swatch="#cfe8a8" mark="person" avatarColor="#9bc24d" compact />
-      <MessageList className="gap-1.5 py-2">
+      <ChatTopBar project="Ato" swatch="#cfe8a8" mark="person" avatarColor="#9bc24d" compact onBack={onBack} />
+      <MessageList innerRef={listRef} className="gap-1.5 py-2">
         <Message bare author="Ato" role="Product Manager" avatarColor="#9bc24d">
           Your daily report is ready. Hands Time led growth, while two new Mood reviews raised questions.
         </Message>
-        <div className="flex gap-3 overflow-hidden -mr-4 pr-4">
+        <div className="ab-pager flex gap-3 overflow-x-auto -mr-4 pr-4" role="region" aria-label="Report cards — swipe to switch">
           <div className="w-[67%] shrink-0">
             <AirDailyCard
               headline="Hands Time led the growth. Mood deserves a closer look."
@@ -116,18 +159,24 @@ function BriefingScreen() {
         <Message bare author="Ato" role="Product Manager" avatarColor="#9bc24d">
           Check Mood&rsquo;s first-entry flow. Both reviews mention difficulty starting. Try the latest version before deciding changes.
         </Message>
+        {dyn.map((m) => m.kind === 'user' ? (
+          <Message key={m.id} kind="user" animate>{m.text}</Message>
+        ) : (
+          <Message key={m.id} bare author="Ato" role="Product Manager" avatarColor="#9bc24d" animate>{m.text}</Message>
+        ))}
+        {typing ? <Typing author="Ato" avatarColor="#9bc24d" /> : null}
       </MessageList>
       <div className="px-4 pb-2">
-        <Composer initialValue="Any updates on Hands Time?" />
+        <Composer initialValue="Any updates on Hands Time?" onSend={handleSend} disabled={locked} />
       </div>
     </PhoneFrame>
   )
 }
 
-function DraftScreen() {
+function DraftScreen({ onBack }: { onBack?: () => void }) {
   return (
     <PhoneFrame label="Website draft — iphone-04">
-      <ChatTopBar project="Colo" swatch="#c9b8f5" mark="person" avatarColor="#8a5fe0" />
+      <ChatTopBar project="Colo" swatch="#c9b8f5" mark="person" avatarColor="#8a5fe0" onBack={onBack} />
       <MessageList className="gap-3 py-2">
         <Message kind="user" wide>Design a website for Hands Time. Keep it simple and let the app speak for itself.</Message>
         <Message bare author="Colo" role="Designer" avatarColor="#8a5fe0">I kept the layout simple. Here&rsquo;s the first draft.</Message>
@@ -145,10 +194,15 @@ function DraftScreen() {
 }
 
 function DetailScreen() {
+  // v1.11: after the sheet dismisses, a demo-only reopen control appears
+  // (labelled as such). It is not original UI and never shows at rest.
+  const [show, setShow] = useState(true)
   return (
     <PhoneFrame label="Detail panel — iphone-05">
       <div className="flex min-h-0 flex-1 flex-col justify-end">
+        {show ? (
         <DetailPanel
+          onDismiss={() => setShow(false)}
           title="Hands Time"
           status="Ready to test"
           updated="Updated 12h ago"
@@ -166,6 +220,12 @@ function DetailScreen() {
             { title: 'Prepare Version', sub: 'Build 3.1.5 (373) is ready to test', done: false },
           ]}
         />
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4">
+            <button type="button" onClick={() => setShow(true)} className="text-[15px] font-medium text-[#0088fe]">Show detail panel</button>
+            <p className="text-[10px] text-black/35">Demo control — not part of the original panel</p>
+          </div>
+        )}
       </div>
     </PhoneFrame>
   )
@@ -199,13 +259,75 @@ function ComponentsScreen() {
   )
 }
 
-const SCREENS: Record<string, () => React.ReactElement> = {
-  home: HomeScreen,
-  chat: ChatScreen,
-  briefing: BriefingScreen,
-  draft: DraftScreen,
-  detail: DetailScreen,
-  components: ComponentsScreen,
+const SCREEN_KEYS = ['home', 'chat', 'briefing', 'draft', 'detail', 'components']
+
+function ScreenByKey({ screen, onProjectTap, onBack }: { screen: string; onProjectTap: (name: string) => void; onBack: () => void }) {
+  switch (screen) {
+    case 'home': return <HomeScreen onProjectTap={onProjectTap} />
+    case 'chat': return <ChatScreen onBack={onBack} />
+    case 'briefing': return <BriefingScreen onBack={onBack} />
+    case 'draft': return <DraftScreen onBack={onBack} />
+    case 'detail': return <DetailScreen />
+    case 'components': return <ComponentsScreen />
+    default: return <HomeScreen onProjectTap={onProjectTap} />
+  }
+}
+
+/**
+ * v1.11 single-screen navigation shell (only active with ?screen=; the
+ * gallery below stays static). A stack of one phone: tapping a home project
+ * tile pushes its chat thread, the chat/briefing/draft back chevron pops.
+ * Push: incoming slides from the right (100% -> 0), outgoing shifts left
+ * (-30%) and dims to 0.94; pop reverses. Both 400ms of the iOS curve
+ * cubic-bezier(0.32,0.72,0,1). Screens remount on navigation (gallery demo:
+ * no cross-screen state is persisted — a briefing send flow resets when
+ * you leave and come back). At rest there is no transform, so single-screen
+ * screenshots are unchanged. Reduced motion commits instantly.
+ * Member rows are NOT wired: a member DM thread is not in the screenshot
+ * set (the chat screen is a project thread), so wiring one would invent a
+ * screen. The + button (new project) and … menu are likewise press-only:
+ * their destination screens are not evidenced.
+ */
+function SingleNav({ initial }: { initial: string }) {
+  const [stack, setStack] = useState<string[]>([initial])
+  const [trans, setTrans] = useState<{ prev: string; next: string; dir: 'push' | 'pop'; nextStack: string[] } | null>(null)
+  const timers = useRef<number[]>([])
+  useEffect(() => () => { timers.current.forEach((t) => window.clearTimeout(t)) }, [])
+  const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const go = (next: string, dir: 'push' | 'pop', nextStack: string[]) => {
+    if (trans) return
+    const cur = stack[stack.length - 1]
+    if (next === cur) return
+    if (reduced()) { setStack(nextStack); return }
+    setTrans({ prev: cur, next, dir, nextStack })
+    timers.current.push(window.setTimeout(() => { setStack(nextStack); setTrans(null) }, 400))
+  }
+  const push = (name: string) => { void name; go('chat', 'push', [...stack, 'chat']) }
+  const back = () => {
+    const cur = stack[stack.length - 1]
+    if (cur === 'home') return
+    if (stack.length > 1) go(stack[stack.length - 2], 'pop', stack.slice(0, -1))
+    else go('home', 'pop', ['home'])
+  }
+  const current = stack[stack.length - 1]
+  return (
+    <main className="flex min-h-screen items-start justify-center bg-[#e9e9e6]">
+      <div className="relative" style={{ width: 390 }}>
+        {trans ? (
+          <>
+            <div className={cn('absolute inset-x-0 top-0 z-10', trans.dir === 'push' ? 'ab-nav-push-out' : 'ab-nav-pop-out')}>
+              <ScreenByKey screen={trans.prev} onProjectTap={push} onBack={back} />
+            </div>
+            <div className={cn('relative z-20', trans.dir === 'push' ? 'ab-nav-push-in' : 'ab-nav-pop-in')}>
+              <ScreenByKey screen={trans.next} onProjectTap={push} onBack={back} />
+            </div>
+          </>
+        ) : (
+          <ScreenByKey screen={current} onProjectTap={push} onBack={back} />
+        )}
+      </div>
+    </main>
+  )
 }
 
 export default function App() {
@@ -213,13 +335,8 @@ export default function App() {
   // place after mount; the CSS class remains the no-JS fallback.
   useEffect(() => applyLiquidGlass(), [])
   const screen = new URLSearchParams(window.location.search).get('screen')
-  if (screen && SCREENS[screen]) {
-    const Single = SCREENS[screen]
-    return (
-      <main className="flex min-h-screen items-start justify-center bg-[#e9e9e6]">
-        <Single />
-      </main>
-    )
+  if (screen && SCREEN_KEYS.includes(screen)) {
+    return <SingleNav initial={screen} />
   }
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">

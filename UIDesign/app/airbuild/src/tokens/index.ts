@@ -38,6 +38,29 @@ export const tokens = {
   glass: 'linear-gradient(325deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.48) 48%, rgba(245, 247, 250, 0.24))',
   fontStack:
     '"SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif',
+  /** v1.11 motion tokens (document the CSS values in index.css; the CSS
+   *  is the live value, this object is the single prose source of truth):
+   *  - pushPop / sheet: the iOS drawer curve cubic-bezier(0.32,0.72,0,1)
+   *    (REA: drawer 240ms with this curve); phone push uses 400ms and
+   *    sheet enter 500ms / dismiss 350ms of the same curve.
+   *  - messageIn: REA verbatim — 260ms cubic-bezier(0.22,1,0.36,1),
+   *    from opacity 0 / translateY(8px) scale(0.985).
+   *  - typing: REA verbatim — 800ms alternate, delays 0/160/320ms.
+   *  - press: 100ms down, 350ms iOS-curve release, scale 0.97 + opacity 0.85.
+   *  - springParams: no spring solver is used — every motion is a timed
+   *    cubic-bezier; nothing here claims a mass/stiffness/damping value
+   *    that was not measured. Reduced motion kills all of it (CSS media
+   *    query + JS matchMedia, REA precedent: render everything at once). */
+  motion: {
+    pushPop: '400ms cubic-bezier(0.32,0.72,0,1)',
+    sheetEnter: '500ms cubic-bezier(0.32,0.72,0,1)',
+    sheetDismiss: '350ms cubic-bezier(0.32,0.72,0,1)',
+    sheetDismissThreshold: '120px or flick > 0.65px/ms',
+    messageIn: '260ms cubic-bezier(0.22,1,0.36,1)',
+    typing: '800ms alternate, delays 0/160/320ms',
+    press: '100ms down / 350ms cubic-bezier(0.32,0.72,0,1) release, scale 0.97 + opacity 0.85',
+    springParams: 'unmeasured — timed cubic-bezier curves only, no solver values claimed',
+  },
 } as const
 
 export type Tokens = typeof tokens

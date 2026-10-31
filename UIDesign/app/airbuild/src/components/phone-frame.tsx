@@ -47,15 +47,20 @@ export function PhoneFrame({ children, width = 390, height = 844, className, lab
         style={{ width, height, borderRadius: 52, border: '10px solid #1c1c1e', boxSizing: 'border-box' }}
       >
         <div className="flex h-full flex-col">
+          {/* v1.11: z-10 — system chrome stays above app content. The detail
+              sheet is transformed (which lifts it into the positioned paint
+              layer); without this, the sheet's background covered the time
+              and status icons at rest, a regression vs v1.10 where the
+              static panel painted below the positioned status bar. */}
           <div
-            className="relative flex items-center justify-center text-[#000]"
+            className="pointer-events-none relative z-10 flex items-center justify-center text-[#000]"
             style={{ gap: 154 * SCALE, padding: statusPad, boxSizing: 'border-box', width: '100%' }}
           >
             <div className="flex flex-1 items-center justify-center" style={{ height: 22, paddingTop: 1.5 }}>
               <span style={{ fontFamily: '-apple-system, "SF Pro", system-ui', fontWeight: 590, fontSize: 17, lineHeight: '22px', color: '#000' }}>13:00</span>
             </div>
             <span
-              className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
+              className="pointer-events-none absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
               style={{ width: islandW, height: islandH, top: islandTop, borderRadius: islandR }}
               aria-hidden
             />

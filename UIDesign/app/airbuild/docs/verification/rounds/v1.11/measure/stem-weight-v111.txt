@@ -1,0 +1,53 @@
+v1.11 title-weight check (stem width / glyph height, NOT ink coverage)
+Method: PIL binarize (luminance < 180); glyph groups = column runs with any
+dark pixel; stem = consecutive columns from the stem edge with dark-core
+coverage >= 0.6 over the glyph band. Same rule for render, probe, original.
+ASCII art was printed per glyph during measurement and eyeballed.
+
+RENDER (bare screenshots, framed rects minus 10px border):
+- briefing headline H, 13px/700 Rounded: stem 2 / cap 9 = 0.222
+- draft headline h, 20px/700 Rounded: stem 4 / height 14 = 0.286
+- detail title H, 12px/700 Rounded: stem 2 / cap 8 = 0.250
+- chat task title M, 13px/700 Rounded: stem 2 / cap 9 = 0.222
+- footnote title T, 14px/700 Rounded: stem 3 / cap 11 = 0.273
+- gallery h1 B, 30px/700 Display (harness optical size): stem 5 / cap 21 = 0.238
+  (non-phone screen, no original counterpart; render-only record)
+
+PROBE (same strings, probe-weights.html, FreeType default AA, no antialiased CSS):
+- 13px H: Rounded 700 = 3/9 = 0.333; Rounded 600 = 3/9 = 0.333 (IDENTICAL)
+- 13px H: Text 700 = 3/9 = 0.333; Text 600 = 2/9 = 0.222
+- 20px h: Rounded 700 = 4/14 = 0.286; Rounded 600 = 4/14 = 0.286 (IDENTICAL)
+- 20px h: Text 700 = 4/15 = 0.267; Text 600 = 3/15 = 0.200
+- 12px H: Rounded 700 = 3/9 = 0.333; Rounded 600 = 3/9 = 0.333 (IDENTICAL)
+- 14px T: Rounded 700 = 3/11 = 0.273; Rounded 600 = 3/10 = 0.300 (stem 3 = 3)
+=> In Rounded, 600 vs 700 changes NO stem pixel at 12/13/14/20px.
+   A Semibold switch would be a visual no-op. In Text it would thin by 1px.
+
+ORIGINAL (App Store screenshots, full-res JPEG coords):
+- iphone-06 briefing headline H (line 1, full band): stem 5 / cap 20 = 0.250
+  (JPEG blur inflates stems ~1px; de-blurred estimate ~4/20 = 0.200)
+- iphone-06 briefing headline M (line 2): stem 4 / cap ~19 = ~0.211
+- iphone-04 draft headline h (line 1, WEBSITE content, not app UI):
+  stem 7 / height 35 = 0.200
+
+VERDICT: NO token change.
+- App-UI titles (briefing/detail/task): render 0.222-0.250 vs original
+  0.200-0.250 -- render is at or slightly below original weight. NOT too heavy.
+- FreeType vs Core Text, stated separately: the product page sets
+  -webkit-font-smoothing: antialiased, which thins stems 1px vs FreeType
+  default (render 13px H = 2 vs probe default = 3). That rendering delta is
+  NOT a weight delta; on a real iOS device Core Text renders the same 700
+  at the original's heft. The Linux screenshot looking "heavy" is not a
+  token problem, and switching to 600 would not change Rounded rendering.
+- Draft H1 ratio gap (render 0.286 vs original 0.200): the original H1 is
+  website content in an unknown web font, not verifiable SF; no family
+  switch is made on a single JPEG ratio. Recorded as observation.
+
+SIZE OBSERVATION (not weight; NOT changed this round -- out of scope, and
+changing it would break the verified +4.1px composer fit):
+- Original briefing headline line-1 width 362 full-px = ~138px @390, vs
+  render 166px; original line-1 occupies ~63% of card width vs render ~73%.
+  Relative size: render headline ~16-20% larger than the App Store original
+  (original ~11-12pt equivalent vs render 13px). New residual R9, needs its
+  own layout round; weight verdict above is unaffected (ratios are
+  scale-free).
