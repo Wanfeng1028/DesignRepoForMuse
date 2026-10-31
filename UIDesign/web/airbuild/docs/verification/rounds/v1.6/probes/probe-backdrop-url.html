@@ -1,0 +1,13 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body { margin: 0; background: repeating-linear-gradient(90deg, #111 0 30px, #eee 30px 60px); }
+svg { position: absolute; width: 0; height: 0; }
+#u { position: absolute; left: 50px; top: 50px; width: 300px; height: 120px; border-radius: 18px;
+  background: rgba(244,246,244,0.42);
+  backdrop-filter: url(#dispTest) blur(10px); -webkit-backdrop-filter: url(#dispTest) blur(10px); }
+#v { position: absolute; left: 400px; top: 50px; width: 300px; height: 120px; border-radius: 18px;
+  background: rgba(244,246,244,0.42); backdrop-filter: blur(10px); }
+</style></head><body>
+<svg aria-hidden="true"><defs><filter id="dispTest"><feTurbulence baseFrequency="0.05" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="20"/></filter></defs></svg>
+<div id="u"></div><div id="v"></div>
+<script>window.__r = (el) => getComputedStyle(document.getElementById(el)).backdropFilter;</script>
+</body></html>

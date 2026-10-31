@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>refraction probe v2: clipped two-layer</title>
+<style>
+  body { margin: 0; background: repeating-linear-gradient(90deg, #111 0 60px, #eee 60px 120px); font-family: sans-serif; }
+  .row { display: flex; gap: 24px; padding: 24px; }
+  .clip { position: relative; width: 300px; height: 120px; border-radius: 18px; overflow: hidden; flex: none; }
+  .inner { position: absolute; background: rgba(244,246,244,0.42); backdrop-filter: blur(34px) saturate(1.24); -webkit-backdrop-filter: blur(34px) saturate(1.24); }
+  .inner.exact { inset: 0; border-radius: 18px; }
+  .inner.over { inset: -16px; }
+  .content { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: #111; z-index: 2; }
+  .edge { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3;
+    box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4), inset 0 0 0 0.5px rgba(0,0,0,0.04); }
+</style></head>
+<body>
+<div class="row">
+  <div class="clip" id="clipG"><div class="inner exact" id="inG"></div><div class="content"><span>G control: two-layer, no filter</span></div><div class="edge"></div></div>
+  <div class="clip" id="clipH"><div class="inner exact" id="inH"></div><div class="content"><span>H + displace 12 exact</span></div><div class="edge"></div></div>
+  <div class="clip" id="clipI"><div class="inner over" id="inI"></div><div class="content"><span>I + displace 30 oversized</span></div><div class="edge"></div></div>
+</div>
+<div class="row">
+  <div class="clip" id="clipJ"><div class="inner exact" id="inJ"></div><div class="content"><span>J + displace 30 exact</span></div><div class="edge"></div></div>
+  <div class="clip" id="clipK"><div class="inner over" id="inK"></div><div class="content"><span>K + displace 12 oversized</span></div><div class="edge"></div></div>
+</div>
+<script>
+function mapURI(w, h, radius, depth) {
+  const svg = '<svg height="' + h + '" width="' + w + '" viewBox="0 0 ' + w + ' ' + h + '" xmlns="http://www.w3.org/2000/svg">'
+    + '<style>.mix { mix-blend-mode: screen; }</style><defs>'
+    + '<linearGradient id="Y" x1="0" x2="0" y1="' + Math.ceil((radius / h) * 15) + '%" y2="' + Math.floor(100 - (radius / h) * 15) + '%"><stop offset="0%" stop-color="#0F0" /><stop offset="100%" stop-color="#000" /></linearGradient>'
+    + '<linearGradient id="X" x1="' + Math.ceil((radius / w) * 15) + '%" x2="' + Math.floor(100 - (radius / w) * 15) + '%" y1="0" y2="0"><stop offset="0%" stop-color="#F00" /><stop offset="100%" stop-color="#000" /></linearGradient></defs>'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="#808080" /><g filter="blur(2px)">'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="#000080" />'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="url(#Y)" class="mix" />'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="url(#X)" class="mix" />'
+    + '<rect x="' + depth + '" y="' + depth + '" height="' + (h - 2 * depth) + '" width="' + (w - 2 * depth) + '" fill="#808080" rx="' + radius + '" ry="' + radius + '" filter="blur(' + depth + 'px)" />'
+    + '</g></svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+function filterURI(w, h, radius, depth, strength, ca) {
+  const m = mapURI(w, h, radius, depth);
+  const svg = '<svg height="' + h + '" width="' + w + '" viewBox="0 0 ' + w + ' ' + h + '" xmlns="http://www.w3.org/2000/svg"><defs>'
+    + '<filter id="displace" color-interpolation-filters="sRGB">'
+    + '<feImage x="0" y="0" height="' + h + '" width="' + w + '" href="' + m + '" result="displacementMap" />'
+    + '<feDisplacementMap in="SourceGraphic" in2="displacementMap" scale="' + (strength + ca * 2) + '" xChannelSelector="R" yChannelSelector="G" />'
+    + '<feColorMatrix type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="displacedR" />'
+    + '<feDisplacementMap in="SourceGraphic" in2="displacementMap" scale="' + (strength + ca) + '" xChannelSelector="R" yChannelSelector="G" />'
+    + '<feColorMatrix type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0" result="displacedG" />'
+    + '<feDisplacementMap in="SourceGraphic" in2="displacementMap" scale="' + strength + '" xChannelSelector="R" yChannelSelector="G" />'
+    + '<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="displacedB" />'
+    + '<feBlend in="displacedR" in2="displacedG" mode="screen" /><feBlend in2="displacedB" mode="screen" />'
+    + '</filter></defs></svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg) + '#displace';
+}
+function apply(elId, w, h, strength) {
+  document.getElementById(elId).style.filter = 'url("' + filterURI(w, h, 18, 6, strength, 0) + '")';
+}
+apply('inH', 300, 120, 12);
+apply('inI', 332, 152, 30);
+apply('inJ', 300, 120, 30);
+apply('inK', 332, 152, 12);
+window.__probeDone = true;
+</script>
+</body></html>

@@ -61,7 +61,7 @@ gap 6px, aspect 1.25, radius 12px, bg `rgba(255,255,255,0.34)`, icon-only
 transparent + ink label, 10px/500 device label, icon 12px
 opacity 0.45, close 9px (opacity 0, 0.3 on hover/active); phone 270px wide,
 aspect 0.51, 7px `#d8d8d6` frame, radius 38px, shadow
-`0 24px 48px rgba(0,0,0,0.24)`, statusbar 8px/700, appbar 42px, feed divider
+`0 24px 48px rgba(0,0,0,0.24)`, statusbar 8px/600, appbar 42px, feed divider
 inset from left 33px; follow-up composer 32px high,
 capsule 999px, margin `0 14px 10px`, shared control gradient bg, no border,
 `inset 0 1px rgba(255,255,255,0.38), 0 3px 8px rgba(0,0,0,0.08)` shadow,
@@ -83,7 +83,7 @@ resizer 8px wide. See `src/tokens/tokens.ts`.
 | `Sidebar` / `ProjectTile` / `AgentRow` | `src/components/Sidebar.tsx` | Icon-only project grid (3 cols, gap 6px) + agent list (illustrated avatar + name + @role + status line + green online dot) + 32px icon-only Account button + 3 32px round footer buttons (narrow-sidebar form, Shadow layer; v1.3); tile hover white 0.5 + up 1px, row hover white 0.5 |
 | `AgentMessage` / `UserMessage` / `TypingRow` / `TaskCard` | `src/components/Message.tsx` | Avatar bottom-aligned; typing = 3× 5px `#aaa` dots, 800ms, 0/160/320ms stagger; task card = title, status line, steps, track |
 | `FollowUpComposer` | `src/components/FollowUpComposer.tsx` | 32px capsule composer, `onSend` prop; attach `#ededeb`, send blue `#1987f7` (see Residuals 9) |
-| `PreviewTabs` / `PhonePreview` | `src/components/Preview.tsx` | Tabs live in the titlebar; phone-statusbar (8px/700) / phone-appbar (42px) / phone-projects / phone-feed (divider inset 33px) |
+| `PreviewTabs` / `PhonePreview` | `src/components/Preview.tsx` | Tabs live in the titlebar; phone-statusbar (8px/600) / phone-appbar (42px) / phone-projects / phone-feed (divider inset 33px) |
 | `ServiceModuleColumn` | `src/components/ServiceModuleColumn.tsx` | ORIGINAL right column: AirFeedback / AirPayment / AirRouter / AirKnowledge / AirTraffic |
 | `BottomModuleBar` | `src/components/BottomModuleBar.tsx` | ADAPTED variant, labelled 改编（非原版） — not the original |
 | `Toast` / `Resizer` | `src/components/Toast.tsx` | Toast bottom 16px, 11px; resizer 8px col-resize |

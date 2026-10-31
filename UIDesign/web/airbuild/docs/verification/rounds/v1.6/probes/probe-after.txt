@@ -1,0 +1,623 @@
+{
+  "winRect": [
+    40,
+    307,
+    1200,
+    668
+  ],
+  "winStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "lineHeight": "normal",
+    "letterSpacing": "normal",
+    "backdropFilter": "blur(34px) saturate(1.24)",
+    "backgroundColor": "rgba(244, 246, 244, 0.42)",
+    "boxShadow": "none",
+    "filter": "none"
+  },
+  "winInline": "position: relative; backdrop-filter: blur(34px) saturate(1.24);",
+  "statusRowRect": [
+    860,
+    399,
+    256,
+    34
+  ],
+  "statusKids": [
+    {
+      "tag": "SPAN",
+      "rect": [
+        876,
+        414,
+        16,
+        10
+      ]
+    },
+    {
+      "tag": "SPAN",
+      "rect": [
+        964,
+        406,
+        48,
+        15
+      ]
+    },
+    {
+      "tag": "SPAN",
+      "rect": [
+        1056,
+        415,
+        44,
+        8
+      ]
+    }
+  ],
+  "clusterKids": [
+    {
+      "tag": "SPAN",
+      "rect": [
+        1056,
+        415,
+        11,
+        8
+      ],
+      "html": "<span style=\"display: flex; align-items: flex-end; height: 8px;\"><svg width=\"11\" height=\"8\" viewBox=\"0 0 19 12\" preserveAspectRatio=\"xMidYMax meet\" aria-hidden=\"true\"><rect x=\"0\" y=\"7.5\" width=\"3.2\" height=\"4.5\" rx=\"0.7\" fill=\"#11110f\"></rect><rect x=\"4.8\" y=\"5\" width=\"3.2\" height=\"7\" rx=\"0.7\" fill=\"#11110f\"></rect><rect x=\"9.6\" y=\"2.5\" width=\"3.2\" height=\"9.5\" rx=\"0.7\" fill=\"#11110f\"></rect><rect",
+      "inner": [
+        {
+          "tag": "svg",
+          "rect": [
+            1056,
+            415,
+            11,
+            8
+          ],
+          "w": "11",
+          "h": "8",
+          "vb": "0 0 19 12"
+        },
+        {
+          "tag": "rect",
+          "rect": [
+            1056,
+            421,
+            2,
+            3
+          ],
+          "w": "3.2",
+          "h": "4.5",
+          "vb": null
+        },
+        {
+          "tag": "rect",
+          "rect": [
+            1059,
+            419,
+            2,
+            4
+          ],
+          "w": "3.2",
+          "h": "7",
+          "vb": null
+        },
+        {
+          "tag": "rect",
+          "rect": [
+            1062,
+            418,
+            2,
+            6
+          ],
+          "w": "3.2",
+          "h": "9.5",
+          "vb": null
+        },
+        {
+          "tag": "rect",
+          "rect": [
+            1064,
+            416,
+            2,
+            7
+          ],
+          "w": "3.2",
+          "h": "12",
+          "vb": null
+        }
+      ]
+    },
+    {
+      "tag": "SPAN",
+      "rect": [
+        1070,
+        415,
+        11,
+        8
+      ],
+      "html": "<span style=\"display: flex; align-items: center; height: 8px;\"><svg width=\"11\" height=\"7\" viewBox=\"0 0 17 12\" preserveAspectRatio=\"xMidYMid meet\" aria-hidden=\"true\"><path d=\"M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z\" fill=\"#11110f\"></path><path d=\"M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.",
+      "inner": [
+        {
+          "tag": "svg",
+          "rect": [
+            1070,
+            416,
+            11,
+            7
+          ],
+          "w": "11",
+          "h": "7",
+          "vb": "0 0 17 12"
+        },
+        {
+          "tag": "path",
+          "rect": [
+            1071,
+            417,
+            8,
+            2
+          ],
+          "w": null,
+          "h": null,
+          "vb": null
+        },
+        {
+          "tag": "path",
+          "rect": [
+            1073,
+            419,
+            5,
+            2
+          ],
+          "w": null,
+          "h": null,
+          "vb": null
+        },
+        {
+          "tag": "circle",
+          "rect": [
+            1075,
+            421,
+            2,
+            2
+          ],
+          "w": null,
+          "h": null,
+          "vb": null
+        }
+      ]
+    },
+    {
+      "tag": "SPAN",
+      "rect": [
+        1084,
+        415,
+        16,
+        8
+      ],
+      "html": "<span style=\"display: flex; align-items: center; height: 8px;\"><svg width=\"16\" height=\"8\" viewBox=\"0 0 27 13\" preserveAspectRatio=\"xMidYMid meet\" aria-hidden=\"true\"><rect x=\"0.5\" y=\"0.5\" width=\"23\" height=\"12\" rx=\"3.5\" stroke=\"#11110f\" stroke-opacity=\"0.35\" fill=\"none\"></rect><rect x=\"2\" y=\"2\" width=\"20\" height=\"9\" rx=\"2\" fill=\"#11110f\"></rect><path d=\"M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5",
+      "inner": [
+        {
+          "tag": "svg",
+          "rect": [
+            1084,
+            415,
+            16,
+            8
+          ],
+          "w": "16",
+          "h": "8",
+          "vb": "0 0 27 13"
+        },
+        {
+          "tag": "rect",
+          "rect": [
+            1084,
+            416,
+            14,
+            7
+          ],
+          "w": "23",
+          "h": "12",
+          "vb": null
+        },
+        {
+          "tag": "rect",
+          "rect": [
+            1085,
+            417,
+            12,
+            5
+          ],
+          "w": "20",
+          "h": "9",
+          "vb": null
+        },
+        {
+          "tag": "path",
+          "rect": [
+            1099,
+            418,
+            1,
+            2
+          ],
+          "w": null,
+          "h": null,
+          "vb": null
+        }
+      ]
+    }
+  ],
+  "islandRect": [
+    964,
+    406,
+    48,
+    15
+  ],
+  "timeStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "8px",
+    "fontWeight": "600",
+    "lineHeight": "normal",
+    "letterSpacing": "normal",
+    "backdropFilter": "none",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none",
+    "filter": "none"
+  },
+  "composerRect": [
+    252,
+    933,
+    469,
+    32
+  ],
+  "composerStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "lineHeight": "normal",
+    "letterSpacing": "normal",
+    "backdropFilter": "blur(4px) saturate(1.45)",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "rgba(255, 255, 255, 0.38) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.4) -1px -1px 1px 0px inset, rgba(0, 0, 0, 0.08) 0px 3px 8px 0px",
+    "filter": "none"
+  },
+  "capsuleCount": 2,
+  "capsuleStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "lineHeight": "normal",
+    "letterSpacing": "normal",
+    "backdropFilter": "blur(4px) saturate(1.45)",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "rgba(255, 255, 255, 0.38) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.4) -1px -1px 1px 0px inset, rgba(0, 0, 0, 0.08) 0px 3px 8px 0px",
+    "filter": "none"
+  },
+  "toastStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "11px",
+    "fontWeight": "400",
+    "lineHeight": "normal",
+    "letterSpacing": "normal",
+    "backdropFilter": "blur(18px)",
+    "backgroundColor": "rgba(18, 18, 18, 0.88)",
+    "boxShadow": "rgba(0, 0, 0, 0.2) 0px 10px 30px 0px",
+    "filter": "none"
+  },
+  "toastRect": [
+    593,
+    924,
+    94,
+    35
+  ],
+  "phoneBtnStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "lineHeight": "normal",
+    "letterSpacing": "normal",
+    "backdropFilter": "blur(4px) saturate(1.45)",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "rgba(255, 255, 255, 0.38) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.4) -1px -1px 1px 0px inset, rgba(0, 0, 0, 0.08) 0px 3px 8px 0px",
+    "filter": "none"
+  },
+  "bubbleStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "12px",
+    "fontWeight": "400",
+    "lineHeight": "16.56px",
+    "letterSpacing": "normal",
+    "backdropFilter": "none",
+    "backgroundColor": "rgb(255, 255, 255)",
+    "boxShadow": "rgba(0, 0, 0, 0.024) 0px 5px 16px 0px",
+    "filter": "none"
+  },
+  "userBubbleStyle": {
+    "fontFamily": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+    "fontSize": "12px",
+    "fontWeight": "400",
+    "lineHeight": "16.56px",
+    "letterSpacing": "normal",
+    "backdropFilter": "none",
+    "backgroundColor": "rgb(25, 135, 247)",
+    "boxShadow": "none",
+    "filter": "none"
+  },
+  "canvasMeasures": {
+    "bubble12Rounded": {
+      "width": 117.35,
+      "ascent": 9,
+      "descent": 3
+    },
+    "bubble12Text": {
+      "width": 134,
+      "ascent": 9,
+      "descent": 3
+    },
+    "bubble12Inter": {
+      "width": 135.33,
+      "ascent": 10,
+      "descent": 3
+    },
+    "agentName10w600Rounded": {
+      "width": 15.77,
+      "ascent": 8,
+      "descent": 1
+    },
+    "feedName9w600Rounded": {
+      "width": 22.72,
+      "ascent": 7,
+      "descent": 1
+    },
+    "time8w700Rounded": {
+      "width": 16.97,
+      "ascent": 6,
+      "descent": 1
+    },
+    "title34w800Display": {
+      "width": 637.22,
+      "ascent": 26,
+      "descent": 7
+    },
+    "title34w800Text": {
+      "width": 700.79,
+      "ascent": 28,
+      "descent": 7
+    },
+    "title34w800Rounded": {
+      "width": 645.04,
+      "ascent": 26,
+      "descent": 7
+    }
+  },
+  "fontsAvail": {
+    "rounded": true,
+    "display": true,
+    "text": true,
+    "inter": true,
+    "bodyStack": "\"SF Pro Rounded\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif"
+  },
+  "titleLines": {
+    "natural": [
+      {
+        "tag": "H1",
+        "text": "AirBuild — desktop / web design system",
+        "fontSize": "34px",
+        "fontWeight": "800",
+        "inlineFamily": "(none)",
+        "height": 51,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "1 · App window — three columns",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "(none)",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "2 · Collapsed states",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "(none)",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "3 · Messages",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "(none)",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "4 · Preview tabs + iPhone preview",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "(none)",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "5 · Service module column (original) + bottom bar (adapted)",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "(none)",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "6 · UI primitives (shadcn-style, Radix)",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "(none)",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "7 · Tokens",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "(none)",
+        "height": 30,
+        "lines": 1
+      }
+    ],
+    "forcedText": [
+      {
+        "tag": "H1",
+        "text": "AirBuild — desktop / web design system",
+        "fontSize": "34px",
+        "fontWeight": "800",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 51,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "1 · App window — three columns",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "2 · Collapsed states",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "3 · Messages",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "4 · Preview tabs + iPhone preview",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "5 · Service module column (original) + bottom bar (adapted)",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "6 · UI primitives (shadcn-style, Radix)",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "7 · Tokens",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      }
+    ],
+    "forcedDisplay": [
+      {
+        "tag": "H1",
+        "text": "AirBuild — desktop / web design system",
+        "fontSize": "34px",
+        "fontWeight": "800",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 51,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "1 · App window — three columns",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "2 · Collapsed states",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "3 · Messages",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "4 · Preview tabs + iPhone preview",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "5 · Service module column (original) + bottom bar (adapted)",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "6 · UI primitives (shadcn-style, Radix)",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      },
+      {
+        "tag": "H2",
+        "text": "7 · Tokens",
+        "fontSize": "20px",
+        "fontWeight": "700",
+        "inlineFamily": "\"SF Pro Display\", \"SF Pro Text\", sans-serif",
+        "height": 30,
+        "lines": 1
+      }
+    ]
+  }
+}

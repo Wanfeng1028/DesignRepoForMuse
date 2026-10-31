@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { tokens } from '../tokens/tokens.ts'
 import { AvatarBlob } from './AvatarBlob.tsx'
-import { CloverMark, IconGear, IconIPhone, IconLineDecrease, IconX, WifiMark, projectIconMap } from './icons.tsx'
+import { BatteryMark, CloverMark, IconGear, IconIPhone, IconLineDecrease, IconX, SignalMark, WifiMark, projectIconMap } from './icons.tsx'
 
 export function PreviewTabs({ tabs, active, onSelect, onClose }: { tabs: string[]; active: string; onSelect: (t: string) => void; onClose?: (t: string) => void }) {
   const [hoverTab, setHoverTab] = useState<string | null>(null)
@@ -47,19 +47,13 @@ export function PhonePreview() {
           background: 'rgba(255,255,255,0.98)', border: '7px solid #d8d8d6',
           boxShadow: '0 24px 48px rgba(0,0,0,0.24), inset 0 0 0 1px #fefefe', overflow: 'hidden',
           display: 'grid', gridTemplateRows: '34px 42px auto 1fr', flex: 'none' }}>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px 2px', fontSize: 8, fontWeight: 700, lineHeight: 'normal' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px 2px', fontSize: 8, fontWeight: 600, lineHeight: 'normal' }}>
             <span>9:41</span>
             <span style={{ position: 'absolute', left: '50%', top: 7, transform: 'translateX(-50%)', width: 48, height: 15, borderRadius: 999, background: '#050505' }} />
             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-              <span style={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
-                <span style={{ width: 3, height: 4, background: '#11110f', borderRadius: 1 }} />
-                <span style={{ width: 3, height: 6, background: '#11110f', borderRadius: 1 }} />
-                <span style={{ width: 3, height: 8, background: '#11110f', borderRadius: 1 }} />
-              </span>
+              <span style={{ display: 'flex', alignItems: 'flex-end', height: 8 }}><SignalMark /></span>
               <span style={{ display: 'flex', alignItems: 'center', height: 8 }}><WifiMark /></span>
-              <span style={{ width: 16, height: 8, border: '1px solid #11110f', borderRadius: 2, position: 'relative', boxSizing: 'border-box' }}>
-                <span style={{ position: 'absolute', left: 1, top: 1, bottom: 1, width: 6, background: '#11110f', borderRadius: 1 }} />
-              </span>
+              <span style={{ display: 'flex', alignItems: 'center', height: 8 }}><BatteryMark /></span>
             </span>
           </div>
           <div style={{ height: 42, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 13px' }}>

@@ -79,17 +79,44 @@ export function IconLineDecrease({ size = 15 }: { size?: number }) {
     </svg>
   )
 }
-/** Vector redraw of the iOS status-bar wifi glyph (11x7 phone-status-icons slot,
- * v1.5). Redrawn geometry, not the official raster: three arcs + dot, stroke 1.2,
- * round caps. NOT a Lucide export: Lucide Wifi is a square 24x24 glyph, while
- * the original status icon is a wide 11x7 crop (figma-icon-10.svg, 11x7). */
+/** iOS status-bar glyphs, v1.6: geometry from the verified iOS 26 UI Kit
+ * status-bar spec (baoyu ios-frame.jsx, 402pt frame), rendered inside the
+ * original phone-status-icons slot boxes (signal 11x8, wifi 11x7, battery
+ * 16x8) with meet scaling, so the slot sizes stay original while the FORMS
+ * become true iOS forms. NOT Lucide exports: Lucide has no status-bar
+ * glyphs (its Wifi is a square 24x24, its Signal is not the 4-bar form).
+ * Real-photo check (App Store iphone-03 phone screen): 4 signal bars,
+ * wifi 2 arcs + dot at 17:12 ratio, battery outline at 27:13 ratio with
+ * ~74% fill — all three match the spec, and the spec fill proportion
+ * (20/27) matches the photo fill, replacing the v1.5 6px fill guess (R13).
+ * Island stays the original slot 48x15 (spec 126x37 scaled by phone width
+ * 270/402 = 85x25 would break mockup-internal proportions; see CHANGELOG).
+ * No home indicator: the original mockup has none (spec 139x5 noted). */
+export function SignalMark() {
+  return (
+    <svg width={11} height={8} viewBox="0 0 19 12" preserveAspectRatio="xMidYMax meet" aria-hidden>
+      <rect x="0" y="7.5" width="3.2" height="4.5" rx="0.7" fill="#11110f" />
+      <rect x="4.8" y="5" width="3.2" height="7" rx="0.7" fill="#11110f" />
+      <rect x="9.6" y="2.5" width="3.2" height="9.5" rx="0.7" fill="#11110f" />
+      <rect x="14.4" y="0" width="3.2" height="12" rx="0.7" fill="#11110f" />
+    </svg>
+  )
+}
 export function WifiMark() {
   return (
-    <svg width={11} height={7} viewBox="0 0 11 7" fill="none" stroke="#11110f" strokeWidth={1.2} strokeLinecap="round" aria-hidden>
-      <path d="M0.8 4.5 Q5.5 -2.9 10.2 4.5" />
-      <path d="M2.6 5 Q5.5 -0.6 8.4 5" />
-      <path d="M4.2 5.4 Q5.5 2.2 6.8 5.4" />
-      <circle cx={5.5} cy={6.2} r={0.7} fill="#11110f" stroke="none" />
+    <svg width={11} height={7} viewBox="0 0 17 12" preserveAspectRatio="xMidYMid meet" aria-hidden>
+      <path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#11110f" />
+      <path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#11110f" />
+      <circle cx="8.5" cy="10.5" r="1.5" fill="#11110f" />
+    </svg>
+  )
+}
+export function BatteryMark() {
+  return (
+    <svg width={16} height={8} viewBox="0 0 27 13" preserveAspectRatio="xMidYMid meet" aria-hidden>
+      <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#11110f" strokeOpacity="0.35" fill="none" />
+      <rect x="2" y="2" width="20" height="9" rx="2" fill="#11110f" />
+      <path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#11110f" fillOpacity="0.4" />
     </svg>
   )
 }

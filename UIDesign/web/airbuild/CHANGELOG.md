@@ -9,6 +9,362 @@ crop, App Store iPad/iPhone shots). A round is clean only when the judge
 reports zero substantive differences item by item; "looks alike" is not
 a pass.
 
+## v1.6 — 2026-11-01 (round 9: iOS texture closure on font / material / glyph lines; v1.5 -> v1.6 patch bump)
+
+- Round: user verdict 2026-10-30 22:09 (iOS texture still absent) plus
+  coordinator briefs 2026-11-01 00:12 / 00:17 / 00:20 / 00:22 / 00:24
+  (results only, fix directly, no approval batches; SF render target;
+  refraction + edge-light material; optical-size harness override).
+  Method is measured_visual_replication in full, same as v1.5.
+- Zero judge calls this round. Measured data decides. No model was
+  called, no BotsRouter call was made, no token or key file was touched,
+  no judge verdict is claimed.
+- Scope: only UIDesign/web/airbuild. No other set, no server database,
+  no token, no BotsRouter, no X, no other project was touched.
+  SF font files were NOT copied into the repo, dist, or docs: they live
+  only in ~/.local/share/fonts/sf-pro/ for local rendering, and
+  ~/.config/fontconfig/fonts.conf was NOT touched by this round.
+- Baseline: v1.5 code rendered with the new SF stack
+  (docs/verification/rounds/v1.6/probes/baseline/ + probe-before.txt),
+  then the v1.6 code rendered the same way (probe-after.txt + final
+  shots). The v1.5 Noto-era screenshots are superseded: every v1.6
+  screenshot is an SF render. Inter is fallback only (see font table).
+- Reference rule unchanged: REA table A wins wherever it gives a value;
+  the iOS 27 / glassy / baoyu material recipes are diagnostics and
+  translations, never overrides of REA. The window backdrop staying
+  REA-exact is deliberate (see material item 4 and residual R23).
+
+### A. Font line (SF render; repo font token UNCHANGED)
+
+- Render resolution (headless shell 1243, file:// dist/index.html,
+  harness-only optical-size override: leaf elements with computed
+  font-size >= 20px get "SF Pro Display", smaller text resolves
+  through the repo token stack). document.fonts.check: SF Pro Rounded
+  true, SF Pro Display true, SF Pro Text true, Inter true (fallback).
+  Token stack is still "SF Pro Rounded", "SF Pro Display",
+  -apple-system, ... (tokens.ts + index.css --font-sans untouched):
+  on Apple devices it resolves to SF exactly as before; on this VM
+  small text now renders SF Pro Rounded (the token's first family),
+  large titles render SF Pro Display via the harness override only.
+  No product-code font change was needed: every REA size/weight
+  already matched (see table), the v1.5 gap was the missing SF
+  runtime, not the token.
+- Font table (original / REA value vs v1.6 render, DOM computed):
+  bubble 12px / 1.38 -> 12px / 16.56px, weight 400; agent name
+  10px / 600 -> 10px / 600; feed name 9px / 600 -> 9px / 600, line
+  1.25 -> 11.25px; feed text 8px / 1.3 -> 8px / 10.4px; feed time
+  6.5px / 1.4 -> 6.5px (unchanged); tab label 10px / 500 -> 10px /
+  500; composer input 12px / 16px -> 12px / 16px; window line-height
+  normal (v1.5) unchanged; window backdrop blur(34px) saturate(1.24)
+  unchanged; toast 11px, blur(18px), shadow 0 10px 30px
+  rgba(0,0,0,0.2) unchanged.
+- Canvas width evidence (same string, 12px): "Session ready to
+  review" = SF Pro Rounded 117.35px, SF Pro Text 134.00px, Inter
+  135.33px. Rounded is ~12% narrower than Text/Inter: the token's
+  Rounded-first order is load-bearing for line widths, and the
+  Inter fallback (coordinator proof images welcome-inter.png /
+  gallery-inter.png) sits ~1% from Text, not from Rounded. Inter is
+  recorded as fallback comparison only; delivered shots are SF.
+- SF Pro Rounded vs original note (one separate line, as briefed):
+  the original token IS SF Pro Rounded, so small text in Rounded is
+  faithful, not an approximation delta. The remaining font delta is
+  narrow: large titles render Display via harness override on this
+  VM (on Apple devices the token stack gives Rounded first, and
+  whether Apple renders >= 20px titles in Display or Rounded is a
+  host-side optical-size behaviour this set cannot encode in the
+  token without breaking the token; recorded, not papered over).
+- Title wrap check (every large title; Range getClientRects line
+  count; gallery chrome has no original, intent = 1 line):
+  H1 34px/800 "AirBuild - desktop / web design system": natural
+  (Rounded) 1 line, forced Text 1 line, forced Display 1 line,
+  final (Display override) 1 line, height 51px. All seven H2 20px/700:
+  1 line in all three states, height 30px. NO wrap defect exists in
+  this set at 34px/20px (the coordinator's 43px Text-wraps evidence
+  is from another set's larger title, not reproduced here). Widths
+  at 34px/800: Display 637.22px, Text 700.79px, Rounded 645.04px
+  (Display narrowest, which is why the override is kept even with
+  no wrap defect: it is the optical-size-correct face).
+- Eye check: window-main + gallery-1280 in SF read as iOS text
+  (rounded letterforms, Semibold time, 600 agent/feed names),
+  versus the v1.5 Noto render. The font line is closed except the
+  Rounded-vs-Display host note above.
+
+### B. Material line (edge-light shipped; SVG refraction REJECTED on evidence)
+
+- Material table (original/REA vs before vs after; blur/saturate/bg
+  never moved where REA fixes them):
+  1. Window backdrop: REA rgba(244,246,244,0.42) + blur(34px)
+     saturate(1.24) -> before identical -> after identical (DOM
+     computed + inline both confirm). NOT strengthened: ios27's
+     blur 100px / alpha 0.70 would be a different design, and the
+     gallery flatness is the flat #ececea backdrop (R5), not the
+     window value. See R23.
+  2. Shared-control glass (titlebar capsules x2, preview toggles,
+     account button, sidebar footer buttons x3, phone appbar
+     buttons x2, composer form, attach button): blur(4px)
+     saturate(1.45) + gradient 325deg + shadow inset 0 1px
+     rgba(255,255,255,0.38) + 0 3px 8px rgba(0,0,0,0.08) -> after
+     ADDS one inset layer: inset -1px -1px 1px
+     rgba(255,255,255,0.40) (baoyu iOS 26 pill bottom-right rim
+     light; glassy specular/hairline translated to CSS: specular
+     1.1 has no CSS numeric equivalent, the rim layer is its
+     translation). DOM after (composer + capsule): "... 0.38 ...
+     inset, rgba(255,255,255,0.4) -1px -1px 1px 0px inset,
+     rgba(0,0,0,0.08) 0px 3px 8px 0px". Pixel effect is subtle by
+     design: composer bottom edge rows y656-657 lift +1 to +2
+     levels (249 -> 251, 251 -> 253); flat interiors unchanged.
+     Tokens changed: tokens.controlShadow + tokens.footerShadow
+     (same value, both updated; all consumers share them).
+  3. Toast: REA bg rgba(18,18,18,0.88) + border
+     rgba(255,255,255,0.12) + shadow 0 10px 30px rgba(0,0,0,0.2) +
+     blur(18px) -> before identical -> after identical. Glassy's
+     0 10px 26px rgba(0,0,0,0.16) was NOT applied: REA wins on
+     conflict. No rim layer added (dark glass, REA-exact).
+  4. Phone frame, bubbles, task card, tiles, service column, bottom
+     bar: unchanged (REA values already exact; tiles recorded as
+     new residual R22 instead of changed, see below).
+  5. No extra top-shine gradient overlay was added: the control
+     gradient (325deg) + existing inset top light already carry
+     the top shine; a second gradient band would double it with
+     no original evidence. The rim completion in item 2 IS the
+     shipped edge-light system.
+- Refraction: four probes, all in docs/verification/rounds/v1.6/
+  probes/, all against the same headless shell; the nikdelvin
+  displacement map + 3-channel (R = strength + 2*CA, G = strength
+  + CA, B = strength, screen blend, CA = 0) was reimplemented for
+  the probes (MIT source ~/workspace/nikdelvin-liquid-glass, not
+  copied into product code):
+  1. probe-refraction.html/png: filter: url(data-URI) directly on
+     a content-bearing slab (strengths 12/30/60) displaces THE
+     SLAB ITSELF (box + text shift, ghost bleeding past the
+     radius) instead of refracting only its backdrop. Unusable on
+     any element with content.
+  2. probe-refraction2.html/png: two-layer (outer radius clip +
+     empty inner slab with backdrop blur + displacement, text in
+     an unfiltered sibling). Boxes stay clean and text stays
+     crisp, but the displaced pattern is NOT a lateral refraction:
+     mid-row profiles flatten (control range 150-192 vs
+     displaced 112-133) with no alignable shift (best-shift fit
+     hits the +/-40px boundary with mean error ~43-46 levels).
+     The screen-blended channel copies wash contrast out.
+  3. probe-refraction3.html/png: sharp 24px-stripe + text backdrop,
+     blur(4px) pill, strengths 8/16. Stripes pass through
+     unchanged; no visible bending at the rim, text glyphs
+     equally blurred in control and displaced variants.
+  4. probe-backdrop-url(2).html/png/cjs: backdrop-filter:
+     url(#filter) IS parsed by this Chromium (computed keeps the
+     url), but rendering ERASES the backdrop entirely (flat tint,
+     no stripes) for both a turbulence filter and the nikdelvin
+     map filter, at blur(10px) and blur(34px) saturate(1.24).
+     Content stays crisp, backdrop is gone: strictly worse than
+     plain blur.
+  Decision: NO SVG displacement filter ships on any product glass.
+  The map's full-surface gradients are too smooth to bend local
+  detail, and the only backdrop-scoped path erases the backdrop.
+  A future round must not retry this without a new mechanism
+  (e.g. a rim-normal map with real spatial frequency, or a
+  browser where backdrop url() renders); see residual R24.
+- Render-layer check (v1.5 lesson, not repeated): window backdrop
+  is inline backdropFilter + WebkitBackdropFilter from
+  tokens.windowFilter (DOM computed blur(34px) saturate(1.24));
+  composer/capsule/phone-button backdrops compute blur(4px)
+  saturate(1.45); toast computes blur(18px). All present in the
+  built product, verified by probe-after.txt, not just by source.
+
+### C. Glyph line (spec forms inside original slot boxes)
+
+- Source: baoyu ios-frame.jsx status bar (402pt frame) + App Store
+  iphone-03 phone-screen real-photo check (crop
+  measure/appstore-iphone03-statusbar2.png). Photo measurements
+  (full-res): time "13:00" glyph height ~31px; signal 4 bars at
+  x880-887 / 893-900 / 907-914 / 921-928; wifi spans x948-990
+  (42 wide) x y900-930 (30 tall), ratio 1.40 = spec 17:12; battery
+  outline x1013-1065 (52 wide) x y905-930 (25 tall), ratio 2.08 =
+  spec 27:13, fill ~74% of total width = spec inner 20/27.
+  Spec and photo agree on all three forms.
+- Glyph table (spec value vs slot-adapted value vs photo check):
+  signal: spec 4 rects 3.2 wide, rx 0.7, (x0,y7.5,h4.5) /
+  (x4.8,y5,h7) / (x9.6,y2.5,h9.5) / (x14.4,y0,h12), viewBox 19x12
+  -> adapted SVG 11x8, preserveAspectRatio xMidYMax meet, drawn
+  bars 2 wide, heights 3/4/6/7, group box unchanged 11x8 ->
+  photo: 4 bars, ascending, rounded tops. MATCH. (v1.5 had 3 bars
+  3px wide; the 4th bar is the spec/photo correction.)
+  wifi: spec outer arc M8.5 3.2... / inner arc M8.5 6.8... /
+  dot cx8.5 cy10.5 r1.5, viewBox 17x12 -> adapted SVG 11x7,
+  xMidYMid meet, drawn outer arc 8 wide, inner 5, dot 2x2 ->
+  photo: 2 arcs + dot, ratio 1.40. MATCH. (v1.5 custom stroked
+  arcs retired; spec glyphs are FILLED shapes, no stroke.)
+  battery: spec outer rect (0.5,0.5,23x12,rx3.5,stroke opacity
+  0.35,fill none) + inner rect (2,2,20x9,rx2) + nub path M25
+  4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z
+  (opacity 0.4), viewBox 27x13 -> adapted SVG 16x8, xMidYMid
+  meet, drawn outline 14x7, fill 12x5, nub 1x2 -> photo: outline
+  + ~74% fill + nub. MATCH. (v1.5 fill was 6px wide; R13's
+  "neither value provable" is now CLOSED: spec + photo agree.)
+  time: spec family -apple-system/SF Pro, weight 590, size 17,
+  line-height 22px, paddingTop 1.5 -> adapted: size stays the
+  original slot 8px, weight 700 -> 600 (590's nearest SF
+  weight), family stays the token stack. DOM time box 17px wide
+  -> 16px wide (Semibold narrower), group position unchanged.
+  Spec-scaled size (17 x 270/402 = 11.4px) was computed and
+  DELIBERATELY NOT applied: the mockup miniaturises everything
+  consistently (island, group, 26px avatars, 48px rows), and
+  scaling only the time to full-iOS proportion would break
+  mockup-internal consistency. Size decision recorded, not
+  hidden; a coordinator who wants full-iOS proportions must
+  rescale the whole phone, not one glyph.
+  island: spec 126x37 (402 frame) -> scaled 85x25 by phone
+  width, but KEPT at the original slot 48x15 (same
+  mockup-consistency reason; DOM island rect unchanged
+  (964,406) 48x15). home indicator: spec 139x5 -> scaled 93x3.4,
+  NOT added: the original mockup has no home indicator (feed
+  scrolls to the bottom edge); adding one would be invention.
+  statusbar container: padding 8px 16px 2px, row 34px, cluster
+  gap 3px all unchanged (slot values).
+- Status group after: time (876,414) 16x10, island (964,406)
+  48x15, cluster (1056,415) 44x8 (signal 11x8 + gap 3 + wifi
+  11x7 box + gap 3 + battery 16x8 box) - same 44px total and
+  same position as v1.5. Only the glyph FORMS changed inside
+  unchanged boxes. Phone-stage 2x eye check
+  (measure/phone-stage-after-2x.png): 9:41, island, 4 bars,
+  wifi arcs, full-ish battery, correct order, no clipping.
+- New glyph components: SignalMark + BatteryMark in icons.tsx,
+  WifiMark rewritten to the spec paths (same export name).
+  Old v1.5 WifiMark stroked-arc geometry is retired, not kept
+  alongside.
+
+### Pixel + DOM cross-check
+
+- Window-main before (v1.5 code, SF render) vs after (v1.6):
+  2467 / 802800 pixels changed, max channel delta 240 (battery
+  fill black-on-white + new bar/arc forms in the tiny status
+  glyphs). Localisation: titlebar bands x100-200 (sidebar
+  capsule rim) + x1050-1199 (preview capsule/toggle rims);
+  body-top x800-1150 (phone glyphs + appbar button rims);
+  bottom band x0-700 (composer bottom edge rows y656-657 only,
+  +1/+2 levels; sidebar footer button rims). No other region
+  moved: window rect 1200x668, sidebar 198, conversation and
+  preview boundaries, avatar discs, bubbles, task card, toast
+  all pixel-identical outside the listed bands.
+- Side-by-side: side-by-side-v15-v16.png (2400 wide, v1.5-code
+  SF render left, v1.6 right, same size). Eye differences, then
+  measured: (a) phone battery fill visibly fuller (6px -> 12px
+  drawn); (b) signal shows 4 bars (was 3); (c) wifi arcs are
+  filled spec arcs (was stroked custom); (d) time slightly
+  narrower (Semibold); (e) control bottom edges carry a faint
+  rim light (<= 2 levels, only on the bottom 1-2 rows); (f) no
+  other visible difference: columns, traffic lights, project
+  icon, tabs, tiles, feed, task card, composer, toast unchanged
+  in form. Gallery full page: sections 1-7 present, no overflow,
+  no missing element.
+- Regression probes (v1.5 scripts re-run against the new dist):
+  probe-dom2 EMPTY diff. probe-dom diff = ONLY the intentional
+  composerShadow rim layer (plus one timing artifact, see R25).
+  probe-collapsed diff = ONLY page y positions -18px (collapsed
+  window rects still 1200x668 at x40; icon centres 487 / 470 /
+  720 unchanged; collapsed titlebar shadow none, strip backdrop
+  blur(4px) saturate(1.45) unchanged). The -18px is gallery
+  chrome, not window geometry: the SF-narrower header paragraph
+  wraps to one fewer line than under Noto, shifting everything
+  below it up; window-internal values are untouched.
+
+### Full rescan residual count (v1.6)
+
+- Closed this round: R13 (battery fill: spec + photo agree, 20/27
+  proportion shipped). Items closed: font runtime (SF), title
+  wrap (none found), status glyph forms (3), control rim light
+  (1 token pair), refraction question (answered: rejected, 4
+  probes). The round is NOT clean: 24 residuals remain (R1-R12,
+  R14-R25 below, R13 closed), numbered with numbers.
+- R1 SF host behaviour for >= 20px titles (Display vs Rounded on
+  Apple devices) unencodable in the token without breaking it;
+  harness override covers verification renders only - carried,
+  narrowed from v1.5 (SF itself is now installed and measured).
+- R2 Avatar faces redrawn geometry - carried.
+- R3 Project tiles vector mini-icons on flat tints (originals are
+  photo covers) - carried.
+- R4 Service-column background rgba(249,249,247,0.92)
+  (user-photo right column unreadable) - carried.
+- R5 Gallery backdrop flat #ececea, not the marketing page's
+  colourful gradient - carried (this is also why the window
+  looks flatter in the gallery than on a real desktop; see R23).
+- R6 Native iPad differences as platform gaps - carried.
+- R7 Send blue #1987f7 per native evidence, against the web
+  demo's gradient/black variant - carried.
+- R8 Dark mode unrendered (light only, table B reserve) - carried.
+- R9 Preview/sidebar collapse mid-state (slide + fade) differs;
+  end states identical - carried.
+- R10 Device-tab switch animation + tablet phone form not
+  implemented - carried.
+- R11 Project-icon swap animation not implemented - carried.
+- R12 Titlebar focus-visible ring not implemented (keyboard-only,
+  invisible in screenshots) - carried.
+- R14 Status glyphs are still hand redraws (now spec-geometry
+  redraws, not raster copies): at 8px, pixel-exact raster match
+  is not resolvable from raster evidence alone; forms, ratios
+  and fill proportion now match spec + photo.
+- R15 Clover mark + device-inbound + line-decrease custom morphs
+  - carried.
+- R16 Desktop body copy from the iPad thread, not verbatim desktop
+  - carried.
+- R17 Gallery chrome (header, notes, token swatches, primitives,
+  bottom bar adapted) is not original - carried; bottom bar
+  stays labelled as adapted, never claimed as original 1:1.
+- R18 Titlebar inset pixel 241 vs body 242 (delta 1, border-edge
+  antialiasing; DOM identical) - carried.
+- R19 Post-backdrop 1-level compositing shifts - carried.
+- R20 Online dot text glyph (font-dependent box 5x8) - carried.
+- R21 Resizer drag physics + message playback timing are host
+  contracts; Assets.car values unmeasured - carried.
+- R22 NEW: project-tile hover/active vs REA table A: tile hover
+  bg 0.5 (code) vs REA 0.58, active border hairline 0.045 (code)
+  vs REA rgba(255,255,255,0.94). NOT changed this round: the
+  table row gives no shadow-layer variant, prior rounds' tile
+  values may reflect shadow evidence not re-examined here, and
+  hover/active states need interaction probes to verify. Exact
+  numbers recorded for a later round to adjudicate.
+- R23 NEW (verdict root-cause note): the "flat" window look in
+  verification shots is substantially a backdrop artifact: REA
+  blur(34px) saturate(1.24) over the flat #ececea gallery
+  backdrop (R5) has almost nothing to blur, while on a real
+  desktop the same values blur wallpaper. Strengthening the
+  window values to compensate would break 1:1; the correct fix
+  would be a wallpaper-backed verification stage, which is a
+  harness decision, not a token change. Not changed.
+- R24 NEW: SVG displacement refraction rejected (4 probes, see
+  material section). Do not retry without a new mechanism.
+- R25 NEW (probe artifact, NOT a regression): probe-dom.cjs
+  tileHoverBg reads 0.34 (idle) on immediate read after hover()
+  in this run, vs 0.5 in the v1.5 record. Proven artifact, not a
+  code change (ProjectTile untouched this round): manual
+  mouse.move + 800ms wait reads 0.5, and synthetic mouseover
+  reads 0.5, in the same session; the probe reads before React
+  flushes hover state under this shell. Recorded so the next
+  rerun is not mistaken for a regression.
+
+### Build
+
+- /home/hatch/.npm-global/bin/pnpm build -> tsc -b && vite build,
+  1978 modules, pass. Final hashes: dist/assets/index-U0CJA-ff.css
+  (16.98 kB) and index-BrXXYHVi.js (305.02 kB). Final screenshots
+  were shot against this build with the optical-size override;
+  probe-after.txt reflects the same build + override.
+
+### Files changed
+
+- README.md (statusbar 8px/700 -> 8px/600, two mentions).
+- src/tokens/tokens.ts (controlShadow + footerShadow rim layer).
+- src/components/icons.tsx (SignalMark + BatteryMark new, WifiMark
+  spec rewrite, comment block).
+- src/components/Preview.tsx (spec marks, time weight 600).
+- src/App.tsx (section-4 note statusbar weight).
+- docs/verification/rounds/v1.6/ (all new: gallery x3, window
+  shots x3, side-by-side-v15-v16, baseline SF shots + probes,
+  refraction probes 1-4 + backdrop-url probes, measure crops,
+  probe-before/after, regression reruns, shoot + probe scripts).
+- CHANGELOG.md (this entry).
+
+
 ## v1.5 — 2026-10-30 (round 8: Apple iOS quality polish inside 1:1 fidelity; v1.4 -> v1.5 patch bump)
 
 - Round: user orders 2026-10-30 12:30 / 13:35 / 13:41 / 15:34

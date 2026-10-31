@@ -1,0 +1,51 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body { margin: 0; background: repeating-linear-gradient(90deg, #111 0 24px, #eee 24px 48px); font-family: sans-serif; }
+svg { position: absolute; width: 0; height: 0; }
+.slab { position: absolute; width: 300px; height: 130px; border-radius: 18px; background: rgba(244,246,244,0.42); }
+.slab span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: #111; }
+#a { left: 24px; top: 24px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+#b { left: 348px; top: 24px; backdrop-filter: url(#turb) blur(10px); -webkit-backdrop-filter: url(#turb) blur(10px); }
+#c { left: 672px; top: 24px; backdrop-filter: url(#nik12) blur(10px); -webkit-backdrop-filter: url(#nik12) blur(10px); }
+#d { left: 24px; top: 178px; backdrop-filter: url(#nik30) blur(10px); -webkit-backdrop-filter: url(#nik30) blur(10px); }
+#e { left: 348px; top: 178px; backdrop-filter: url(#nik12) blur(34px) saturate(1.24); -webkit-backdrop-filter: url(#nik12) blur(34px) saturate(1.24); }
+</style></head><body>
+<svg aria-hidden="true"><defs id="defs">
+<filter id="turb" color-interpolation-filters="sRGB"><feTurbulence baseFrequency="0.02" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="20"/></filter>
+</defs></svg>
+<div class="slab" id="a"><span>A control blur(10)</span></div>
+<div class="slab" id="b"><span>B backdrop turbulence 20</span></div>
+<div class="slab" id="c"><span>C backdrop nik12 blur(10)</span></div>
+<div class="slab" id="d"><span>D backdrop nik30 blur(10)</span></div>
+<div class="slab" id="e"><span>E backdrop nik12 blur(34)</span></div>
+<script>
+function mapURI(w, h, radius, depth) {
+  const svg = '<svg height="' + h + '" width="' + w + '" viewBox="0 0 ' + w + ' ' + h + '" xmlns="http://www.w3.org/2000/svg">'
+    + '<style>.mix { mix-blend-mode: screen; }</style><defs>'
+    + '<linearGradient id="Y" x1="0" x2="0" y1="' + Math.ceil((radius / h) * 15) + '%" y2="' + Math.floor(100 - (radius / h) * 15) + '%"><stop offset="0%" stop-color="#0F0" /><stop offset="100%" stop-color="#000" /></linearGradient>'
+    + '<linearGradient id="X" x1="' + Math.ceil((radius / w) * 15) + '%" x2="' + Math.floor(100 - (radius / w) * 15) + '%" y1="0" y2="0"><stop offset="0%" stop-color="#F00" /><stop offset="100%" stop-color="#000" /></linearGradient></defs>'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="#808080" /><g filter="blur(2px)">'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="#000080" />'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="url(#Y)" class="mix" />'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="url(#X)" class="mix" />'
+    + '<rect x="' + depth + '" y="' + depth + '" height="' + (h - 2 * depth) + '" width="' + (w - 2 * depth) + '" fill="#808080" rx="' + radius + '" ry="' + radius + '" filter="blur(' + depth + 'px)" />'
+    + '</g></svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+function nikFilter(id, w, h, strength) {
+  const m = mapURI(w, h, 18, 6);
+  const f = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+  f.setAttribute('id', id); f.setAttribute('color-interpolation-filters', 'sRGB');
+  const img = document.createElementNS('http://www.w3.org/2000/svg', 'feImage');
+  img.setAttribute('x', '0'); img.setAttribute('y', '0'); img.setAttribute('height', String(h)); img.setAttribute('width', String(w));
+  img.setAttribute('href', m); img.setAttribute('result', 'displacementMap');
+  const d = document.createElementNS('http://www.w3.org/2000/svg', 'feDisplacementMap');
+  d.setAttribute('in', 'SourceGraphic'); d.setAttribute('in2', 'displacementMap');
+  d.setAttribute('scale', String(strength)); d.setAttribute('xChannelSelector', 'R'); d.setAttribute('yChannelSelector', 'G');
+  f.appendChild(img); f.appendChild(d);
+  document.getElementById('defs').appendChild(f);
+}
+nikFilter('nik12', 300, 130, 12);
+nikFilter('nik30', 300, 130, 30);
+window.__done = true;
+</script>
+</body></html>

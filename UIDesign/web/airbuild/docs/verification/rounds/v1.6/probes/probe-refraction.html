@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>refraction probe v1.6</title>
+<style>
+  body { margin: 0; background: repeating-linear-gradient(90deg, #111 0 60px, #eee 60px 120px); font-family: sans-serif; }
+  .row { display: flex; gap: 24px; padding: 24px; }
+  .slab { position: relative; width: 300px; height: 120px; border-radius: 18px; overflow: hidden;
+    background: rgba(244,246,244,0.42); backdrop-filter: blur(34px) saturate(1.24); -webkit-backdrop-filter: blur(34px) saturate(1.24); }
+  .slab span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: #111; }
+  .edge { box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4), inset 0 0 0 0.5px rgba(0,0,0,0.04), 0 10px 26px rgba(0,0,0,0.16); }
+  .edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 28%); }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="defs"></defs></svg>
+<div class="row">
+  <div class="slab" id="slabA"><span>A plain blur(34) sat(1.24)</span></div>
+  <div class="slab" id="slabB"><span>B + displace 12</span></div>
+  <div class="slab" id="slabC"><span>C + displace 30</span></div>
+</div>
+<div class="row">
+  <div class="slab" id="slabD"><span>D + displace 60</span></div>
+  <div class="slab edge" id="slabF"><span>F edge-light only</span></div>
+  <div class="slab" id="slabE"><span>E text + displace 30 (warp check)</span></div>
+</div>
+<script>
+// nikdelvin displacement map + 3-channel filter, reimplemented for this probe
+function mapURI(w, h, radius, depth) {
+  const svg = '<svg height="' + h + '" width="' + w + '" viewBox="0 0 ' + w + ' ' + h + '" xmlns="http://www.w3.org/2000/svg">'
+    + '<style>.mix { mix-blend-mode: screen; }</style><defs>'
+    + '<linearGradient id="Y" x1="0" x2="0" y1="' + Math.ceil((radius / h) * 15) + '%" y2="' + Math.floor(100 - (radius / h) * 15) + '%"><stop offset="0%" stop-color="#0F0" /><stop offset="100%" stop-color="#000" /></linearGradient>'
+    + '<linearGradient id="X" x1="' + Math.ceil((radius / w) * 15) + '%" x2="' + Math.floor(100 - (radius / w) * 15) + '%" y1="0" y2="0"><stop offset="0%" stop-color="#F00" /><stop offset="100%" stop-color="#000" /></linearGradient></defs>'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="#808080" /><g filter="blur(2px)">'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="#000080" />'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="url(#Y)" class="mix" />'
+    + '<rect x="0" y="0" height="' + h + '" width="' + w + '" fill="url(#X)" class="mix" />'
+    + '<rect x="' + depth + '" y="' + depth + '" height="' + (h - 2 * depth) + '" width="' + (w - 2 * depth) + '" fill="#808080" rx="' + radius + '" ry="' + radius + '" filter="blur(' + depth + 'px)" />'
+    + '</g></svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+function filterURI(w, h, radius, depth, strength, ca) {
+  const m = mapURI(w, h, radius, depth);
+  const svg = '<svg height="' + h + '" width="' + w + '" viewBox="0 0 ' + w + ' ' + h + '" xmlns="http://www.w3.org/2000/svg"><defs>'
+    + '<filter id="displace" color-interpolation-filters="sRGB">'
+    + '<feImage x="0" y="0" height="' + h + '" width="' + w + '" href="' + m + '" result="displacementMap" />'
+    + '<feDisplacementMap in="SourceGraphic" in2="displacementMap" scale="' + (strength + ca * 2) + '" xChannelSelector="R" yChannelSelector="G" />'
+    + '<feColorMatrix type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="displacedR" />'
+    + '<feDisplacementMap in="SourceGraphic" in2="displacementMap" scale="' + (strength + ca) + '" xChannelSelector="R" yChannelSelector="G" />'
+    + '<feColorMatrix type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0" result="displacedG" />'
+    + '<feDisplacementMap in="SourceGraphic" in2="displacementMap" scale="' + strength + '" xChannelSelector="R" yChannelSelector="G" />'
+    + '<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="displacedB" />'
+    + '<feBlend in="displacedR" in2="displacedG" mode="screen" /><feBlend in2="displacedB" mode="screen" />'
+    + '</filter></defs></svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg) + '#displace';
+}
+const defs = document.getElementById('defs');
+[['disp12', 12], ['disp30', 30], ['disp60', 60]].forEach(([id, s]) => {
+  const holder = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+  holder.setAttribute('id', id);
+  defs.appendChild(holder);
+});
+function applyFilter(elId, filterId, strength) {
+  // Build a same-document filter via inline SVG string injection (feImage data-URI path)
+  const uri = filterURI(300, 120, 18, 6, strength, 0);
+  document.getElementById(elId).style.filter = 'url("' + uri + '")';
+}
+applyFilter('slabB', 'disp12', 12);
+applyFilter('slabC', 'disp30', 30);
+applyFilter('slabD', 'disp60', 60);
+applyFilter('slabE', 'disp30', 30);
+window.__probeDone = true;
+</script>
+</body></html>

@@ -31,11 +31,11 @@ export const tokens = {
   /** Shared floating-control material: base shared block + shadow override.
    * Shadow inset is 0 1px (not the base shared block's 1px 1px); shadow wins. */
   controlBg: 'linear-gradient(325deg, rgba(255,255,255,0.78), rgba(245,247,250,0.24))',
-  controlShadow: 'inset 0 1px 0 rgba(255,255,255,0.38), 0 3px 8px rgba(0,0,0,0.08)',
+  controlShadow: 'inset 0 1px 0 rgba(255,255,255,0.38), inset -1px -1px 1px rgba(255,255,255,0.40), 0 3px 8px rgba(0,0,0,0.08)',
   /** Sidebar footer buttons: shadow layer puts them in the shared gradient
    * list, so they share the control material (v1.2's flat base row is out). */
   footerBg: 'linear-gradient(325deg, rgba(255,255,255,0.78), rgba(245,247,250,0.24))',
   footerBorder: 'none',
-  footerShadow: 'inset 0 1px 0 rgba(255,255,255,0.38), 0 3px 8px rgba(0,0,0,0.08)',
+  footerShadow: 'inset 0 1px 0 rgba(255,255,255,0.38), inset -1px -1px 1px rgba(255,255,255,0.40), 0 3px 8px rgba(0,0,0,0.08)',
 } as const
 export type Tokens = typeof tokens
