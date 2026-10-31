@@ -23,18 +23,28 @@
 html, body { background: #e9e9e6; }
 body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
-/* Frosted-glass control (round 8, REA set): floating-control gradient +
-   shadow from REA table A (window-control/header-action group), blur 34px +
-   saturate 1.24 from the REA chat-window glass (the only blur/saturate
-   numbers in evidence). Replaces the v1.6 flat fill (rgba 0.72 + blur 12 +
-   saturate 1.4 + white border + inset top highlight). Applied to top-bar
-   round buttons, pills, the draft URL pill + share button and the detail
-   check button. No official asset is involved; this is a CSS material only. */
+/* Liquid-glass control (round 9 / v1.10, B line): REA floating-control
+   gradient + REA floating shadow kept; frost tier corrected for SMALL
+   controls (REA blur 34px is the large chat-window value, not a button
+   value — small-control references: ios27 button blur 7px, baoyu pill
+   blur 12px saturate 1.8, nikdelvin default saturate 1.5; tier chosen
+   blur 10px saturate 1.5). Edge light is now a set, not one diagonal
+   highlight: glassy-liquid hairline inset 0 0 0 0.5px rgba(0,0,0,0.04)
+   (edge definition on white cards) + top specular 0.85 + left 0.45 +
+   bottom rim 0.25 (specular intensity concept ~1.1, glassy-liquid).
+   glassy-liquid's 0 10px 26px rgba(0,0,0,0.16) shadow was evaluated and
+   REJECTED for these 40-46px controls (heavier than the REA floating
+   shadow and the original buttons); its 3px accent focus ring is not
+   applied (no focus state in this gallery, original shows none).
+   Refraction (SVG displacement, strength 16 / cab 2) is layered on top
+   at runtime by src/lib/liquid-glass.ts, which upgrades this same
+   backdrop-filter in place; the class below is the no-JS fallback and
+   stays blur-only so a copied component never loses its glass. */
 .ab-glass {
   background: linear-gradient(325deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.48) 48%, rgba(245, 247, 250, 0.24));
-  -webkit-backdrop-filter: blur(34px) saturate(1.24);
-  backdrop-filter: blur(34px) saturate(1.24);
-  box-shadow: inset 1px 1px rgba(255, 255, 255, 0.38), 0 3px 8px rgba(0, 0, 0, 0.08);
+  -webkit-backdrop-filter: blur(10px) saturate(1.5);
+  backdrop-filter: blur(10px) saturate(1.5);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 1px 0 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.25), 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Morphing transitions (M1/M2/M5): every state switch animates, never cuts. */

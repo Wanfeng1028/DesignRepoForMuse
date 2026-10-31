@@ -1,0 +1,6 @@
+{"screen":"chat","key":"agentBubble","sf":{"w":250,"h":95.9,"lines":4},"inter":{"w":250,"h":95.9,"lines":4},"text":{"w":250,"h":95.9,"lines":4},"display":{"w":250,"h":95.9,"lines":4},"size":"11.5px","weight":"400"}
+{"screen":"chat","key":"userBubble","sf":{"w":242,"h":93.9,"lines":4},"inter":{"w":242,"h":93.9,"lines":4},"text":{"w":242,"h":93.9,"lines":4},"display":{"w":242,"h":93.9,"lines":4},"size":"11.5px","weight":"400"}
+{"screen":"briefing","key":"bare1","sf":{"w":266,"h":60.9,"lines":2},"inter":{"w":266,"h":78.4,"lines":3},"text":{"w":266,"h":78.4,"lines":3},"display":{"w":266,"h":60.9,"lines":2},"size":"11.5px","weight":"400"}
+{"screen":"briefing","key":"bare2","sf":{"w":266,"h":78.4,"lines":3},"inter":{"w":266,"h":78.4,"lines":3},"text":{"w":266,"h":78.4,"lines":3},"display":{"w":266,"h":78.4,"lines":3},"size":"11.5px","weight":"400"}
+{"screen":"briefing","key":"briefHead","sf":{"w":200.5,"h":32.5,"lines":2},"inter":{"w":200.5,"h":32.5,"lines":2},"text":{"w":200.5,"h":32.5,"lines":2},"display":{"w":200.5,"h":32.5,"lines":2},"size":"13px","weight":"700"}
+{"screen":"draft","key":"draftHead","sf":{"w":170,"h":50,"lines":2},"inter":{"w":170,"h":50,"lines":2},"text":{"w":170,"h":50,"lines":2},"display":{"w":170,"h":50,"lines":2},"size":"20px","weight":"700"}

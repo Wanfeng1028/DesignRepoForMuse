@@ -392,3 +392,94 @@
 
 - 本轮只改 UIDesign/app/airbuild/ 内 10 个源码文件（briefing-cards、composer、message、phone-frame、project-card-grid、task-list-card、ui/card、website-draft-card、index.css、tokens/index.ts）+ CHANGELOG 本条 + rounds/v1.9/ 验证物；未动其他三套、未动 UIDesign/CHANGELOG.md 总账、未动服务器/令牌/BotsRouter/X/其他项目；未 git add、未 commit、未 push。
 - 测量脚本仅读取 ~/workspace/airbuild-refs/ 的原图、只输出数值文本，未把任何官方位图或裁图写入仓库；一眼合成图已删除。
+
+## v1.10 — 2026-11-01 — round 9：iOS 质感闭合（字体 / 材质 / 字形三条线，SF 渲染）
+
+- 决策总则（用户 2026-10-30 22:09 verdict + 协调方 2026-11-01 追加指令，原简报其余内容不变）：只看结果、直接做、不许问；歧义按原图/实测证据自行定夺并记入本条；本轮零裁判调用（只认 PIL/DOM 实测）；不许等 SF（SF 到货后按 SF 交付，Inter 图一律作废）；SF 文件绝不进仓库、不提交、不分发；fontconfig 由上层统一改、本人严禁动；commit 只加本套文件（绝不 -A），push 后以 git branch -r --contains 核实进了 origin 再报；不碰其他三套、总账、服务器数据库、任何令牌、BotsRouter、X、其他项目。
+- 渲染方法（本轮定稿，取代 Inter 方案）：Playwright headless shell 1243（显式 executablePath；playwright-core 1.64 默认要 1248，未装）+ file:// dist + SF 光学尺寸 harness 覆盖（加载后 page.evaluate：全部元素取 computed font-size，>=20px 且无子元素且文本非空者 fontFamily 改为 SF Pro Display / SF Pro Text，500ms 后截图；harness-only，产品代码与 repo token 一律不动）。截图：docs/verification/rounds/v1.10/（framed 六屏 + chat-430）与 bare/（370x824，裁 (10,10,380,834)，与 v1.9 同法）。工作区其他套的改动属于并行 worker，本轮未碰、未提交。
+- 字体装机核验（上层装机，本人只核验未改动）：~/.local/share/fonts/sf-pro/ 共 45 个 OTF（Display/Text/Rounded 全 weight）；fc-match sans-serif 与 SF Pro Text 均为 SF-Pro-Text-Regular，SF Pro Display 为 SF-Pro-Display-Regular，SF Pro Rounded 为 SF-Pro-Rounded-Regular。注意：本套 token 首位就是 SF Pro Rounded，因此实测 computed font 栈解析为 SF Pro Rounded（见下），SF Pro Text 在此是后备而非渲染族；状态栏时间显式用 -apple-system / SF Pro（Text），与 spec 一致。
+
+### A. 字体线（SF 为准，Inter 只记后备对比；字号/字重 token 本轮未动）
+
+- 实测方法：DOM computed（size/weight/line-height/rect）+ 强制族探针（同一元素先后置 Rounded/Text/Display/Inter，记行数与盒宽），见 measure/font-compare.txt；字号/字重是 token 值（自 v1.7 起已按量，SF 只换渲染族，不改 token）。
+- 字体实测表（元素 | token | SF 渲染 | 原图/证据 | 结论）：
+  - 聊天正文：11.5px / 400 / 行高 17.48 | 同值，agent 气泡 250px、用户气泡 242px、行数各 4（demo 文案；原图文本不同，行数只作内部对照）| v1.7 原图行带 pitch 17.5-18.3pt，渲染行盒 17.48（比区间下沿低 0.02，属取整，视为贴合）。
+  - 作者行：10px / 600 | token 未动，族改为 Rounded | v1.7 原图 10px 一致。
+  - 简报标题：13px / 700 / 行高 16.25 | 渲染 w200.5 h32.5，2 行 | 与卡片结构一致。
+  - 简报 bare1（首条消息）：11.5px | 渲染 w266，行数 Rounded 2 / Text 3 / Display 2 / Inter 3 | 关键判据：Rounded 与 Display 一致、Text 与 Inter 各多折 1 行。token 族 Rounded 是简报不断错行的原因；若栈解析为 Text，bare1 会多 1 行并挤破简报贴合。
+  - 简报 bare2：11.5px | 渲染 w266，行数 3（四族一致）。
+  - 草稿标题：20px / 700 / 行高 25 | 渲染 w170 h50，行数 Rounded/Text/Display/Inter 均为 2 | 原图 2 行（v1.7 L23），四族一致，无需修。
+  - 作曲器输入：12px | token 未动 | v1.7 原图 12px 一致。
+  - 详情标题：12px / 700 | token 未动 | v1.7 原图 12px 一致。
+  - 任务标题：13px / 700 | token 未动 | v1.7 原图一致。
+  - 药丸/按钮字：pill 10px / 600；项目 pill 高 19-23px（DOM 各 pill rect 见 dom-v110c.txt）。
+  - SF Pro Rounded 差一笔：本套字体本就是 SF Pro Rounded（REA），不是 Text；bare1 是 Rounded 与 Text 的可测分野（2 行 vs 3 行），交付渲染用 Rounded，Text 只作对照族。
+  - Inter 后备对比：Inter 下 bare1 为 3 行（+17.5px），其余关键文本行数不变；无 SF 的机器上 Inter 后备会使简报贴合破裂，记为平台残留（N5），不谎称 Inter 与 SF 等价。
+- 大标题折行必查（medley 43px Text 折 2 行 / Display 折 1 行的案例）：本套六屏中 computed >=20px 的叶文本元素为 0（dom bigPre/bigPost 全屏为空）；唯一 >=20px 标题是草稿标题 h3 20px，但它含 br 子元素，不满足 harness 叶条件（children.length === 0），覆盖对其不生效——已用强制族探针逐族核对：四族均为 2 行、原图 2 行，无折行差，无需 Display 修复。medley 案例在本套不复现（本套最大手机标题 20px 且 br 分行）。画廊 h1（30px）不是手机屏，单屏模式不拍，不计入。
+
+### B. 材质线（折射 + 边缘光；REA 优先，ios27/glassy 只作诊断与分档依据）
+
+- 诊断（为什么 v1.9 玻璃看起来平）：① REA blur 34px 是大型聊天窗的值，误用于 40-46px 小控件；小控件分档依据为 ios27 按钮 blur 7px、baoyu pill blur 12px saturate 1.8、nikdelvin 默认 saturate 1.5——本轮小控件 frost 档定为 blur 10px saturate 1.5（居 7 与 12 之间），REA 34 不再用于小控件；② 平背光下 blur 本就不可见，可见的只能是边缘光与折射，而 v1.9 只有一道 1px 斜向高光；③ REA 浮动控件渐变与阴影本身无错，予以保留。
+- 材质对照表（面 | REA/原图值 | 改前值 | 改后值）：
+  - 全部 .ab-glass（顶栏圆钮 46px、详情勾选钮 44px、草稿分享钮 40px、URL pill、顶栏 pill、项目 pill）：渐变 REA 325deg 白 .78/.48/.24（保留）+ 外阴影 REA 0 3px 8px rgba(0,0,0,0.08)（保留）；frost blur 34 saturate 1.24 → fallback blur 10 saturate 1.5，运行时升级为 blur(5px) + 位移 url + blur(10px) saturate(1.5)；边缘光 1 道 inset 1px 1px rgba(255,255,255,0.38) → 成套 5 层：hairline inset 0 0 0 0.5px rgba(0,0,0,0.04)（glassy-liquid 值，卡片白底上的边缘定义）+ 顶 specular inset 0 1px 0 rgba(255,255,255,0.85) + 左 inset 1px 0 0 rgba(255,255,255,0.45) + 底 rim inset 0 -1px 0 rgba(255,255,255,0.25) + 外阴影（specular 强度概念取 glassy-liquid 1.1 档）。
+  - 位移（nikdelvin-liquid-glass MIT 技术，src/lib/liquid-glass.ts 自写移植，只取技术不抄控件长相）：位移图 = 圆角矩形（fill #808080，blur(depth)）；三通道 R scale = strength + 2 x cab、G = strength + cab、B = strength，screen 混合；每元素按实测宽高/半径现算位移图（圆钮 46x46 r23 depth 8、勾选钮 44x44 r22 depth 8、分享钮 40x40 r20 depth 7、URL pill 129x35 r18 depth 6、顶栏 pill 61x19 r10 depth 5、项目 pill 70x23 r12 depth 5；depth 公式 clamp(round(radius x 0.35), 5, 8)）；强度 strength 16 / cab 2（R20/G18/B16），由 App useEffect 在挂载后原地升级各 .ab-glass 的 backdrop-filter（ResizeObserver 跟随尺寸变化）；.ab-glass CSS 本身仍是无 JS 后备（blur 档），复制出去的组件不丢玻璃。
+  - 探针结论（measure/probe-glass.*，条纹背光）：blur 对照组条纹边在 16px 周期位 ±2px 内；strength 16 在 rim 行使边移位约 ±5px、中心行约 0（真透镜 rim 效应）；strength 100（nikdelvin 默认）把条纹边抹掉/并线，对小控件过强，否决。Chromium headless 下 computed backdrop-filter 完整保留 url() 段，不会因加 url 而丢 blur。
+  - 评估后否决：glassy-liquid 0 10px 26px rgba(0,0,0,0.16) 外阴影（对 40-46px 钮过重，违 REA 浮动阴影与原图钮阴影）；glassy 3px accent focus 环（画廊无 focus 交互、原图无 focus 环）；nikdelvin strength 100 默认（见探针）。
+  - 不玻璃化的面（原图即实色，改玻璃化才是改设计）：卡片（白 + 0.045 hairline + 0 5px 16px 0.025 阴影，维持）、作曲器（白卡，维持）、详情面板（#f4f4f4 实色底 sheet，维持）、聊天画布（#f4f4f4 实色，维持；REA blur 34 属于网页端聊天窗，不移植到手机画布上）。
+  - 平背光诚实项：画廊背光（画布/白卡）基本是平的，v1.10 与基线钮面采样差 <=2 灰阶（#f5-#fb 区间同值）；折射要有背光变化才可见，画廊里主要由边缘光与状态栏 chrome 承担肉眼质感，折射以探针 + computed（dom-v110c.txt 全量 .ab-glass 含 url()）为证，不谎称平背光截图里折射肉眼可见（残留 N1）。
+- 渲染层复核（上一轮 Tailwind 丢 backdrop-filter 的教训）：构建产物 CSS 含 blur(10px) saturate(1.5) 的 .ab-glass 规则；DOM computed 全量 .ab-glass 为 blur(5px) url(...) blur(10px) saturate(1.5)；无前缀丢失。
+
+### C. 字形线（spec 缩放 + 实拍核对；spec 来源 baoyu-design ios-frame.jsx，402 框）
+
+- 缩放口径：布局几何按 390/402 = 0.9701 缩放；字号不缩放（iOS pt 尺寸与设备宽无关，把 17pt 缩成 16.5pt 会造出不存在的尺寸——此为有意的不盲抄，记入决策）。
+- 字形重绘表（spec 402 值 | 缩放值 | 渲染 DOM 值 | 像素核对）：
+  - 状态栏条：flex，gap 154，padding 21px 24px 19px | gap 149.4、padding 20.4px 23.3px 18.4px | 栏 370x60.8（改前 370x35.5，+25.3）| 栏高 DOM 60.8。
+  - 时间：-apple-system / SF Pro，字重 590，字号 17，行高 22px，paddingTop 1.5 | 字号/行高/字重保持 spec 值 | 渲染 17px / 590 / 22px，rect framed x52 y31.1 w49.1 h22 | 时间中心占屏宽 18.0% vs spec 18.4%，差约 1.5px（bezels：spec 框无边框、本框 10px 边框 + 内屏 370，属任务定缩放下的已知差，残留 N3）。
+  - 时间 glyph 纵位：spec 内容盒算法下 framed y 约 31.9，渲染 y31.1，差 0.8px（Tailwind 全局 border-box 把 1.5px paddingTop 压进 22px 行高内；<1px，接受，残留 N2）。
+  - 右簇：flex，gap 7，paddingTop 1，paddingRight 1 | gap 6.8、padding 1/1 | 簇内图标起 bare x265.9（算术）与像素起 265 一致。
+  - 信号 19x12（viewBox 0 0 19 12，4 条 3.2 宽 rx0.7，(x0,y7.5,h4.5)/(x4.8,y5,h7)/(x9.6,y2.5,h9.5)/(x14.4,y0,h12)）| 18.4x11.6，路径原样 | 像素 bare 4 条：265-267 / 270-272 / 275-276 / 279-281。
+  - wifi 17x12（viewBox 0 0 17 12，外弧/内弧/圆点 cx8.5 cy10.5 r1.5，路径与源文件逐字一致）| 16.5x11.6，路径原样 | 像素 bare 弧段 x295-304。
+  - 电池 27x13（viewBox 0 0 27 13，外框 rect (0.5,0.5,23x12,rx3.5，描边不透明度 0.35，fill none)；内芯 rect (2,2,20x9,rx2)；正极 path 不透明度 0.4）| 26.2x12.6，路径原样 | 像素 bare 内芯 x316-334（19.4px = 20/27 x 26.2），外框描边 0.35 在 #f4f4f4 上约 #9e 灰，未进 sum<200 的计数阈（已说明，非缺失）。
+  - Dynamic Island 126x37 r24 top11 | 122.2x35.9 r23.3 top10.7 | DOM framed x133.9 y20.7 w122.2 h35.9 r23.28（exact）| 像素 bare：中行宽 122（124-245），高约 36（y11-46，圆角收窄）。
+  - Home 指示条 139x5 r100 底距 8 | 134.8x5 | DOM framed x127.5 y821 w135 h5 | 像素 bare y811-815（5 高）、中行宽 134（圆角抗锯齿 -1）。
+  - Home 条颜色偏离（有意）：spec 浅色 rgba(0,0,0,0.25)，渲染保持纯黑——0.25 在 #f4f4f4 画布上读作淡灰，真机指示条读作近黑，实拍观感为准（残留 N4）。
+- 实拍核对（measure/orig-status.py，仅数字无裁图）：5 张 iPhone 原图顶带均未分离出可量状态栏（03/01 为斜拍营销照、顶带 0-350px 全为边框/背景；06/05/04 顶带暗像素为营销构图与面板内容，非一行时间+岛+图标的 iOS 比例带）；结论：实拍无可与 spec 冲突的状态栏量测值，spec 为准，无 spec-vs-实拍不一致项。
+- 状态栏改动连锁（内容整体下移 25.3px）与补偿（只动未量测的贴合间距，量测元素一律不动）：
+  - 简报：顶栏 compact pb-2→pb-1（4px）+ 列表 py-3→py-2（顶 4px，底 4px  slack）→ 第二消息底 framed 671.9、作曲器顶 676，间隙 +4.1px（改前重叠 -3.9px；v1.9 为 +1px）；第二消息 3 行 + 气泡底 padding 全部在作曲器之上（PIL 末行字形 bare y644、气泡底约 662 bare、作曲器顶 666 bare）。
+  - home：内容 pt-3→pt-2（4px）+ gap-4→gap-3（8px）+ 成员行 py-2.5→py-[9px]（12px）= 24px；末行由超框 13.8px 回到框内（算术底 framed 823.8、余量 10.2；v1.9 基线余量约 11.5；clip 探针：除画廊 caption 外无叶元素超 834）。
+  - chat / draft / detail / components：clip 探针无超框；detail 为底锚面板，中部空隙吸收位移，4 行进度完整在框内。
+
+### 全套重扫（六屏 + chat-430；肉眼逐屏看过 bare 图）
+
+- home：状态栏新 chrome + 玻璃钮 46x46（位移图 46x46）+ 项目 pill（位移图按 pill 实测 70x23 / 61x23 / 80x23 / 54x23）+ tile 132px + 成员 6 行全在框内 + 指示条 135x5；其余与基线一致。
+- chat：气泡圆角 13px / 内边距 12px / 阴影 0.025 维持；agent 250px、用户 242px、文件卡/任务卡边框 0.045 维持；用户气泡 4 行全文在框内；发送盘/箭头见下。
+- briefing：封面 103px、发送盘 34x34（像素 bare 蓝行 y763-796 = 34 高、x305-338 = 34 宽）、箭头 22px 居中（像素箭头干 x 约 322 = 盘中心 321.5）、图表 22px 取舍维持、第二消息 3 行完整、日期 pill 仍折 2 行（见 R4，未动）。
+- draft：URL pill（位移图 129x35）+ 分享钮 40x40（位移图 40x40）玻璃在位；标题 20px 2 行、封面 1.00 方、末条气泡全文在框内。
+- detail：勾选钮 44x44（位移图 44x44）玻璃在位；标题/商店 glyph/版本/进度 4 行完整在框内。
+- components：打字点 5px、morphing 三组过渡类在位、作曲器在位；无新增演示 tile（折射证据用探针图，不以 inventory 造屏）。
+- chat-430：430x932 视口、390 框居中，与 v1.9 同法重拍。
+
+### 验证
+
+- 构建：/home/hatch/.npm-global/bin/pnpm build（tsc -b && vite build）一次通过。
+- 截图：docs/verification/rounds/v1.10/（framed 六屏 + chat-430）与 bare/（六张 370x824）；基线（v1.9 代码 + SF）存 measure/baseline/（framed + bare）作对照。
+- DOM/computed：measure/dom-base.txt（v1.9 代码 + SF 基线）与 measure/dom-v110c.txt（终态）；玻璃 computed 全量含 url()；状态栏/岛/指示条/贴合值见上表。
+- 像素复验：岛 122x36、指示条 135x5、信号 4 条、电池内芯 19.4px、发送盘 34x34、气泡宽 250/242/266 与 DOM 一致。
+- 目视复核：六屏 bare 图已逐屏目视——状态栏一眼即 iOS（17px 粗时间 + 大岛 + 三组精确字形）；简报第二消息完整；home 六成员完整；detail 四进度行完整；draft 末气泡完整。
+
+### 残留（总数 13 项 = 延续 7 项 + 本轮新增 6 项；无隐藏项）
+
+- 延续（v1.9 R1/R3/R4/R5/R6/R7/R8，状态不变）：R1 头像直径两轴分歧（29.9 vs 24.3pt，渲染 32px 维持）；R3 详情勾选钮 44px / chevron 徽 24px（旧换算不可复现，维持）；R4 简报日期 pill 折 2 行（SF 未改观，维持）；R5 气泡纵向内边距 12px vs 区间 16-20pt（抬到 16px 需 8px，简报间隙 4.1px 会转负，仍不抬）；R6 简报封面宽 +6.2（卡内边距差，不改）；R7 动效弹簧参数未量；R8  bundle（U1 面板顶圆角 32px、U2 商店卡高、U3 成员行字号绝对值、U5 卡内行数、U6 tile 预览细节、U7 中央标瓣弧、U8 手形掌心点偏上约 2px、U9 状态角标底色、U10 pill 内边距字号、U11 iPad 双栏 / ipad-04 / 深色 / 设置账号屏、U12 图表 22px 取舍、U13 Assets.car、头像非逐像素复刻、TestFlight 渐变复用、销售条坐标、简报 pills 簇 pitch、详情 glyph 渐变视觉级、Download 钮宽比、作曲器瓦 68px 未量）。
+- v1.9 R2 已闭合：R2（Noto 回落、差值无法量出）由本轮 SF 渲染 + 字体实测表关闭，代之以 N5（Inter 后备行数差）。
+- 本轮新增：
+  - N1 玻璃平背光极限：平背光下 v1.10 与基线钮面采样差 <=2 灰阶；折射以探针 + computed 为证，画廊肉眼质感主要来自状态栏 chrome 与边缘光定义，不谎称平背光图里折射肉眼可见。
+  - N2 时间 glyph 纵位 0.8px 差（border-box 压 paddingTop，见 C 表）。
+  - N3 时间/图标中心屏占比差约 1.5px（390 框缩放 + 10px 边框 vs spec 无边框框，见 C 表）。
+  - N4 Home 条颜色：spec 0.25 vs 渲染纯黑（有意偏离，实拍观感为准）。
+  - N5 Inter 后备：bare1 多 1 行（+17.5px），无 SF 机器上简报贴合破裂；SF 为交付基准。
+  - N6 光学尺寸覆盖在手机屏上为空集：六屏 >=20px 叶文本为 0，草稿标题因含 br 不被覆盖；四族行数已逐族核对一致，无遗留折行差。
+
+### 清理与范围确认
+
+- 本轮改动文件（仅本套）：src/components/phone-frame.tsx（状态栏字形 + 岛 + 指示条）、src/index.css（.ab-glass frost 档 + 边缘光成套）、src/lib/liquid-glass.ts（新增，位移移植 + 运行时升级）、src/App.tsx（applyLiquidGlass effect + home/briefing 贴合间距）、src/components/top-bar.tsx（briefing compact pb-1）、src/components/member-activity-row.tsx（py-[9px]）、src/tokens/index.ts（glass 注释）、CHANGELOG 本条、docs/verification/rounds/v1.10/ 验证物（截图 + bare + measure 脚本/文本/探针 + baseline 对照）。
+- 未动：其他三套、UIDesign/CHANGELOG.md 总账、服务器/令牌/BotsRouter/X/其他项目；font token 未动（SF 栈在苹果设备上仍解析为 SF）；仓库与 dist 内无 SF 字体文件（只做本机渲染验证）；测量脚本只读 ~/workspace/airbuild-refs/ 原图、只输出数字文本，未把任何官方位图或裁图写入仓库；一眼合成图未留存（本轮以逐屏 bare 目视 + 像素表为准）。

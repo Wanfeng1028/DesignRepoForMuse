@@ -26,10 +26,15 @@ export const tokens = {
   actionOrange: '#f97316',
   bubbleRadius: 13,
   cardRadius: 20,
-  /** frosted-glass material (round 8, REA set): floating-control gradient.
-   *  The live material is the .ab-glass CSS class (gradient + blur 34px +
-   *  saturate 1.24 + REA floating shadow); this token documents the same
-   *  gradient for non-CSS consumers. Not referenced by components today. */
+  /** frosted-glass material (round 9 / v1.10, B line): floating-control
+   *  gradient (REA). The live material is the .ab-glass CSS class:
+   *  gradient + small-control frost tier blur 10px saturate 1.5 (REA
+   *  blur 34px is the large chat-window value) + rim-light set + REA
+   *  floating shadow, upgraded at runtime with SVG displacement
+   *  (src/lib/liquid-glass.ts, strength 16 / cab 2). This token documents
+   *  the same gradient for non-CSS consumers. Not referenced by components
+   *  today. Font tokens are untouched: on Apple devices the stack still
+   *  resolves to SF; see CHANGELOG v1.10 for the SF render evidence. */
   glass: 'linear-gradient(325deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.48) 48%, rgba(245, 247, 250, 0.24))',
   fontStack:
     '"SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif',

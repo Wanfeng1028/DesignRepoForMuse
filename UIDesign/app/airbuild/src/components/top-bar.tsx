@@ -50,7 +50,7 @@ export type ChatTopBarProps = {
 /** Chat top bar: back chevron (left circle) + centred mark + pill + … menu (right circle). */
 export function ChatTopBar({ project, swatch, mark = 'project', avatarColor, compact, onBack, onMenu }: ChatTopBarProps) {
   return (
-    <header className={`relative flex items-start justify-between px-4 pt-2 ${compact ? 'pb-2' : 'pb-4'}`}>
+    <header className={`relative flex items-start justify-between px-4 pt-2 ${compact ? 'pb-1' : 'pb-4'}`}>
       <button type="button" aria-label="Back" onClick={onBack} className="ab-glass flex h-[46px] w-[46px] items-center justify-center rounded-full">
         <ChevronLeftIcon className="h-5 w-5" />
       </button>

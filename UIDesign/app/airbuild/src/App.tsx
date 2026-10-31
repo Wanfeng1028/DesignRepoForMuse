@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AirDailyCard, SalesReportCard } from './components/briefing-cards.tsx'
 import { ChevronMorphIcon, HandSolidIcon, PlusCheckMorphIcon, TaskCheckMorphIcon } from './components/icons.tsx'
 import { Avatar } from './components/avatar.tsx'
@@ -12,6 +12,7 @@ import { ProjectCardGrid } from './components/project-card-grid.tsx'
 import { TaskListCard } from './components/task-list-card.tsx'
 import { ChatTopBar, HomeTopBar } from './components/top-bar.tsx'
 import { WebsiteDraftCard } from './components/website-draft-card.tsx'
+import { applyLiquidGlass } from './lib/liquid-glass.ts'
 
 const PROJECTS = [
   { name: 'Hands Time', swatch: '#e8e8e6' },
@@ -33,7 +34,7 @@ function HomeScreen() {
   return (
     <PhoneFrame label="Home — iphone-01">
       <HomeTopBar />
-      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-4 pt-3">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden px-4 pt-2">
         <ProjectCardGrid projects={PROJECTS} />
         <div className="flex justify-center gap-1.5" aria-hidden>
           <span className="h-1.5 w-1.5 rounded-full bg-black" />
@@ -86,7 +87,7 @@ function BriefingScreen() {
   return (
     <PhoneFrame label="Daily briefing — iphone-06">
       <ChatTopBar project="Ato" swatch="#cfe8a8" mark="person" avatarColor="#9bc24d" compact />
-      <MessageList className="gap-1.5">
+      <MessageList className="gap-1.5 py-2">
         <Message bare author="Ato" role="Product Manager" avatarColor="#9bc24d">
           Your daily report is ready. Hands Time led growth, while two new Mood reviews raised questions.
         </Message>
@@ -208,6 +209,9 @@ const SCREENS: Record<string, () => React.ReactElement> = {
 }
 
 export default function App() {
+  // Liquid Glass refraction (v1.10): upgrade .ab-glass backdrop-filters in
+  // place after mount; the CSS class remains the no-JS fallback.
+  useEffect(() => applyLiquidGlass(), [])
   const screen = new URLSearchParams(window.location.search).get('screen')
   if (screen && SCREENS[screen]) {
     const Single = SCREENS[screen]
