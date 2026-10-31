@@ -9,6 +9,243 @@ crop, App Store iPad/iPhone shots). A round is clean only when the judge
 reports zero substantive differences item by item; "looks alike" is not
 a pass.
 
+## v1.7 — 2026-11-01 (round 9 interaction line: iOS behaviour inside 1:1 fidelity; v1.6 -> v1.7 patch bump)
+
+- Round: user order 2026-11-01 00:12 ("figure it out yourself") +
+  01:00 interaction line (in 1:1 restoration, add the iOS style,
+  interaction and details; static screenshots never carry the "feel";
+  the original screen IS an iOS app, so its behaviour is part of the
+  1:1 target, not extra design). Only behaviours the original screen
+  evidences were built; everything else is recorded N/A with a reason,
+  never invented. Method is measured_visual_replication in full.
+- Zero judge calls this round. Measured data decides. No model was
+  called, no BotsRouter call was made, no token or key file was touched,
+  no judge verdict is claimed. No official bitmap was copied into the
+  design system; icons/avatars/logo stay vector redraws, Lucide where
+  one exists; the new traffic-light glyphs are hand-drawn SVG paths.
+- Scope: only UIDesign/web/airbuild. No other set (app/medley had
+  another worker's uncommitted changes throughout this round and was
+  not touched), no server database, no token, no BotsRouter, no X, no
+  other project was touched. SF font files were NOT copied into the
+  repo or dist; fontconfig was NOT touched (the ffmpeg-1011 cache
+  symlink for Playwright video mirrors the existing ffmpeg-1013
+  symlink and is environment cache, not repo content).
+- Baseline: v1.6 code + v1.6 screenshots
+  (docs/verification/rounds/v1.6/). All v1.7 evidence lives in
+  docs/verification/rounds/v1.7/ (gallery x3, window shots x3,
+  window-main-after-send, side-by-side-v16-v17 x3, probe-v17.txt,
+  stem probe + results, videos x3 + frame grabs).
+
+### A. Interaction table (original behaviour vs implementation vs parameter)
+
+- Window chrome / traffic lights: original macOS window lights.
+  Hover now reveals the glyphs (close x, minimise -, zoom +), drawn
+  SVG, opacity 0 -> 1, 120ms iOS easing; light itself scales 1.06 on
+  hover (unchanged). Probe: idle 0, hover 1, transform matrix(1.06).
+  Window drag is host (AppKit) behaviour and is N/A in a browser demo.
+- Sidebar / preview collapse (drawers): already 240ms
+  cubic-bezier(0.32,0.72,0,1); verified both directions, end grids
+  198px 498px 504px <-> 0px 696px 504px (sidebar) and 198px 1002px 0px
+  (preview). Panel toggle icons keep the v1.2 morph (divider slides
+  240ms, same easing). No modal sheet exists in this original window,
+  so no sheet/presentation + scrim was invented: the two drawers ARE
+  the original's panels, and they are split-view, not sheets (no
+  scrim in the original either). Sheet = N/A, reason recorded.
+- Press states (all buttons): iOS press = scale + fast easing.
+  Generic buttons scale 0.96, composer send/attach scale 0.92, all
+  120ms cubic-bezier(0.32,0.72,0,1). Inline-transform controls got
+  their own classes (.ab-composer-send/.ab-composer-attach/.ab-tile)
+  because an inline transform beats a stylesheet :active rule.
+  Probe (mouse.down, 800ms wait; see shell-lag artifact A1):
+  send matrix(0.92), capsule matrix(0.96), tile matrix(0.96).
+- Composer / send / message flow: REA evidences presentMessage +
+  showTyping, so send -> user bubble enters the stream at once ->
+  Ato thinking dots (3 x 5px, 800ms, 0/160/320ms, unchanged) -> a
+  demo-only agent reply after 1200ms with the message-in animation
+  (260ms cubic-bezier(0.22,1,0.36,1)). The reply copy ("Noted — I'll
+  fold that into the next pass.") is demo text, labelled as such in
+  the gallery note; it is not claimed as original copy. Auto-scroll
+  to bottom on send: scrollTop 327 = max 327 after send. Empty
+  composer: send is disabled + opacity 0.45 (iOS empty-state);
+  typed: enabled, opacity 1. No stop button: REA evidences no stop
+  control for this window, so none was added. No partial streaming
+  text: REA evidences typing dots + full bubbles only, so character
+  streaming is N/A, not invented.
+- Navigation / session switch: sidebar project tiles now switch the
+  session (previously inert). Switch plays an iOS push: conversation
+  slides in from the right 24px + fade, 320ms
+  cubic-bezier(0.32,0.72,0,1) (.ab-push-in); titlebar project icon
+  and active tile follow (Hands Time verified, back to Hourtown
+  verified). Conversation copy per project is not in REA, so the
+  thread stays the demo thread on every project; only the session
+  chrome (icon, active tile) switches. This is labelled demo state.
+- Tabs: device tabs already switched; the switch now fades/slides
+  the preview pane 240ms, same drawer easing (.ab-pane-in). New tab
+  (iPadOS 26.5) + back to iOS 26.5 verified, tab hover #f2f2f0
+  verified. Tablet phone form stays residual (R10, narrowed): no
+  tablet-form geometry exists in REA, so the phone form does not
+  change shape on tab switch.
+- Scroll: native scrolling kept (on Apple devices AppKit gives
+  momentum + bounce natively; inventing JS scroll physics would break
+  1:1). Set overscroll-behavior: contain +
+  -webkit-overflow-scrolling: touch on .ab-scroll. Probe: wheel
+  scrollTop 0 -> 207 (max at that width).
+- Switch / segmented control / slider: none exists in this original
+  window (no settings screen in this set), so all three are N/A with
+  this reason; no control was invented to demo them.
+- Title rotation: N/A. This window has no rotating title (the
+  rotating-title original belongs to another set); nothing was faked.
+- Focus ring (closes R12): keyboard-only :focus-visible ring, 2px
+  solid #1987f7, offset 2px (buttons/tabs); composer input uses a
+  2px shadow ring because its inline outline:none would beat an
+  outline rule. Probe: keyboard Tab reaches "App settings" with
+  outline 2px. Screenshots unaffected (never matches on mouse click).
+- Details re-verified: statusbar time 9:41, 8px/600; tab label
+  10px/500; composer input 12px/16px; agent bubble 12px/16.56px;
+  feed time 6.5px (v1.6 value, unchanged); toast "Message sent"
+  still renders. Morphing continues: panel toggles, task-dot
+  colour morph + check draw (unchanged).
+- Reduced motion: the existing global rule covers every new
+  animation. Probe (reducedMotion context): message-in duration
+  1e-05s, drawer transition 1e-05s.
+- Animation fill fix (found by the v1.6->v1.7 pixel diff): the first
+  v1.7 build kept `both` fill on .ab-push-in/.ab-pane-in, which left
+  a retained compositing layer and shifted 69,543 preview pixels by
+  a mean 0.25 levels (max 25). Fill removed (end values equal the
+  natural values, so motion is unchanged); re-diff: preview region
+  is now pixel-identical to v1.6 in all three windows. The remaining
+  window-main diff (851px) is exactly: active-tile border fix (245px
+  sidebar, max delta 16) + dimmed empty-state send button (442px
+  delta > 50 at x654-677 y630-653, intended) + weak antialiasing.
+  The sidebar-collapsed 12x12 strong cluster at x65-76 y382-393 is
+  the task-card active-dot pulse caught at a different phase (tan
+  #c49b65 dot), a screenshot-timing artifact, not a regression.
+- Shell-lag artifact A1 (probe method, NOT a product bug): on this
+  heavy backdrop-blur page the headless shell runs transitions
+  slower than nominal (a 120ms rule still read identity at 150ms
+  and reached 0.96 only at 400ms+; a 300ms traffic-glyph hover read
+  0 in one run and 1 after an 800ms wait). All press/hover reads in
+  probe-v17 therefore wait 800ms. Nominal values in code are the
+  iOS values; the shell lag is harness-only. Same family as v1.6 R25.
+- iOS curves used, all measured in DOM: drawer 240ms
+  cubic-bezier(0.32,0.72,0,1); push 320ms same bezier; pane 240ms
+  same bezier; message-in 260ms cubic-bezier(0.22,1,0.36,1); press
+  120ms same drawer bezier. No WAAPI spring physics is claimed: the
+  bezier IS the iOS value used here; original spring constants are
+  unmeasured (Assets.car, see R21) and were not invented.
+
+### B. Large-title weight check (stem width / cap-height, ink method NOT used)
+
+- Method (replaces the voided v1.6 ink method): same string rendered
+  in SF Pro Display at 600/700/800 (probe page, deviceScaleFactor 3)
+  + the live gallery titles; glyph x-ranges from Range rects; stem
+  = median dark-run width in the glyph's middle band (H1: left stem
+  of 'B'; H2: right stem of 'd'; cap height from the dark bbox of
+  'B'/'A'); threshold luminance < 128. Anchor: isolated 'H' at 34px
+  reads 600 -> 5.0px / 0.2083, 700 -> 6.33px / 0.2639, 800 -> 6.33px /
+  0.2639, so the method is monotonic and 700/800 coincide on this VM.
+- BEFORE (code H1 800, H2 700): live H1 stem 6.0px, capH 24px, ratio
+  0.2500 = exactly the 700 reference (6.0px / 0.2500), NOT a distinct
+  800: SF Pro Display 700 and 800 render identically on this VM
+  (identical glyph boxes and PNG bytes). Live H2 stem 3.33px, capH
+  14px, ratio 0.2381 = exactly the 700 reference. Semibold references:
+  H1 5.0px / 0.2083, H2 3.0px / 0.2143.
+- Decision: H1 800 -> 600 and all seven H2 700 -> 600 (Semibold).
+  Reasons, in order: (1) the user flagged the big titles as too
+  heavy; (2) gallery headings are our chrome, not original pixels,
+  so softening them breaks no 1:1 value; (3) on Apple devices code
+  800 renders a true ExtraBold, heavier than the VM's
+  700-equivalent, so VM screenshots understate what the user saw.
+  AFTER re-measure: live H1 5.0px / 0.2083, live H2 3.0px / 0.2143,
+  both exactly the 600 references (H1 -16.7% stem, H2 -10.0%).
+  Unchanged on purpose: the 11px eyebrow (700) and all other 700/600
+  small labels are not large titles and drew no complaint.
+- FreeType vs Core Text, stated separately (never conflated with
+  weight): all ratios above are FreeType-relative (this VM). The
+  600-vs-700 ordering is renderer-independent because every weight
+  was rendered by the same renderer, so the decision rests on
+  within-renderer ordering + the user's complaint, NOT on claiming
+  VM pixel widths equal Apple pixel widths. Core Text hinting may
+  shift absolute stems by ~0.5px class on Apple devices; the
+  Semibold choice is safe on both renderers because it is lighter
+  than Bold/ExtraBold under either.
+
+### C. R22 adjudication (closed) + full rescan residual count
+
+- R22 CLOSED: project-tile hover/active now match REA table A
+  exactly (hover bg 0.58, was 0.5; active border
+  rgba(255,255,255,0.94), was hairline 0.045; active bg 0.72 and shadow
+  already matched). Probe: hover bg rgba(255,255,255,0.58), active
+  border rgba(255,255,255,0.94). README line 83 updated to match.
+- R12 CLOSED: focus-visible ring implemented + probed (see A).
+- R10 NARROWED, still open: device-tab switch animation done; the
+  tablet phone form is still unimplemented (no REA geometry).
+- R21 NARROWED, still open: message playback is now real (send ->
+  thinking 1200ms -> reply), but the 1200ms thinking delay is a demo
+  choice, not a measured original timing; resizer drag physics still
+  host contracts; Assets.car values still unmeasured.
+- Rescan count: v1.6 closed with 24 residuals (R1-R12, R14-R25
+  except R13). This round closes R12 and R22 outright and narrows
+  R10/R21 without closing them: 22 residuals remain (R1-R11 except
+  R10-narrowed, R14-R21 except R21-narrowed, R23-R25; R9 mid-state
+  drawer, R23 backdrop flatness, R24 refraction rejection, R25 probe
+  timing artifact all carried unchanged). No new product residual
+  was opened; A1 is a harness artifact, not a product residual.
+- Rescan coverage (probe-v17.txt, all values DOM-computed, not
+  eyeballed): window 1200x668; drawer 240ms iOS bezier; grids in
+  both collapse directions; traffic glyphs + scale; press scales;
+  tile hover/active; push + pane animations; tab switch + hover;
+  scroll + overscroll; full send flow + scroll-to-bottom; message-in
+  + typing params; focus ring; H1/H2/tiny-label typography; toast;
+  reduced motion; gallery sections window/collapsed/messages/
+  preview/services/primitives/tokens all present (3 windows).
+- Pixel + DOM cross-check: v1.6 -> v1.7 window diffs are 851px
+  (main), 606px (sidebar-collapsed), 851px (preview-collapsed),
+  all accounted for above; preview region pixel-identical in all
+  three. Side-by-side-v16-v17 composites in rounds/v1.7/ show the
+  same: only the tile border and the dimmed empty send differ.
+  Interactive flagship: window-main-after-send.png shows the sent
+  bubble + demo reply in the stream with no material/glyph change
+  elsewhere. Gallery full page: 1280x5788, sections 1-7 present.
+
+### D. Videos (Playwright video, .webm, 1280x800, vp8)
+
+- rounds/v1.7/video/drawer-collapse.webm (10.32s): traffic-light
+  hover glyphs, sidebar collapse + expand, preview collapse + expand.
+- rounds/v1.7/video/send-message.webm (8.24s): composer type,
+  send, thinking dots, demo reply, scroll to bottom.
+- rounds/v1.7/video/tabs-sessions.webm (8.88s): new iPadOS tab,
+  back to iOS tab, Hands Time session push, back to Hourtown.
+- Frame grabs in rounds/v1.7/probes/frames/ (drawer-mid,
+  send-late, tabs-mid) confirm each clip's content. No sheet video:
+  no sheet exists in this original (see A).
+
+### E. Build
+
+- /home/hatch/.npm-global/bin/pnpm build -> tsc -b && vite build,
+  1978 modules, pass. Final hashes: dist/assets/index-Cx-mKuCC.css
+  (18,765 bytes) and index-DVBsljMF.js (307,067 bytes). Final
+  screenshots, probes and videos were shot against this build (the
+  fill-fix rebuild); the earlier build's shots were superseded and
+  re-shot.
+  The gallery demo runs all of the above interactions (screenshots
+  alone are not the deliverable).
+
+### F. Files changed
+
+- src/index.css (press system, focus ring, traffic glyphs, push/pane
+  keyframes without fill, overscroll).
+- src/components/Titlebar.tsx (traffic-light glyph SVGs).
+- src/components/FollowUpComposer.tsx (disabled empty send, press
+  classes, hover-lift moved to CSS).
+- src/components/Sidebar.tsx (R22 values, tile onSelect, tile class).
+- src/components/AppWindow.tsx (message state, thinking + demo
+  reply, project-switch push, device-pane animation, scroll).
+- src/App.tsx (H1 800 -> 600, H2 700 -> 600, section-1 note).
+- README.md (tile hover/active values).
+- docs/verification/rounds/v1.7/ (all new evidence + scripts).
+- CHANGELOG.md (this entry).
+
 ## v1.6 — 2026-11-01 (round 9: iOS texture closure on font / material / glyph lines; v1.5 -> v1.6 patch bump)
 
 - Round: user verdict 2026-10-30 22:09 (iOS texture still absent) plus

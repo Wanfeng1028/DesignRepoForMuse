@@ -3,11 +3,16 @@ import { tokens } from '../tokens/tokens.ts'
 import { IconDeviceInbound, IconIPhone, IconPaperplane, IconPlus, IconX, PanelLeftToggle, PanelRightToggle } from './icons.tsx'
 
 export function TrafficLights() {
+  const glyphs = [
+    <svg key="x" className="ab-traffic-glyph" width={9} height={9} viewBox="0 0 10 10" fill="none" stroke="rgba(0,0,0,0.45)" strokeWidth={1.5} strokeLinecap="round" aria-hidden><path d="M2 2l6 6M8 2l-6 6" /></svg>,
+    <svg key="m" className="ab-traffic-glyph" width={9} height={9} viewBox="0 0 10 10" fill="none" stroke="rgba(0,0,0,0.45)" strokeWidth={1.5} strokeLinecap="round" aria-hidden><path d="M2 5h6" /></svg>,
+    <svg key="p" className="ab-traffic-glyph" width={9} height={9} viewBox="0 0 10 10" fill="none" stroke="rgba(0,0,0,0.45)" strokeWidth={1.5} strokeLinecap="round" aria-hidden><path d="M5 2v6M2 5h6" /></svg>,
+  ]
   return (
     <span style={{ display: 'flex', gap: 7, alignItems: 'center', flex: 'none' }}>
-      {tokens.trafficLights.map((c) => (
+      {tokens.trafficLights.map((c, i) => (
         <span key={c} className="ab-traffic-light" style={{ width: 17, height: 17, borderRadius: '50%', background: c,
-          boxShadow: 'inset 0 0 0 0.5px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.08)' }} />
+          boxShadow: 'inset 0 0 0 0.5px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.08)' }}>{glyphs[i]}</span>
       ))}
     </span>
   )

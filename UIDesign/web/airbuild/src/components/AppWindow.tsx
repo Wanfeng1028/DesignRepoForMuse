@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { agents, projects, thread } from '../data/demo.ts'
+import { agents, projects, thread, type Msg } from '../data/demo.ts'
 import { projectIconMap } from './icons.tsx'
 import { tokens } from '../tokens/tokens.ts'
 import { AgentMessage, TypingRow, UserMessage } from './Message.tsx'
@@ -45,10 +45,35 @@ export function AppWindow({ title = 'Hourtown', sidebarCollapsed = false, previe
   const [pvCollapsed, setPvCollapsed] = useState(previewCollapsed)
   const [deviceTabs, setDeviceTabs] = useState<string[]>(['iOS 26.5'])
   const [activeDevice, setActiveDevice] = useState('iOS 26.5')
+  const [activeProjectName, setActiveProjectName] = useState(title)
+  const [msgs, setMsgs] = useState<Msg[]>(thread)
+  const [thinking, setThinking] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const replyTimer = useRef<number | null>(null)
+  const mountedRef = useRef(false)
+  useEffect(() => () => { if (replyTimer.current) window.clearTimeout(replyTimer.current) }, [])
+  /* Scroll-to-bottom only after a send (mount skipped: the flagship shot
+   * keeps the original top-of-thread view). */
+  useEffect(() => { if (!mountedRef.current) { mountedRef.current = true; return } const el = scrollRef.current; if (el) el.scrollTop = el.scrollHeight }, [msgs, thinking])
+  /* v1.7 send flow (REA presentMessage/showTyping): user bubble enters the
+   * stream at once, Ato thinking dots show, then a demo-only agent reply
+   * enters with the message-in animation. The reply copy is demo text, not
+   * original copy; the gallery note under section 1 says so. No stop
+   * button: REA evidences no stop control for this window. */
+  const handleSend = (v: string) => {
+    onSend?.(v)
+    setMsgs((m) => [...m, { kind: 'user', text: v }])
+    setThinking(true)
+    if (replyTimer.current) window.clearTimeout(replyTimer.current)
+    replyTimer.current = window.setTimeout(() => {
+      setThinking(false)
+      setMsgs((m) => [...m, { kind: 'agent', agentKey: 'ato', text: 'Noted — I’ll fold that into the next pass.' }])
+    }, 1200)
+  }
   const grid = sbCollapsed
     ? pvCollapsed ? '0px minmax(320px,1fr) 0px' : '0px minmax(320px,1fr) minmax(310px,42%)'
     : pvCollapsed ? '198px minmax(320px,1fr) 0px' : '198px minmax(320px,1fr) minmax(310px,42%)'
-  const project = projects.find((p) => p.name === title) ?? projects[1]
+  const project = projects.find((p) => p.name === activeProjectName) ?? projects[1]
   const ProjectIcon = projectIconMap[project.icon]
   const closeDevice = (t: string) => {
     if (deviceTabs.length <= 1) return
@@ -67,19 +92,22 @@ export function AppWindow({ title = 'Hourtown', sidebarCollapsed = false, previe
         onToggleSidebar={() => setSbCollapsed(!sbCollapsed)} onTogglePreview={() => setPvCollapsed(!pvCollapsed)} />
       <div className="ab-drawer" style={{ display: 'grid', gridTemplateColumns: grid, height: 628, transition: 'grid-template-columns 240ms cubic-bezier(0.32,0.72,0,1)' }}>
         <div style={{ overflow: 'hidden' }}>
-          <Sidebar agents={agents} projects={projects} activeAgentKey="ato" activeProject={project.name} />
+          <Sidebar agents={agents} projects={projects} activeAgentKey="ato" activeProject={project.name} onSelectProject={setActiveProjectName} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', background: 'rgba(249,249,247,0.54)', minWidth: 320, overflow: 'hidden', borderRight: pvCollapsed ? 'none' : '1px solid rgba(17,17,15,0.045)' }}>
-          <div className="ab-scroll" style={{ flex: 1, overflowY: 'auto', padding: '18px 16px 14px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {thread.map((m, i) => m.kind === 'agent'
+          <div ref={scrollRef} className="ab-scroll" key={project.name} style={{ flex: 1, overflowY: 'auto', padding: '18px 16px 14px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div className="ab-push-in" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {msgs.map((m, i) => m.kind === 'agent'
               ? <AgentMessage key={i} agent={agents.find((a) => a.key === m.agentKey) ?? agents[0]} text={m.text} task={m.task} index={i} />
               : m.kind === 'user' ? <UserMessage key={i} text={m.text} index={i} /> : <TypingRow key={i} agent={agents.find((a) => a.key === m.agentKey) ?? agents[0]} />)}
             {showTyping ? <TypingRow agent={agents[1]} /> : null}
+            {thinking ? <TypingRow agent={agents[0]} /> : null}
+            </div>
           </div>
-          <FollowUpComposer onSend={onSend} />
+          <FollowUpComposer onSend={handleSend} />
         </div>
-        <div style={{ overflow: 'hidden', minWidth: pvCollapsed ? 0 : 310, background: 'rgba(246,247,245,0.36)' }}>
-          {pvCollapsed ? null : showServiceColumn ? <ServiceModuleColumn /> : <PhonePreview />}
+        <div key={activeDevice} style={{ overflow: 'hidden', minWidth: pvCollapsed ? 0 : 310, background: 'rgba(246,247,245,0.36)' }}>
+          {pvCollapsed ? null : showServiceColumn ? <ServiceModuleColumn /> : <div className="ab-pane-in" style={{ height: '100%' }}><PhonePreview /></div>}
         </div>
       </div>
       {showToast ? <Toast text={showToast} /> : null}

@@ -1,0 +1,28 @@
+const { chromium } = require('/home/hatch/workspace/rea-tool/node_modules/playwright-core');
+(async () => {
+  const browser = await chromium.launch({ executablePath: '/home/hatch/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell', args: ['--no-sandbox', '--disable-dev-shm-usage', '--allow-file-access-from-files'] });
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await ctx.newPage();
+  await page.goto('file:///home/hatch/workspace/DesignRepoForMuse/UIDesign/web/airbuild/dist/index.html', { waitUntil: 'networkidle', timeout: 30000 });
+  await page.waitForTimeout(1200);
+  await page.locator('[data-window="main"]').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  const btn = page.locator('[data-window="main"] button[aria-label="Toggle left sidebar"]');
+  const box = await btn.boundingBox();
+  console.log('capsule box', box);
+  const tile = page.locator('[data-window="main"] button[aria-label="Open Hands Time"]');
+  const tbox = await tile.boundingBox();
+  console.log('tile box', tbox);
+  const sbox = await page.locator('[data-window="main"] .ab-scroll').boundingBox();
+  console.log('scroll box', sbox);
+  const top = await page.evaluate(([x, y]) => { const el = document.elementFromPoint(x, y); return el ? el.tagName + '.' + el.className + ' aria=' + el.getAttribute('aria-label') : 'none'; }, [tbox.x + tbox.width / 2, tbox.y + tbox.height / 2]);
+  console.log('elementFromPoint tile center:', top);
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.waitForTimeout(200);
+  await page.mouse.down(); await page.waitForTimeout(200);
+  const r = await page.evaluate(() => { const el = document.querySelector('[data-window="main"] button[aria-label="Toggle left sidebar"]'); return { active: el.matches(':active'), transform: getComputedStyle(el).transform, cls: el.className }; });
+  console.log('capsule down:', JSON.stringify(r));
+  await page.mouse.up();
+  const cssHas = await page.evaluate(() => { for (const ss of document.styleSheets) { try { for (const rule of ss.cssRules) { if (rule.selectorText && rule.selectorText.includes('button:active')) return rule.cssText; } } catch (e) {} } return 'NOT-FOUND'; });
+  console.log('button:active rule:', cssHas);
+  await browser.close();
+})().catch((e) => { console.error('DBG-FAIL', e.message); process.exit(1); });

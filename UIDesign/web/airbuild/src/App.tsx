@@ -15,7 +15,7 @@ import { agents, projects, thread } from './data/demo.ts'
 function Section({ id, title, note, children }: { id: string; title: string; note?: string; children: React.ReactNode }) {
   return (
     <section id={id} style={{ marginBottom: 48 }}>
-      <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px' }}>{title}</h2>
+      <h2 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 4px' }}>{title}</h2>
       {note ? <p style={{ fontSize: 12, color: 'rgba(17,17,15,0.55)', margin: '0 0 16px', maxWidth: 860 }}>{note}</p> : null}
       {children}
     </section>
@@ -29,7 +29,7 @@ export default function App() {
     <div style={{ maxWidth: 1240, margin: '0 auto', padding: '32px 20px 80px' }}>
       <header style={{ marginBottom: 32 }}>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#1987f7' }}>UIDesign / web / airbuild</p>
-        <h1 style={{ fontSize: 34, fontWeight: 800, margin: '6px 0' }}>AirBuild — desktop / web design system</h1>
+        <h1 style={{ fontSize: 34, fontWeight: 600, margin: '6px 0' }}>AirBuild — desktop / web design system</h1>
         <p style={{ fontSize: 13, color: 'rgba(17,17,15,0.6)', maxWidth: 860, lineHeight: 1.6 }}>
           Fixed 1200×668 canvas, scaled as a whole (never reflowed). Tokens from AIRBUILD-REA-20261029.md table A.
           Gallery copy is demo content only — see README “Residuals”. Official bitmap assets are not used;
@@ -42,9 +42,9 @@ export default function App() {
         </nav>
       </header>
 
-      <Section id="window" title="1 · App window — three columns" note="Sidebar 198px / conversation min 320px 1fr / preview min 310px 42%. Window background rgba(244,246,244,0.42) + blur(34px) saturate(1.24), radius 18px. Titlebar is 40px in the same three zones: sidebar zone (traffic lights 17px + control capsule), conversation zone (centred 32px project icon), preview zone (device tabs + action capsule). Toggle the titlebar sidebar/preview icons to see both collapsed states live.">
+      <Section id="window" title="1 · App window — three columns" note="Sidebar 198px / conversation min 320px 1fr / preview min 310px 42%. Window background rgba(244,246,244,0.42) + blur(34px) saturate(1.24), radius 18px. Titlebar is 40px in the same three zones: sidebar zone (traffic lights 17px + control capsule), conversation zone (centred 32px project icon), preview zone (device tabs + action capsule). Toggle the titlebar sidebar/preview icons to see both collapsed states live. v1.7 interaction: traffic-light hover glyphs (×/−/+), press scale 0.96 on all buttons (0.92 on composer buttons), project-tile click switches session with a 320ms iOS push slide, device-tab switch fades the preview pane 240ms, composer send is disabled while empty and appends to the stream with Ato thinking dots (1200ms) then a demo-only reply.">
         <div data-window="main"><ScaleCanvas><AppWindow showToast={toast} onSend={(v) => { setSent([...sent, v]); setToast('Message sent') }} /></ScaleCanvas></div>
-        {sent.length ? <p style={{ fontSize: 12, marginTop: 10 }}>Sent via composer (demo state): {sent.join(' · ')}</p> : null}
+        {sent.length ? <p style={{ fontSize: 12, marginTop: 10 }}>Sent via composer (demo state; the reply in the stream is demo copy, not original copy): {sent.join(' · ')}</p> : null}
         <div style={{ marginTop: 12 }}><Button onClick={() => setToast(toast ? '' : 'Message sent')}>{toast ? 'Hide toast' : 'Show toast'}</Button></div>
       </Section>
 

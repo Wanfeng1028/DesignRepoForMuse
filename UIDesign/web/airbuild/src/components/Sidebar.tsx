@@ -4,18 +4,20 @@ import { tokens } from '../tokens/tokens.ts'
 import { AvatarBlob } from './AvatarBlob.tsx'
 import { IconBookOpen, IconGear, IconHouse, IconPerson, projectIconMap, type ProjectIconKey } from './icons.tsx'
 
-export function ProjectTile({ name, icon, tint, active }: { name: string; icon: ProjectIconKey; tint: string; active?: boolean }) {
+export function ProjectTile({ name, icon, tint, active, onSelect }: { name: string; icon: ProjectIconKey; tint: string; active?: boolean; onSelect?: () => void }) {
   const Mini = projectIconMap[icon]
   const [hovered, setHovered] = useState(false)
   return (
-    <button type="button" aria-label={`Open ${name}`} title={name}
+    <button type="button" aria-label={`Open ${name}`} title={name} className="ab-tile"
+      onClick={onSelect}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ aspectRatio: 1.25, borderRadius: 12,
-        background: active ? 'rgba(255,255,255,0.72)' : hovered ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.34)',
-        border: active ? '1px solid rgba(17,17,15,0.045)' : '1px solid transparent',
+        /* v1.7 R22 adjudicated to REA table A: hover 0.58 (was 0.5),
+         * active border rgba(255,255,255,0.94) (was hairline 0.045). */
+        background: active ? 'rgba(255,255,255,0.72)' : hovered ? 'rgba(255,255,255,0.58)' : 'rgba(255,255,255,0.34)',
+        border: active ? '1px solid rgba(255,255,255,0.94)' : '1px solid transparent',
         boxShadow: active ? '0 5px 14px rgba(0,0,0,0.06)' : 'none',
-        transform: hovered && !active ? 'translateY(-1px)' : 'none',
-        transition: 'background 140ms ease, border-color 140ms ease, transform 140ms ease',
+        transition: 'background 140ms ease, border-color 140ms ease',
         display: 'grid', placeItems: 'center', padding: 0, cursor: 'pointer', minWidth: 0 }}>
       <span style={{ width: 32, height: 32, borderRadius: '32%', background: tint, display: 'grid', placeItems: 'center',
         color: 'rgba(17,17,15,0.75)', filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.2))' }}>
@@ -61,8 +63,8 @@ function FootBtn({ label, title, children }: { label: string; title: string; chi
   )
 }
 
-export function Sidebar({ agents, projects, activeAgentKey, activeProject }: {
-  agents: Agent[]; projects: { name: string; icon: ProjectIconKey; tint: string }[]; activeAgentKey?: string; activeProject?: string
+export function Sidebar({ agents, projects, activeAgentKey, activeProject, onSelectProject }: {
+  agents: Agent[]; projects: { name: string; icon: ProjectIconKey; tint: string }[]; activeAgentKey?: string; activeProject?: string; onSelectProject?: (name: string) => void
 }) {
   const [hoverAccount, setHoverAccount] = useState(false)
   return (
@@ -70,7 +72,7 @@ export function Sidebar({ agents, projects, activeAgentKey, activeProject }: {
       borderRight: '1px solid rgba(17,17,15,0.045)', boxShadow: 'inset -1px 0 rgba(255,255,255,0.42)',
       overflow: 'hidden', padding: '8px 9px 9px', boxSizing: 'border-box' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }} aria-label="Projects">
-        {projects.map((p) => (<ProjectTile key={p.name} {...p} active={p.name === activeProject} />))}
+        {projects.map((p) => (<ProjectTile key={p.name} {...p} active={p.name === activeProject} onSelect={onSelectProject ? () => onSelectProject(p.name) : undefined} />))}
       </div>
       <div style={{ marginTop: 9, display: 'flex', flexDirection: 'column', gap: 3 }} aria-label="AI team">
         {agents.map((a) => (<AgentRow key={a.key} agent={a} active={a.key === activeAgentKey} />))}

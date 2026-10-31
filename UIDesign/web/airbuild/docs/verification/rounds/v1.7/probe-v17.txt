@@ -1,0 +1,44 @@
+scrollTop at load: 0
+window rect: {"width":"1200px","height":"668px","_rect":[1200,668]}
+drawer transition: {"transitionDuration":"0.24s","transitionTimingFunction":"cubic-bezier(0.32, 0.72, 0, 1)","gridTemplateColumns":"198px 498px 504px","_rect":[1200,628]}
+traffic glyph idle opacity: 0
+traffic glyph hover opacity: 1
+traffic light hover transform: matrix(1.06, 0, 0, 1.06, 0, 0)
+send empty disabled: true opacity: 0.45
+send typed disabled: false opacity: 1
+press send transform: matrix(0.92, 0, 0, 0.92, 0, 0)
+press capsule transform: matrix(0.96, 0, 0, 0.96, 0, 0)
+press tile transform: matrix(0.96, 0, 0, 0.96, 0, 0)
+tile hover bg: rgba(255, 255, 255, 0.58)
+push animation: ab-push-in 0.32s cubic-bezier(0.32, 0.72, 0, 1)
+current project btn: Current project: Hands Time
+active tile border: rgba(255, 255, 255, 0.94)
+back to project btn: Current project: Hourtown
+pane animation: ab-pane-in 0.24s cubic-bezier(0.32, 0.72, 0, 1)
+device tabs: iOS 26.5:false | iPadOS 26.5:true
+tab hover bg (inactive iOS tab now inactive): rgb(242, 242, 240)
+device tabs after back: iOS 26.5:true | iPadOS 26.5:false
+grid before collapse: 198px 498px 504px
+grid sidebar-collapsed: 0px 696px 504px
+grid restored: 198px 498px 504px
+grid preview-collapsed: 198px 1002px 0px
+grid restored2: 198px 498px 504px
+scroll overscroll: contain
+scrollTop wheel: 0 -> 207
+after send user bubble present: true
+thinking dots visible: 3
+demo reply present: true
+scroll after send (top, max): [327,327]
+message-in: ab-message-in 0.26s cubic-bezier(0.22, 1, 0.36, 1)
+typing dots after reply (expect 0, thinking replaced by reply): 0
+focus-visible hit: App settings outline=2px shadow=rgba(255, 255, 255, 0.38) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.4) -1px -1px 1px 0px inset, rgba(0, 0, 0, 0.08) 0px 3px 8px 0px
+H1: {"fontSize":"34px","fontWeight":"600","_rect":[1200,51]}
+H2: {"fontSize":"20px","fontWeight":"600","_rect":[1200,30]}
+statusbar time: n/a phone-time=9:41 present
+phone time weight: 600 8px
+tab label: {"fontSize":"10px","fontWeight":"500","_rect":[38,12]}
+composer input: {"fontSize":"12px","lineHeight":"16px","_rect":[407,24]}
+agent bubble: {"fontSize":"12px","lineHeight":"16.56px","_rect":[330,72]}
+toast: Message sent
+reduced-motion message-in duration: 1e-05s
+reduced-motion drawer transition: 1e-05s
