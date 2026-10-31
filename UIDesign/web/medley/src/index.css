@@ -116,3 +116,59 @@ body {
     animation: none;
   }
 }
+
+/* v1.7 Liquid Glass (iOS 26/27 recipe, 1:1-bounded):
+ * Every glass surface keeps its measured original fill as the tint base;
+ * blur/saturate/rim/shadow are the only additions, and the displacement
+ * filter (src/components/liquid-glass.tsx, strength 28 / CA 2) only bends
+ * the BACKDROP — element text is never filtered, so glyphs stay crisp
+ * (proven by docs/verification/rounds/v1.7/glass-test*.png: text inside
+ * displaced glass renders sharp, stripes behind it warp).
+ * Tiers (ios27-design-system recipe): chrome 50px, panel 90px (the
+ * transparency-slider formula at default t=0.5: 100*(0.5+0.8*0.5)),
+ * small 6px; saturate 1.8 everywhere. Tints: light large
+ * rgba(250,250,250,0.70), dark rgba(31,32,36,0.85) (the recipe's
+ * rgba(0,0,0,0.80) would read darker than the measured #1F2024 dark
+ * fills, so the dark tint keeps the measured fill's RGB), sheet
+ * rgba(255,255,255,0.92). Rim (glassy-liquid reference values):
+ * specular top highlight + inner hairline inset 0 0 0 .5px
+ * rgba(0,0,0,.04) light / rgba(255,255,255,.06) dark; sheet/dialog keep
+ * their measured 0 -12px 32px shadows, composer keeps its resting shadow.
+ * BACKDROP-FILTER DELIVERY WARNING: the backdrop-filter declarations
+ * must NOT live in this stylesheet — Tailwind v4's Lightning CSS pass
+ * strips the standard property and leaves only -webkit-backdrop-filter,
+ * which Chromium's stylesheet parser then drops for url() values, so
+ * the computed filter silently becomes none (caught by verify-dom.cjs
+ * in v1.7). The filter therefore travels as React inline styles from
+ * src/components/liquid-glass.tsx (glassChromeStyle / glassPanelStyle /
+ * glassSmallStyle), which the optimizer cannot touch. Only tints, rims
+ * and shadows live here as classes.
+ * Font tokens are NOT touched here (--font-sans unchanged); SF optical
+ * sizing is a screenshot-harness override only (see shot scripts). */
+.glass-rim {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+}
+.glass-rim-dark {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.06);
+}
+.glass-tint-light {
+  background: rgba(250, 250, 250, 0.7);
+}
+.glass-tint-dark {
+  background: rgba(31, 32, 36, 0.85);
+}
+.glass-tint-sheet {
+  background: rgba(255, 255, 255, 0.92);
+}
+.glass-tint-bubble {
+  background: rgba(237, 238, 240, 0.7);
+}
+.glass-rim-shadow-rest {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 0 0 0.5px rgba(0, 0, 0, 0.04), 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+.glass-rim-shadow-sheet {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 0 0 0.5px rgba(0, 0, 0, 0.04), 0 -12px 32px rgba(23, 24, 28, 0.1);
+}
+.glass-rim-dark-shadow-sheet {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.06), 0 -12px 32px rgba(23, 24, 28, 0.1);
+}

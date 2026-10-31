@@ -3,6 +3,7 @@ import { cn } from "../lib/utils";
 import { Icon } from "./icons";
 import { DiagonalDots, ModelDots } from "./medley-mark";
 import { RadioGroup, RadioGroupItem } from "./ui/controls";
+import { glassSmallStyle } from "./liquid-glass";
 
 export type PlanData = {
   name: string;
@@ -48,7 +49,7 @@ export function PricingPanel({
       <h1 className="text-[22px] font-bold leading-[1.25] my-2">{title}</h1>
       <p className="text-[14px] leading-[1.5] text-dark-sub my-0 mb-3">{intro}</p>
 
-      <div className="flex rounded-button bg-dark-input p-1">
+      <div style={glassSmallStyle} className="flex rounded-button glass-tint-dark p-1">
         {(["monthly", "yearly"] as const).map((b) => (
           <button
             key={b}

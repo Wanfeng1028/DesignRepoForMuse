@@ -3,6 +3,287 @@
 > Scope: UIDesign/web/medley only. Desktop layout itself has no original
 > image; 1:1 covers tokens and component forms (see README residual 1).
 
+## v1.7 — 2026-11-01 (fix round; round 9: iOS texture close-out — font / material / glyph lines)
+
+- Fix round, not a review round. No judge call was made in this round:
+  every verdict below rests on pixel samples / computed values / eye
+  pairs, not on any judge verdict. Build passes: pnpm build
+  (tsc -b && vite build). Scope: UIDesign/web/medley only (src files
+  below + this entry + docs/verification/rounds/v1.7/ evidence; nothing
+  else in the repo touched, verified by git status before commit).
+  Screenshots: docs/verification/rounds/v1.7/ — gallery-fullpage.png,
+  sec-*.png per section (incl. new sec-phone-chrome.png),
+  panel-*.png (panel-only shots, incl. panel-phone-chrome.png),
+  sidebyside/pair-*.png (11 original pairs + pair-phone-chrome.png),
+  glass-test.html/png + glass-test-noblur.html/png (refraction probes),
+  shot-sections.cjs / shot-panels.cjs / title-audit.cjs /
+  title-widths.cjs / verify-dom.cjs / resweep.py / pair.py /
+  font-bands.cjs / debug-bf.cjs / debug-bf2.cjs / debug-sheet.cjs
+  (probe scripts; debug-sheet-*.png = sheet backdrop hide/show test).
+  Render pipeline for ALL v1.7 shots: Playwright headless shell 1243
+  (explicit executablePath chrome-headless-shell; playwright-core
+  default 1248 is not installed and is never relied on), file:// dist,
+  SF render (see font line), plus the harness-only Display override
+  (see below). Earlier Inter renders are void and were not reused.
+  fontconfig was NOT touched in this round (coordinator-owned alias).
+
+- A. FONT LINE — SF render, tokens untouched. The repo font token
+  (--font-sans, -apple-system stack) is unchanged: on Apple devices it
+  still resolves to SF, which is correct. What changed is only this
+  VM's render pipeline: fontconfig now resolves sans-serif /
+  PingFang SC / Noto Sans SC to SF Pro Text (Inter is fallback only),
+  and the shot harness applies the iOS optical-sizing override after
+  load (leaf elements with computed font-size >= 20px get
+  "SF Pro Display", then 500ms wait before screenshot) — harness-only,
+  product code untouched. SF files never enter the repo or dist.
+  Title widths (DOM Range, CSS px) — Text vs Display, and the
+  phone-width verdict at 350px content width (390 frame minus 2x20
+  padding). Display is ~8-10% narrower everywhere; that narrowness IS
+  the iOS look Text misses:
+  * welcome title 41px: Text 298.9 / Display 270.2 (Display -9.6%).
+  * home greeting EN 27px: 268.0 / 242.7 (-9.4%).
+  * home greeting CN 27px: 169.7 / 165.1 (-2.7%; CJK glyphs fall back
+    to the platform CJK font — SF has no CJK — so the CN delta is
+    small; on Apple devices this is PingFang, not a defect, see R13).
+  * pricing title 22px: 259.8 / 234.6 (-9.7%).
+  * credits huge number 37px: 137.1 / 126.3 (-7.9%).
+  * suspended title 26px: 362.0 / 331.0 (-8.5%).
+  * picker title 20px: 163.8 / 151.0 (-7.8%).
+  Title wrap table (orig lines / Text lines / Display lines). At
+  gallery widths every title is 1 line under both fonts (title-audit:
+  all 11 titles 1 line Text and 1 line Display). At phone width the
+  one wrap-sensitive title in this set is the suspended title:
+  orig 1 line (ov-suspended crop, "Your account is suspended" on one
+  line) / Text 362px > 350px = 2 lines (WRONG) / Display 331px <
+  350px = 1 line (RIGHT). Every other title fits under both fonts at
+  350px (welcome 298.9/270.2, greeting 268.0/242.7, pricing 259.8/
+  234.6, credits 137.1/126.3, picker 163.8/151.0). Determination: no
+  product size/weight change is needed — on Apple devices the OS
+  picks Display for >= 20px text automatically, so the shipped token
+  is already right; the harness override is what makes verification
+  truthful, and any future phone-width render must use Display.
+  Ink bands (post-fix SF renders, PIL row scans): welcome title ink
+  31px vs SF Display bold cap 29.4px + anti-aliasing (expected
+  30-31, PASS); home greeting ink 24px vs ascender-to-descender
+  ~25px + anti-aliasing (PASS within 1px). No font size, weight, or
+  token changed in v1.7 — the font fix is the render pipeline, and
+  the numbers above are its proof.
+
+- B. MATERIAL LINE — Liquid Glass, 1:1-bounded. Recipe sources:
+  ios27-design-system (seunghan91 iOS 27 Liquid Glass web edition)
+  for blur tiers / saturate / tints / transparency formula, and
+  glassy-liquid (19 iOS 26 controls) for specular 1.1-class rim,
+  shadow 0 10px 26px rgba(0,0,0,.16), inner hairline inset 0 0 0 .5px
+  rgba(0,0,0,.04), focus ring (not applicable here — no focus state
+  is rendered in the static gallery). Only material technique was
+  taken (refraction, edge light, dispersion, shadow); no vendor
+  control look was copied into this set.
+  Displacement (nikdelvin-liquid-glass, MIT, technique only):
+  rounded-rect map (fill #808080, blur(depth)) over X/Y gradient
+  ramps composited with screen blend; three feDisplacementMap
+  passes, R = strength + 2*CA, G = strength + CA, B = strength,
+  blended with screen; applied as backdrop-filter: url(#medley-lg)
+  (the filter's SourceGraphic IS the backdrop), so element text is
+  never displaced. Probe results (glass-test*.png, striped backdrop):
+  at blur 12px the 28 and 100 strengths look alike (blur masks warp);
+  at blur 0px, 28 visibly warps stripe edges while text stays crisp,
+  and 100 warps hard with green/purple chromatic fringing at edges.
+  Shipped params: strength 28, CA 2 (R 32 / G 30 / B 28) — 100 was
+  rejected as breaking 1:1. The map is a fixed 400x160 nominal tile
+  (radius 26, depth 8) stretched by feImage preserveAspectRatio=
+  "none" to each surface's box; corner radii stretch with the box,
+  acceptable for an edge-refraction map (probe boxes were 180x120).
+  Tiers shipped: chrome 50px, panel 90px (transparency formula at
+  default t = 0.5: 100*(0.5+0.8*0.5) = 90), small 6px; saturate 1.8
+  everywhere. Tints: light large rgba(250,250,250,0.70), dark
+  rgba(31,32,36,0.85) — NOT the recipe's rgba(0,0,0,0.80), which
+  would read darker than the measured #1F2024 dark fills, so the
+  dark tint keeps the measured fill's RGB; sheet
+  rgba(255,255,255,0.92) — NOT 0.70, because the original sheet is
+  white. Rim: inset 0 1px 1px white highlight (0.9 light / 0.25
+  dark) + inner hairline .5px (rgba(0,0,0,.04) light /
+  rgba(255,255,255,.06) dark). Shadows are NOT upgraded to the
+  glassy floating shadow: composer keeps its resting 0 2px 12px
+  rgba(0,0,0,.06), sheet/dialog keep their measured 0 -12px 32px
+  rgba(23,24,28,.10); only the rim is added to those shadows.
+  DELIVERY TRAP (caught by verify-dom.cjs, fixed in-round): putting
+  backdrop-filter in index.css does NOT survive the build —
+  Tailwind v4's Lightning CSS pass strips the standard property and
+  leaves only -webkit-backdrop-filter, which Chromium's stylesheet
+  parser then drops for url() values, so computed backdrop-filter
+  silently became none (first verify-dom run: all surfaces none,
+  tints/rims intact). The filter therefore travels as React inline
+  styles from src/components/liquid-glass.tsx (glassChromeStyle /
+  glassPanelStyle / glassSmallStyle), which the optimizer cannot
+  touch; post-fix verify-dom shows url(#medley-lg) blur(50/90/6px)
+  saturate(1.8) on every glass surface. The index.css comment
+  records this trap so nobody moves the filter back into CSS.
+  Per-surface table (original / before / after). Before = git HEAD
+  values (solid fills, no backdrop filter anywhere in this set):
+  * composer bar light (single + stacked): solid #FFFFFF + border +
+    0 2 12 .06 shadow / after: blur 50 + saturate 1.8 + displacement
+    28 + tint rgba(250,250,250,.70) + rim + same resting shadow.
+    Tint math verified exactly: home-EN composer interior renders
+    (238,244,244) = 0.70 x 250 + 0.30 x home gradient (~210,229,227).
+  * composer bar dark (single + stacked + Lisbon stop): solid
+    #1F2024 / after: blur 50 + saturate 1.8 + displacement 28 + tint
+    rgba(31,32,36,.85) + dark rim. Lisbon composer interior mode
+    (28,30,34) = 0.85 x (31,32,36) + 0.15 x dark panel bg, exact.
+  * composer model-label pill: solid #2F3034 / #EDEEF0 / after:
+    blur 6 + saturate 1.8 + displacement 28 + matching tint + rim.
+  * drawer search pill: solid #1F2024 / after: blur 50 + saturate
+    1.8 + displacement 28 + dark tint + dark rim.
+  * home CN segmented pill: solid #EDEEF0 / after: blur 6 +
+    saturate 1.8 + displacement 28 + tint rgba(237,238,240,.70).
+    Selected segment stays solid white (measured selected state).
+  * pricing segmented pill: solid #1F2024 / after: blur 6 +
+    saturate 1.8 + displacement 28 + dark tint. Selected segment
+    stays solid #2F3034 (measured selected state).
+  * chat-info sheet: solid #FFFFFF + 0 -12 32 .10 shadow / after:
+    blur 90 + saturate 1.8 + displacement 28 + tint
+    rgba(255,255,255,.92) + rim + same shadow. Hide/show test
+    (debug-sheet-*.png): behind-sheet is page bg (245,246,248);
+    sheet composite renders (254,255,255) at the bottom and
+    (255,255,255) above — a 1-level spread from screen-blend
+    rounding, imperceptible, recorded as R12 not a defect.
+  * dialog content (How credits work): solid #FFFFFF / #1E1F23 +
+    0 -12 32 .10 shadow / after: blur 90 + saturate 1.8 +
+    displacement 28 + sheet/dark tint + matching rim + same shadow.
+  * welcome Try button: transparent over glows + 1px #43474C
+    border / after: blur 50 + saturate 1.8 + displacement 28 +
+    dark rim, border and transparency kept. Honest limit: over
+    smooth radial glows the blur itself is visually negligible
+    (Try interior grey std identical 46.0 pre/post); the visible
+    Try change is the rim highlight (see R11).
+  * welcome Google button: measured fill #EDEEF2 kept solid (the
+    0.70 tint recipe was rejected here: over the dark glow it
+    would render darker than the measured fill) + rim only.
+  * NOT glassed, deliberately: pricing Pro card (its 1px dark-sub
+    border is measured; a rim would falsify it), savings/compare/
+    agent/drawer cards and the credits chart card (originals are
+    opaque; no translucent surface exists there), credits panel as
+    a whole (no translucent surface in the original — pricing's
+    segmented pill is the pricing/credits glass surface in this
+    round), DesktopLayout top-center pill (desktop chrome is
+    deliberately untouched per the round brief — no mobile evidence
+    covers it; see R10).
+  * Glass visibility limits in this gallery (R11): most glass
+    surfaces sit on flat backgrounds in the static gallery, so
+    blur/displacement are computed-real but visually quiet; they
+    are proven by the striped-backdrop probe and by computed
+    values, and they become visible in-product where surfaces
+    overlap scrolling content. The sheet likewise does not overlap
+    content in the gallery layout (it sits below the backdrop
+    remnant); the recipe is shipped for the real bottom-sheet
+    overlap, not faked by restructuring the gallery.
+
+- C. GLYPH LINE — status bar redrawn from spec, no Lucide
+  approximation. New src/components/ios-status-bar.tsx: IOSStatusBar
+  (dark/light, time prop default "10:24" to match photo-9, optional
+  Dynamic Island) + HomeIndicator. Geometry is verbatim from
+  baoyu-design/starter-components/ios-frame.jsx (iOS 26 UI Kit +
+  Figma status bar spec), scaled by width/402; the gallery frame is
+  390 CSS, so s = 0.970. Adaptation table (spec at 402 / adapted at
+  390 / DOM-measured at 390): bar padding 21/24/19 / 20.4/23.3/18.4
+  / 20.4/23.3/18.4 PASS; bar gap 154 / 149.4 / 149.4 PASS; time
+  17pt weight 590 line-height 22 / 16.5/590/21.3 / 16.5/590/21.3
+  PASS; signal 19x12 / 18.4x11.6 / 18.4x11.6 PASS; wifi 17x12 /
+  16.5x11.6 / 16.5x11.6 PASS; battery 27x13 / 26.2x12.6 / 26.2x12.6
+  PASS; home indicator 139x5 radius 100 / 134.9x4.9 radius 97 /
+  134.9x4.9 PASS; island 126x37 radius 24 / 122.2x35.9 radius 23.3 /
+  122.2x35.9 PASS. Signal bars (3.2 wide, rx 0.7, x0/4.8/9.6/14.4,
+  y7.5/5/2.5/0, h4.5/7/9.5/12), wifi arcs (outer + inner paths +
+  dot cx8.5 cy10.5 r1.5), battery (outer rect 0.5,0.5,23x12,rx3.5,
+  stroke opacity 0.35, fill none; inner rect 2,2,20x9,rx2; nub path
+  opacity 0.4) are the spec's own SVG paths, unaltered except the
+  width/height scaling attributes. New gallery section
+  "phone-chrome" (App.tsx): dark / light / island frames, 390 CSS
+  wide, bodies empty on purpose so the chrome itself is the
+  subject; panel-phone-chrome.png + sec-phone-chrome.png show all
+  three; pair-phone-chrome.png pairs the render bar against the
+  photo-9 TL status crop.
+  Photo-9 cross-check — DETERMINATION (not averaging): photo-9
+  confirms the FORMS (semibold time left, 4 ascending signal bars,
+  wifi 2 arcs + dot, battery rounded rect + nub, white pill
+  indicator centred, dark/light colorways) but its absolute pixels
+  do NOT reduce to one scale — time glyph cap ~13px, home
+  indicator height ~11px, right-cluster span ~90px imply scales
+  ~1.07 / ~2.2 / ~1.17 against the spec, mutually inconsistent
+  (stitched collage, quadrants at different scales, JPEG mush on
+  small icons). Forcing one scale would fabricate geometry, so the
+  spec stays the geometry authority and photo-9 stays form
+  evidence; the pair caption states the scales differ. Where spec
+  and photo disagree on absolute size, this determination (spec
+  wins, photo form-confirms) is the recorded rule for this round.
+  U9 status: PARTIALLY closed — the component + section now exist
+  and are spec-exact; the other gallery panels remain chrome-free
+  by design (they are content panels, not phone frames) and were
+  NOT retrofitted with bars, which would have broken panel 1:1
+  geometry. Retrofitting is a layout decision for a later round,
+  not smuggled in here.
+
+- FULL RESWEEP (post-fix, all panels re-shot). Panel sizes vs v1.6:
+  welcome 560x481 SAME, home-en 588x561 SAME, home-cn 588x561 SAME,
+  credits 720x897 SAME, picker-a 588x807 SAME, suspended 560x635
+  SAME, agent-team 560x850 SAME; pricing 560x716 (+1), chat-info
+  588x787 (-1), drawer 340x850 (+1), language 560x734 (+1) — 1px
+  rounding from SF reflow; chat-lisbon 588x733 (+25) — SF reflow of
+  the Lisbon thread body (Noto to SF line wraps), no geometry code
+  in that thread changed (composer height, message layout
+  untouched), recorded as R14. Welcome colour layer intact: zone
+  medians v1.7 vs v1.6 identical — base-top (17,20,26), blue halo
+  (32,47,66), green glow (36,67,67), Google fill (237,238,242) =
+  #EDEEF2; round 7 colours did not regress. All 11 original pairs
+  + the phone-chrome pair re-shot post-fix (sidebyside/pair-*.png).
+  Eye pairs viewed post-fix: phone-chrome (3 frames), welcome,
+  chat-info, home-en, composer states — all closed except the
+  documented adaptations and residuals below.
+
+- RESIDUALS (counted, with numbers; 14 items).
+  R1 Hairline 0.5px still renders as a full 1 device pixel in this
+    Chromium (v1.6 finding stands): verified by dist-CSS rule +
+    class presence, needs true-device recheck.
+  R2 Photo-9 absolute status-bar pixels are not a geometry source
+    (scales 1.07/2.2/1.17 mutually inconsistent, see glyph line);
+    spec is geometry authority, photo-9 is form evidence.
+  R3 v1.6 U11 stands: pricing, credits, picker, drawer, agent-team,
+    suspended, chat-info, desktop examples were swept visually
+    against v1.3 evidence + HD colours; their per-element values
+    rest on the v1.3 audit and are NOT re-certified 1:1 here.
+  R4 The 390px CSS-width conversion (v1.3 P2-1) is still unprovable
+    from JPEGs; the 390 frame is a convention, and the status-bar
+    scale 390/402 inherits that convention.
+  R5 v1.6 U3 stands: drawer recent colours, drawer pinned dots,
+    legend/by-model direct-centre samples, savings big-number size,
+    credits bar exact height sequence, activity dot colour,
+    agent-team / suspended / chat-info / picker row-level colours
+    rest on the v1.3 audit / OV15 collage.
+  R6 v1.6 U5/U6/U7 stand: welcome secondary greys (+-~5), Try
+    border #43474C (+-10 blur-corrected), dark circle mic orange
+    #D95E27 not re-measured against an isolated HD dark-mic still.
+  R7 v1.6 U8 stands: Lisbon Claude action row (EN complete state)
+    vs CN streaming state (no action row yet) is a state
+    difference, unresolved.
+  R8 v1.6 U10 stands: icons are Lucide substitutions for the
+    original custom icons (mandated library), not pixel-identical
+    — except the status-bar glyphs, which are now spec SVG.
+  R9 Gallery panels (other than the new phone-chrome section)
+    remain chrome-free by design; U9 is partially closed (see
+    glyph line), not fully.
+  R10 Desktop top bar (M mark + Auto pill geometry) deliberately
+    untouched this round: no mobile evidence covers desktop chrome.
+  R11 Glass visibility limits in the static gallery (see material
+    line): blur/displacement are computed-real but quiet on flat
+    backdrops; Try-button blur negligible over smooth glows (std
+    46.0 pre/post); sheet blur has no overlap to show in-gallery.
+  R12 Sheet composite 254 vs 255 across the sheet (1-level
+    screen-blend rounding on near-white); imperceptible.
+  R13 CJK glyphs render via the platform CJK fallback on this VM
+    (SF has no CJK); on Apple devices this is PingFang. Not a
+    defect, but CN text widths here are fallback widths.
+  R14 Chat-lisbon panel +25px height vs v1.6 from SF reflow
+    (Noto to SF); no thread geometry code changed.
+
 ## v1.6 — 2026-10-30 (fix round; round 8: Apple iOS texture inside 1:1 + precision gates)
 
 - Fix round, not a review round. No judge call was made in this round:

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cn } from "../lib/utils";
 import { Icon } from "./icons";
 import { Input } from "./ui/input";
+import { glassChromeStyle, glassSmallStyle } from "./liquid-glass";
 
 export type ComposerMic = "circle" | "plain" | "stop" | "arrow";
 
@@ -51,9 +52,10 @@ export function Composer({
   const pillNode = modelLabel ? (
     <span
       onClick={() => setLabelOpen((v) => !v)}
+      style={glassSmallStyle}
       className={cn(
         "inline-flex cursor-pointer items-center gap-1 rounded-[16px] px-2.5 py-1.5 text-secondary font-semibold shrink-0",
-        dark ? "bg-dark-row text-dark-sub" : "bg-user-bubble-light text-light-sub",
+        dark ? "glass-tint-dark glass-rim-dark text-dark-sub" : "glass-tint-bubble glass-rim text-light-sub",
       )}
     >
       {modelLabel}
@@ -90,9 +92,10 @@ export function Composer({
     return (
       <div className={cn("w-full", className)}>
         <div
+          style={glassChromeStyle}
           className={cn(
             "flex flex-col rounded-input pb-6",
-            dark ? "bg-dark-input" : "bg-light-card border border-light-divider shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
+            dark ? "glass-tint-dark glass-rim-dark" : "glass-tint-light glass-rim-shadow-rest border border-light-divider",
           )}
         >
           <div className="flex h-[48px] items-center pl-5 pr-4">
@@ -111,10 +114,11 @@ export function Composer({
   return (
     <div className={cn("w-full", className)}>
       <div
+        style={glassChromeStyle}
         className={cn(
           "flex items-center gap-2.5 rounded-input px-2 pl-3.5",
           tall ? "h-[54px]" : "h-[48px]",
-          dark ? "bg-dark-input" : "bg-light-card border border-light-divider shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
+          dark ? "glass-tint-dark glass-rim-dark" : "glass-tint-light glass-rim-shadow-rest border border-light-divider",
         )}
       >
         {!hidePlus && <span className="inline-flex" style={{ color: sub }}>{Icon.plus(sub)}</span>}

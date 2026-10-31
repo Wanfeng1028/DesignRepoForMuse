@@ -2,6 +2,7 @@ import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cn } from "../../lib/utils";
 import { Icon } from "../icons";
+import { glassPanelStyle } from "../liquid-glass";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -18,9 +19,10 @@ export function DialogContent({
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/45" />
       <DialogPrimitive.Content
         data-slot="dialog-content"
+        style={glassPanelStyle}
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-sheet p-5 shadow-[0_-12px_32px_rgba(23,24,28,0.10)]",
-          dark ? "bg-dark-card text-dark-text" : "bg-white text-light-text",
+          "fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-sheet p-5",
+          dark ? "glass-tint-dark glass-rim-dark-shadow-sheet text-dark-text" : "glass-tint-sheet glass-rim-shadow-sheet text-light-text",
           className,
         )}
         {...props}

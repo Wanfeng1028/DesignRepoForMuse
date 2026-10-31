@@ -1,5 +1,6 @@
 import { BrandDots, ModelDot } from "./medley-mark";
 import { Icon } from "./icons";
+import { glassPanelStyle } from "./liquid-glass";
 
 export type ChatInfoTool = { name: string; right: string };
 export type ChatInfoReply = { model: string; dot: string; right: string };
@@ -32,7 +33,7 @@ export function ChatInfoSheet({
   title?: string;
 }) {
   return (
-    <div className="bg-white text-light-text rounded-sheet shadow-[0_-12px_32px_rgba(23,24,28,0.10)] p-5 pt-3">
+    <div style={glassPanelStyle} className="glass-tint-sheet glass-rim-shadow-sheet text-light-text rounded-sheet p-5 pt-3">
       <div className="flex justify-center">
         <div className="h-1 w-9 rounded-full bg-[#D8D9DD]" />
       </div>

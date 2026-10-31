@@ -17,6 +17,8 @@ import { LanguagePanel } from "./components/language-panel";
 import { SavingsCard, CompareTable } from "./components/savings-card";
 import { Icon } from "./components/icons";
 import { ModelDot } from "./components/medley-mark";
+import { LiquidGlassDefs } from "./components/liquid-glass";
+import { IOSStatusBar, HomeIndicator } from "./components/ios-status-bar";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Separator } from "./components/ui/separator";
@@ -215,6 +217,7 @@ export default function App() {
   const [thinking, setThinking] = useState("Auto");
   return (
     <div className="min-h-full bg-[#F5F6F8] pb-16 font-sans text-[#17181C]">
+      <LiquidGlassDefs />
       <header className="border-b border-light-divider bg-white px-5 py-6">
         <div className="mx-auto flex w-full max-w-[1240px] items-center gap-3">
           <span className="text-[26px] font-bold">Medley</span>
@@ -226,7 +229,7 @@ export default function App() {
           All screen copy on this page is demo content only — components take every string as a prop.
         </p>
         <nav className="mx-auto mt-3 flex w-full max-w-[1240px] flex-wrap gap-x-4 gap-y-1 text-[13px] font-medium">
-          {["desktop-lisbon", "desktop-home", "welcome", "home", "chat", "picker", "pricing", "credits", "agent-team", "drawer", "chat-info", "suspended", "language", "composer", "primitives"].map((id) => (
+          {["desktop-lisbon", "desktop-home", "welcome", "home", "chat", "picker", "pricing", "credits", "agent-team", "drawer", "chat-info", "suspended", "language", "composer", "phone-chrome", "primitives"].map((id) => (
             <a key={id} href={`#${id}`} className="text-[#17181C] underline underline-offset-2">{id}</a>
           ))}
         </nav>
@@ -341,6 +344,29 @@ export default function App() {
         <div className="max-w-[560px] rounded-card border border-light-divider bg-light-bg py-3">
           <LanguagePanel title="App language" rows={d.languageRows} footnote="Answers follow the language you write in." />
         </div>
+      </Section>
+
+      <Section id="phone-chrome" title="Phone chrome — iOS status bar + home indicator" note="Spec-exact redraw (ios-frame.jsx Figma spec, scaled 390/402 from the 402pt frame). Frames are 390 CSS wide; bodies are empty on purpose so the chrome itself is the subject. Dark frames use the set dark token #111518, the light frame the light bg; the island frame adds a Dynamic Island.">
+        <div className="grid items-start gap-6 lg:grid-cols-3">
+          <div className="chrome-dark flex min-h-[220px] w-full max-w-[390px] flex-col overflow-hidden rounded-card border border-light-divider bg-dark-bg">
+            <IOSStatusBar dark time="10:24" width={390} />
+            <div className="flex-1" />
+            <HomeIndicator dark width={390} />
+          </div>
+          <div className="chrome-light flex min-h-[220px] w-full max-w-[390px] flex-col overflow-hidden rounded-card border border-light-divider bg-light-bg">
+            <IOSStatusBar dark={false} time="10:24" width={390} />
+            <div className="flex-1" />
+            <HomeIndicator dark={false} width={390} />
+          </div>
+          <div className="chrome-island flex min-h-[220px] w-full max-w-[390px] flex-col overflow-hidden rounded-card border border-light-divider bg-dark-bg">
+            <IOSStatusBar dark time="10:24" width={390} island />
+            <div className="flex-1" />
+            <HomeIndicator dark width={390} />
+          </div>
+        </div>
+        <p className="mt-3 max-w-[720px] text-[13px] leading-[1.55] text-light-sub">
+          Geometry: bar flex gap 154, padding 21/24/19, time 17pt weight 590 line-height 22, right-cluster gap 7, signal 19×12, wifi 17×12, battery 27×13, home indicator 139×5, island 126×37 — all at the 402pt spec, scaled by 390/402 in code. Photo-9 confirms the forms and colorways; its absolute pixels do not reduce to one scale, so the spec is the geometry authority (see CHANGELOG v1.7).
+        </p>
       </Section>
 
       <Section id="composer" title="Composer states">

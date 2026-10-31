@@ -1,6 +1,7 @@
 import { cn } from "../lib/utils";
 import { tokens } from "../tokens";
 import { Icon } from "./icons";
+import { glassChromeStyle } from "./liquid-glass";
 
 export type DrawerNavItem = { label: string; icon: "image" | "folder" | "cards" | "list-checks"; badge?: string };
 export type DrawerRecentItem = { label: string; dot: string; dots?: string[] };
@@ -42,7 +43,7 @@ export function SearchDrawer({
     <div className={cn("flex flex-col bg-dark-bg text-dark-text", className)}>
       {/* v1.3 B5: edit sits inside the pill; hamburger is its own row
           below, right-aligned. */}
-      <div className="flex h-12 items-center gap-2.5 rounded-input bg-dark-input px-3.5">
+      <div style={glassChromeStyle} className="flex h-12 items-center gap-2.5 rounded-input glass-tint-dark glass-rim-dark px-3.5">
         {Icon.search(sub)}
         <span className="flex-1 text-list-item text-dark-dim">{searchPlaceholder}</span>
         {Icon.edit(sub)}

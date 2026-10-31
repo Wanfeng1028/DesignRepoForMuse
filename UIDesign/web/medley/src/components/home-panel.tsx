@@ -4,6 +4,7 @@ import { cn } from "../lib/utils";
 import { Icon } from "./icons";
 import { MedleyMark, BrandDots } from "./medley-mark";
 import { Composer } from "./composer";
+import { glassSmallStyle } from "./liquid-glass";
 
 export type Suggestion = { icon: "news" | "pdf" | "image" | "cards" | "searchOrbit"; text: string; badge?: string };
 
@@ -76,7 +77,7 @@ export function HomePanel({ greeting, suggestions, composerPlaceholder, composer
               </span>
             </span>
           ) : (
-            <span className="inline-flex items-center rounded-chip bg-user-bubble-light p-[3px]">
+            <span style={glassSmallStyle} className="inline-flex items-center rounded-chip glass-tint-bubble p-[3px]">
               <span className="rounded-[16px] bg-light-card px-3.5 py-1.5 text-[14px] font-bold">{segmentLabels?.[0]}</span>
               <span className="px-3.5 py-1.5 text-[14px] font-medium text-light-sub">{segmentLabels?.[1]}</span>
             </span>

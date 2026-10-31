@@ -1,6 +1,7 @@
 import { BrandDots } from "./medley-mark";
 import { tokens } from "../tokens";
 import { Button } from "./ui/button";
+import { glassChromeStyle } from "./liquid-glass";
 
 /**
  * Dark welcome panel, photo-9 state (v1.5): dot-cluster mark + "Medley"
@@ -63,7 +64,7 @@ export function WelcomePanel({
       <div className="flex flex-col gap-2 pb-4">
         {/* v1.4: Google fill measured #EDEEF2 (237,238,242); G disc is a
             plain white 20px disc with no grey ring (sharp 236->254 edge). */}
-        <Button className="w-full bg-[#EDEEF2]">
+        <Button className="w-full bg-[#EDEEF2] glass-rim">
           <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full bg-white text-[13px] font-extrabold">
             G
           </span>
@@ -71,7 +72,7 @@ export function WelcomePanel({
         </Button>
         {/* v1.4: Try button is a transparent outline pill (interior = panel
             bg exactly), 1px border ~#43474C; v1.3 filled-pill form was wrong. */}
-        <Button variant="outline" className="w-full border-[#43474C] bg-transparent font-semibold text-dark-text">
+        <Button variant="outline" style={glassChromeStyle} className="w-full border-[#43474C] bg-transparent font-semibold text-dark-text glass-rim-dark">
           {tryLabel}
         </Button>
         {/* v1.4: footnote 12px / 1.31 pitch / #84878B (B-cap 12 img px,
